@@ -1,14 +1,18 @@
-import express from 'express';
+const express = require('express');
+const httpToHttps = require('express-http-to-https').redirectToHTTPS;
+
 const app = express();
 
-// enable ssl redirect
-app.get('*', (req, res, next) => {
-    if (req.headers['x-forwarded-proto'] !== 'https') {
-        res.redirect('https://' + req.headers.host + req.url);
-    } else {
-        next();
-    }
+// Redireciona todas as solicitações HTTP para HTTPS
+app.use(httpToHttps({
+    trustXFPHeader: true
+}));
+
+// Adicione as rotas do seu aplicativo aqui
+app.get('/', (req, res) => {
+    res.send('Olá, mundo!');
 });
 
-
-app.listen(process.env.PORT || 3000);
+app.listen(process.env.PORT || 3000, () => {
+    console.log(`Servidor iniciado na porta ${process.env.PORT || 3000}`);
+});
