@@ -1,5 +1,5 @@
 import { MongoClient } from "mongodb"
-const URL = 'mongodb+srv://mauroserrano:MongoMrsf1@cluster.tjk9fxo.mongodb.net/life_is_a_game?retryWrites=true&w=majority' ?? "mongodb://localhost:3000"
+const URL = process.env.MONGODB_URI ?? "mongodb://localhost:3000"
 
 let client
 

@@ -1,10 +1,16 @@
 import { Server } from "socket.io";
 const mongoose = require("mongoose");
-const QuizModel = mongoose.model.quiz || mongoose.model("quiz", { active: Boolean }, 'quizzesa');
 
 export default function SocketHandler(req, res) {
+
+  // Check if socket server has already been initialized
+  if (res.socket.server.io) {
+    console.log("Socket.IO server already set up");
+    res.end();
+    return;
+  }
   // Connect to MongoDB database
-  mongoose.connect('mongodb+srv://mauroserrano:MongoMrsf1@cluster.tjk9fxo.mongodb.net/quiz_makaaaaer?retryWrites=true&w=majority', {
+  mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
   });
@@ -18,27 +24,17 @@ export default function SocketHandler(req, res) {
   mongoose.connection.once("open", () => {
     console.log("MongoDB database connected");
 
-    // Create a change stream for the "quizzesa" collection
+    // Create a change stream for the rooms collection
     console.log("Setting change streams");
-    const changeStream = mongoose.connection.collection("quizzesa").watch();
+    const changeStream = mongoose.connection.collection(process.env.COLL_ROOMS).watch();
 
     // Listen for "change" events on the change stream
     changeStream.on("change", (change) => {
-      console.log('change event received with value:', change.updateDescription.updatedFields.active);
-      const quiz = {
-        active: change.updateDescription.updatedFields.active,
-      };
-      io.emit("getData", quiz);
+      const roomAttFields = { ...change.updateDescription.updatedFields };
+      io.emit("updateFields", roomAttFields);
     });
 
   });
-
-  // Check if socket server has already been initialized
-  if (res.socket.server.io) {
-    console.log("Socket.IO server already set up");
-    res.end();
-    return;
-  }
 
   // Initialize socket server
   const io = new Server(res.socket.server);
@@ -48,43 +44,45 @@ export default function SocketHandler(req, res) {
   io.on("connection", (socket) => {
     console.log('Socket.io client connected');
 
-    // Listen for "updateQuiz" events emitted by the client
-    socket.on("updateQuiz", (updatedQuiz) => {
-      QuizModel.updateOne({ code: 'abc' }, { ...updatedQuiz, active: updatedQuiz.active })
-        .then(() => {
-          console.log("Quiz updated successfully");
-          /* io.emit("updateQuizSuccess", updatedQuiz); */
-        })
-        .catch((err) => {
-          console.log("Error updating quiz:", err);
-          /* io.emit("updateQuizError", err); */
-        });
-    });
-
-    // Get the current value of "active" from the "quizzesa" collection
-    mongoose.connection.collection("quizzesa").findOne({ owner: req.headers.email })
+    // Get the current value of "active" from the process.env.COLL_ROOMS collection
+    mongoose.connection.collection(process.env.COLL_ROOMS).findOne({ owner: req.headers.email })
       .then((result) => {
-        console.log('email', req.headers.email)
-        const quiz = { ...result };
-        socket.emit("getData", quiz);
+        const room = { ...result };
+        socket.emit("getData", room);
       })
       .catch((err) => {
         console.log('Error getting initial data:', err);
       });
 
-    // Get the current value of "active" from the "quizzesa" collection
-/*     mongoose.connection.collection("quizzesa").findOne({ code: req.headers.code })
-      .then((result) => {
-        console.log('code', req.headers.code, result)
-        if (result) {
-          const quiz = { ...result };
-          socket.emit("getQuizForPlayer", quiz);
-        }
-      })
-      .catch((err) => {
-        console.log('Error getting data:', err);
-      }); */
+    // Listen for "updateQuiz" events emitted by the client
+    socket.on("updateRoom", (updatedRoom) => {
+      const RoomModel = mongoose.models.room ? mongoose.model("room") : mongoose.model("room", { code: String, owner: String, active: Boolean }, 'rooms');
+      
+      RoomModel.updateOne({ code: updatedRoom.code }, { ...updatedRoom, active: updatedRoom.active })
+        .then(() => {
+          console.log("Quiz updated successfully");
+          io.emit("updateRoomSuccess", updatedRoom);
+        })
+        .catch((err) => {
+          console.log("Error updating quiz:", err);
+          io.emit("updateRoomError", err);
+        });
+    });
+
+    // Get the current value of "active" from the rooms collection
+    /*     mongoose.connection.collection(process.env.COLL_ROOMS).findOne({ code: req.headers.code })
+          .then((result) => {
+            console.log('code', req.headers.code, result)
+            if (result) {
+              const quiz = { ...result };
+              socket.emit("getQuizForPlayer", quiz);
+            }
+          })
+          .catch((err) => {
+            console.log('Error getting data:', err);
+          }); */
   });
+
 
   console.log("Setting up socket");
   res.end();

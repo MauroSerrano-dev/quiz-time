@@ -1,7 +1,7 @@
 const { getMongoCollection } = require("./utils/mongodb");
 
-const DATABASE = "quiz_makaaaaer";
-const COLLECTION_NAME = "quizzesa";
+const DATABASE = process.env.MONGODB_DB;
+const COLLECTION_NAME = process.env.COLL_ROOMS;
 
 async function getRoom(code) {
   const collection = await getMongoCollection(DATABASE, COLLECTION_NAME);
@@ -27,12 +27,12 @@ async function getUserByEmail(email) {
   return result;
 }
 
-async function updateUser(userEmail, data) {
+async function updateRoom(room) {
   const collection = await getMongoCollection(DATABASE, COLLECTION_NAME);
-  delete data._id;
+  delete room._id;
   const result = await collection.updateOne(
-    { email: userEmail },
-    { $set: { ...data } }
+    { code: room.code },
+    { $set: { ...room } }
   );
   return result;
 }
@@ -63,4 +63,5 @@ async function removeDailyQuestDate(userEmail, dailyQuestInfos) {
 
 export {
   getRoom,
+  updateRoom
 }
