@@ -9,7 +9,7 @@ import { useSession, signIn, signOut } from "next-auth/react"
 const MENU_LIST = [
     { name: 'Main', href: '/' },
     { name: 'Lobby', href: '/lobby' },
-    { name: 'Achievements', href: '/achievements' },
+    { name: 'Quiz Builder', href: '/quiz-builder' },
     { name: 'Configuration', href: '/configuration' },
     { name: 'Support', href: '/support' },
 ]
