@@ -1,0 +1,40 @@
+.optionsContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 80%;
+    border-style: dashed;
+}
+
+.gameOption {
+    width: 300px;
+    height: 300px;
+
+    border-radius: 0.5rem;
+
+    background-color: rgba(0, 255, 225, 0.42);
+}
+
+.editorContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    border-style: dashed;
+    border-color: aquamarine;
+}
+
+/* Enable hover only on non-touch devices */
+@media (hover: hover) and (pointer: fine) {
+    .gameOption {
+        cursor: pointer;
+    }
+}
+
+/* Mobile */
+@media (max-width: 700px) {}
+
+/* Tablet and Smaller Desktop */
+@media (min-width: 701px) and (max-width: 1120px) {}

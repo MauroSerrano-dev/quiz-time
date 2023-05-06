@@ -2,6 +2,7 @@ import io from "socket.io-client";
 import styles from '../styles/index.module.css'
 import { useState, useEffect } from "react";
 import { useSession, signIn, signOut } from "next-auth/react"
+import Head from 'next/head'
 
 let socket;
 
@@ -39,6 +40,12 @@ export default function Index() {
 
   return (
     <div>
+      <Head>
+        <title>Quiz Time</title>
+        <meta name="description" content="Quiz Buider App" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <main>
         {room && session && <div className={styles.box} onClick={handleClick} style={{ backgroundColor: room.active ? 'red' : 'blue' }}></div>}
       </main>

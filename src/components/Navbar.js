@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
-/* import DarkModeButton from './DarkModeButton.js' */
 import styles from '@/styles/components/NavBar.module.css'
 import { useRouter } from 'next/router'
-/* import AvatarSelector from './AvatarSelector' */
 import { useSession, signIn, signOut } from "next-auth/react"
 
 const MENU_LIST = [
@@ -20,7 +18,7 @@ export default function NavBar() {
     const { pathname } = useRouter()
 
     return (
-        <header>
+        <div>
             <div className={styles.container}>
                 <div className={styles.leftSide}>
                     {/* <div className={styles.darkModeButton}>
@@ -28,7 +26,8 @@ export default function NavBar() {
                     </div> */}
                     <Link legacyBehavior href={'/'}>
                         <a>
-                            <h1 className={styles.logo}>Quiz Time</h1>
+                            <img className={styles.logo} src='/quiz-time-logo.png' />
+                            <h1 className={styles.title}>Quiz Time</h1>
                         </a>
                     </Link>
                 </div>
@@ -56,9 +55,6 @@ export default function NavBar() {
                     {session &&
                         <div className={styles.rightSideLogin}>
                             <div className={styles.avatarContainer}>
-                                {/* <div className={styles.avatar}>
-                                    <AvatarSelector customImg={session.user.image} left='-450%' bottom='-50%' leftMobile='-190%' bottomMobile='-50%' />
-                                </div> */}
                                 <div className={styles.userName}>
                                     {session.user.name}
                                 </div>
@@ -73,6 +69,6 @@ export default function NavBar() {
                     }
                 </div>
             </div>
-        </header>
+        </div>
     )
 }
