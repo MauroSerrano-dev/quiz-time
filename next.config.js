@@ -1,4 +1,3 @@
-const sslRedirect = require('heroku-ssl-redirect').default;
 const isDev = process.env.NODE_ENV !== 'production'
 
 module.exports = {
@@ -7,7 +6,7 @@ module.exports = {
     return [
       {
         source: '/(.*)',
-        destination: 'https://quiztime.pt/$1',
+        destination: 'https://quiz-maker.herokuapp.com/$1',
       },
     ];
   },
@@ -17,7 +16,7 @@ module.exports = {
       {
         source: '/:path*',
         permanent: true,
-        destination: 'https://quiztime.pt/:path*',
+        destination: 'https://quiz-maker.herokuapp.com/:path*',
       },
     ];
   },
