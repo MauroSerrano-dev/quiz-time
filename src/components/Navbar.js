@@ -12,7 +12,7 @@ const MENU_LIST = [
     { name: 'Support', href: '/support' },
 ]
 
-export default function NavBar() {
+export default function Navbar() {
     const { data: session } = useSession()
     const [navActive, setNavActive] = useState(false)
     const { pathname } = useRouter()

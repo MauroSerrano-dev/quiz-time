@@ -1,6 +1,6 @@
 import '../styles/globals.css'
 import { SessionProvider } from 'next-auth/react'
-import NavBar from '../components/NavBar'
+import Navbar from '../components/Navbar'
 
 function MyApp(props) {
   const { Component, pageProps } = props
@@ -8,7 +8,7 @@ function MyApp(props) {
   return (
     <>
       <SessionProvider>
-        <NavBar />
+        <Navbar />
         <Component {...pageProps} />
       </SessionProvider>
     </>
