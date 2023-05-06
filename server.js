@@ -1,12 +1,29 @@
-var express = require('express');
-var secure = require('ssl-express-www');
-var app = express();
+const express = require('express');
+const next = require('next');
 
-app.use(secure);
+const dev = process.env.NODE_ENV === 'dev';
+const app = next({ dev });
+const handle = app.getRequestHandler();
 
-app.get('/', (req, res) => {
-  res.send('Olá, mundo!');
+app.prepare().then(() => {
+    const server = express();
+
+    /*     if (!dev) { */
+    server.use((req, res, next) => {
+        if (req.secure) {
+            next();
+        } else {
+            res.redirect('https://' + req.headers.host + req.url);
+        }
+    });
+    /*     } */
+
+    server.get('*', (req, res) => {
+        return handle(req, res);
+    });
+
+    server.listen(3000, (err) => {
+        if (err) throw err;
+        console.log('> Ready on http://localhost:3000');
+    });
 });
-
-var port = process.env.PORT || 3000;
-app.listen(port, () => console.log('Server listening.'));
