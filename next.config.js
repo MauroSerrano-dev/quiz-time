@@ -1,8 +1,8 @@
-const isDev = process.env.NODE_ENV !== 'production'
+/* const isDev = process.env.NODE_ENV !== 'production' */
 
 module.exports = {
   reactStrictMode: true,
-  async rewrites() {
+  /* async rewrites() {
     return [
       {
         source: '/(.*)',
@@ -19,5 +19,5 @@ module.exports = {
         destination: 'https://quiz-maker.herokuapp.com/:path*',
       },
     ];
-  },
+  }, */
 };
