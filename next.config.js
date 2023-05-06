@@ -1,12 +1,12 @@
 const isProd = process.env.NODE_ENV === 'production'
 
-const withSslRedirect = require('heroku-ssl-redirect')
+import sslRedirect from 'heroku-ssl-redirect';
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 })
 
 module.exports = withBundleAnalyzer(
-  withSslRedirect({
+  sslRedirect({
     async redirects() {
       return [
         {
