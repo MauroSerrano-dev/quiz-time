@@ -9,7 +9,7 @@ module.exports = {
         destination: 'https://quiz-maker.herokuapp.com/$1',
       },
     ];
-  },
+  }, */
 
   async redirects() {
     return [
@@ -19,5 +19,5 @@ module.exports = {
         destination: 'https://quiz-maker.herokuapp.com/:path*',
       },
     ];
-  }, */
+  },
 };
