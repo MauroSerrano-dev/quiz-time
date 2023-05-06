@@ -9,10 +9,8 @@ app.prepare().then(() => {
     const server = express();
 
     server.use((req, res, next) => {
-        console.log(JSON.stringify(req.headers))
-        console.log(JSON.stringify(req))
         if (req.headers['x-forwarded-proto'] !== 'https') {
-            res.redirect('https://' + req.headers.host + req.url);
+            res.redirect('https://' + process.env.SITE_URL + req.url);
         } else {
             next();
         }
