@@ -1,19 +1,13 @@
-const withSass = require("@zeit/next-sass");
+const withHttpsRedirect = require('next-https-redirect');
 
-module.exports = withSass({
+module.exports = withHttpsRedirect({
   async redirects() {
     return [
       {
-        source: "/*",
-        destination: "https://quiz-maker.herokuapp.com/:splat",
+        source: '/:path*',
+        destination: `https://quiz-maker.herokuapp.com/:path*`,
         permanent: true,
-        has: [
-          {
-            type: "protocol",
-            value: "http"
-          }
-        ]
-      }
+      },
     ];
-  }
+  },
 });
