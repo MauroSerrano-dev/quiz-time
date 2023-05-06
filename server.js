@@ -20,6 +20,10 @@ app.prepare().then(() => {
         return handle(req, res);
     });
 
+    server.all('*', (req, res) => {
+        return handle(req, res)
+    })
+
     server.listen(process.env.PORT, (err) => {
         if (err) throw err;
         console.log(`> Ready on http://localhost:${process.env.PORT}`);
