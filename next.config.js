@@ -3,7 +3,6 @@ const isDev = process.env.NODE_ENV !== 'production'
 
 module.exports = {
   reactStrictMode: true,
-  
   async rewrites() {
     return [
       {
@@ -12,7 +11,7 @@ module.exports = {
       },
     ];
   },
-  
+
   async redirects() {
     return [
       {
@@ -21,15 +20,5 @@ module.exports = {
         destination: 'https://quiztime.pt/:path*',
       },
     ];
-  },
-
-  webpack: (config, { isServer }) => {
-    // for production, force SSL/TLS
-    if (!isDev) {
-      config.resolve.alias['@sentry/node'] = '@sentry/browser';
-      config.plugins.push(new sslRedirect());
-    }
-
-    return config;
   },
 };
