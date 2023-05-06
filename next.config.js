@@ -1,6 +1,6 @@
-const withHttpsRedirect = require('next-https-redirect');
+const sslRedirect = require('next-ssl-redirect-middleware');
 
-module.exports = withHttpsRedirect({
+module.exports = sslRedirect({
   async redirects() {
     return [
       {
