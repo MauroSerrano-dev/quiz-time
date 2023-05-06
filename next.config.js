@@ -2,15 +2,9 @@ module.exports = {
   async redirects() {
     return [
       {
-        source: '/*',
-        has: [
-          {
-            type: 'host',
-            value: '(?<host>.+)',
-            destination: ':https',
-            continue: true,
-          },
-        ],
+        source: '/(.*)',
+        destination: 'https://quiz-maker.herokuapp.com/:path*',
+        permanent: true,
       },
     ];
   },
