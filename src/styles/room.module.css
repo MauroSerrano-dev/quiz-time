@@ -1,7 +1,11 @@
 @import url('./animations.css');
 
+.roomName {
+  margin-bottom: 1rem;
+}
+
 .qrContainer {
-    --size: 200px;
+    --size: 300px;
     display: flex;
     position: relative;
     flex-direction: column;
@@ -23,6 +27,7 @@
     animation-delay: 200ms;
     animation-fill-mode: forwards;
     box-shadow: 0px 0px 15px 1px white;
+    margin-bottom: 1rem;
 }
 
 .frame {
@@ -30,20 +35,24 @@
     height: calc(var(--size) * 0.8);
     position: absolute;
     border-style: solid;
-    border-width: 0.4rem;
+    border-width: calc(var(--size) * 0.025);
 }
 
 .border {
     border-style: solid;
-    border-width: 0.4rem;
-    border-radius: 1rem;
+    border-width: calc(var(--size) * 0.03);
+    border-radius: calc(var(--size) * 0.08);
 }
 
 .qrContainer  h2{
+  padding-top: calc(var(--size) * 0.01);
     position: relative;
-    bottom: -5%;
-    font-size: 180%;
+    font-size: calc(var(--size) * 0.17);
     color: white;
+}
+
+.qrCode {
+  padding-top: calc(var(--size) * 0.015);
 }
 
 @keyframes fadeIn {
