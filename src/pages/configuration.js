@@ -48,6 +48,7 @@ export default function Configuration() {
         <div>
             <main>
                 {process.env.NODE_ENV === 'development' && <button onClick={teste}>Populate</button>}
+                {process.env.NODE_ENV}
             </main>
         </div>
     );
