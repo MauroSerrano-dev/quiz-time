@@ -1,0 +1,23 @@
+.watingContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    width: 287px;
+}
+
+.watingMsg{
+    width: 280px;
+}
+
+.dots {
+    width: 15px;
+    text-align: start;
+}
+
+.optionsContainer {
+    display: flex;
+    flex-direction: column;
+}
