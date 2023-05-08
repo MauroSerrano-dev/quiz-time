@@ -9,8 +9,8 @@
     transition: all 650ms ease-in-out;
     z-index: 1;
     margin-bottom: 2rem;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
 
 }
 
@@ -18,16 +18,34 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    width: 30%;
+    width: 20%;
     height: 100%;
+    margin-left: 1rem;
 }
 
 .leftSide a {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
     height: 100%;
+    gap: 0.5rem;
+}
+
+.middle {
+    
+}
+
+.rightSide {
+    width: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-right: 1rem;
+}
+
+.rightSideLogin {
+    display: flex;
+    flex-direction: row;
     gap: 0.5rem;
 }
 
@@ -43,19 +61,8 @@
 }
 
 .nav_menu_bar {
-    height: 35px;
-    width: 50px;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    cursor: pointer;
-    position: absolute;
-    right: 12px;
-    top: 10px;
     display: none;
-    -webkit-tap-highlight-color: transparent;
 }
-
 
 .nav_menu_list {
     display: flex;
@@ -134,6 +141,7 @@
 }
 
 .title {
+    font-size: 28px;
     transition: all 200ms ease-in-out;
 }
 
@@ -146,13 +154,6 @@
     height: 60px;
 }
 
-.rightSideLogin {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-}
-
 .avatarContainer {
     display: flex;
     align-items: center;
@@ -160,12 +161,48 @@
     gap: 0.5rem;
 }
 
-
 /* Enable hover only on non-touch devices */
 @media (hover: hover) and (pointer: fine) {}
 
+/* Mobile, Tablet and Smaller Desktop*/
+@media (max-width: 1120px) {
+    .container {
+        height: 70px;
+    }
+
+    .nav_menu_bar {
+        height: 35px;
+        width: 50px;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        cursor: pointer;
+        position: relative;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .rightSide {
+        width: 50%;
+    }
+
+    .nav_menu_list {
+        flex-direction: column;
+        position: fixed;
+        width: 288px;
+        min-height: calc(100vh - 60px);
+        height: 60px;
+        background-color: rgb(189, 189, 189);
+    }
+}
+
 /* Mobile */
-@media (max-width: 700px) {}
+@media (max-width: 700px) {
+    .rightSideLogin {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
 
 /* Tablet and Smaller Desktop */
 @media (min-width: 701px) and (max-width: 1120px) {}

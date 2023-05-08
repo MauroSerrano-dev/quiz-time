@@ -43,7 +43,6 @@ export default function SocketHandler(req, res) {
 
   io.on("connection", (socket) => {
     console.log('Socket.io client connected');
-
     // Get the current value of "active" from the process.env.COLL_ROOMS collection
     mongoose.connection.collection(process.env.COLL_ROOMS).findOne({ owner: req.headers.email })
       .then((result) => {
@@ -56,16 +55,22 @@ export default function SocketHandler(req, res) {
 
     // Listen for "updateQuiz" events emitted by the client
     socket.on("updateRoom", (updatedRoom) => {
-      const RoomModel = mongoose.models.room ? mongoose.model("room") : mongoose.model("room", { code: String, owner: String, active: Boolean }, 'rooms');
-      
-      RoomModel.updateOne({ code: updatedRoom.code }, { ...updatedRoom, active: updatedRoom.active })
+      const RoomModel = mongoose.models.room
+        ? mongoose.model("room")
+        : mongoose.model("room", {
+          code: String,
+          owner: String,
+          active: Boolean,
+          currentQuestion: Number
+        }, 'rooms');
+      RoomModel.updateOne({ code: updatedRoom.code }, { ...updatedRoom, active: updatedRoom.active, currentQuestion: updatedRoom.currentQuestion })
         .then(() => {
           console.log("Quiz updated successfully");
-          io.emit("updateRoomSuccess", updatedRoom);
+          /* io.emit("updateRoomSuccess", updatedRoom); */
         })
         .catch((err) => {
           console.log("Error updating quiz:", err);
-          io.emit("updateRoomError", err);
+          /* io.emit("updateRoomError", err); */
         });
     });
 

@@ -56,16 +56,6 @@ const quiz = {
             optionsRandom: false
         },
         {
-            content: 'Eu me divirto quando...',
-            options: [
-                { content: 'Estou me exercitando', actions: [{ profile: 'Ativador', points: 1 }] },
-                { content: 'Tenho novidades', actions: [{ profile: 'Idealizador', points: 1 }] },
-                { content: 'Estou com outros', actions: [{ profile: 'Comunicador', points: 1 }] },
-                { content: 'Determino as regras', actions: [{ profile: 'Organizador', points: 1 }] },
-            ],
-            optionsRandom: false
-        },
-        {
             content: 'Eu penso que...',
             options: [
                 { content: 'Unidos venceremos, dividos perderemos', actions: [{ profile: 'Comunicador', points: 1 }] },
@@ -172,6 +162,16 @@ const quiz = {
                 { content: 'Colocar os outros na frente', actions: [{ profile: 'Comunicador', points: 1 }] },
                 { content: 'Mudar de idéia', actions: [{ profile: 'Idealizador', points: 1 }] },
                 { content: 'Ser consistente', actions: [{ profile: 'Organizador', points: 1 }] },
+            ],
+            optionsRandom: false
+        },
+        {
+            content: 'Eu gosto de buscar conselhos de...',
+            options: [
+                { content: 'Pessoas bem sucedidas', actions: [{ profile: 'Ativador', points: 1 }] },
+                { content: 'Anciões e conselheiros', actions: [{ profile: 'Comunicador', points: 1 }] },
+                { content: 'Autoridades no assunto', actions: [{ profile: 'Organizador', points: 1 }] },
+                { content: 'Lugares, os mais estranhos', actions: [{ profile: 'Idealizador', points: 1 }] },
             ],
             optionsRandom: false
         },

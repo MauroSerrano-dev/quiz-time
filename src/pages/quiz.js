@@ -1,6 +1,9 @@
 import styles from '../styles/quiz.module.css'
 import { useEffect, useState } from 'react'
 import { withRouter } from 'next/router'
+import io from "socket.io-client";
+
+let socket;
 
 export default withRouter((props) => {
     const { code } = props.router.query
@@ -14,6 +17,7 @@ export default withRouter((props) => {
 
     useEffect(() => {
         getQuiz()
+        socketInitializer()
     }, [])
 
     useEffect(() => {
@@ -30,6 +34,23 @@ export default withRouter((props) => {
             .then(response => response.json())
             .then(response => setQuiz(response.quiz))
             .catch(err => console.error(err))
+    }
+
+    const socketInitializer = async () => {
+        const options = {
+            method: 'GET',
+            headers: { email: 'mauro.r.serrano.f@gmail.com' },
+        };
+        await fetch("/api/socket", options)
+
+        socket = io();
+
+        socket.on("getData", (data) => {
+            setCurrentQuestion(data.currentQuestion)
+        });
+
+        socket.on("updateFields", (roomAttFields) => {
+            setCurrentQuestion(roomAttFields.currentQuestion)})
     }
 
     function nextQuestion() {
