@@ -50,6 +50,12 @@ export default withRouter((props) => {
     const resetQuestions = async () => {
         socket.emit("updateRoom", { ...room, currentQuestion: 0 });
     };
+    const startQuiz = async () => {
+        socket.emit("updateRoom", { ...room, state: 'active' });
+    };
+    const disableQuiz = async () => {
+        socket.emit("updateRoom", { ...room, state: 'disable' });
+    };
 
     return (
         <div>
@@ -64,6 +70,8 @@ export default withRouter((props) => {
                 </div>
                 <button onClick={nextQuestion}>Next Question</button>
                 <button onClick={resetQuestions}>Reset Questions</button>
+                <button onClick={startQuiz}>Start Quiz</button>
+                <button onClick={disableQuiz}>Disable Quiz</button>
             </main>
         </div>
     );

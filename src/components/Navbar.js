@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
-import styles from '@/styles/components/NavBar.module.css'
+import styles from '@/styles/components/Navbar.module.css'
 import { useRouter } from 'next/router'
 import { useSession, signIn, signOut } from "next-auth/react"
 
@@ -27,9 +27,9 @@ export default function Navbar() {
                         </a>
                     </Link>
                 </div>
-                <div className={`${navActive ? styles.active : ''} ${styles.nav_menu_list}`}>
-                    {MENU_LIST.map((option, i) => {
-                        return (
+                <div className={styles.middle}>
+                    <div className={`${navActive ? styles.active : ''} ${styles.nav_menu_list}`}>
+                        {MENU_LIST.map((option, i) =>
                             <div onClick={() => { setNavActive(false) }}
                                 key={option.name}>
                                 <Link legacyBehavior href={option.href}>
@@ -38,8 +38,8 @@ export default function Navbar() {
                                     </a>
                                 </Link>
                             </div>
-                        )
-                    })}
+                        )}
+                    </div>
                 </div>
                 <div className={styles.rightSide}>
                     {session &&
@@ -57,11 +57,11 @@ export default function Navbar() {
                             <button onClick={() => signIn()}>Sign in</button>
                         </div>
                     }
-                </div>
-                <div onClick={() => setNavActive(!navActive)} className={styles.nav_menu_bar}>
-                    <div className={`${navActive ? styles.active2 : styles.disactive} ${styles.navButton}`}></div>
-                    <div className={`${navActive ? styles.active : styles.disactive2} ${styles.navButton}`}></div>
-                    <div className={`${navActive ? styles.active2 : styles.disactive3} ${styles.navButton}`}></div>
+                    <div onClick={() => setNavActive(!navActive)} className={styles.nav_menu_bar}>
+                        <div className={`${navActive ? styles.active2 : styles.disactive} ${styles.navButton}`}></div>
+                        <div className={`${navActive ? styles.active : styles.disactive2} ${styles.navButton}`}></div>
+                        <div className={`${navActive ? styles.active2 : styles.disactive3} ${styles.navButton}`}></div>
+                    </div>
                 </div>
             </div>
         </div>

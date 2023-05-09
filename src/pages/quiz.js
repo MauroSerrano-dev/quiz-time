@@ -2,23 +2,29 @@ import styles from '../styles/quiz.module.css'
 import { useEffect, useState } from 'react'
 import { withRouter } from 'next/router'
 import io from "socket.io-client";
+import { useSession, signIn, signOut } from "next-auth/react"
 
 let socket;
 
 export default withRouter((props) => {
+    const { data: session } = useSession()
     const { code } = props.router.query
 
     /* const { quizName } = props */
     const quizName = 'Perfil Comportamental'
     const [quiz, setQuiz] = useState()
+    const [room, setRoom] = useState()
     const [dots, setDots] = useState('')
-    const [currentQuestion, setCurrentQuestion] = useState(0)
-    const [state, setState] = useState('active')
+    const [joined, setJoined] = useState(false)
+    const [optionSelected, setOptionSelected] = useState()
 
     useEffect(() => {
-        getQuiz()
-        socketInitializer()
-    }, [])
+        if (session) {
+            getQuiz()
+            getRoom()
+            socketInitializer()
+        }
+    }, [session])
 
     useEffect(() => {
         setTimeout(() => setDots(prev => prev.length >= 3 ? '' : prev + '.'), 500)
@@ -36,6 +42,9 @@ export default withRouter((props) => {
             .catch(err => console.error(err))
     }
 
+    async function getRoom() {
+    }
+
     const socketInitializer = async () => {
         const options = {
             method: 'GET',
@@ -46,43 +55,79 @@ export default withRouter((props) => {
         socket = io();
 
         socket.on("getData", (data) => {
-            setCurrentQuestion(data.currentQuestion)
+            if (data.players.some(player => player.email === session.user.email))
+                setJoined(true)
+            setRoom(data)
         });
 
         socket.on("updateFields", (roomAttFields) => {
-            setCurrentQuestion(roomAttFields.currentQuestion)})
+            if(roomAttFields.currentQuestion)
+                setOptionSelected()
+            setRoom(prev => { return { ...prev, ...roomAttFields } })
+        })
     }
 
-    function nextQuestion() {
-        if (currentQuestion >= quiz.questions.length - 1)
-            setState('finish')
-        else
-            setCurrentQuestion(prev => prev + 1)
+    function answer(option) {
+        setOptionSelected(option)
+        socket.emit("updateRoom",
+            {
+                ...room, players: room.players.map(player =>
+                    player.email === session.user.email
+                        ? {
+                            ...player,
+                            answers: [
+                                ...player.answers.slice(0, room.currentQuestion),
+                                quiz.questions[room.currentQuestion].options[option],
+                                ...player.answers.slice(room.currentQuestion, player.answers.length)
+                            ]
+                        }
+                        : player)
+            });
+    }
+
+    function joinQuiz() {
+        setJoined(true)
+        socket.emit("updateRoom", { ...room, players: [...room.players, { email: session.user.email, points: 0 }] });
+    }
+
+    function leaveQuiz() {
+        setJoined(false)
+        socket.emit("updateRoom", { ...room, players: room.players.filter(player => player.email !== session.user.email) });
     }
 
     return (
         <div>
             <main>
                 <h1 className={styles.roomName}>{quizName}</h1>
-                {state === 'disable' &&
-                    <div className={styles.watingContainer}>
-                        <h3 className={styles.watingMsg}>Aguarde enquanto o Quiz começa</h3><h3 className={styles.dots}>{dots}</h3>
+                {room && room.state === 'disable' &&
+                    <div>
+                        {!joined &&
+                            <button onClick={joinQuiz}>Join</button>
+                        }
+                        {joined &&
+                            <div>
+                                <div className={styles.watingContainer}>
+                                    <h3 className={styles.watingMsg}>Aguarde enquanto o Quiz começa</h3><h3 className={styles.dots}>{dots}</h3>
+                                </div>
+                                <button onClick={leaveQuiz}>Leave</button>
+                            </div>
+                        }
                     </div>
                 }
-                {state === 'active' && quiz &&
+                {room && room.state === 'active' && quiz &&
                     <div>
                         <div className={styles.questionContainer}>
-                            <h2>{quiz.questions[currentQuestion].content}</h2>
+                            <h2>{quiz.questions[room.currentQuestion].content}</h2>
                         </div>
                         <div className={styles.optionsContainer}>
-                            <button onClick={nextQuestion}>{quiz.questions[currentQuestion].options[0].content}</button>
-                            <button onClick={nextQuestion}>{quiz.questions[currentQuestion].options[1].content}</button>
-                            <button onClick={nextQuestion}>{quiz.questions[currentQuestion].options[2].content}</button>
-                            <button onClick={nextQuestion}>{quiz.questions[currentQuestion].options[3].content}</button>
+                            <button className={optionSelected === 0 ? styles.optionSelected : ''} onClick={() => answer(0)}>{quiz.questions[room.currentQuestion].options[0].content}</button>
+                            <button className={optionSelected === 1 ? styles.optionSelected : ''} onClick={() => answer(1)}>{quiz.questions[room.currentQuestion].options[1].content}</button>
+                            <button className={optionSelected === 2 ? styles.optionSelected : ''} onClick={() => answer(2)}>{quiz.questions[room.currentQuestion].options[2].content}</button>
+                            <button className={optionSelected === 3 ? styles.optionSelected : ''} onClick={() => answer(3)}>{quiz.questions[room.currentQuestion].options[3].content}</button>
                         </div>
                     </div>
                 }
-                {state === 'finish' &&
+                {room && room.state === 'finish' &&
                     <div>
                         <h2>Finalizado</h2>
                     </div>
