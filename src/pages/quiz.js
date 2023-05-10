@@ -17,6 +17,8 @@ export default withRouter((props) => {
     const [dots, setDots] = useState('')
     const [joined, setJoined] = useState(false)
     const [optionSelected, setOptionSelected] = useState()
+    const [results, setResults] = useState([])
+    const [allResults, setAllResults] = useState([])
 
     useEffect(() => {
         if (session) {
@@ -25,6 +27,13 @@ export default withRouter((props) => {
             socketInitializer()
         }
     }, [session])
+
+    useEffect(() => {
+        if (room && room.state === 'finish') {
+            setResults(getResults())
+            setAllResults(getAllResults())
+        }
+    }, [room])
 
     useEffect(() => {
         setTimeout(() => setDots(prev => prev.length >= 3 ? '' : prev + '.'), 500)
@@ -61,38 +70,85 @@ export default withRouter((props) => {
         });
 
         socket.on("updateFields", (roomAttFields) => {
-            if(roomAttFields.currentQuestion)
+            if (roomAttFields.currentQuestion)
                 setOptionSelected()
             setRoom(prev => { return { ...prev, ...roomAttFields } })
         })
     }
 
     function answer(option) {
-        setOptionSelected(option)
-        socket.emit("updateRoom",
-            {
-                ...room, players: room.players.map(player =>
-                    player.email === session.user.email
-                        ? {
-                            ...player,
-                            answers: [
-                                ...player.answers.slice(0, room.currentQuestion),
-                                quiz.questions[room.currentQuestion].options[option],
-                                ...player.answers.slice(room.currentQuestion, player.answers.length)
-                            ]
-                        }
-                        : player)
-            });
+        if (optionSelected === option) {
+            setOptionSelected()
+            socket.emit("updateRoom",
+                {
+                    ...room, players: room.players.map(player =>
+                        player.email === session.user.email
+                            ? {
+                                ...player,
+                                answers: player.answers.filter((answer, i) => i !== room.currentQuestion)
+                            }
+                            : player
+                    )
+                })
+        }
+        else {
+            setOptionSelected(option)
+            socket.emit("updateRoom",
+                {
+                    ...room, players: room.players.map(player =>
+                        player.email === session.user.email
+                            ? {
+                                ...player,
+                                answers: [
+                                    ...player.answers.slice(0, room.currentQuestion),
+                                    quiz.questions[room.currentQuestion].options[option],
+                                    ...player.answers.slice(room.currentQuestion + 1, player.answers.length)
+                                ]
+                            }
+                            : player
+                    )
+                })
+        }
     }
 
     function joinQuiz() {
         setJoined(true)
-        socket.emit("updateRoom", { ...room, players: [...room.players, { email: session.user.email, points: 0 }] });
+        socket.emit("updateRoom", { ...room, players: [...room.players, { email: session.user.email, name: session.user.name,  answers: [] }] });
     }
 
     function leaveQuiz() {
         setJoined(false)
         socket.emit("updateRoom", { ...room, players: room.players.filter(player => player.email !== session.user.email) });
+    }
+
+    function getResults() {
+        return quiz.results.map(result => {
+            return {
+                ...result, points: room.players.filter(player => player.email === session.user.email)[0].answers
+                    .reduce((acc, answer) =>
+                        acc + answer.actions.reduce((accumulator, action) =>
+                            action.profile === result.name
+                                ? accumulator + action.points
+                                : accumulator
+                            , 0)
+                        , 0)
+            }
+        }).sort((a, b) => b.points - a.points).reduce((acc, result) => acc.length === 0 || acc[0].points === result.points ? [...acc, result] : acc, [])
+    }
+
+    function getAllResults() {
+        return quiz.results.map(result => {
+            return {
+                ...result, points: room.players.filter(player => player.email === session.user.email)[0].answers
+                    .reduce((acc, answer) =>
+                        acc + answer.actions.reduce((accumulator, action) =>
+                            action.profile === result.name
+                                ? accumulator + action.points
+                                : accumulator
+                            , 0)
+                        , 0)
+            }
+        }).sort((a, b) => b.points - a.points)
     }
 
     return (
@@ -127,9 +183,17 @@ export default withRouter((props) => {
                         </div>
                     </div>
                 }
-                {room && room.state === 'finish' &&
+                {room && quiz && room.state === 'finish' && results &&
                     <div>
                         <h2>Finalizado</h2>
+                        <div>
+                            {results.map((result, i) =>
+                                <div key={`Result: ${i}`}>
+                                    <img src={result.img} />
+                                    <p>{result.name} {result.points}</p>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 }
             </main>
