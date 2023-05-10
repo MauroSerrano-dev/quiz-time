@@ -55,13 +55,10 @@ export default withRouter((props) => {
     }
 
     const socketInitializer = async () => {
-        const options = {
-            method: 'GET',
-            headers: { code: code },
-        };
+        const options = { method: 'GET' }
         await fetch("/api/socket", options)
 
-        socket = io();
+        socket = io({ query: { code: code } });
 
         socket.on("getData", (data) => {
             if (data.players.some(player => player.email === session.user.email))
@@ -113,7 +110,7 @@ export default withRouter((props) => {
 
     function joinQuiz() {
         setJoined(true)
-        socket.emit("updateRoom", { ...room, players: [...room.players, { email: session.user.email, name: session.user.name,  answers: [] }] });
+        socket.emit("updateRoom", { ...room, players: [...room.players, { email: session.user.email, name: session.user.name, answers: [] }] });
     }
 
     function leaveQuiz() {

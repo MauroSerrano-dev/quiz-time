@@ -27,10 +27,7 @@ export default withRouter((props) => {
     }, [session])
 
     const socketInitializer = async () => {
-        const options = {
-            method: 'GET',
-            headers: { code: code },
-        };
+        const options = { method: 'GET' }
         await fetch("/api/socket", options)
 
         socket = io({ query: { code: code } })
