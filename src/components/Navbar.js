@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
-import styles from '../styles/components/Navbar.module.css'
+import styles from '../styles/components/NavBar.module.css'
 import { useRouter } from 'next/router'
 import { useSession, signIn, signOut } from "next-auth/react"
 
