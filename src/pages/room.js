@@ -27,14 +27,13 @@ export default withRouter((props) => {
     }, [session])
 
     const socketInitializer = async () => {
-        console.log('socketInitializer', code)
         const options = {
             method: 'GET',
             headers: { code: code },
         };
         await fetch("/api/socket", options)
 
-        socket = io()
+        socket = io({ query: { code: code } })
 
         socket.on("getData", (room) => {
             setRoom(room)
