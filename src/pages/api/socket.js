@@ -42,9 +42,10 @@ export default function SocketHandler(req, res) {
   res.socket.server.io = io;
 
   io.on("connection", (socket) => {
+    console.log('aa', req.headers.code)
     console.log('Socket.io client connected');
     // Get the current value of "active" from the process.env.COLL_ROOMS collection
-    mongoose.connection.collection(process.env.COLL_ROOMS).findOne({ owner: req.headers.email })
+    mongoose.connection.collection(process.env.COLL_ROOMS).findOne({ code: req.headers.code })
       .then((result) => {
         const room = { ...result };
         socket.emit("getData", room);

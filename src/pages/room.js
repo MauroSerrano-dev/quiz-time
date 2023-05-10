@@ -9,33 +9,37 @@ import { motion } from "framer-motion"
 
 let socket;
 
+const quizName = 'Perfil Comportamental'
+
 export default withRouter((props) => {
-    const [room, setRoom] = useState();
+    const [room, setRoom] = useState()
     const { data: session } = useSession()
-    const [disableShow, setDisableShow] = useState(false);
-    const [activeShow, setActiveShow] = useState(false);
+    const [disableShow, setDisableShow] = useState(false)
+    const [activeShow, setActiveShow] = useState(false)
+    const [quiz, setQuiz] = useState()
 
     const { code } = props.router.query
 
     useEffect(() => {
-        if (session) {
-            socketInitializer();
+        if (session && !room) {
+            socketInitializer()
         }
-    }, [session]);
+    }, [session])
 
     const socketInitializer = async () => {
+        console.log('socketInitializer', code)
         const options = {
             method: 'GET',
-            headers: { email: session.user.email },
+            headers: { code: code },
         };
         await fetch("/api/socket", options)
 
-        socket = io();
+        socket = io()
 
-        socket.on("getData", (data) => {
-            setRoom(data)
-            setDisableShow(data.state === 'disable')
-            setActiveShow(data.state === 'active')
+        socket.on("getData", (room) => {
+            setRoom(room)
+            setDisableShow(room.state === 'disable')
+            setActiveShow(room.state === 'active')
         });
 
         socket.on("updateFields", (roomAttFields) => {
@@ -48,17 +52,20 @@ export default withRouter((props) => {
             socket.emit("updateRoom", { ...room, state: 'finish' })
         else
             socket.emit("updateRoom", { ...room, currentQuestion: room.currentQuestion + 1 })
-    };
+    }
+
     const resetQuestions = async () => {
         socket.emit("updateRoom", { ...room, currentQuestion: 0 })
-    };
+    }
+
     const startQuiz = async () => {
         setDisableShow(false)
         setActiveShow(true)
         setTimeout(() => {
             socket.emit("updateRoom", { ...room, state: 'active' })
         }, 600)
-    };
+    }
+
     const disableQuiz = async () => {
         setDisableShow(true)
         setActiveShow(false)
@@ -66,14 +73,19 @@ export default withRouter((props) => {
             socket.emit("updateRoom", { ...room, state: 'disable' })
         }, 600)
 
-    };
+    }
 
     return (
         <div>
             <main>
-                <h1 className={styles.roomName}>Essa é a sala: {code}</h1>
-                {room &&
+                {room && Object.keys(room).length === 0 &&
                     <div>
+                        <h1 className={styles.roomName}>Esta sala não existe</h1>
+                    </div>
+                }
+                {room && Object.keys(room).length > 0 &&
+                    <div>
+                        <h1 className={styles.roomName}>Essa é a sala: {code}</h1>
                         {room.state === 'disable' &&
                             <motion.div
                                 initial={{ opacity: 0, y: 30 }}

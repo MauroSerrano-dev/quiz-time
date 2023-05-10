@@ -21,7 +21,7 @@ export default withRouter((props) => {
     const [allResults, setAllResults] = useState([])
 
     useEffect(() => {
-        if (session) {
+        if (session && !room) {
             getQuiz()
             getRoom()
             socketInitializer()
@@ -57,7 +57,7 @@ export default withRouter((props) => {
     const socketInitializer = async () => {
         const options = {
             method: 'GET',
-            headers: { email: 'mauro.r.serrano.f@gmail.com' },
+            headers: { code: code },
         };
         await fetch("/api/socket", options)
 
