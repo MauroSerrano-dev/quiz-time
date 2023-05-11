@@ -9,6 +9,12 @@ async function getRoom(code) {
   return result;
 }
 
+async function addRoom(room) {
+  const collection = await getMongoCollection(DATABASE, COLLECTION_NAME);
+  const result = await collection.insertOne({...room, state: 'disable', currentQuestion: 0, players: []});
+  return result.insertedId;
+}
+
 async function addUser(user) {
   const collection = await getMongoCollection(DATABASE, COLLECTION_NAME);
   const result = await collection.insertOne(user);
@@ -64,5 +70,6 @@ async function removeDailyQuestDate(userEmail, dailyQuestInfos) {
 
 export {
   getRoom,
-  updateRoom
+  updateRoom,
+  addRoom
 }

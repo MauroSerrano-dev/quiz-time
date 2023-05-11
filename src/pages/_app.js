@@ -1,17 +1,15 @@
 import '../styles/globals.css'
 import { SessionProvider } from 'next-auth/react'
-import Navbar from '../components/Navbar'
+import DataHandler from '@/components/DataHandler'
 
 function MyApp(props) {
   const { Component, pageProps } = props
 
   return (
-    <>
-      <SessionProvider>
-        <Navbar />
-        <Component {...pageProps} />
-      </SessionProvider>
-    </>
+    <SessionProvider>
+      <DataHandler pageProps={pageProps} Component={Component} />
+    </SessionProvider>
+
   )
 }
 

@@ -1,9 +1,8 @@
 import styles from '../styles/index.module.css'
-import { useSession, signIn, signOut } from "next-auth/react"
 import Head from 'next/head'
 
-export default function Index() {
-  const { data: session } = useSession()
+export default function Index(props) {
+  const { session } = props
 
   return (
     <div>
@@ -14,7 +13,6 @@ export default function Index() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        {false && session && <div className={styles.box} onClick={handleClick} style={{ backgroundColor: room.active ? 'red' : 'blue' }}></div>}
       </main>
     </div>
   );

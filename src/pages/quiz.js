@@ -2,12 +2,11 @@ import styles from '../styles/quiz.module.css'
 import { useEffect, useState } from 'react'
 import { withRouter } from 'next/router'
 import io from "socket.io-client";
-import { useSession, signIn, signOut } from "next-auth/react"
 
 let socket;
 
 export default withRouter((props) => {
-    const { data: session } = useSession()
+    const { session } = props
     const { code } = props.router.query
 
     /* const { quizName } = props */

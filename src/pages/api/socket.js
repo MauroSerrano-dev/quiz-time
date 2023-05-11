@@ -61,7 +61,6 @@ export default function SocketHandler(req, res) {
         : mongoose.model("room", {
           code: String,
           owner: String,
-          active: Boolean,
           currentQuestion: Number,
           players: Array,
           state: String,
@@ -70,7 +69,6 @@ export default function SocketHandler(req, res) {
         { code: updatedRoom.code },
         {
           ...updatedRoom,
-          active: updatedRoom.active,
           currentQuestion: updatedRoom.currentQuestion,
           players: updatedRoom.players,
           state: updatedRoom.state

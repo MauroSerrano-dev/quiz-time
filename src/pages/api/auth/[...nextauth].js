@@ -17,11 +17,18 @@ export default NextAuth({
           email: profile.email,
           image: profile.picture,
           createAt: new Date(),
+          quizzesStandard: ['Perfil Comportamental'],
+          quizzesCustom: [],
         };
       },
     }),
     // ...add more providers here
   ],
+  callbacks: {
+    session: async (session) => {
+      return Promise.resolve(session);
+    },
+  },
   secret: process.env.NEXTAUTH_SECRET,
   /*     jwt: {
         signingKey: process.env.NEXTAUTH_SECRET,

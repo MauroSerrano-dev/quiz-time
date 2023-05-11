@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import styles from '../styles/components/NavBar.module.css'
 import { useRouter } from 'next/router'
-import { useSession, signIn, signOut } from "next-auth/react"
 
 const MENU_LIST = [
     { name: 'Main', href: '/' },
@@ -12,8 +11,8 @@ const MENU_LIST = [
     { name: 'Support', href: '/support' },
 ]
 
-export default function Navbar() {
-    const { data: session } = useSession()
+export default function Navbar(props) {
+    const { session, signIn, signOut } = props
     const [navActive, setNavActive] = useState(false)
     const { pathname } = useRouter()
 

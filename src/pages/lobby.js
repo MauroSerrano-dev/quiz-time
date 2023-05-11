@@ -1,25 +1,35 @@
 import Router from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from '../styles/lobby.module.css'
-import Modal from "@/components/Modal";
+import Modal from "../components/Modal";
 import Select from "react-select";
 
 let socket;
 
-const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' },
-];
-
-export default function Lobby() {
+export default function Lobby(props) {
+    const { session } = props
+    const [newRoom, setNewRoom] = useState({ code: '', private: false })
     const [code, setCode] = useState('')
     const [requestState, setRequestState] = useState('denied')
     const [showModal, setShowModal] = useState(false)
     const [showModalOpacity, setShowModalOpacity] = useState(false)
 
+    useEffect(() => {
+        if (session && !newRoom.owner) {
+            setNewRoom(prev => { return { ...prev, owner: session.user.email } })
+        }
+    }, [session])
+
     function handleCodeChange(event) {
         setCode(event.target.value)
+    }
+
+    function handleNewCodeChange(event) {
+        setNewRoom(prev => { return { ...prev, code: event.target.value } })
+    }
+
+    function handleNewIsPrivite(event) {
+        setNewRoom(prev => { return { ...prev, private: event.target.checked } })
     }
 
     async function handleSubmitCode() {
@@ -44,7 +54,17 @@ export default function Lobby() {
     }
 
     function createNewRoom() {
+        console.log(newRoom)
+        const options = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newRoom)
+        };
 
+        fetch('/api/rooms', options)
+            .then(response => response.json())
+            .then(response => console.log(response))
+            .catch(err => console.error(err));
     }
 
     function openModal() {
@@ -55,6 +75,10 @@ export default function Lobby() {
     function closeModal() {
         setShowModalOpacity(false)
         setTimeout(() => setShowModal(false), 300)
+    }
+
+    function handleQuizSelectorChange(event) {
+        setNewRoom(prev => { return { ...prev, quizInfo: session.user.quizzesStandardInfos.concat(session.user.quizzesCustomInfos)[event.value] } })
     }
 
     return (
@@ -69,13 +93,13 @@ export default function Lobby() {
                     body={
                         <div>
                             <label>Nome: </label>
-                            <input />
+                            <input onChange={handleNewCodeChange} value={newRoom.code} />
                             <label>Private: </label>
-                            <input type="checkbox" />
+                            <input type="checkbox" onChange={handleNewIsPrivite} checked={newRoom.privite} />
                             <Select
                                 placeholder='Quiz'
-                                onChange={() => console.log('')}
-                                options={options}
+                                onChange={handleQuizSelectorChange}
+                                options={session.user.quizzesStandardInfos.concat(session.user.quizzesCustomInfos).map((quiz, i) => { return { value: i, label: quiz.name } })}
                             />
                         </div>
                     }

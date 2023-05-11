@@ -1,19 +1,15 @@
 import { withRouter } from 'next/router'
 import { QRCode } from 'react-qrcode-logo';
 import styles from '../styles/room.module.css'
-import $ from 'jquery'
 import io from "socket.io-client";
 import { useEffect, useState } from 'react';
-import { useSession, signIn, signOut } from "next-auth/react"
 import { motion } from "framer-motion"
 
 let socket;
 
-const quizName = 'Perfil Comportamental'
-
 export default withRouter((props) => {
+    const { session } = props
     const [room, setRoom] = useState()
-    const { data: session } = useSession()
     const [disableShow, setDisableShow] = useState(false)
     const [activeShow, setActiveShow] = useState(false)
     const [quiz, setQuiz] = useState()
@@ -25,6 +21,12 @@ export default withRouter((props) => {
             socketInitializer()
         }
     }, [session])
+
+    useEffect(() => {
+        if (room && !quiz) {
+            getQuiz()
+        }
+    }, [room])
 
     const socketInitializer = async () => {
         const options = { method: 'GET' }
@@ -40,11 +42,23 @@ export default withRouter((props) => {
 
         socket.on("updateFields", (roomAttFields) => {
             setRoom(prev => { return { ...prev, ...roomAttFields } })
-        });
-    };
+        })
+    }
+
+    async function getQuiz() {
+        const options = {
+            method: 'GET',
+            headers: { "quizname": room.quizInfo.name },
+        }
+
+        fetch(room.quizInfo.type === 'standard' ? '/api/quizzesStandard' : '/api/quizzesCustom', options)
+            .then(response => response.json())
+            .then(response => setQuiz(response.quiz))
+            .catch(err => console.error(err))
+    }
 
     const nextQuestion = async () => {
-        if (room.currentQuestion >= 24)
+        if (room.currentQuestion >= quiz.questions.length - 1)
             socket.emit("updateRoom", { ...room, state: 'finish' })
         else
             socket.emit("updateRoom", { ...room, currentQuestion: room.currentQuestion + 1 })
