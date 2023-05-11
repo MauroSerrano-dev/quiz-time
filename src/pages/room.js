@@ -104,7 +104,7 @@ export default withRouter((props) => {
                                 className={styles.disableContainer}
                             >
                                 <div className={styles.qrContainer}>
-                                    <div className={styles.qrCode}><QRCode value={`quiz-maker.herokuapp.com/quiz?code=${code}`} size={200} ecLevel='H' qrStyle='dots' logoImage='quiz-time-logo.png' logoWidth={200 * 0.6} logoOpacity={0.5} eyeColor={{ outer: '#00a0dc', inner: '#005270' }} eyeRadius={5} /></div>
+                                    <div className={styles.qrCode}><QRCode value={`quiztime.pt/quiz?code=${code}`} size={200} ecLevel='H' qrStyle='dots' logoImage='quiz-time-logo.png' logoWidth={200 * 0.6} logoOpacity={0.5} eyeColor={{ outer: '#00a0dc', inner: '#005270' }} eyeRadius={5} /></div>
                                     <h2>Scan Me!</h2>
                                     <div className={styles.frame}></div>
                                     <div className={`${styles.frame} ${styles.border}`}></div>
