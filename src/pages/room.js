@@ -65,7 +65,8 @@ export default withRouter((props) => {
     }
 
     const prevQuestion = async () => {
-        socket.emit("updateRoom", { ...room, currentQuestion: room.currentQuestion - 1 })
+        if(room.currentQuestion > 0)
+            socket.emit("updateRoom", { ...room, currentQuestion: room.currentQuestion - 1 })
     }
 
     async function showResults() {
@@ -131,7 +132,7 @@ export default withRouter((props) => {
                                     <button>{quiz.questions[room.currentQuestion].options[2].content}</button>
                                     <button>{quiz.questions[room.currentQuestion].options[3].content}</button>
                                 </div>                                
-                                <button onClick={prevQuestion}>Prev Question</button>
+                                <button onClick={prevQuestion} disabled={room.currentQuestion === 0}>Prev Question</button>
                                 <button onClick={nextQuestion}>Next Question</button>
                                 <button onClick={resetQuiz}>Reset Quiz</button>
                             </motion.div>

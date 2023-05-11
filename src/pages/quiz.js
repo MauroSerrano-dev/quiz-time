@@ -72,8 +72,8 @@ export default withRouter((props) => {
         });
 
         socket.on("updateFields", (roomAttFields) => {
-            /* if (roomAttFields.currentQuestion)
-                updateOptionSelected() */
+            if(roomAttFields.players && roomAttFields.players.every(player => player.email !== session.user.email))
+                setJoined(false)
             setRoom(prev => { return { ...prev, ...roomAttFields } })
         })
     }
@@ -129,7 +129,7 @@ export default withRouter((props) => {
     function getResults() {
         return quiz.results.map(result => {
             return {
-                ...result, points: room.players.filter(player => player.email === session.user.email)[0].answers
+                ...result, points: room.players.filter(player => player.email === session.user.email)[0]?.answers
                     .reduce((acc, answer) =>
                         acc + answer.actions.reduce((accumulator, action) =>
                             action.profile === result.name
@@ -144,7 +144,7 @@ export default withRouter((props) => {
     function getAllResults() {
         return quiz.results.map(result => {
             return {
-                ...result, points: room.players.filter(player => player.email === session.user.email)[0].answers
+                ...result, points: room.players.filter(player => player.email === session.user.email)[0]?.answers
                     .reduce((acc, answer) =>
                         acc + answer.actions.reduce((accumulator, action) =>
                             action.profile === result.name
@@ -199,7 +199,7 @@ export default withRouter((props) => {
                         <div>
                             {results.map((result, i) =>
                                 <div key={`Result: ${i}`}>
-                                    <img src={result.img} />
+                                    <img style={{borderRadius: '0.5rem'}} src={result.img} />
                                     <p>{result.name} {result.points}</p>
                                 </div>
                             )}

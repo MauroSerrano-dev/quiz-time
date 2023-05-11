@@ -126,5 +126,5 @@ export default function Lobby(props) {
                 {requestState === 'fail' && <p>Esta sala não existe</p>}
             </main>
         </div>
-    );
+    )
 }
