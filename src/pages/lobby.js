@@ -78,7 +78,11 @@ export default function Lobby(props) {
 
     function closeModal() {
         setShowModalOpacity(false)
-        setTimeout(() => setShowModal(false), 300)
+        setTimeout(() => {
+            setShowModal(false)
+            setNewRoom(prev => { return { ...prev, password: '', code: '', private: false } })
+                , 300
+        })
     }
 
     function handleQuizSelectorChange(event) {
