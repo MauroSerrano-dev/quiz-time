@@ -88,12 +88,12 @@ export default function Lobby(props) {
             showInfoToast("Nenhum Quiz Selecitonado.", 3000)
             return
         }
-        if (!validateCodeLength(newRoom.code)) {
-            showInfoToast("O nome deve conter ao menos 3 letras ou números.", 5000)
-            return
-        }
         if (!validateCodeCharacters(newRoom.code)) {
             showInfoToast("O nome deve conter apenas letras, números, espaços ou hífens.", 5000)
+            return
+        }
+        if (!validateCodeLength(newRoom.code)) {
+            showInfoToast("O nome deve conter ao menos 3 letras ou números.", 5000)
             return
         }
         if ((newRoom.private && newRoom.password.length < 3)) {
