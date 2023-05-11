@@ -17,8 +17,8 @@ export default NextAuth({
           email: profile.email,
           image: profile.picture,
           createAt: new Date(),
-          quizzesStandard: ['Perfil Comportamental'],
-          quizzesCustom: [],
+          quizzesStandardInfo: ['Perfil Comportamental'],
+          quizzesCustomInfo: [],
         };
       },
     }),
