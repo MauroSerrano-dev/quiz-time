@@ -10,6 +10,19 @@ export function validateCodeCharacters(code) {
 }
 
 /**
+ * Function that checks if a given string contains accented characters.
+ * Returns true if it does, otherwise returns false.
+ * @param {string} str - The string to be checked.
+ * @returns {boolean} - True if the string contains accented characters, false otherwise.
+ */
+export function containsAccents(str) {
+    // Regular expression to match any character with acute, circumflex, tilde or umlaut accents in vowels a, e, i, o, u (uppercase or lowercase).
+    const ACCENTS_REGEX = /[áàãâäéèêëíìîïóòõôöúùûü]/i;
+    // Return true if the regular expression matches any character in the string, false otherwise.
+    return ACCENTS_REGEX.test(str);
+  }
+
+/**
  * Function that checks if a code contains at least 3 letters or numbers.
  * Returns true if it does, otherwise returns false.
  * @param {string} code - The code to validate

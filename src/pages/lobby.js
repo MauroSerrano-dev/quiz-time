@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import styles from '../styles/lobby.module.css'
 import Modal from "../components/Modal";
 import Select from "react-select";
-import { validateCodeCharacters, validateCodeLength } from "../../utils/validations";
+import { validateCodeCharacters, validateCodeLength, containsAccents } from "../../utils/validations";
 import 'react-toastify/dist/ReactToastify.css';
 import { showInfoToast } from "../../utils/toasts";
 
@@ -86,6 +86,10 @@ export default function Lobby(props) {
     async function createNewRoom() {
         if (!newRoom.quizInfo) {
             showInfoToast("Nenhum Quiz Selecitonado.", 3000)
+            return
+        }        
+        if (containsAccents(newRoom.code)) {
+            showInfoToast("O nome não pode conter acentos.", 3000)
             return
         }
         if (!validateCodeCharacters(newRoom.code)) {

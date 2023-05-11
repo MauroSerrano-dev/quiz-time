@@ -206,7 +206,7 @@ const quiz = {
             optionsRandom: false
         },
         {
-            content: 'Se eu fosse biblionário...',
+            content: 'Se eu fosse bilionário...',
             options: [
                 { content: 'Faria doações para muitas entidades', actions: [{ profile: 'Comunicador', points: 1 }] },
                 { content: 'Criaria uma poupança avantajada', actions: [{ profile: 'Organizador', points: 1 }] },
