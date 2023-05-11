@@ -8,7 +8,7 @@ let socket;
 
 export default function Lobby(props) {
     const { session } = props
-    const [newRoom, setNewRoom] = useState({ code: '', private: false })
+    const [newRoom, setNewRoom] = useState({ code: '', private: false, password: '' })
     const [code, setCode] = useState('')
     const [requestState, setRequestState] = useState('denied')
     const [showModal, setShowModal] = useState(false)
@@ -28,7 +28,13 @@ export default function Lobby(props) {
         setNewRoom(prev => { return { ...prev, code: event.target.value } })
     }
 
-    function handleNewIsPrivite(event) {
+    function handleNewPasswordChange(event) {
+        setNewRoom(prev => { return { ...prev, password: event.target.value } })
+    }
+
+    function handleNewIsPrivate(event) {
+        if (!event.target.checked)
+            setNewRoom(prev => { return { ...prev, password: '' } })
         setNewRoom(prev => { return { ...prev, private: event.target.checked } })
     }
 
@@ -40,7 +46,6 @@ export default function Lobby(props) {
         await fetch("/api/rooms", options)
             .then(response => response.json())
             .then(response => {
-                console.log(response)
                 if (response.room) {
                     Router.push(`/room?code=${code}`)
                 }
@@ -54,7 +59,6 @@ export default function Lobby(props) {
     }
 
     function createNewRoom() {
-        console.log(newRoom)
         const options = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -78,7 +82,7 @@ export default function Lobby(props) {
     }
 
     function handleQuizSelectorChange(event) {
-        setNewRoom(prev => { return { ...prev, quizInfo: session.user.quizzesStandardInfos.concat(session.user.quizzesCustomInfos)[event.value] } })
+        setNewRoom(prev => { return { ...prev, quizInfo: session.user.quizzesInfos[event.value] } })
     }
 
     return (
@@ -87,7 +91,7 @@ export default function Lobby(props) {
                 {showModal && <Modal closeModal={closeModal} showModalOpacity={showModalOpacity}
                     head={
                         <div>
-                            <h2>Criar Game</h2>
+                            <h2>Criar Sala</h2>
                         </div>
                     }
                     body={
@@ -95,11 +99,17 @@ export default function Lobby(props) {
                             <label>Nome: </label>
                             <input onChange={handleNewCodeChange} value={newRoom.code} />
                             <label>Private: </label>
-                            <input type="checkbox" onChange={handleNewIsPrivite} checked={newRoom.privite} />
+                            <input type="checkbox" onChange={handleNewIsPrivate} checked={newRoom.private} />
+                            {newRoom.private &&
+                                <div>
+                                    <label>Senha: </label>
+                                    <input onChange={handleNewPasswordChange} value={newRoom.password} />
+                                </div>
+                            }
                             <Select
                                 placeholder='Quiz'
                                 onChange={handleQuizSelectorChange}
-                                options={session.user.quizzesStandardInfos.concat(session.user.quizzesCustomInfos).map((quiz, i) => { return { value: i, label: quiz.name } })}
+                                options={session.user.quizzesInfos.map((quiz, i) => { return { value: i, label: quiz.name } })}
                             />
                         </div>
                     }
@@ -112,7 +122,7 @@ export default function Lobby(props) {
                 />}
                 <input onChange={handleCodeChange} value={code} />
                 <button onClick={handleSubmitCode}>Entrar</button>
-                <button onClick={openModal}>Criar Game</button>
+                <button onClick={openModal}>Criar Sala</button>
                 {requestState === 'fail' && <p>Esta sala não existe</p>}
             </main>
         </div>

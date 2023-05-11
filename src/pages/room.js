@@ -64,8 +64,20 @@ export default withRouter((props) => {
             socket.emit("updateRoom", { ...room, currentQuestion: room.currentQuestion + 1 })
     }
 
-    const resetQuestions = async () => {
-        socket.emit("updateRoom", { ...room, currentQuestion: 0 })
+    const prevQuestion = async () => {
+        socket.emit("updateRoom", { ...room, currentQuestion: room.currentQuestion - 1 })
+    }
+
+    async function showResults() {
+        socket.emit("updateRoom", { ...room, state: 'results' })
+    }
+
+    const resetQuiz = async () => {
+        setDisableShow(true)
+        setActiveShow(false)
+        setTimeout(() => {
+            socket.emit("updateRoom", { ...room, state: 'disable', currentQuestion: 0, players: [] })
+        }, 600)
     }
 
     const startQuiz = async () => {
@@ -74,15 +86,6 @@ export default withRouter((props) => {
         setTimeout(() => {
             socket.emit("updateRoom", { ...room, state: 'active' })
         }, 600)
-    }
-
-    const disableQuiz = async () => {
-        setDisableShow(true)
-        setActiveShow(false)
-        setTimeout(() => {
-            socket.emit("updateRoom", { ...room, state: 'disable' })
-        }, 600)
-
     }
 
     return (
@@ -112,22 +115,36 @@ export default withRouter((props) => {
                                 </div>
                                 <button onClick={startQuiz}>Start Quiz</button>
                             </motion.div>}
-                        {room.state === 'active' &&
+                        {room.state === 'active' && quiz &&
                             <motion.div
                                 initial={{ opacity: 0 }}
                                 animate={activeShow ? { opacity: 1 } : { opacity: 0 }}
                                 transition={{ delay: activeShow ? 0.5 : 0, duration: activeShow ? 1.2 : 0.6, easings: ["easeInOut"] }}
                                 className={styles.activeContainer}
                             >
+                                <div className={styles.questionContainer}>
+                                    <h2>{quiz.questions[room.currentQuestion].content}</h2>
+                                </div>
+                                <div className={styles.optionsContainer}>
+                                    <button>{quiz.questions[room.currentQuestion].options[0].content}</button>
+                                    <button>{quiz.questions[room.currentQuestion].options[1].content}</button>
+                                    <button>{quiz.questions[room.currentQuestion].options[2].content}</button>
+                                    <button>{quiz.questions[room.currentQuestion].options[3].content}</button>
+                                </div>                                
+                                <button onClick={prevQuestion}>Prev Question</button>
                                 <button onClick={nextQuestion}>Next Question</button>
-                                <button onClick={resetQuestions}>Reset Questions</button>
-                                <button onClick={disableQuiz}>Disable Quiz</button>
+                                <button onClick={resetQuiz}>Reset Quiz</button>
                             </motion.div>
                         }
                         {room.state === 'finish' &&
                             <div>
-                                <button onClick={resetQuestions}>Reset Questions</button>
-                                <button onClick={disableQuiz}>Disable Quiz</button>
+                                <button onClick={resetQuiz}>Reset Quiz</button>
+                                <button onClick={showResults}>Mostrar Resultados</button>
+                            </div>
+                        }
+                        {room.state === 'results' &&
+                            <div>
+                                <button onClick={resetQuiz}>Reset Quiz</button>
                             </div>
                         }
                         <div>

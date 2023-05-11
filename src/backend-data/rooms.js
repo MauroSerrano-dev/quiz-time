@@ -34,7 +34,6 @@ async function getUserByEmail(email) {
 }
 
 async function updateRoom(room) {
-  console.log('eitaaaaaaaaaaaaaaa')
   const collection = await getMongoCollection(DATABASE, COLLECTION_NAME);
   delete room._id;
   const result = await collection.updateOne(

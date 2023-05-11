@@ -28,6 +28,9 @@ export default withRouter((props) => {
     }, [session])
 
     useEffect(() => {
+        if (room && joined) {
+            updateOptionSelected()
+        }
         if (room && room.state === 'finish') {
             setResults(getResults())
             setAllResults(getAllResults())
@@ -59,17 +62,27 @@ export default withRouter((props) => {
 
         socket = io({ query: { code: code } });
 
-        socket.on("getData", (data) => {
-            if (data.players.some(player => player.email === session.user.email))
+        socket.on("getData", (startRoom) => {
+            if (startRoom.players.some(player => player.email === session.user.email)) {
                 setJoined(true)
-            setRoom(data)
+                if (startRoom.players.filter(player => player.email === session.user.email)[0].answers.some(answer => answer.questionIndex === startRoom.currentQuestion))
+                    setOptionSelected(startRoom.players.filter(player => player.email === session.user.email)[0].answers.filter(answer => answer.questionIndex === startRoom.currentQuestion)[0].optionIndex)
+            }
+            setRoom(startRoom)
         });
 
         socket.on("updateFields", (roomAttFields) => {
-            if (roomAttFields.currentQuestion)
-                setOptionSelected()
+            /* if (roomAttFields.currentQuestion)
+                updateOptionSelected() */
             setRoom(prev => { return { ...prev, ...roomAttFields } })
         })
+    }
+
+    function updateOptionSelected() {
+        if (room.players.filter(player => player.email === session.user.email)[0]?.answers.some(answer => answer.questionIndex === room.currentQuestion))
+            setOptionSelected(room.players.filter(player => player.email === session.user.email)[0].answers.filter(answer => answer.questionIndex === room.currentQuestion)[0].optionIndex)
+        else
+            setOptionSelected()
     }
 
     function answer(option) {
@@ -81,7 +94,7 @@ export default withRouter((props) => {
                         player.email === session.user.email
                             ? {
                                 ...player,
-                                answers: player.answers.filter((answer, i) => i !== room.currentQuestion)
+                                answers: player.answers.filter(answer => answer.questionIndex !== room.currentQuestion)
                             }
                             : player
                     )
@@ -95,11 +108,7 @@ export default withRouter((props) => {
                         player.email === session.user.email
                             ? {
                                 ...player,
-                                answers: [
-                                    ...player.answers.slice(0, room.currentQuestion),
-                                    quiz.questions[room.currentQuestion].options[option],
-                                    ...player.answers.slice(room.currentQuestion + 1, player.answers.length)
-                                ]
+                                answers: player.answers.filter(answer => answer.questionIndex !== room.currentQuestion).concat([{ ...quiz.questions[room.currentQuestion].options[option], questionIndex: room.currentQuestion, optionIndex: option }])
                             }
                             : player
                     )
@@ -166,7 +175,7 @@ export default withRouter((props) => {
                         }
                     </div>
                 }
-                {room && room.state === 'active' && quiz &&
+                {room && room.state === 'active' && quiz && joined &&
                     <div>
                         <div className={styles.questionContainer}>
                             <h2>{quiz.questions[room.currentQuestion].content}</h2>
@@ -179,9 +188,14 @@ export default withRouter((props) => {
                         </div>
                     </div>
                 }
-                {room && quiz && room.state === 'finish' && results &&
+                {room && quiz && room.state === 'finish' && joined &&
                     <div>
                         <h2>Finalizado</h2>
+                    </div>
+                }
+                {room && quiz && room.state === 'results' && results && joined &&
+                    <div>
+                        <h2>Resultado</h2>
                         <div>
                             {results.map((result, i) =>
                                 <div key={`Result: ${i}`}>
