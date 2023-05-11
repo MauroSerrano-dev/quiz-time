@@ -47,7 +47,7 @@ export default withRouter((props) => {
             headers: { "quizname": quizName },
         };
 
-        fetch('/api/quizzesStandard', options)
+        await fetch('/api/quizzesStandard', options)
             .then(response => response.json())
             .then(response => setQuiz(response.quiz))
             .catch(err => console.error(err))

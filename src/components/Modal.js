@@ -20,7 +20,7 @@ export default function Modal(props) {
                 className={styles.container}
                 initial={{ opacity: 0 }}
                 animate={showModalOpacity ? { opacity: 1 } : { opacity: 0 }}
-                transition={{ duration: showModalOpacity ? 0.5 : 0.3, easings: ["easeInOut"] }}
+                transition={{ duration: showModalOpacity ? 0.5 : 0.3, ease: [.62, -0.18, .32, 1.17] }}
             >
                 <div className={styles.background} onClick={closeModal}>
                 </div>
@@ -28,7 +28,7 @@ export default function Modal(props) {
                     className={styles.modal}
                     initial={{ scale: 0.7 }}
                     animate={showModalOpacity ? { scale: 1 } : { scale: 0.7 }}
-                    transition={{ duration: showModalOpacity ? 0.5 : 0.3, easings: ["easeInOut"] }}
+                    transition={{ duration: showModalOpacity ? 0.5 : 0.3, ease: [.62, -0.18, .32, 1.17] }}
                 >
                     <div className={styles.content}>
                         <div className={styles.head}>{head}</div>

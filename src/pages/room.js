@@ -51,7 +51,7 @@ export default withRouter((props) => {
             headers: { "quizname": room.quizInfo.name },
         }
 
-        fetch(room.quizInfo.type === 'standard' ? '/api/quizzesStandard' : '/api/quizzesCustom', options)
+        await fetch(room.quizInfo.type === 'standard' ? '/api/quizzesStandard' : '/api/quizzesCustom', options)
             .then(response => response.json())
             .then(response => setQuiz(response.quiz))
             .catch(err => console.error(err))
@@ -99,7 +99,7 @@ export default withRouter((props) => {
                 }
                 {room && Object.keys(room).length > 0 &&
                     <div>
-                        <h1 className={styles.roomName}>Essa é a sala: {code}</h1>
+                        <h1 className={styles.roomName}>Essa é a sala: {room.name}</h1>
                         {room.state === 'disable' &&
                             <motion.div
                                 initial={{ opacity: 0, y: 30 }}
