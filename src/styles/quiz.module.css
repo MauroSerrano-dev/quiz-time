@@ -1,27 +1,58 @@
+.container {
+    --text-color: var(--text-white);
+}
+
+.roomName {
+    margin-bottom: 1rem;
+}
+
 .watingContainer {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     text-align: center;
     position: relative;
-    width: 287px;
+    width: 350px;
 }
 
-.watingMsg{
-    width: 280px;
-}
-
-.dots {
-    width: 15px;
+.watingMsg {
     text-align: start;
+    width: 335px;
+}
+
+.questionContainer {
+    margin-bottom: 1rem;
 }
 
 .optionsContainer {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 1rem;
+    --text-color: var(--text-black);
+}
+
+.option {
+    background-color: var(--global-white);
+    border-radius: 0.5rem;
+
+    width: 250px;
+    height: 40px;
+
+    transition: background-color 200ms ease-in-out;
+}
+
+.option p {
+    text-align: start;
+    margin-left: 1rem;
 }
 
 .optionSelected {
-    background-color: green;
+    background-color: #a6b8fb;
+    outline: 2px;
+    outline-style: solid;
+    outline-color: #1934a9;
 }

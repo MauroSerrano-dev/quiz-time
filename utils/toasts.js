@@ -2,7 +2,7 @@ import { toast } from 'react-toastify'
 
 export function showInfoToast(msg, time) {
     toast.info(msg, {
-        position: "top-center",
+        position: 'top-center',
         autoClose: time,
         hideProgressBar: false,
         closeOnClick: true,

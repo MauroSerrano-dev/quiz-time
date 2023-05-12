@@ -2,6 +2,7 @@ import styles from '../styles/quiz.module.css'
 import { useEffect, useState } from 'react'
 import { withRouter } from 'next/router'
 import io from "socket.io-client";
+import { motion } from "framer-motion"
 
 let socket;
 
@@ -18,6 +19,7 @@ export default withRouter((props) => {
     const [optionSelected, setOptionSelected] = useState()
     const [results, setResults] = useState([])
     const [allResults, setAllResults] = useState([])
+    const [questionTransition, setQuestionTransition] = useState(false)
 
     useEffect(() => {
         if (session && !room) {
@@ -72,9 +74,17 @@ export default withRouter((props) => {
         });
 
         socket.on("updateFields", (roomAttFields) => {
-            if(roomAttFields.players && roomAttFields.players.every(player => player.email !== session.user.email))
+            if (roomAttFields.players && roomAttFields.players.every(player => player.email !== session.user.email))
                 setJoined(false)
-            setRoom(prev => { return { ...prev, ...roomAttFields } })
+            if (roomAttFields.currentQuestion !== undefined) {
+                setQuestionTransition(true)
+                setTimeout(() => {
+                    setRoom(prev => { return { ...prev, ...roomAttFields } })
+                    setQuestionTransition(false)
+                }, 250)
+            }
+            else
+                setRoom(prev => { return { ...prev, ...roomAttFields } })
         })
     }
 
@@ -157,9 +167,13 @@ export default withRouter((props) => {
     }
 
     return (
-        <div>
+        <motion.div className={styles.container}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.5, ease: [.62, -0.18, .32, 1.17] }}
+        >
             <main>
-                <h1 className={styles.roomName}>{quizName}</h1>
+                <h3 className={styles.roomName}>{quizName}</h3>
                 {room && room.state === 'disable' &&
                     <div>
                         {!joined &&
@@ -168,7 +182,7 @@ export default withRouter((props) => {
                         {joined &&
                             <div>
                                 <div className={styles.watingContainer}>
-                                    <h3 className={styles.watingMsg}>Aguarde enquanto o Quiz começa</h3><h3 className={styles.dots}>{dots}</h3>
+                                    <h3 className={styles.watingMsg}>Aguarde enquanto o Quiz começa{dots}</h3>
                                 </div>
                                 <button onClick={leaveQuiz}>Leave</button>
                             </div>
@@ -176,17 +190,21 @@ export default withRouter((props) => {
                     </div>
                 }
                 {room && room.state === 'active' && quiz && joined &&
-                    <div>
+                    <motion.div className={styles.questionOptions}
+                        initial={{ opacity: 0 }}
+                        animate={questionTransition ? { opacity: 0 } : { opacity: 1 }}
+                        transition={{ duration: 0.2, ease: [.62, -0.18, .32, 1.17] }}
+                    >
                         <div className={styles.questionContainer}>
-                            <h2>{quiz.questions[room.currentQuestion].content}</h2>
+                            <h2>{room.currentQuestion + 1}. {quiz.questions[room.currentQuestion].content}</h2>
                         </div>
                         <div className={styles.optionsContainer}>
-                            <button className={optionSelected === 0 ? styles.optionSelected : ''} onClick={() => answer(0)}>{quiz.questions[room.currentQuestion].options[0].content}</button>
-                            <button className={optionSelected === 1 ? styles.optionSelected : ''} onClick={() => answer(1)}>{quiz.questions[room.currentQuestion].options[1].content}</button>
-                            <button className={optionSelected === 2 ? styles.optionSelected : ''} onClick={() => answer(2)}>{quiz.questions[room.currentQuestion].options[2].content}</button>
-                            <button className={optionSelected === 3 ? styles.optionSelected : ''} onClick={() => answer(3)}>{quiz.questions[room.currentQuestion].options[3].content}</button>
+                            <button className={`${styles.option} ${optionSelected === 0 ? styles.optionSelected : ''}`} onClick={() => answer(0)}><p>{quiz.questions[room.currentQuestion].options[0].content}</p></button>
+                            <button className={`${styles.option} ${optionSelected === 1 ? styles.optionSelected : ''}`} onClick={() => answer(1)}><p>{quiz.questions[room.currentQuestion].options[1].content}</p></button>
+                            <button className={`${styles.option} ${optionSelected === 2 ? styles.optionSelected : ''}`} onClick={() => answer(2)}><p>{quiz.questions[room.currentQuestion].options[2].content}</p></button>
+                            <button className={`${styles.option} ${optionSelected === 3 ? styles.optionSelected : ''}`} onClick={() => answer(3)}><p>{quiz.questions[room.currentQuestion].options[3].content}</p></button>
                         </div>
-                    </div>
+                    </motion.div>
                 }
                 {room && quiz && room.state === 'finish' && joined &&
                     <div>
@@ -199,7 +217,7 @@ export default withRouter((props) => {
                         <div>
                             {results.map((result, i) =>
                                 <div key={`Result: ${i}`}>
-                                    <img style={{borderRadius: '0.5rem'}} src={result.img} />
+                                    <img style={{ borderRadius: '0.5rem' }} src={result.img} />
                                     <p>{result.name} {result.points}</p>
                                 </div>
                             )}
@@ -207,6 +225,6 @@ export default withRouter((props) => {
                     </div>
                 }
             </main>
-        </div>
+        </motion.div>
     )
 })

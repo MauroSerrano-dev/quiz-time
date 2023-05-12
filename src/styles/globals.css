@@ -1,8 +1,22 @@
+@font-face {
+  font-family: montserrat-regular;
+  src: url(../../public/Montserrat-Regular.ttf);
+}
+
+@font-face {
+  font-family: montserrat-extrabold;
+  src: url(../../public/Montserrat-ExtraBold.ttf);
+}
+
 :root {
   --body-background: #8a8a8a;
-  --body-background-color: #424242;
+  --body-background-color: #1c222c;
   --body-background-size: 1em 1em;
   --global-white: #e5e5e5;
+  --global-black: #1d1d1d;
+  --text-black: #0a0a0a;
+  --text-white: #e5e5e5;
+  --text-color: var(--text-black);
   --global-modal-background: rgba(0, 0, 0, 0.5);
 }
 
@@ -58,8 +72,16 @@ main {
   text-align: center;
 }
 
-p, h1, h2, h3, h4, h5, h6 {
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: montserrat-regular;
   text-align: center;
+  color: var(--text-color);
 }
 
 @media (prefers-color-scheme: light) {

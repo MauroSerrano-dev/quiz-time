@@ -5,13 +5,12 @@
     width: 100%;
     justify-content: space-between;
     align-items: center;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.3);
     transition: all 650ms ease-in-out;
     z-index: 1;
     margin-bottom: 2rem;
     padding-left: 1rem;
     padding-right: 1rem;
-
 }
 
 .leftSide {
@@ -40,16 +39,19 @@
 }
 
 .rightSide {
-    width: 20%;
     display: flex;
     align-items: center;
     justify-content: flex-end;
+
+    width: 20%;
+    gap: 1rem;
     margin-right: 1rem;
 }
 
 .rightSideLogin {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+
     gap: 0.5rem;
 }
 
@@ -70,8 +72,7 @@
 
 .nav_menu_list {
     display: flex;
-    transition: all 0.2s;
-    transition: all 650ms ease-in-out;
+    transition: right 650ms ease-in-out;
     background-color: transparent;
     position: unset;
     flex-direction: row;
@@ -187,10 +188,10 @@
     .nav_menu_list {
         flex-direction: column;
         position: fixed;
-        width: 288px;
+        width: 150px;
         min-height: calc(100vh - 60px);
         height: 60px;
-        background-color: rgb(189, 189, 189);
+        background-color: #3d485b;
         row-gap: 24px;
         right: -288px;
         padding: 24px 16px;
@@ -199,6 +200,11 @@
 
     .middle {
         width: 0%;
+    }
+
+    .navOption {
+        font-size: 15px;
+        color: var(--text-white)
     }
 }
 

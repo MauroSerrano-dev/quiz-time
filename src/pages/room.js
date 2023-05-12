@@ -65,7 +65,7 @@ export default withRouter((props) => {
     }
 
     const prevQuestion = async () => {
-        if(room.currentQuestion > 0)
+        if (room.currentQuestion > 0)
             socket.emit("updateRoom", { ...room, currentQuestion: room.currentQuestion - 1 })
     }
 
@@ -100,63 +100,72 @@ export default withRouter((props) => {
                 {room && Object.keys(room).length > 0 &&
                     <div>
                         <h1 className={styles.roomName}>Essa é a sala: {room.name}</h1>
-                        {room.state === 'disable' &&
-                            <motion.div
-                                initial={{ opacity: 0, y: 30 }}
-                                animate={disableShow ? { opacity: 1, y: 0 } : { opacity: 0, y: 0 }}
-                                transition={{ delay: disableShow ? 0.5 : 0, duration: disableShow ? 1.2 : 0.6, easings: ["easeInOut"] }}
-                                className={styles.disableContainer}
-                            >
-                                <div className={styles.qrContainer}>
-                                    <div className={styles.qrCode}><QRCode value={`quiztime.pt/quiz?code=${code}`} size={200} ecLevel='H' qrStyle='dots' logoImage='quiz-time-logo.png' logoWidth={200 * 0.6} logoOpacity={0.5} eyeColor={{ outer: '#00a0dc', inner: '#005270' }} eyeRadius={5} /></div>
-                                    <h2>Scan Me!</h2>
-                                    <div className={styles.frame}></div>
-                                    <div className={`${styles.frame} ${styles.border}`}></div>
-                                    <div className={styles.textContainer}></div>
-                                </div>
-                                <button onClick={startQuiz}>Start Quiz</button>
-                            </motion.div>}
-                        {room.state === 'active' && quiz &&
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={activeShow ? { opacity: 1 } : { opacity: 0 }}
-                                transition={{ delay: activeShow ? 0.5 : 0, duration: activeShow ? 1.2 : 0.6, easings: ["easeInOut"] }}
-                                className={styles.activeContainer}
-                            >
-                                <div className={styles.questionContainer}>
-                                    <h2>{quiz.questions[room.currentQuestion].content}</h2>
-                                </div>
-                                <div className={styles.optionsContainer}>
-                                    <button>{quiz.questions[room.currentQuestion].options[0].content}</button>
-                                    <button>{quiz.questions[room.currentQuestion].options[1].content}</button>
-                                    <button>{quiz.questions[room.currentQuestion].options[2].content}</button>
-                                    <button>{quiz.questions[room.currentQuestion].options[3].content}</button>
-                                </div>                                
-                                <button onClick={prevQuestion} disabled={room.currentQuestion === 0}>Prev Question</button>
-                                <button onClick={nextQuestion}>Next Question</button>
-                                <button onClick={resetQuiz}>Reset Quiz</button>
-                            </motion.div>
-                        }
-                        {room.state === 'finish' &&
+                        {session.user.email === room.owner &&
                             <div>
-                                <button onClick={resetQuiz}>Reset Quiz</button>
-                                <button onClick={showResults}>Mostrar Resultados</button>
+
+                                {room.state === 'disable' &&
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 30 }}
+                                        animate={disableShow ? { opacity: 1, y: 0 } : { opacity: 0, y: 0 }}
+                                        transition={{ delay: disableShow ? 0.5 : 0, duration: disableShow ? 1.2 : 0.6, easings: ["easeInOut"] }}
+                                        className={styles.disableContainer}
+                                    >
+                                        <div className={styles.qrContainer}>
+                                            <div className={styles.qrCode}><QRCode value={`quiztime.pt/quiz?code=${code}`} size={200} ecLevel='H' qrStyle='dots' logoImage='quiz-time-logo.png' logoWidth={200 * 0.6} logoOpacity={0.5} eyeColor={{ outer: '#00a0dc', inner: '#005270' }} eyeRadius={5} /></div>
+                                            <h2>Scan Me!</h2>
+                                            <div className={styles.frame}></div>
+                                            <div className={`${styles.frame} ${styles.border}`}></div>
+                                            <div className={styles.textContainer}></div>
+                                        </div>
+                                        <button onClick={startQuiz}>Start Quiz</button>
+                                    </motion.div>}
+                                {room.state === 'active' && quiz &&
+                                    <motion.div
+                                        initial={{ opacity: 0 }}
+                                        animate={activeShow ? { opacity: 1 } : { opacity: 0 }}
+                                        transition={{ delay: activeShow ? 0.5 : 0, duration: activeShow ? 1.2 : 0.6, easings: ["easeInOut"] }}
+                                        className={styles.activeContainer}
+                                    >
+                                        <div className={styles.questionContainer}>
+                                            <h2>{quiz.questions[room.currentQuestion].content}</h2>
+                                        </div>
+                                        <div className={styles.optionsContainer}>
+                                            <button>{quiz.questions[room.currentQuestion].options[0].content}</button>
+                                            <button>{quiz.questions[room.currentQuestion].options[1].content}</button>
+                                            <button>{quiz.questions[room.currentQuestion].options[2].content}</button>
+                                            <button>{quiz.questions[room.currentQuestion].options[3].content}</button>
+                                        </div>
+                                        <button onClick={prevQuestion} disabled={room.currentQuestion === 0}>Prev Question</button>
+                                        <button onClick={nextQuestion}>Next Question</button>
+                                        <button onClick={resetQuiz}>Reset Quiz</button>
+                                    </motion.div>
+                                }
+                                {room.state === 'finish' &&
+                                    <div>
+                                        <button onClick={showResults}>Mostrar Resultados</button>
+                                    </div>
+                                }
+                                {room.state === 'results' &&
+                                    <div>
+                                        <h2>Finalizado</h2>
+                                    </div>
+                                }
+                                <div>
+                                    <h3>Players</h3>
+                                    <ol>
+                                        {room.players.map((player, i) => <li key={`Player: ${i}`}><p>{player.name} {player.answers.some((answer, i) => i === room.currentQuestion) ? 'check' : ''}</p></li>)}
+                                    </ol>
+                                </div>
                             </div>
                         }
-                        {room.state === 'results' &&
+                        {session.user.email !== room.owner &&
                             <div>
-                                <button onClick={resetQuiz}>Reset Quiz</button>
+                                <h3>Esta é a visão de quem não é dono da sala</h3>
                             </div>
                         }
-                        <div>
-                            <h3>Players</h3>
-                            <ol>
-                                {room.players.map((player, i) => <li key={`Player: ${i}`}><p>{player.name} {player.answers.some((answer, i) => i === room.currentQuestion) ? 'check' : ''}</p></li>)}
-                            </ol>
-                        </div>
                     </div>
                 }
             </main>
         </div>
-    );
+    )
 })

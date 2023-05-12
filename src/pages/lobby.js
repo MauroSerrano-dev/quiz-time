@@ -1,10 +1,9 @@
+import styles from '../styles/lobby.module.css'
 import Router from "next/router";
 import { useEffect, useState } from "react";
-import styles from '../styles/lobby.module.css'
 import Modal from "../components/Modal";
 import Select from "react-select";
 import { validateCodeCharacters, validateCodeLength, containsAccents } from "../../utils/validations";
-import 'react-toastify/dist/ReactToastify.css';
 import { showInfoToast } from "../../utils/toasts";
 
 let socket;
@@ -44,21 +43,22 @@ export default function Lobby(props) {
         setNewRoom(prev => { return { ...prev, private: event.target.checked } })
     }
 
-    async function handleSubmitCode() {
-        const options = {
-            method: 'GET',
-            headers: { "code": convertToCode(searchCode) },
-        };
-        await fetch("/api/rooms", options)
-            .then(response => response.json())
-            .then(response => {
-                if (response.room)
-                    Router.push(`/room?code=${convertToCode(searchCode)}`)
-                else
-                    showInfoToast("Esta sala não existe.", 3000)
-            })
-            .catch(err => console.error(err));
-        setSearchCode('')
+    async function handleSubmitCode(event) {
+        if ((event._reactName === 'onClick' || event.key === 'Enter') && searchCode !== '') {
+            const options = {
+                method: 'GET',
+                headers: { "code": convertToCode(searchCode) },
+            };
+            await fetch("/api/rooms", options)
+                .then(response => response.json())
+                .then(response => {
+                    if (response.room)
+                        Router.push(`/quiz?code=${convertToCode(searchCode)}`)
+                    else
+                        showInfoToast("Esta sala não existe.", 3000)
+                })
+                .catch(err => console.error(err));
+        }
     }
 
     function convertToCode(string) {
@@ -87,7 +87,7 @@ export default function Lobby(props) {
         if (!newRoom.quizInfo) {
             showInfoToast("Nenhum Quiz Selecitonado.", 3000)
             return
-        }        
+        }
         if (containsAccents(newRoom.code)) {
             showInfoToast("O nome não pode conter acentos.", 3000)
             return
@@ -153,8 +153,8 @@ export default function Lobby(props) {
                         </div>
                     }
                 />}
-                <input onChange={handleCodeChange} value={searchCode} />
-                <button onClick={handleSubmitCode}>Entrar</button>
+                <input onChange={handleCodeChange} onKeyDown={handleSubmitCode} value={searchCode} />
+                <button onClick={handleSubmitCode} disabled={searchCode === ''} >Entrar</button>
                 <button onClick={openModal}>Criar Sala</button>
             </main>
         </div>
