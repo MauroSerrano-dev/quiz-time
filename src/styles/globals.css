@@ -84,6 +84,14 @@ h6 {
   color: var(--text-color);
 }
 
+input {
+  text-align: center;
+}
+
+button {
+  text-align: center;
+}
+
 @media (prefers-color-scheme: light) {
   html {
     color-scheme: light;

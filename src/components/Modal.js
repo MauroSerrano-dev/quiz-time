@@ -3,7 +3,7 @@ import styles from '../styles/components/Modal.module.css'
 import { motion } from "framer-motion"
 
 export default function Modal(props) {
-    const { closeModal, body, foot, head, showModalOpacity } = props
+    const { closeModal, body, foot, head, showModalOpacity, height, width } = props
 
     useEffect(() => {
         document.addEventListener("keydown", handleKeyDown);
@@ -26,6 +26,7 @@ export default function Modal(props) {
                 </div>
                 <motion.div
                     className={styles.modal}
+                    style={{ width: width, height: height, minWidth: '250px', minHeight: '350px'}}
                     initial={{ scale: 0.7 }}
                     animate={showModalOpacity ? { scale: 1 } : { scale: 0.7 }}
                     transition={{ duration: showModalOpacity ? 0.5 : 0.3, ease: [.62, -0.18, .32, 1.17] }}

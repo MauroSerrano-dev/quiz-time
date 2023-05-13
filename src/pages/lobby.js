@@ -5,6 +5,7 @@ import Modal from "../components/Modal";
 import Select from "react-select";
 import { validateCodeCharacters, validateCodeLength, containsAccents } from "../../utils/validations";
 import { showInfoToast } from "../../utils/toasts";
+import { motion } from "framer-motion"
 
 let socket;
 
@@ -17,6 +18,7 @@ export default function Lobby(props) {
     const [showModal, setShowModal] = useState(false)
     const [showModalOpacity, setShowModalOpacity] = useState(false)
     const [disableCreateNewRoom, setDisableCreateNewRoom] = useState(false)
+    const [passwordInputOpen, setPasswordInputOpen] = useState(false)
 
     useEffect(() => {
         if (session && !newRoom.owner) {
@@ -38,9 +40,14 @@ export default function Lobby(props) {
     }
 
     function handleNewIsPrivate(event) {
-        if (!event.target.checked)
+        const { checked } = event.target
+        if (checked)
+            setPasswordInputOpen(prev => !prev)
+        else {
             setNewRoom(prev => { return { ...prev, password: '' } })
-        setNewRoom(prev => { return { ...prev, private: event.target.checked } })
+            setTimeout(() => setPasswordInputOpen(prev => !prev), 1000)
+        }
+        setNewRoom(prev => { return { ...prev, private: checked } })
     }
 
     async function handleSubmitCode(event) {
@@ -77,6 +84,7 @@ export default function Lobby(props) {
     function closeModal() {
         setShowModalOpacity(false)
         setTimeout(() => {
+            setPasswordInputOpen(false)
             setShowModal(false)
             setNewRoom(prev => { return { ...prev, password: '', code: '', name: '', private: false } })
             delete newRoom.quizInfo
@@ -121,24 +129,35 @@ export default function Lobby(props) {
     return (
         <div>
             <main>
-                {showModal && <Modal closeModal={closeModal} showModalOpacity={showModalOpacity}
+                {showModal && <Modal height={'30%'} width={'25%'} minHeight={'350px'} minWidth={'250px'} closeModal={closeModal} showModalOpacity={showModalOpacity}
                     head={
                         <div>
                             <h2>Criar Sala</h2>
                         </div>
                     }
                     body={
-                        <div>
-                            <label>Nome: </label>
-                            <input onChange={handleNewCodeChange} value={newRoom.name} />
-                            <label>Private: </label>
-                            <input type="checkbox" onChange={handleNewIsPrivate} checked={newRoom.private} />
-                            {newRoom.private &&
+                        <div className={styles.bodyContainer}>
+                            <input onChange={handleNewCodeChange} value={newRoom.name} placeholder="Nome" />
+                            <div>
+
+                            </div>
+                            <div className={styles.privateContainer}>
                                 <div>
-                                    <label>Senha: </label>
-                                    <input onChange={handleNewPasswordChange} value={newRoom.password} />
+                                    <label>Private: </label>
+                                    <input type="checkbox" onChange={handleNewIsPrivate} checked={newRoom.private} />
                                 </div>
-                            }
+                                {passwordInputOpen &&
+                                    <motion.input
+                                        className={styles.password}
+                                        onChange={handleNewPasswordChange}
+                                        value={newRoom.password}
+                                        placeholder="Senha"
+                                        initial={{ width: '0px', height: '0px', marginLeft: '0rem' }}
+                                        animate={newRoom.private ? { width: '150px', height: '30px', marginLeft: '0.5rem' } : { width: '0px', height: '0px', marginLeft: '0rem' }}
+                                        transition={{ duration: newRoom.private ? 1 : 0.5, ease: newRoom.private ? [.62, -0.18, .32, 1.17] : [.52, .03, .24, 1.06] }}
+                                    />
+                                }
+                            </div>
                             <Select
                                 placeholder='Quiz'
                                 onChange={handleQuizSelectorChange}

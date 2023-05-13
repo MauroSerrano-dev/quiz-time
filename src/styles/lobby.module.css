@@ -3,11 +3,11 @@
     transition: opacity 1000ms ease-in-out;
 }
 
-.ReactModal__Overlay--after-open{
+.ReactModal__Overlay--after-open {
     opacity: 1;
 }
 
-.ReactModal__Overlay--before-close{
+.ReactModal__Overlay--before-close {
     opacity: 0;
 }
 
@@ -16,10 +16,30 @@
     transition: opacity 1000ms ease-in-out;
 }
 
-.ReactModal__Body--after-open{
+.ReactModal__Body--after-open {
     opacity: 1;
 }
 
-.ReactModal__Body--before-close{
+.ReactModal__Body--before-close {
     opacity: 0;
+}
+
+.bodyContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.privateContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    transition: all ease-in-out 1s;
+    height: 50px;
+}
+
+.password {
 }
