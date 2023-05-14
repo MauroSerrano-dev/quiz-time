@@ -20,8 +20,7 @@ export default NextAuth({
           quizzesInfos: [{ name: 'Perfil Comportamental', purchaseDate: '', type: 'standard' }],
           quizzesCustom: [],
           purchases: [],
-          emailVerified: profile.email_verified
-        };
+        }
       },
     }),
     // ...add more providers here
