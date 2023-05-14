@@ -30,8 +30,10 @@ export default function SocketHandler(req, res) {
 
     // Listen for "change" events on the change stream
     changeStream.on("change", (change) => {
-      const roomAttFields = { ...change.updateDescription.updatedFields };
-      io.emit("updateFields", roomAttFields);
+      if(change.updateDescription) {
+        const roomAttFields = { ...change.updateDescription.updatedFields };
+        io.emit("updateFields", roomAttFields);
+      }
     });
 
   });
