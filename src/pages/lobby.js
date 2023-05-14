@@ -131,18 +131,15 @@ export default function Lobby(props) {
             <main>
                 {showModal && <Modal height={'30%'} width={'25%'} minHeight={'350px'} minWidth={'250px'} closeModal={closeModal} showModalOpacity={showModalOpacity}
                     head={
-                        <div>
+                        <div className={styles.headContainer}>
                             <h2>Criar Sala</h2>
                         </div>
                     }
                     body={
                         <div className={styles.bodyContainer}>
-                            <input onChange={handleNewCodeChange} value={newRoom.name} placeholder="Nome" />
-                            <div>
-
-                            </div>
-                            <div className={styles.privateContainer}>
-                                <div>
+                            <input className={styles.nameInput} onChange={handleNewCodeChange} value={newRoom.name} placeholder="Nome" />
+                            <div className={styles.privateAndInput}>
+                                <div className={styles.privateContainer}>
                                     <label>Private: </label>
                                     <input type="checkbox" onChange={handleNewIsPrivate} checked={newRoom.private} />
                                 </div>
@@ -152,21 +149,21 @@ export default function Lobby(props) {
                                         onChange={handleNewPasswordChange}
                                         value={newRoom.password}
                                         placeholder="Senha"
-                                        initial={{ width: '0px', height: '0px', marginLeft: '0rem' }}
-                                        animate={newRoom.private ? { width: '150px', height: '30px', marginLeft: '0.5rem' } : { width: '0px', height: '0px', marginLeft: '0rem' }}
-                                        transition={{ duration: newRoom.private ? 1 : 0.5, ease: newRoom.private ? [.62, -0.18, .32, 1.17] : [.52, .03, .24, 1.06] }}
+                                        animate={newRoom.private ? { width: ['0%', '65%', '65%'], height: ['0%', '0%', '100%'], marginLeft: ['0%', '1%', '5%'] } : { width: ['65%', '65%', '0%'], height: ['100%', '0%', '0%'], marginLeft: ['5%', '1%', '0%'] }}
+                                        transition={{ times: [0, 0.5, 1], duration: 1, ease: newRoom.private ? [.62, -0.18, .32, 1.17] : [.52, .03, .24, 1.06] }}
                                     />
                                 }
                             </div>
                             <Select
                                 placeholder='Quiz'
+                                className={styles.selectQuiz}
                                 onChange={handleQuizSelectorChange}
                                 options={session.user.quizzesInfos.map((quiz, i) => { return { value: i, label: quiz.name } })}
                             />
                         </div>
                     }
                     foot={
-                        <div>
+                        <div className={styles.footContainer}>
                             <button onClick={closeModal}>Cancelar</button>
                             <button onClick={createNewRoom} disabled={disableCreateNewRoom} >{disableCreateNewRoom ? "Criando" : "Criar"}</button>
                         </div>

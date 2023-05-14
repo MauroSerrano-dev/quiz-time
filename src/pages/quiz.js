@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { withRouter } from 'next/router'
 import io from "socket.io-client";
 import { motion } from "framer-motion"
+import ChartPie from '../components/ChartPie';
 
 let socket;
 
@@ -33,11 +34,11 @@ export default withRouter((props) => {
         if (room && joined) {
             updateOptionSelected()
         }
-        if (room && room.state === 'finish') {
+        if (room && quiz && (room.state === 'finish' || room.state === 'results')) {
             setResults(getResults())
             setAllResults(getAllResults())
         }
-    }, [room])
+    }, [room, quiz])
 
     useEffect(() => {
         setTimeout(() => setDots(prev => prev.length >= 3 ? '' : prev + '.'), 500)
@@ -152,6 +153,7 @@ export default withRouter((props) => {
     }
 
     function getAllResults() {
+        console.log(quiz.results)
         return quiz.results.map(result => {
             return {
                 ...result, points: room.players.filter(player => player.email === session.user.email)[0]?.answers
@@ -213,14 +215,16 @@ export default withRouter((props) => {
                 }
                 {room && quiz && room.state === 'results' && results && joined &&
                     <div>
-                        <h2>Resultado</h2>
                         <div>
                             {results.map((result, i) =>
                                 <div key={`Result: ${i}`}>
                                     <img style={{ borderRadius: '0.5rem' }} src={result.img} />
-                                    <p>{result.name} {result.points}</p>
+                                    <h2>{result.name}</h2>
                                 </div>
                             )}
+                        </div>
+                        <div style={{width: '320px', height: '200px', marginTop: '2rem'}}>
+                            <ChartPie data={allResults} totalPoints={allResults.reduce((acc, result) => acc + result.points, 0)} />
                         </div>
                     </div>
                 }

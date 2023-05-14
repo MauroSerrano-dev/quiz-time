@@ -42,7 +42,7 @@
     width: 250px;
     height: 40px;
 
-    transition: background-color 200ms ease-in-out;
+    transition: background-color 150ms ease-in-out;
 }
 
 .option p {

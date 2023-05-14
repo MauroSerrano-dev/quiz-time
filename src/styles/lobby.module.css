@@ -1,45 +1,64 @@
-.ReactModal__Overlay {
-    opacity: 1;
-    transition: opacity 1000ms ease-in-out;
-}
-
-.ReactModal__Overlay--after-open {
-    opacity: 1;
-}
-
-.ReactModal__Overlay--before-close {
-    opacity: 0;
-}
-
-.ReactModal__Body {
-    opacity: 1;
-    transition: opacity 1000ms ease-in-out;
-}
-
-.ReactModal__Body--after-open {
-    opacity: 1;
-}
-
-.ReactModal__Body--before-close {
-    opacity: 0;
-}
-
 .bodyContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-start;
+
+    margin-top: 20%;
+
+    height: 100%;
+    width: 85%;
+    gap: 7%;
+}
+
+.headContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+
+    height: 100%;
+    width: 85%;
+}
+
+.footContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+
+    height: 100%;
+    width: 85%;
+}
+
+.privateAndInput {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    height: 10%;
+}
+
+.nameInput {
+    width: 80%;
 }
 
 .privateContainer {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
-    transition: all ease-in-out 1s;
-    height: 50px;
+    justify-content: space-around;
+
+    width: 40%;
+    height: 100%;
 }
 
-.password {
+.privateContainer input {
+    position: relative;
+    bottom: -2px;
+}
+
+.selectQuiz {
+    width: 80%;
 }

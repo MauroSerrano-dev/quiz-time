@@ -1,19 +1,33 @@
 .optionsContainer{
+    --size: 20vw;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
-    width: 80%;
-    min-width: 960px;
+    align-items: center;
+    width: calc(var(--size) * 4);
+    height: var(--size);
+    /* min-width: 960px; */
     border-style: dashed;
 }
 
 .gameOption {
-    width: 300px;
-    height: 300px;
+    width: var(--size);
+    height: var(--size);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
 
     border-radius: 0.5rem;
 
     background-color: rgba(0, 255, 225, 0.42);
+
+}
+
+.gameOption h2{
+    margin-top: 20%;
+    font-size: calc(var(--size) / 7);
 }
 
 .editorContainer {
