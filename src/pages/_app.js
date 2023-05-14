@@ -8,10 +8,18 @@ function MyApp(props) {
   const { Component, pageProps } = props
 
   return (
-    <SessionProvider>
-      <DataHandler pageProps={pageProps} Component={Component} />
-      <ToastContainer newestOnTop transition={Flip} />
-    </SessionProvider>
+    <div>
+      <Head>
+        <title>Quiz Time</title>
+        <meta name="description" content="Quiz Buider App" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/quiz-time-logo.png" />
+      </Head>
+      <SessionProvider>
+        <DataHandler pageProps={pageProps} Component={Component} />
+        <ToastContainer newestOnTop transition={Flip} />
+      </SessionProvider>
+    </div>
   )
 }
 
