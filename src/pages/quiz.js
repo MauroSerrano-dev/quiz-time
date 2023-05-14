@@ -35,7 +35,7 @@ export default withRouter((props) => {
         if (room && joined && room.control) {
             updateOptionSelected()
         }
-        if (room && quiz && (room.state === 'finish' || room.state === 'results')) {
+        if (room && quiz && (room.state === 'finish' || room.state === 'results' || getPlayer()?.state === 'result')) {
             setResults(getResults())
             setAllResults(getAllResults())
         }
@@ -133,6 +133,7 @@ export default withRouter((props) => {
     function answer(option) {
         setDisableOptions(true)
         setOptionSelected(option)
+        const showResult = getPlayer().currentQuestion >= quiz.questions.length - 1
         setTimeout(() => {
             setQuestionTransition(true)
             setTimeout(() => {
@@ -142,7 +143,8 @@ export default withRouter((props) => {
                             player.email === session.user.email
                                 ? {
                                     ...player,
-                                    currentQuestion: player.currentQuestion + 1,
+                                    currentQuestion: showResult ? player.currentQuestion : player.currentQuestion + 1,
+                                    state: showResult ? 'result' : player.state,
                                     answers: [...player.answers, { ...quiz.questions[player.currentQuestion].options[option], questionIndex: player.currentQuestion, optionIndex: option }]
                                 }
                                 : player
@@ -151,14 +153,16 @@ export default withRouter((props) => {
                 )
                 setOptionSelected()
                 setDisableOptions(false)
-                setQuestionTransition(false)
+                if (!showResult) {
+                    setQuestionTransition(false)
+                }
             }, 250)
         }, 250)
     }
 
     function joinQuiz() {
         setJoined(true)
-        socket.emit("updateRoom", { ...room, players: [...room.players, { email: session.user.email, name: session.user.name, answers: [], currentQuestion: 0 }] });
+        socket.emit("updateRoom", { ...room, players: [...room.players, { email: session.user.email, name: session.user.name, answers: [], currentQuestion: 0, state: 'answering' }] });
     }
 
     function leaveQuiz() {
@@ -224,7 +228,7 @@ export default withRouter((props) => {
                         }
                     </div>
                 }
-                {room && room.state === 'active' && quiz && joined &&
+                {room && room.state === 'active' && quiz && joined && getPlayer().state === 'answering' &&
                     <motion.div className={styles.questionOptions}
                         initial={{ opacity: 0 }}
                         animate={questionTransition ? { opacity: 0 } : { opacity: 1 }}
@@ -245,7 +249,7 @@ export default withRouter((props) => {
                         <h2>Finalizado</h2>
                     </div>
                 }
-                {room && quiz && room.state === 'results' && results && joined &&
+                {room && quiz && (room.state === 'results' || getPlayer()?.state === 'result') && results && joined &&
                     <div>
                         <div>
                             {results.map((result, i) =>

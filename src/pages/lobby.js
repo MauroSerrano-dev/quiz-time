@@ -11,7 +11,7 @@ let socket;
 
 export default function Lobby(props) {
     const { session } = props
-    const [newRoom, setNewRoom] = useState({ name: '', code: '', private: false, control: false, password: '' })
+    const [newRoom, setNewRoom] = useState({ name: '', code: '', private: false, control: false, password: '', state: 'disable' })
     const [searchCode, setSearchCode] = useState('')
     const [newCode, setNewCode] = useState('')
     const [requestState, setRequestState] = useState('denied')
