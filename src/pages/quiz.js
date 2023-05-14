@@ -7,6 +7,8 @@ import ChartPie from '../components/ChartPie';
 
 let socket;
 
+const TRANSITION_DURATION = 250
+
 export default withRouter((props) => {
     const { session } = props
     const { code } = props.router.query
@@ -83,7 +85,7 @@ export default withRouter((props) => {
                 setTimeout(() => {
                     setRoom(prev => { return { ...prev, ...roomAttFields } })
                     setQuestionTransition(false)
-                }, 250)
+                }, TRANSITION_DURATION)
             }
             else {
                 setRoom(prev => { return { ...prev, ...roomAttFields } })
@@ -131,8 +133,8 @@ export default withRouter((props) => {
     }
 
     function answer(option) {
-        setDisableOptions(true)
         setOptionSelected(option)
+        setDisableOptions(true)
         const showResult = getPlayer().currentQuestion >= quiz.questions.length - 1
         setTimeout(() => {
             setQuestionTransition(true)
@@ -156,8 +158,8 @@ export default withRouter((props) => {
                 if (!showResult) {
                     setQuestionTransition(false)
                 }
-            }, 250)
-        }, 250)
+            }, TRANSITION_DURATION)
+        }, TRANSITION_DURATION)
     }
 
     function joinQuiz() {
@@ -232,7 +234,7 @@ export default withRouter((props) => {
                     <motion.div className={styles.questionOptions}
                         initial={{ opacity: 0 }}
                         animate={questionTransition ? { opacity: 0 } : { opacity: 1 }}
-                        transition={{ duration: 0.2, ease: [.62, -0.18, .32, 1.17] }}
+                        transition={{ duration: TRANSITION_DURATION / 1000, ease: [.62, -0.18, .32, 1.17] }}
                     >
                         <div className={styles.questionContainer}>
                             <h2>{room.control ? room.currentQuestion + 1 : getPlayer().currentQuestion + 1}. {quiz.questions[room.control ? room.currentQuestion : getPlayer().currentQuestion].content}</h2>
@@ -250,7 +252,11 @@ export default withRouter((props) => {
                     </div>
                 }
                 {room && quiz && (room.state === 'results' || getPlayer()?.state === 'result') && results && joined &&
-                    <div>
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: TRANSITION_DURATION / 2000, duration: TRANSITION_DURATION / 1000, ease: [.62, -0.18, .32, 1.17] }}
+                    >
                         <div>
                             {results.map((result, i) =>
                                 <div key={`Result: ${i}`}>
@@ -262,7 +268,7 @@ export default withRouter((props) => {
                         <div style={{ width: '320px', height: '200px', marginTop: '2rem' }}>
                             <ChartPie data={allResults} totalPoints={allResults.reduce((acc, result) => acc + result.points, 0)} />
                         </div>
-                    </div>
+                    </motion.div>
                 }
             </main>
         </motion.div>
