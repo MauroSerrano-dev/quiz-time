@@ -257,10 +257,10 @@ const quiz = {
         },
     ],
     results: [
-        { name: 'Ativador', description: '', img: 'shark.jpg' },
-        { name: 'Comunicador', description: '', img: 'cat.jpg' },
-        { name: 'Idealizador', description: '', img: 'eagle.jpg' },
-        { name: 'Organizador', description: '', img: 'wolf.jpg' },
+        { name: 'Ativador(a)', description: '', img: 'shark.jpg' },
+        { name: 'Comunicador(a)', description: '', img: 'cat.jpg' },
+        { name: 'Idealizador(a)', description: '', img: 'eagle.jpg' },
+        { name: 'Organizador(a)', description: '', img: 'wolf.jpg' },
     ],
     resultLayout: [],
     subResults: []
