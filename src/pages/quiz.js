@@ -21,6 +21,7 @@ export default withRouter((props) => {
     const [results, setResults] = useState([])
     const [allResults, setAllResults] = useState([])
     const [questionTransition, setQuestionTransition] = useState(false)
+    const [disableOptions, setDisableOptions] = useState(false)
 
     useEffect(() => {
         if (session && !room) {
@@ -31,7 +32,7 @@ export default withRouter((props) => {
     }, [session])
 
     useEffect(() => {
-        if (room && joined) {
+        if (room && joined && room.control) {
             updateOptionSelected()
         }
         if (room && quiz && (room.state === 'finish' || room.state === 'results')) {
@@ -68,7 +69,7 @@ export default withRouter((props) => {
         socket.on("getData", (startRoom) => {
             if (startRoom.players.some(player => player.email === session.user.email)) {
                 setJoined(true)
-                if (startRoom.players.filter(player => player.email === session.user.email)[0].answers.some(answer => answer.questionIndex === startRoom.currentQuestion))
+                if (startRoom.players.filter(player => player.email === session.user.email)[0].answers.some(answer => answer.questionIndex === startRoom.currentQuestion) && startRoom.control)
                     setOptionSelected(startRoom.players.filter(player => player.email === session.user.email)[0].answers.filter(answer => answer.questionIndex === startRoom.currentQuestion)[0].optionIndex)
             }
             setRoom(startRoom)
@@ -84,19 +85,20 @@ export default withRouter((props) => {
                     setQuestionTransition(false)
                 }, 250)
             }
-            else
+            else {
                 setRoom(prev => { return { ...prev, ...roomAttFields } })
+            }
         })
     }
 
     function updateOptionSelected() {
-        if (room.players.filter(player => player.email === session.user.email)[0]?.answers.some(answer => answer.questionIndex === room.currentQuestion))
-            setOptionSelected(room.players.filter(player => player.email === session.user.email)[0].answers.filter(answer => answer.questionIndex === room.currentQuestion)[0].optionIndex)
+        if (getPlayer()?.answers.some(answer => answer.questionIndex === room.currentQuestion))
+            setOptionSelected(getPlayer().answers.filter(answer => answer.questionIndex === room.currentQuestion)[0].optionIndex)
         else
             setOptionSelected()
     }
 
-    function answer(option) {
+    function answerControl(option) {
         if (optionSelected === option) {
             setOptionSelected()
             socket.emit("updateRoom",
@@ -123,13 +125,40 @@ export default withRouter((props) => {
                             }
                             : player
                     )
-                })
+                }
+            )
         }
+    }
+
+    function answer(option) {
+        setDisableOptions(true)
+        setOptionSelected(option)
+        setTimeout(() => {
+            setQuestionTransition(true)
+            setTimeout(() => {
+                socket.emit("updateRoom",
+                    {
+                        ...room, players: room.players.map(player =>
+                            player.email === session.user.email
+                                ? {
+                                    ...player,
+                                    currentQuestion: player.currentQuestion + 1,
+                                    answers: [...player.answers, { ...quiz.questions[player.currentQuestion].options[option], questionIndex: player.currentQuestion, optionIndex: option }]
+                                }
+                                : player
+                        )
+                    }
+                )
+                setOptionSelected()
+                setDisableOptions(false)
+                setQuestionTransition(false)
+            }, 250)
+        }, 250)
     }
 
     function joinQuiz() {
         setJoined(true)
-        socket.emit("updateRoom", { ...room, players: [...room.players, { email: session.user.email, name: session.user.name, answers: [] }] });
+        socket.emit("updateRoom", { ...room, players: [...room.players, { email: session.user.email, name: session.user.name, answers: [], currentQuestion: 0 }] });
     }
 
     function leaveQuiz() {
@@ -140,7 +169,7 @@ export default withRouter((props) => {
     function getResults() {
         return quiz.results.map(result => {
             return {
-                ...result, points: room.players.filter(player => player.email === session.user.email)[0]?.answers
+                ...result, points: getPlayer()?.answers
                     .reduce((acc, answer) =>
                         acc + answer.actions.reduce((accumulator, action) =>
                             action.profile === result.name
@@ -156,7 +185,7 @@ export default withRouter((props) => {
         console.log(quiz.results)
         return quiz.results.map(result => {
             return {
-                ...result, points: room.players.filter(player => player.email === session.user.email)[0]?.answers
+                ...result, points: getPlayer()?.answers
                     .reduce((acc, answer) =>
                         acc + answer.actions.reduce((accumulator, action) =>
                             action.profile === result.name
@@ -166,6 +195,10 @@ export default withRouter((props) => {
                         , 0)
             }
         }).sort((a, b) => b.points - a.points)
+    }
+
+    function getPlayer() {
+        return room.players.filter(player => player.email === session.user.email)[0]
     }
 
     return (
@@ -198,13 +231,12 @@ export default withRouter((props) => {
                         transition={{ duration: 0.2, ease: [.62, -0.18, .32, 1.17] }}
                     >
                         <div className={styles.questionContainer}>
-                            <h2>{room.currentQuestion + 1}. {quiz.questions[room.currentQuestion].content}</h2>
+                            <h2>{room.control ? room.currentQuestion + 1 : getPlayer().currentQuestion + 1}. {quiz.questions[room.control ? room.currentQuestion : getPlayer().currentQuestion].content}</h2>
                         </div>
                         <div className={styles.optionsContainer}>
-                            <button className={`${styles.option} ${optionSelected === 0 ? styles.optionSelected : ''}`} onClick={() => answer(0)}><p>{quiz.questions[room.currentQuestion].options[0].content}</p></button>
-                            <button className={`${styles.option} ${optionSelected === 1 ? styles.optionSelected : ''}`} onClick={() => answer(1)}><p>{quiz.questions[room.currentQuestion].options[1].content}</p></button>
-                            <button className={`${styles.option} ${optionSelected === 2 ? styles.optionSelected : ''}`} onClick={() => answer(2)}><p>{quiz.questions[room.currentQuestion].options[2].content}</p></button>
-                            <button className={`${styles.option} ${optionSelected === 3 ? styles.optionSelected : ''}`} onClick={() => answer(3)}><p>{quiz.questions[room.currentQuestion].options[3].content}</p></button>
+                            {quiz.questions[room.control ? room.currentQuestion : getPlayer().currentQuestion].options.map((option, i) =>
+                                <button key={`Option: ${i}`} className={`${styles.option} ${optionSelected === i ? styles.optionSelected : ''}`} onClick={() => room.control ? answerControl(i) : answer(i)} disabled={disableOptions} ><p>{option.content}</p></button>)
+                            }
                         </div>
                     </motion.div>
                 }
@@ -223,7 +255,7 @@ export default withRouter((props) => {
                                 </div>
                             )}
                         </div>
-                        <div style={{width: '320px', height: '200px', marginTop: '2rem'}}>
+                        <div style={{ width: '320px', height: '200px', marginTop: '2rem' }}>
                             <ChartPie data={allResults} totalPoints={allResults.reduce((acc, result) => acc + result.points, 0)} />
                         </div>
                     </div>

@@ -11,7 +11,7 @@ let socket;
 
 export default function Lobby(props) {
     const { session } = props
-    const [newRoom, setNewRoom] = useState({ name: '', code: '', private: false, password: '' })
+    const [newRoom, setNewRoom] = useState({ name: '', code: '', private: false, control: false, password: '' })
     const [searchCode, setSearchCode] = useState('')
     const [newCode, setNewCode] = useState('')
     const [requestState, setRequestState] = useState('denied')
@@ -50,6 +50,11 @@ export default function Lobby(props) {
         setNewRoom(prev => { return { ...prev, private: checked } })
     }
 
+    function handleNewControl(event) {
+        const { checked } = event.target
+        setNewRoom(prev => { return { ...prev, control: checked } })
+    }
+
     async function handleSubmitCode(event) {
         if ((event._reactName === 'onClick' || event.key === 'Enter') && searchCode !== '') {
             const options = {
@@ -86,7 +91,7 @@ export default function Lobby(props) {
         setTimeout(() => {
             setPasswordInputOpen(false)
             setShowModal(false)
-            setNewRoom(prev => { return { ...prev, password: '', code: '', name: '', private: false } })
+            setNewRoom(prev => { return { ...prev, password: '', code: '', name: '', private: false, control: false } })
             delete newRoom.quizInfo
         }, 300)
     }
@@ -139,9 +144,13 @@ export default function Lobby(props) {
                         <div className={styles.bodyContainer}>
                             <input className={styles.nameInput} onChange={handleNewCodeChange} value={newRoom.name} placeholder="Nome" />
                             <div className={styles.privateAndInput}>
-                                <div className={styles.privateContainer}>
+                                <div className={styles.labelCheckbox}>
                                     <label>Private: </label>
                                     <input type="checkbox" onChange={handleNewIsPrivate} checked={newRoom.private} />
+                                </div>
+                                <div className={styles.labelCheckbox}>
+                                    <label>Controlar Perguntas: </label>
+                                    <input type="checkbox" onChange={handleNewControl} checked={newRoom.control} />
                                 </div>
                                 {passwordInputOpen &&
                                     <motion.input
