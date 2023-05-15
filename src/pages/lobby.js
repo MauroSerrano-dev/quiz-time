@@ -144,13 +144,9 @@ export default function Lobby(props) {
                         <div className={styles.bodyContainer}>
                             <input className={styles.nameInput} onChange={handleNewCodeChange} value={newRoom.name} placeholder="Nome" />
                             <div className={styles.privateAndInput}>
-                                <div className={styles.labelCheckbox}>
+                                <div className={styles.privateContainer}>
                                     <label>Private: </label>
                                     <input type="checkbox" onChange={handleNewIsPrivate} checked={newRoom.private} />
-                                </div>
-                                <div className={styles.labelCheckbox}>
-                                    <label>Controlar Perguntas: </label>
-                                    <input type="checkbox" onChange={handleNewControl} checked={newRoom.control} />
                                 </div>
                                 {passwordInputOpen &&
                                     <motion.input
@@ -158,10 +154,14 @@ export default function Lobby(props) {
                                         onChange={handleNewPasswordChange}
                                         value={newRoom.password}
                                         placeholder="Senha"
-                                        animate={newRoom.private ? { width: ['0%', '65%', '65%'], height: ['0%', '0%', '100%'], marginLeft: ['0%', '1%', '5%'] } : { width: ['65%', '65%', '0%'], height: ['100%', '0%', '0%'], marginLeft: ['5%', '1%', '0%'] }}
+                                        animate={newRoom.private ? { width: ['0%', '65%', '65%'], height: ['0%', '0%', '100%'] } : { width: ['65%', '65%', '0%'], height: ['100%', '0%', '0%'] }}
                                         transition={{ times: [0, 0.5, 1], duration: 1, ease: newRoom.private ? [.62, -0.18, .32, 1.17] : [.52, .03, .24, 1.06] }}
                                     />
                                 }
+                            </div>
+                            <div className={styles.controlContainer}>
+                                <label>Controlar Perguntas: </label>
+                                <input type="checkbox" onChange={handleNewControl} checked={newRoom.control} />
                             </div>
                             <Select
                                 placeholder='Quiz'

@@ -42,23 +42,40 @@
 
 .nameInput {
     width: 80%;
+    height: 10%;
 }
 
-.labelCheckbox {
+.privateContainer {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-around;
+    justify-content: center;
+    gap: 0.5rem;
 
     width: 40%;
     height: 100%;
 }
 
-.labelCheckbox input {
+.privateContainer input {
     position: relative;
     bottom: -2px;
 }
 
 .selectQuiz {
     width: 80%;
+}
+
+.controlContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 80%;
+    height: 10%;
+}
+
+.controlContainer input {
+    position: relative;
+    bottom: -2px;
 }
