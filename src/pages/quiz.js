@@ -78,6 +78,11 @@ export default withRouter((props) => {
         });
 
         socket.on("updateFields", (roomAttFields) => {
+            if (roomAttFields.state === 'active') {
+                setTimeout(() =>
+                    setQuestionTransition(false)
+                    , TRANSITION_DURATION)
+            }
             const firstKey = Object.keys(roomAttFields)[0]
             if (roomAttFields.players && roomAttFields.players.every(player => player.email !== session.user.email))
                 setJoined(false)
