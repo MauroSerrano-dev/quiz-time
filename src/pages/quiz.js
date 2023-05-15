@@ -78,6 +78,7 @@ export default withRouter((props) => {
         });
 
         socket.on("updateFields", (roomAttFields) => {
+            const firstKey = Object.keys(roomAttFields)[0]
             if (roomAttFields.players && roomAttFields.players.every(player => player.email !== session.user.email))
                 setJoined(false)
             if (roomAttFields.currentQuestion !== undefined) {
@@ -87,8 +88,7 @@ export default withRouter((props) => {
                     setQuestionTransition(false)
                 }, TRANSITION_DURATION)
             }
-            else if (Object.keys(roomAttFields).some(field => field.includes('players'))) {
-                const key = Object.keys(roomAttFields)[0]
+            else if (firstKey.includes('players')) {
                 setRoom(prev => { return { ...prev, players: prev.players.filter(player => player.email !== roomAttFields[key].email).concat(roomAttFields[key]) } })
             }
             else {
