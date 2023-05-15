@@ -22,17 +22,17 @@ export default function SocketHandler(req, res) {
 
   // MongoDB connection successful
   mongoose.connection.once("open", () => {
-    console.log("MongoDB database connected");
+    console.log("MongoDB database connected")
 
     // Create a change stream for the rooms collection
-    console.log("Setting change streams");
-    const changeStream = mongoose.connection.collection(process.env.COLL_ROOMS).watch();
+    console.log("Setting change streams")
+    const changeStream = mongoose.connection.collection(process.env.COLL_ROOMS).watch()
 
     // Listen for "change" events on the change stream
     changeStream.on("change", (change) => {
-      if(change.updateDescription) {
-        const roomAttFields = { ...change.updateDescription.updatedFields };
-        io.emit("updateFields", roomAttFields);
+      if (change.updateDescription) {
+        const roomAttFields = { ...change.updateDescription.updatedFields }
+        io.emit("updateFields", roomAttFields)
       }
     });
 
@@ -55,7 +55,7 @@ export default function SocketHandler(req, res) {
         console.log('Error getting initial data:', err);
       });
 
-    // Listen for "updateQuiz" events emitted by the client
+    // Listen for "updateRoom" events emitted by the client
     socket.on("updateRoom", (updatedRoom) => {
       const RoomModel = mongoose.models.room
         ? mongoose.model("room")
@@ -81,8 +81,41 @@ export default function SocketHandler(req, res) {
         .catch((err) => {
           console.log("Error updating room:", err);
           /* io.emit("updateRoomError", err); */
-        });
-    });
+        })
+    })
+
+    // Listen for "updateAnswer" events emitted by the client
+    socket.on("updateAnswer", (player, code) => {
+      const RoomModel = mongoose.models.room
+        ? mongoose.model("room")
+        : mongoose.model("room", {
+          code: String,
+          owner: String,
+          currentQuestion: Number,
+          players: Array,
+          state: String,
+          teste: Array,
+        }, 'rooms');
+      RoomModel.updateOne(
+        { code: code },
+        {
+          $set: {
+            'players.$[element]': player
+          }
+        },
+        {
+          arrayFilters: [{ 'element.email': player.email }]
+        }
+      )
+        .then(() => {
+          console.log("Room updated successfully");
+          /* io.emit("updateRoomSuccess", updatedRoom); */
+        })
+        .catch((err) => {
+          console.log("Error updating room:", err);
+          /* io.emit("updateRoomError", err); */
+        })
+    })
 
     // Get the current value of "active" from the rooms collection
     /*     mongoose.connection.collection(process.env.COLL_ROOMS).findOne({ code: req.headers.code })

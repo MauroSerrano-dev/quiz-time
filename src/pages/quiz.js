@@ -87,6 +87,10 @@ export default withRouter((props) => {
                     setQuestionTransition(false)
                 }, TRANSITION_DURATION)
             }
+            else if (Object.keys(roomAttFields).some(field => field.includes('players'))) {
+                const key = Object.keys(roomAttFields)[0]
+                setRoom(prev => { return { ...prev, players: prev.players.filter(player => player.email !== roomAttFields[key].email).concat(roomAttFields[key]) } })
+            }
             else {
                 setRoom(prev => { return { ...prev, ...roomAttFields } })
             }
@@ -139,7 +143,7 @@ export default withRouter((props) => {
         setTimeout(() => {
             setQuestionTransition(true)
             setTimeout(() => {
-                socket.emit("updateRoom",
+                /* socket.emit("updateAnswer",
                     {
                         ...room, players: room.players.map(player =>
                             player.email === session.user.email
@@ -152,6 +156,15 @@ export default withRouter((props) => {
                                 : player
                         )
                     }
+                ) */
+                const player = getPlayer()
+                socket.emit("updateAnswer",
+                    {
+                        ...player,
+                        currentQuestion: showResult ? player.currentQuestion : player.currentQuestion + 1,
+                        state: showResult ? 'result' : player.state,
+                        answers: [...player.answers, { ...quiz.questions[player.currentQuestion].options[option], questionIndex: player.currentQuestion, optionIndex: option }]
+                    }, code
                 )
                 setOptionSelected()
                 setDisableOptions(false)
