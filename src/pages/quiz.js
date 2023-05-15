@@ -140,39 +140,30 @@ export default withRouter((props) => {
         setOptionSelected(option)
         setDisableOptions(true)
         const showResult = getPlayer().currentQuestion >= quiz.questions.length - 1
+
         setTimeout(() => {
             setQuestionTransition(true)
-            setTimeout(() => {
-                /* socket.emit("updateAnswer",
-                    {
-                        ...room, players: room.players.map(player =>
-                            player.email === session.user.email
-                                ? {
-                                    ...player,
-                                    currentQuestion: showResult ? player.currentQuestion : player.currentQuestion + 1,
-                                    state: showResult ? 'result' : player.state,
-                                    answers: [...player.answers, { ...quiz.questions[player.currentQuestion].options[option], questionIndex: player.currentQuestion, optionIndex: option }]
-                                }
-                                : player
-                        )
-                    }
-                ) */
-                const player = getPlayer()
-                socket.emit("updateAnswer",
-                    {
-                        ...player,
-                        currentQuestion: showResult ? player.currentQuestion : player.currentQuestion + 1,
-                        state: showResult ? 'result' : player.state,
-                        answers: [...player.answers, { ...quiz.questions[player.currentQuestion].options[option], questionIndex: player.currentQuestion, optionIndex: option }]
-                    }, code
-                )
-                setOptionSelected()
-                setDisableOptions(false)
-                if (!showResult) {
-                    setQuestionTransition(false)
-                }
-            }, TRANSITION_DURATION)
         }, TRANSITION_DURATION)
+
+        setTimeout(() => {
+            const player = getPlayer()
+            socket.emit("updateAnswer",
+                {
+                    ...player,
+                    currentQuestion: showResult ? player.currentQuestion : player.currentQuestion + 1,
+                    state: showResult ? 'result' : player.state,
+                    answers: [...player.answers, { ...quiz.questions[player.currentQuestion].options[option], questionIndex: player.currentQuestion, optionIndex: option }]
+                }, code
+            )
+            setOptionSelected()
+            setDisableOptions(false)
+        }, TRANSITION_DURATION * 1.3)
+
+        setTimeout(() => {
+            if (!showResult) {
+                setQuestionTransition(false)
+            }
+        }, TRANSITION_DURATION * 2)
     }
 
     function joinQuiz() {
