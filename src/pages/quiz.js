@@ -157,13 +157,13 @@ export default withRouter((props) => {
             )
             setOptionSelected()
             setDisableOptions(false)
-        }, TRANSITION_DURATION * 1.3)
+        }, TRANSITION_DURATION * 2.1)
 
         setTimeout(() => {
             if (!showResult) {
                 setQuestionTransition(false)
             }
-        }, TRANSITION_DURATION * 2)
+        }, TRANSITION_DURATION * 2.3)
     }
 
     function joinQuiz() {
