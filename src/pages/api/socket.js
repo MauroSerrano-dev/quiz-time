@@ -94,7 +94,6 @@ export default function SocketHandler(req, res) {
           currentQuestion: Number,
           players: Array,
           state: String,
-          teste: Array,
         }, 'rooms');
       RoomModel.updateOne(
         { code: code },

@@ -88,7 +88,7 @@ export default withRouter((props) => {
                     setQuestionTransition(false)
                 }, TRANSITION_DURATION)
             }
-            else if (firstKey.includes('players')) {
+            else if (firstKey.includes('players') && firstKey !== 'players') {
                 setRoom(prev => { return { ...prev, players: prev.players.filter(player => player.email !== roomAttFields[firstKey].email).concat(roomAttFields[firstKey]) } })
             }
             else {
