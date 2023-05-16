@@ -57,6 +57,7 @@ export default function SocketHandler(req, res) {
 
     // Listen for "updateRoom" events emitted by the client
     socket.on("updateRoom", (updatedRoom) => {
+      console.log('a', updatedRoom)
       const RoomModel = mongoose.models.room
         ? mongoose.model("room")
         : mongoose.model("room", {
@@ -65,6 +66,7 @@ export default function SocketHandler(req, res) {
           currentQuestion: Number,
           players: Array,
           state: String,
+          control: Boolean,
         }, 'rooms');
       RoomModel.updateOne(
         { code: updatedRoom.code },
@@ -72,7 +74,8 @@ export default function SocketHandler(req, res) {
           ...updatedRoom,
           currentQuestion: updatedRoom.currentQuestion,
           players: updatedRoom.players,
-          state: updatedRoom.state
+          state: updatedRoom.state,
+          control: updatedRoom.control
         })
         .then(() => {
           console.log("Room updated successfully");
@@ -107,11 +110,11 @@ export default function SocketHandler(req, res) {
         }
       )
         .then(() => {
-          console.log("Room updated successfully");
+          console.log("Answer updated successfully");
           /* io.emit("updateRoomSuccess", updatedRoom); */
         })
         .catch((err) => {
-          console.log("Error updating room:", err);
+          console.log("Error updating answer:", err);
           /* io.emit("updateRoomError", err); */
         })
     })

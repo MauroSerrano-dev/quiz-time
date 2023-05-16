@@ -1,7 +1,11 @@
 import { useSession, signIn, signOut } from "next-auth/react"
-import Navbar from '../components/Navbar'
+import Navbar from './Navbar'
 import styles from '../styles/components/DataHandler.module.css'
 import { useEffect } from "react"
+
+const FREE_PAGES = [
+    'Support'
+]
 
 export default function DataHandler(props) {
     const { Component, pageProps } = props
@@ -11,16 +15,20 @@ export default function DataHandler(props) {
         console.log(session)
     }, [session])
 
+    useEffect(() => {
+        console.log(Component.name)
+    }, [Component])
+
     return (
         <div>
-            {session === null &&
+            {session === null && !FREE_PAGES.includes(Component.name) &&
                 <div className={styles.noSessionContainer}>
                     <img className={styles.logo} src='/quiz-time-logo.png' />
                     <button onClick={() => signIn()}>Sign in</button>
                 </div>
             }
             {
-                session &&
+                (session || FREE_PAGES.includes(Component.name)) &&
                 <div>
                     <Navbar session={session} signIn={signIn} signOut={signOut} />
                     <Component {...pageProps} session={session} />

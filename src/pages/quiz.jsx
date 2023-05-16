@@ -1,13 +1,15 @@
 import styles from '../styles/quiz.module.css'
 import { useEffect, useState } from 'react'
 import { withRouter } from 'next/router'
-import io from "socket.io-client";
+import io from "socket.io-client"
 import { motion } from "framer-motion"
-import ChartPie from '../components/ChartPie';
+import ChartPie from '../components/ChartPie'
+import ChartRadar from '@/components/ChartRadar'
+import { Button } from '@mui/material';
 
-let socket;
+let socket
 
-const TRANSITION_DURATION = 250
+const TRANSITION_DURATION = 200
 
 export default withRouter((props) => {
     const { session } = props
@@ -22,11 +24,12 @@ export default withRouter((props) => {
     const [optionSelected, setOptionSelected] = useState()
     const [results, setResults] = useState([])
     const [allResults, setAllResults] = useState([])
+    const [allSubResults, setAllSubResults] = useState([])
     const [questionTransition, setQuestionTransition] = useState(false)
     const [disableOptions, setDisableOptions] = useState(false)
 
     useEffect(() => {
-        if (session && !room) {
+        if (!room) {
             getQuiz()
             getRoom()
             socketInitializer()
@@ -40,6 +43,7 @@ export default withRouter((props) => {
         if (room && quiz && (room.state === 'finish' || room.state === 'results' || getPlayer()?.state === 'result')) {
             setResults(getResults())
             setAllResults(getAllResults())
+            setAllSubResults(getAllSubResults())
         }
     }, [room, quiz])
 
@@ -110,32 +114,22 @@ export default withRouter((props) => {
     }
 
     function answerControl(option) {
+        const player = getPlayer()
         if (optionSelected === option) {
             setOptionSelected()
-            socket.emit("updateRoom",
+            socket.emit("updateAnswer",
                 {
-                    ...room, players: room.players.map(player =>
-                        player.email === session.user.email
-                            ? {
-                                ...player,
-                                answers: player.answers.filter(answer => answer.questionIndex !== room.currentQuestion)
-                            }
-                            : player
-                    )
-                })
+                    ...player,
+                    answers: player.answers.filter(answer => answer.questionIndex !== room.currentQuestion)
+                }, code
+            )
         }
         else {
             setOptionSelected(option)
-            socket.emit("updateRoom",
+            socket.emit("updateAnswer",
                 {
-                    ...room, players: room.players.map(player =>
-                        player.email === session.user.email
-                            ? {
-                                ...player,
-                                answers: player.answers.filter(answer => answer.questionIndex !== room.currentQuestion).concat([{ ...quiz.questions[room.currentQuestion].options[option], questionIndex: room.currentQuestion, optionIndex: option }])
-                            }
-                            : player
-                    )
+                    ...player,
+                    answers: player.answers.filter(answer => answer.questionIndex !== room.currentQuestion).concat([{ ...quiz.questions[room.currentQuestion].options[option], questionIndex: room.currentQuestion, optionIndex: option }])
                 }
             )
         }
@@ -148,7 +142,8 @@ export default withRouter((props) => {
 
         setTimeout(() => {
             setQuestionTransition(true)
-        }, TRANSITION_DURATION)
+            setOptionSelected()
+        }, TRANSITION_DURATION + 400)
 
         setTimeout(() => {
             const player = getPlayer()
@@ -160,15 +155,14 @@ export default withRouter((props) => {
                     answers: [...player.answers, { ...quiz.questions[player.currentQuestion].options[option], questionIndex: player.currentQuestion, optionIndex: option }]
                 }, code
             )
-            setOptionSelected()
-            setDisableOptions(false)
-        }, TRANSITION_DURATION * 2.1)
+        }, TRANSITION_DURATION * 2.1 + 400)
 
         setTimeout(() => {
+            setDisableOptions(false)
             if (!showResult) {
                 setQuestionTransition(false)
             }
-        }, TRANSITION_DURATION * 2.3)
+        }, TRANSITION_DURATION * 2.4 + 400)
     }
 
     function joinQuiz() {
@@ -197,8 +191,34 @@ export default withRouter((props) => {
     }
 
     function getAllResults() {
-        console.log(quiz.results)
         return quiz.results.map(result => {
+            return {
+                ...result, points: getPlayer()?.answers
+                    .reduce((acc, answer) =>
+                        acc + answer.actions.reduce((accumulator, action) =>
+                            action.profile === result.name
+                                ? accumulator + action.points
+                                : accumulator
+                            , 0)
+                        , 0)
+            }
+        }).sort((a, b) => b.points - a.points)
+    }
+
+    function getAllSubResults() {
+        console.log(quiz.subResults.map(result => {
+            return {
+                ...result, points: getPlayer()?.answers
+                    .reduce((acc, answer) =>
+                        acc + answer.actions.reduce((accumulator, action) =>
+                            action.profile === result.name
+                                ? accumulator + action.points
+                                : accumulator
+                            , 0)
+                        , 0)
+            }
+        }).sort((a, b) => b.points - a.points))
+        return quiz.subResults.map(result => {
             return {
                 ...result, points: getPlayer()?.answers
                     .reduce((acc, answer) =>
@@ -214,6 +234,10 @@ export default withRouter((props) => {
 
     function getPlayer() {
         return room.players.filter(player => player.email === session.user.email)[0]
+    }
+
+    function getRadarData() {
+        return quiz.radarOrder.map(name => allResults.concat(allSubResults).find(e => e.name === name))
     }
 
     return (
@@ -240,20 +264,34 @@ export default withRouter((props) => {
                     </div>
                 }
                 {room && room.state === 'active' && quiz && joined && getPlayer().state === 'answering' &&
-                    <motion.div className={styles.questionOptions}
-                        initial={{ opacity: 0 }}
-                        animate={questionTransition ? { opacity: 0 } : { opacity: 1 }}
-                        transition={{ duration: TRANSITION_DURATION / 1000, ease: [.62, -0.18, .32, 1.17] }}
-                    >
-                        <div className={styles.questionContainer}>
+                    <div className={styles.questionOptions}>
+                        <motion.div
+                            className={styles.questionContainer}
+                            initial={{ opacity: 0 }}
+                            animate={questionTransition ? { opacity: 0 } : { opacity: 1 }}
+                            transition={{ duration: TRANSITION_DURATION / 1000, ease: [.62, -0.18, .32, 1.17] }}
+                        >
                             <h2>{room.control ? room.currentQuestion + 1 : getPlayer().currentQuestion + 1}. {quiz.questions[room.control ? room.currentQuestion : getPlayer().currentQuestion].content}</h2>
-                        </div>
+                        </motion.div>
                         <div className={styles.optionsContainer}>
                             {quiz.questions[room.control ? room.currentQuestion : getPlayer().currentQuestion].options.map((option, i) =>
-                                <button key={`Option: ${i}`} className={`${styles.option} ${optionSelected === i ? styles.optionSelected : ''}`} onClick={() => room.control ? answerControl(i) : answer(i)} disabled={disableOptions} ><p>{option.content}</p></button>)
+                                <button
+                                    key={`Option: ${i}`}
+                                    className={`${styles.option} ${optionSelected === i ? styles.optionSelected : ''}`}
+                                    onClick={() => room.control ? answerControl(i) : answer(i)}
+                                    style={{ pointerEvents: disableOptions ? 'none' : 'auto' }}
+                                >
+                                    <motion.p
+                                        initial={{ opacity: 0 }}
+                                        animate={questionTransition ? { opacity: 0 } : { opacity: 1 }}
+                                        transition={{ duration: TRANSITION_DURATION / 1000, ease: [.62, -0.18, .32, 1.17] }}
+                                    >
+                                        {option.content}
+                                    </motion.p>
+                                </button>)
                             }
                         </div>
-                    </motion.div>
+                    </div>
                 }
                 {room && quiz && room.state === 'finish' && joined &&
                     <div>
@@ -262,6 +300,7 @@ export default withRouter((props) => {
                 }
                 {room && quiz && (room.state === 'results' || getPlayer()?.state === 'result') && results && joined &&
                     <motion.div
+                        className={styles.resultContainer}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: TRANSITION_DURATION / 2000, duration: TRANSITION_DURATION / 1000, ease: [.62, -0.18, .32, 1.17] }}
@@ -269,7 +308,9 @@ export default withRouter((props) => {
                         <div>
                             {results.map((result, i) =>
                                 <div key={`Result: ${i}`}>
-                                    <img style={{ borderRadius: '0.5rem' }} src={result.img} />
+                                    <div className={styles.resultImgContainer}>
+                                        <img src={result.img} alt={result.img.split('.')[0]} title={result.img.split('.')[0]} />
+                                    </div>
                                     <h2>{result.name}</h2>
                                 </div>
                             )}
@@ -277,6 +318,14 @@ export default withRouter((props) => {
                         <div style={{ width: '320px', height: '200px', marginTop: '2rem' }}>
                             <ChartPie data={allResults} totalPoints={allResults.reduce((acc, result) => acc + result.points, 0)} />
                         </div>
+                        <h2>Preferência Cerebral</h2>
+                        <div style={{ width: '600px', height: '600px' }}>
+                            <ChartRadar data={getRadarData()} max={25} />
+                        </div>
+                        <h2>Características Principais</h2>
+                        {results.map((result, i) =>
+                            <p>{result.description1}</p>
+                        )}
                     </motion.div>
                 }
             </main>

@@ -10,8 +10,11 @@ export default function Modal(props) {
     }, [])
 
     function handleKeyDown(event) {
-        if (event.key === 'Escape')
+        if (event.key === 'Escape') {
+            event.preventDefault()
             closeModal()
+            event.target.blur()
+        }
     }
 
     return (
@@ -26,7 +29,7 @@ export default function Modal(props) {
                 </div>
                 <motion.div
                     className={styles.modal}
-                    style={{ width: width, height: height, minWidth: '250px', minHeight: '350px'}}
+                    style={{ width: width, height: height, minWidth: '250px', minHeight: '350px' }}
                     initial={{ scale: 0.7 }}
                     animate={showModalOpacity ? { scale: 1 } : { scale: 0.7 }}
                     transition={{ duration: showModalOpacity ? 0.5 : 0.3, ease: [.62, -0.18, .32, 1.17] }}

@@ -1,6 +1,6 @@
 import styles from '../styles/support.module.css'
 
-export default function Lobby(props) {
+export default function Support(props) {
     const { session } = props
 
     return (

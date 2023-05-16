@@ -1,11 +1,6 @@
 @font-face {
-  font-family: montserrat-regular;
-  src: url(../../public/Montserrat-Regular.ttf);
-}
-
-@font-face {
-  font-family: montserrat-extrabold;
-  src: url(../../public/Montserrat-ExtraBold.ttf);
+  font-family: 'montserrat';
+  src: url('/_next/static/fonts/montserrat.ttf') format('truetype');
 }
 
 :root {
@@ -18,13 +13,14 @@
   --text-white: #e5e5e5;
   --text-color: var(--text-black);
   --global-modal-background: rgba(0, 0, 0, 0.5);
+  --logo-color: #009fda
 }
 
-@media (prefers-color-scheme: light) {
+/* @media (prefers-color-scheme: light) {
   :root {
     --body-background-color: #e2e2e2;
   }
-}
+} */
 
 ::-webkit-scrollbar {
   width: 0.5rem;
@@ -78,10 +74,17 @@ h2,
 h3,
 h4,
 h5,
-h6 {
-  font-family: montserrat-regular;
+h6,
+li {
+  font-family: 'montserrat';
   text-align: center;
   color: var(--text-color);
+}
+
+div {
+  font-family: 'montserrat';
+  text-align: center;
+  --toastify-text-color-dark: var(--global-white);
 }
 
 input {
@@ -89,14 +92,26 @@ input {
 }
 
 button {
+  font-family: 'montserrat';
   text-align: center;
+  cursor: pointer;
 }
 
-@media (prefers-color-scheme: light) {
+input,
+label {
+  font-family: 'montserrat';
+  color: var(--text-color);
+}
+
+input::placeholder {
+  font-family: 'montserrat';
+}
+
+/* @media (prefers-color-scheme: light) {
   html {
     color-scheme: light;
   }
-}
+} */
 
 /* Enable hover only on non-touch devices */
 @media (hover: hover) and (pointer: fine) {}

@@ -3,9 +3,13 @@ import Router from "next/router";
 import { useEffect, useState } from "react";
 import Modal from "../components/Modal";
 import Select from "react-select";
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import { validateCodeCharacters, validateCodeLength, containsAccents } from "../../utils/validations";
 import { showInfoToast } from "../../utils/toasts";
 import { motion } from "framer-motion"
+import Switch, { SwitchProps } from '@mui/material/Switch';
+import { TextField, Button } from '@mui/material';
 
 let socket;
 
@@ -21,7 +25,7 @@ export default function Lobby(props) {
     const [passwordInputOpen, setPasswordInputOpen] = useState(false)
 
     useEffect(() => {
-        if (session && !newRoom.owner) {
+        if (!newRoom.owner) {
             setNewRoom(prev => { return { ...prev, owner: session.user.email } })
         }
     }, [session])
@@ -133,8 +137,23 @@ export default function Lobby(props) {
 
     return (
         <div>
-            <main>
-                {showModal && <Modal height={'30%'} width={'25%'} minHeight={'350px'} minWidth={'250px'} closeModal={closeModal} showModalOpacity={showModalOpacity}
+            <main className={styles.main}>
+                <TextField
+                    value={searchCode}
+                    onChange={handleCodeChange}
+                    onKeyDown={handleSubmitCode}
+                    id="outlined-basic"
+                    label="Nome da Sala"
+                    variant='outlined'
+                    autoComplete='off'
+                />
+                <Button onClick={handleSubmitCode} disabled={searchCode === ''} >
+                    Entrar
+                </Button>
+                <Button onClick={openModal}>
+                    Criar Sala
+                </Button>
+                {showModal && <Modal height={'60%'} width={'30%'} minHeight={'350px'} minWidth={'250px'} closeModal={closeModal} showModalOpacity={showModalOpacity}
                     head={
                         <div className={styles.headContainer}>
                             <h2>Criar Sala</h2>
@@ -142,7 +161,35 @@ export default function Lobby(props) {
                     }
                     body={
                         <div className={styles.bodyContainer}>
-                            <input className={styles.nameInput} onChange={handleNewCodeChange} value={newRoom.name} placeholder="Nome" />
+                            <TextField value={newRoom.name} onChange={handleNewCodeChange} id="outlined-basic" label="Nome" variant='outlined' size='small' autoComplete='off' /* inputProps={{ style: { height: "50px", width: '50px' } }} */ />
+                            <div className={styles.privateAndInput}>
+                                <FormControlLabel
+                                    control={<Switch />}
+                                    label="Private:"
+                                    labelPlacement="start"
+                                    onChange={handleNewIsPrivate}
+                                    checked={newRoom.private}
+                                />
+                                <motion.div
+                                    className={styles.password}
+                                    onChange={handleNewPasswordChange}
+                                    value={newRoom.password}
+                                    placeholder="Senha"
+                                    initial={{ width: '0%' }}
+                                    animate={newRoom.private ? { width: '100%' } : { width: '0%' }}
+                                    transition={{ times: [0, 1], duration: 1, ease: newRoom.private ? [.62, -0.18, .32, 1.8] : [.52, .03, .24, 1.06] }}
+                                >
+                                    <TextField value={newRoom.password} id="outlined-basic" label="Senha" variant='outlined' size='small' autoComplete='off' />
+                                </motion.div>
+                            </div>
+                            <FormControlLabel onChange={handleNewControl} checked={newRoom.control} control={<Switch />} label="Controlar Perguntas:" labelPlacement="start" />
+                            <Select
+                                placeholder='Quiz'
+                                className={styles.selectQuiz}
+                                onChange={handleQuizSelectorChange}
+                                options={session.user.quizzesInfos.map((quiz, i) => { return { value: i, label: quiz.name } })}
+                            />
+                            {/* <input className={styles.nameInput} onChange={handleNewCodeChange} value={newRoom.name} placeholder="Nome" />
                             <div className={styles.privateAndInput}>
                                 <div className={styles.privateContainer}>
                                     <label>Private: </label>
@@ -155,7 +202,7 @@ export default function Lobby(props) {
                                         value={newRoom.password}
                                         placeholder="Senha"
                                         animate={newRoom.private ? { width: ['0%', '65%', '65%'], height: ['0%', '0%', '100%'] } : { width: ['65%', '65%', '0%'], height: ['100%', '0%', '0%'] }}
-                                        transition={{ times: [0, 0.5, 1], duration: 1, ease: newRoom.private ? [.62, -0.18, .32, 1.17] : [.52, .03, .24, 1.06] }}
+                                        transition={{ times: [0, 0.5, 1], duration: 1, ease: newRoom.private ? [.62, -0.18, .32, 1.8] : [.52, .03, .24, 1.06] }}
                                     />
                                 }
                             </div>
@@ -168,19 +215,22 @@ export default function Lobby(props) {
                                 className={styles.selectQuiz}
                                 onChange={handleQuizSelectorChange}
                                 options={session.user.quizzesInfos.map((quiz, i) => { return { value: i, label: quiz.name } })}
-                            />
+                            /> */}
                         </div>
                     }
                     foot={
                         <div className={styles.footContainer}>
-                            <button onClick={closeModal}>Cancelar</button>
-                            <button onClick={createNewRoom} disabled={disableCreateNewRoom} >{disableCreateNewRoom ? "Criando" : "Criar"}</button>
+                            <Button onClick={closeModal} variant="contained" color="error">
+                                Cancelar
+                            </Button>
+                            <Button onClick={createNewRoom} variant="contained" color="success">
+                                Criar
+                            </Button>
+                            {/* <button onClick={closeModal}>Cancelar</button>
+                            <button onClick={createNewRoom} disabled={disableCreateNewRoom} >{disableCreateNewRoom ? "Criando" : "Criar"}</button> */}
                         </div>
                     }
                 />}
-                <input onChange={handleCodeChange} onKeyDown={handleSubmitCode} value={searchCode} />
-                <button onClick={handleSubmitCode} disabled={searchCode === ''} >Entrar</button>
-                <button onClick={openModal}>Criar Sala</button>
             </main>
         </div>
     )

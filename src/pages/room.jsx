@@ -4,6 +4,7 @@ import styles from '../styles/room.module.css'
 import io from "socket.io-client";
 import { useEffect, useState } from 'react';
 import { motion } from "framer-motion"
+import { Button } from '@mui/material';
 
 let socket;
 
@@ -17,7 +18,7 @@ export default withRouter((props) => {
     const { code } = props.router.query
 
     useEffect(() => {
-        if (session && !room) {
+        if (!room) {
             socketInitializer()
         }
     }, [session])
@@ -41,6 +42,7 @@ export default withRouter((props) => {
         });
 
         socket.on("updateFields", (roomAttFields) => {
+            console.log(roomAttFields)
             const firstKey = Object.keys(roomAttFields)[0]
             if (firstKey.includes('players') && firstKey !== 'players') {
                 setRoom(prev => { return { ...prev, players: prev.players.filter(player => player.email !== roomAttFields[firstKey].email).concat(roomAttFields[firstKey]) } })
@@ -94,8 +96,12 @@ export default withRouter((props) => {
         }, 600)
     }
 
+    async function switchControl() {
+        socket.emit("updateRoom", { ...room, control: !room.control })
+    }
+
     return (
-        <div>
+        <div className={styles.container}>
             <main>
                 {room && Object.keys(room).length === 0 &&
                     <div>
@@ -103,7 +109,7 @@ export default withRouter((props) => {
                     </div>
                 }
                 {room && Object.keys(room).length > 0 &&
-                    <div>
+                    <div className={styles.roomContainer}>
                         <h1 className={styles.roomName}>Essa é a sala: {room.name}</h1>
                         {session.user.email === room.owner &&
                             <div>
@@ -122,7 +128,8 @@ export default withRouter((props) => {
                                             <div className={`${styles.frame} ${styles.border}`}></div>
                                             <div className={styles.textContainer}></div>
                                         </div>
-                                        <button onClick={startQuiz}>Start Quiz</button>
+                                        <Button variant="outlined" onClick={switchControl}>{room.control ? 'Control' : 'Auto-Play'}</Button>
+                                        <Button variant="outlined" onClick={startQuiz}>Start Quiz</Button>
                                     </motion.div>}
                                 {room.state === 'active' && quiz &&
                                     <motion.div
@@ -131,23 +138,29 @@ export default withRouter((props) => {
                                         transition={{ delay: activeShow ? 0.5 : 0, duration: activeShow ? 1.2 : 0.6, easings: ["easeInOut"] }}
                                         className={styles.activeContainer}
                                     >
-                                        <div className={styles.questionContainer}>
-                                            <h2>{quiz.questions[room.currentQuestion].content}</h2>
-                                        </div>
-                                        <div className={styles.optionsContainer}>
-                                            <button>{quiz.questions[room.currentQuestion].options[0].content}</button>
-                                            <button>{quiz.questions[room.currentQuestion].options[1].content}</button>
-                                            <button>{quiz.questions[room.currentQuestion].options[2].content}</button>
-                                            <button>{quiz.questions[room.currentQuestion].options[3].content}</button>
-                                        </div>
-                                        <button onClick={prevQuestion} disabled={room.currentQuestion === 0}>Prev Question</button>
-                                        <button onClick={nextQuestion}>Next Question</button>
-                                        <button onClick={resetQuiz}>Reset Quiz</button>
+                                        {room.control &&
+                                            <div>
+                                                <div className={styles.questionContainer}>
+                                                    <h2>{room.currentQuestion + 1}. {quiz.questions[room.currentQuestion].content}</h2>
+                                                </div>
+                                                <div className={styles.optionsContainer}>
+                                                    <Button variant="outlined">{quiz.questions[room.currentQuestion].options[0].content}</Button>
+                                                    <Button variant="outlined">{quiz.questions[room.currentQuestion].options[1].content}</Button>
+                                                    <Button variant="outlined">{quiz.questions[room.currentQuestion].options[2].content}</Button>
+                                                    <Button variant="outlined">{quiz.questions[room.currentQuestion].options[3].content}</Button>
+                                                </div>
+                                                <div>
+                                                    <Button variant="contained" onClick={prevQuestion} disabled={room.currentQuestion === 0}>Prev Question</Button>
+                                                    <Button variant="contained" onClick={nextQuestion}>Next Question</Button>
+                                                </div>
+                                            </div>
+                                        }
+                                        <Button variant="outlined" onClick={resetQuiz}>Reset Quiz</Button>
                                     </motion.div>
                                 }
                                 {room.state === 'finish' &&
                                     <div>
-                                        <button onClick={showResults}>Mostrar Resultados</button>
+                                        <Button variant="outlined" onClick={showResults}>Mostrar Resultados</Button>
                                     </div>
                                 }
                                 {room.state === 'results' &&
@@ -155,7 +168,7 @@ export default withRouter((props) => {
                                         <h2>Finalizado</h2>
                                     </div>
                                 }
-                                <div>
+                                <div className={styles.playersList}>
                                     <h3>Players</h3>
                                     <ol>
                                         {room.players.map((player, i) => <li key={`Player: ${i}`}><p>{player.name} {player.answers.some((answer, i) => i === room.currentQuestion) ? 'check' : ''}</p></li>)}
