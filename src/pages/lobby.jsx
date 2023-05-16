@@ -166,10 +166,10 @@ export default function Lobby(props) {
                         },
                     }}
                 />
-                <Button onClick={handleSubmitCode} disabled={searchCode === ''} >
+                <Button variant="outlined" onClick={handleSubmitCode} disabled={searchCode === ''} >
                     Entrar
                 </Button>
-                <Button onClick={openModal}>
+                <Button variant="outlined" onClick={openModal}>
                     Criar Sala
                 </Button>
                 {showModal && <Modal height={'60%'} width={'30%'} minHeight={'350px'} minWidth={'250px'} closeModal={closeModal} showModalOpacity={showModalOpacity}

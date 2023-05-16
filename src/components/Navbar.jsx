@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import styles from '../styles/components/NavBar.module.css'
 import { useRouter } from 'next/router'
+import { Button } from '@mui/material';
 
 const MENU_LIST = [
     { name: 'Main', href: '/' },
@@ -48,12 +49,12 @@ export default function Navbar(props) {
                                     <p>{session.user.name}</p>
                                 </div>
                             </div>
-                            <button onClick={() => signOut()}>Sign out</button>
+                            <Button variant="outlined" size='small' onClick={() => signOut()}>Sign out</Button>
                         </div>
                     }
                     {!session &&
                         <div>
-                            <button onClick={() => signIn()}>Sign in</button>
+                            <Button variant="outlined" size='small' onClick={() => signIn()}>Sign in</Button>
                         </div>
                     }
                     <div onClick={() => setNavActive(!navActive)} className={styles.nav_menu_bar}>

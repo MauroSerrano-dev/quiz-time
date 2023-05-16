@@ -2,6 +2,7 @@ import { useSession, signIn, signOut } from "next-auth/react"
 import Navbar from './Navbar'
 import styles from '../styles/components/DataHandler.module.css'
 import { useEffect } from "react"
+import { Button } from '@mui/material';
 
 const FREE_PAGES = [
     'Support'
@@ -24,7 +25,7 @@ export default function DataHandler(props) {
             {session === null && !FREE_PAGES.includes(Component.name) &&
                 <div className={styles.noSessionContainer}>
                     <img className={styles.logo} src='/quiz-time-logo.png' />
-                    <button onClick={() => signIn()}>Sign in</button>
+                    <Button variant="outlined" onClick={() => signIn()}>Sign in</Button>
                 </div>
             }
             {
