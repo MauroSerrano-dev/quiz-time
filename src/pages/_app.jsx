@@ -13,7 +13,7 @@ const mainTheme = createTheme({
       main: '#009fda',
     },
     secondary: {
-      main: '#ffffff'
+      main: '#e5e5e5'
     }
   },
   typography: {
@@ -36,7 +36,7 @@ function MyApp(props) {
       <ThemeProvider theme={mainTheme}>
         <SessionProvider>
           <DataHandler pageProps={pageProps} Component={Component} />
-          <ToastContainer newestOnTop transition={Flip} style={{color: 'white'}} className="foo" />
+          <ToastContainer newestOnTop transition={Flip} style={{ color: 'white' }} className="foo" />
         </SessionProvider>
       </ThemeProvider>
     </div>

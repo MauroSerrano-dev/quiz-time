@@ -93,3 +93,15 @@
     overflow: hidden;
     height: 100%;
 }
+
+.customLabel {
+    color: #e5e5e5;
+}
+
+.customLabelFocused {
+    color: #009fda;
+}
+
+.customLabel:hover {
+    color: #ffffff;
+}

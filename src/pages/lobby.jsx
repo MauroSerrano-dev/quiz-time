@@ -146,6 +146,25 @@ export default function Lobby(props) {
                     label="Nome da Sala"
                     variant='outlined'
                     autoComplete='off'
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                                borderColor: '#e5e5e5',
+                            },
+                            '&:hover fieldset': {
+                                borderColor: '#ffffff',
+                            },
+                        },
+                        '& .MuiInputLabel-root': {
+                            color: '#e5e5e5',
+                        },
+                        '&:hover .MuiInputLabel-root': {
+                            color: '#ffffff',
+                        },
+                        '& .MuiInputLabel-shrink': {
+                            color: '#009fda',
+                        },
+                    }}
                 />
                 <Button onClick={handleSubmitCode} disabled={searchCode === ''} >
                     Entrar
