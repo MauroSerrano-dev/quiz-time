@@ -9,7 +9,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  
+
   gap: 1rem;
 }
 
@@ -18,7 +18,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  
+
   gap: 1rem;
 }
 
@@ -32,6 +32,24 @@
   justify-content: center;
   align-items: center;
   text-align: center;
+}
+
+.linkContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 0.6rem;
+}
+
+.linkContainer a {
+  transition: text-decoration 250ms ease-in-out;
+  text-decoration: underline #e5e5e500;
+}
+
+.linkContainer a:hover {
+  text-decoration: underline #e5e5e5;
 }
 
 .activeContainer {

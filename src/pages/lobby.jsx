@@ -2,20 +2,22 @@ import styles from '../styles/lobby.module.css'
 import Router from "next/router";
 import { useEffect, useState } from "react";
 import Modal from "../components/Modal";
-import Select from "react-select";
 import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import { validateCodeCharacters, validateCodeLength, containsAccents } from "../../utils/validations";
 import { showInfoToast } from "../../utils/toasts";
 import { motion } from "framer-motion"
 import Switch, { SwitchProps } from '@mui/material/Switch';
-import { TextField, Button } from '@mui/material';
+import { TextField, Button, Select, FormControlLabel, MenuItem, OutlinedInput, InputLabel, FormControl } from '@mui/material';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import { SelectChangeEvent } from '@mui/material/Select';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 let socket;
 
 export default function Lobby(props) {
     const { session } = props
-    const [newRoom, setNewRoom] = useState({ name: '', code: '', private: false, control: false, password: '', state: 'disable' })
+    const [newRoom, setNewRoom] = useState({ name: '', code: '', private: false, control: false, password: '', state: 'disable', quizInfo: { name: '', purchaseDate: '', type: '' } })
     const [searchCode, setSearchCode] = useState('')
     const [newCode, setNewCode] = useState('')
     const [requestState, setRequestState] = useState('denied')
@@ -87,7 +89,7 @@ export default function Lobby(props) {
     }
 
     function handleQuizSelectorChange(event) {
-        setNewRoom(prev => { return { ...prev, quizInfo: session.user.quizzesInfos[event.value] } })
+        setNewRoom(prev => { return { ...prev, quizInfo: session.user.quizzesInfos[event.target.value] } })
     }
 
     function closeModal() {
@@ -95,13 +97,12 @@ export default function Lobby(props) {
         setTimeout(() => {
             setPasswordInputOpen(false)
             setShowModal(false)
-            setNewRoom(prev => { return { ...prev, password: '', code: '', name: '', private: false, control: false } })
-            delete newRoom.quizInfo
+            setNewRoom(prev => { return { ...prev, password: '', code: '', name: '', private: false, control: false, quizInfo: { name: '', purchaseDate: '', type: '' } } })
         }, 300)
     }
 
     async function createNewRoom() {
-        if (!newRoom.quizInfo) {
+        if (newRoom.quizInfo.name === '') {
             showInfoToast("Nenhum Quiz Selecitonado.", 3000)
             return
         }
@@ -146,25 +147,6 @@ export default function Lobby(props) {
                     label="Nome da Sala"
                     variant='outlined'
                     autoComplete='off'
-                    sx={{
-                        '& .MuiOutlinedInput-root': {
-                            '& fieldset': {
-                                borderColor: '#e5e5e5',
-                            },
-                            '&:hover fieldset': {
-                                borderColor: '#ffffff',
-                            },
-                        },
-                        '& .MuiInputLabel-root': {
-                            color: '#e5e5e5',
-                        },
-                        '&:hover .MuiInputLabel-root': {
-                            color: '#ffffff',
-                        },
-                        '& .MuiInputLabel-shrink': {
-                            color: '#009fda',
-                        },
-                    }}
                 />
                 <Button variant="outlined" onClick={handleSubmitCode} disabled={searchCode === ''} >
                     Entrar
@@ -180,8 +162,10 @@ export default function Lobby(props) {
                     }
                     body={
                         <div className={styles.bodyContainer}>
-                            <TextField value={newRoom.name} onChange={handleNewCodeChange} id="outlined-basic" label="Nome" variant='outlined' size='small' autoComplete='off' /* inputProps={{ style: { height: "50px", width: '50px' } }} */ />
-                            <div className={styles.privateAndInput}>
+                            <FormControl sx={{ height: '15%', width: '80%' }}>
+                                <TextField value={newRoom.name} onChange={handleNewCodeChange} id="outlined-basic" label="Nome" variant='outlined' size='small' autoComplete='off' /* inputProps={{ style: { height: "50px", width: '50px' } }} */ />
+                            </FormControl>
+                            <FormControl sx={{ height: '15%', width: '80%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
                                 <FormControlLabel
                                     control={<Switch />}
                                     label="Private:"
@@ -192,22 +176,39 @@ export default function Lobby(props) {
                                 <motion.div
                                     className={styles.password}
                                     onChange={handleNewPasswordChange}
-                                    value={newRoom.password}
-                                    placeholder="Senha"
-                                    initial={{ width: '0%' }}
-                                    animate={newRoom.private ? { width: '100%' } : { width: '0%' }}
-                                    transition={{ times: [0, 1], duration: 1, ease: newRoom.private ? [.62, -0.18, .32, 1.8] : [.52, .03, .24, 1.06] }}
+                                    initial={{ width: '0%', pointerEvents: 'none', opacity: 0 }}
+                                    animate={newRoom.private ? { width: '100%', opacity: [0, 1, 1], pointerEvents: 'auto' } : { width: '0%', opacity: [1, 1, 0], pointerEvents: 'none' }}
+                                    transition={{ times: [0, 0.8, 1], duration: 1, ease: newRoom.private ? [.62, -0.18, .32, 1.8] : [.52, .03, .24, 1.06] }}
                                 >
-                                    <TextField value={newRoom.password} id="outlined-basic" label="Senha" variant='outlined' size='small' autoComplete='off' />
+                                    <FormControl sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
+                                        <TextField value={newRoom.password} id="outlined-basic" label="Senha" variant='outlined' size='small' autoComplete='off' />
+                                    </FormControl>
                                 </motion.div>
-                            </div>
+                            </FormControl>
                             <FormControlLabel onChange={handleNewControl} checked={newRoom.control} control={<Switch />} label="Controlar Perguntas:" labelPlacement="start" />
-                            <Select
-                                placeholder='Quiz'
-                                className={styles.selectQuiz}
-                                onChange={handleQuizSelectorChange}
-                                options={session.user.quizzesInfos.map((quiz, i) => { return { value: i, label: quiz.name } })}
-                            />
+                            <FormControl sx={{ width: '80%' }}>
+                                <InputLabel size='small' id="select-label">Quiz</InputLabel>
+                                <Select
+                                    labelId="select-label"
+                                    id="select"
+                                    name={newRoom.quizInfo.name}
+                                    value={session.user.quizzesInfos.reduce((acc, item, i) => item.name === newRoom.quizInfo.name && item.type === newRoom.quizInfo.type ? i : '', '')}
+                                    onChange={handleQuizSelectorChange}
+                                    input={<OutlinedInput label="Quiz" />}
+                                    size='small'
+                                >
+                                    {session.user.quizzesInfos.map((quiz, i) => (
+                                        <MenuItem
+                                            key={`Quiz: ${i}`}
+                                            name={quiz.name}
+                                            value={i}
+                                        /* style={getStyles(name, personName, theme)} */
+                                        >
+                                            {quiz.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
                             {/* <input className={styles.nameInput} onChange={handleNewCodeChange} value={newRoom.name} placeholder="Nome" />
                             <div className={styles.privateAndInput}>
                                 <div className={styles.privateContainer}>
@@ -239,14 +240,25 @@ export default function Lobby(props) {
                     }
                     foot={
                         <div className={styles.footContainer}>
-                            <Button onClick={closeModal} variant="contained" color="error">
+                            <Button
+                                onClick={closeModal}
+                                variant="contained"
+                                color="error"
+                                sx={{ width: '30%', height: '55%' }}
+                            >
                                 Cancelar
                             </Button>
-                            <Button onClick={createNewRoom} variant="contained" color="success">
-                                Criar
-                            </Button>
-                            {/* <button onClick={closeModal}>Cancelar</button>
-                            <button onClick={createNewRoom} disabled={disableCreateNewRoom} >{disableCreateNewRoom ? "Criando" : "Criar"}</button> */}
+                            <LoadingButton
+                                onClick={createNewRoom}
+                                loading={disableCreateNewRoom}
+                                loadingPosition="end"
+                                color="success"
+                                variant="contained"
+                                endIcon={disableCreateNewRoom && <AddCircleOutlineIcon />}
+                                sx={{ width: '30%', height: '55%' }}
+                            >
+                                {disableCreateNewRoom ? 'Criando' : 'Criar'}
+                            </LoadingButton>
                         </div>
                     }
                 />}

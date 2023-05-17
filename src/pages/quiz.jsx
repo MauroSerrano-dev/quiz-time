@@ -99,6 +99,7 @@ export default withRouter((props) => {
             }
             else if (firstKey.includes('players') && firstKey !== 'players') {
                 setRoom(prev => { return { ...prev, players: prev.players.filter(player => player.email !== roomAttFields[firstKey].email).concat(roomAttFields[firstKey]) } })
+                turnOffTransition()
             }
             else {
                 setRoom(prev => { return { ...prev, ...roomAttFields } })
@@ -156,13 +157,13 @@ export default withRouter((props) => {
                 }, code
             )
         }, TRANSITION_DURATION * 2.1 + 400)
+    }
 
+    function turnOffTransition() {
         setTimeout(() => {
             setDisableOptions(false)
-            if (!showResult) {
-                setQuestionTransition(false)
-            }
-        }, TRANSITION_DURATION * 2.4 + 400)
+            setQuestionTransition(false)
+        }, TRANSITION_DURATION)
     }
 
     function joinQuiz() {

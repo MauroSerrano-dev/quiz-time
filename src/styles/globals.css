@@ -125,3 +125,7 @@ input::placeholder {
 @media (min-width: 701px) and (max-width: 1120px) {}
 
 @media (prefers-color-scheme: dark) {}
+
+.red-border {
+  border-color: red !important;
+}

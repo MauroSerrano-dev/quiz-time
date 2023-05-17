@@ -128,6 +128,13 @@ export default withRouter((props) => {
                                             <div className={`${styles.frame} ${styles.border}`}></div>
                                             <div className={styles.textContainer}></div>
                                         </div>
+                                        <h2>Ou</h2>
+                                        <div className={styles.linkContainer}>
+                                            <h2>Entre no link:</h2>
+                                            <a href={`https://quiztime.pt/quiz?code=${code}`} target='_blank'>
+                                                <h2>quiztime.pt/quiz?code={code}</h2>
+                                            </a>
+                                        </div>
                                         <Button variant="outlined" onClick={switchControl}>{room.control ? 'Control' : 'Auto-Play'}</Button>
                                         <Button variant="outlined" onClick={startQuiz}>Start Quiz</Button>
                                     </motion.div>}
