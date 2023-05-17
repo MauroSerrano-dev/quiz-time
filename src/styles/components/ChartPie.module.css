@@ -1,0 +1,12 @@
+.pieChart {
+    --text-color: var(--text-black)
+}
+.pieChart ul {
+    padding: 0px;
+    margin: 0px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}

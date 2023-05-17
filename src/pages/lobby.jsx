@@ -25,6 +25,7 @@ export default function Lobby(props) {
     const [showModalOpacity, setShowModalOpacity] = useState(false)
     const [disableCreateNewRoom, setDisableCreateNewRoom] = useState(false)
     const [passwordInputOpen, setPasswordInputOpen] = useState(false)
+    const [firstClickPrivite, setFirstClickPrivite] = useState(false)
 
     useEffect(() => {
         if (!newRoom.owner) {
@@ -46,6 +47,7 @@ export default function Lobby(props) {
     }
 
     function handleNewIsPrivate(event) {
+        setFirstClickPrivite(true)
         const { checked } = event.target
         if (checked)
             setPasswordInputOpen(prev => !prev)
@@ -93,6 +95,7 @@ export default function Lobby(props) {
     }
 
     function closeModal() {
+        setFirstClickPrivite(false)
         setShowModalOpacity(false)
         setTimeout(() => {
             setPasswordInputOpen(false)
@@ -177,7 +180,7 @@ export default function Lobby(props) {
                                     className={styles.password}
                                     onChange={handleNewPasswordChange}
                                     initial={{ width: '0%', pointerEvents: 'none', opacity: 0 }}
-                                    animate={newRoom.private ? { width: '100%', opacity: [0, 1, 1], pointerEvents: 'auto' } : { width: '0%', opacity: [1, 1, 0], pointerEvents: 'none' }}
+                                    animate={newRoom.private ? { width: '100%', opacity: [0, 1, 1], pointerEvents: 'auto' } : { width: '0%', opacity: firstClickPrivite ? [1, 1, 0] : [0, 0, 0], pointerEvents: 'none' }}
                                     transition={{ times: [0, 0.8, 1], duration: 1, ease: newRoom.private ? [.62, -0.18, .32, 1.8] : [.52, .03, .24, 1.06] }}
                                 >
                                     <FormControl sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>

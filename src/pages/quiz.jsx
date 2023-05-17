@@ -252,14 +252,14 @@ export default withRouter((props) => {
                 {room && room.state === 'disable' &&
                     <div>
                         {!joined &&
-                            <button onClick={joinQuiz}>Join</button>
+                            <Button variant="outlined" onClick={joinQuiz}>Join</Button>
                         }
                         {joined &&
                             <div>
                                 <div className={styles.watingContainer}>
                                     <h3 className={styles.watingMsg}>Aguarde enquanto o Quiz começa{dots}</h3>
                                 </div>
-                                <button onClick={leaveQuiz}>Leave</button>
+                                <Button variant="outlined" onClick={leaveQuiz}>Leave</Button>
                             </div>
                         }
                     </div>
@@ -276,20 +276,21 @@ export default withRouter((props) => {
                         </motion.div>
                         <div className={styles.optionsContainer}>
                             {quiz.questions[room.control ? room.currentQuestion : getPlayer().currentQuestion].options.map((option, i) =>
-                                <button
+                                <Button
+                                    variant={optionSelected === i ? 'contained' : 'outlined'}
                                     key={`Option: ${i}`}
-                                    className={`${styles.option} ${optionSelected === i ? styles.optionSelected : ''}`}
+                                    /* className={`${styles.option} ${optionSelected === i ? styles.optionSelected : ''}`} */
                                     onClick={() => room.control ? answerControl(i) : answer(i)}
-                                    style={{ pointerEvents: disableOptions ? 'none' : 'auto' }}
+                                    sx={{ pointerEvents: disableOptions ? 'none' : 'auto', width: '350px', height: '50px' }}
                                 >
                                     <motion.p
-                                        initial={{ opacity: 0 }}
+                                        initial={{ opacity: 0, color: 'var(--text-white)' }}
                                         animate={questionTransition ? { opacity: 0 } : { opacity: 1 }}
                                         transition={{ duration: TRANSITION_DURATION / 1000, ease: [.62, -0.18, .32, 1.17] }}
                                     >
                                         {option.content}
                                     </motion.p>
-                                </button>)
+                                </Button>)
                             }
                         </div>
                     </div>
@@ -316,7 +317,7 @@ export default withRouter((props) => {
                                 </div>
                             )}
                         </div>
-                        <div style={{ width: '320px', height: '200px', marginTop: '2rem' }}>
+                        <div style={{ width: '400px', height: '200px', marginTop: '2rem' }}>
                             <ChartPie data={allResults} totalPoints={allResults.reduce((acc, result) => acc + result.points, 0)} />
                         </div>
                         <h2>Preferência Cerebral</h2>

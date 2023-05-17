@@ -1,4 +1,5 @@
 import React from "react";
+import styles from '../styles/components/ChartRadar.module.css'
 import {
     Radar,
     RadarChart,
@@ -57,6 +58,7 @@ export default function ChartRadar(props) {
             width={600}
             height={600}
             data={data}
+            className={styles.radarChart}
         >
             <PolarGrid />
             <PolarAngleAxis dataKey="name" />

@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { easeInOut, motion } from 'framer-motion';
+import styles from '../styles/components/ChartPie.module.css'
 
 const RADIAN = Math.PI / 180;
 const renderCustomizedLabel = (event) => {
@@ -50,7 +51,7 @@ export default class ChartPie extends PureComponent {
     render() {
         return (
             <ResponsiveContainer width="100%" height="100%">
-                <PieChart style={{ outline: 'none' }} width={400} height={400}>
+                <PieChart className={styles.pieChart} style={{ outline: 'none' }} width={400} height={400}>
                     <Legend layout="vertical" verticalAlign="middle" align="right" />
                     <Pie
                         stroke={'white'}
@@ -69,7 +70,7 @@ export default class ChartPie extends PureComponent {
                             <Cell key={`Cell: ${i}`} fill={result.color} />
                         ))}
                     </Pie>
-                    <Tooltip content={(event) => CustomTooltip(event, this.props.totalPoints)} />
+                    <Tooltip labelStyle={{color: 'red'}} itemStyle={{backgroundColor: 'blue'}} className={styles.tooltip} content={(event) => CustomTooltip(event, this.props.totalPoints)} />
                 </PieChart>
             </ResponsiveContainer>
         );
