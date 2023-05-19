@@ -254,7 +254,7 @@ export default function Lobby(props) {
                             <LoadingButton
                                 onClick={createNewRoom}
                                 loading={disableCreateNewRoom}
-                                loadingPosition="end"
+                                loadingPosition={disableCreateNewRoom ? 'end' : 'center'}
                                 color="success"
                                 variant="contained"
                                 endIcon={disableCreateNewRoom && <AddCircleOutlineIcon />}

@@ -282,7 +282,11 @@ const quiz = {
         { name: subResult2, description1: '', img: '', color: '' },
         { name: subResult4, description1: '', img: '', color: '' },
     ],
-    radarOrder: radarOrder
+    radarOrder: radarOrder,
+    layout: [
+        {name: 'ChartPie', legend: true},
+        {name: 'ChartRadar', radarOrder: radarOrder},
+    ]
 }
 
 export default function Configuration() {

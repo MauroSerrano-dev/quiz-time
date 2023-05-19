@@ -4,7 +4,7 @@ import styles from '../styles/room.module.css'
 import io from "socket.io-client";
 import { useEffect, useState } from 'react';
 import { motion } from "framer-motion"
-import { Button } from '@mui/material';
+import { Button, ButtonGroup } from '@mui/material';
 
 let socket;
 
@@ -96,8 +96,8 @@ export default withRouter((props) => {
         }, 600)
     }
 
-    async function switchControl() {
-        socket.emit("updateRoom", { ...room, control: !room.control })
+    async function switchControl(isControl) {
+        socket.emit("updateRoom", { ...room, control: isControl })
     }
 
     return (
@@ -135,7 +135,10 @@ export default withRouter((props) => {
                                                 <h2>quiztime.pt/quiz?code={code}</h2>
                                             </a>
                                         </div>
-                                        <Button variant="outlined" onClick={switchControl}>{room.control ? 'Control' : 'Auto-Play'}</Button>
+                                        <ButtonGroup>
+                                            <Button sx={{width: '120px'}} variant={room.control ? 'outlined' : 'contained'} onClick={() => switchControl(false)}>Auto-Play</Button>
+                                            <Button sx={{width: '120px'}} variant={room.control ? 'contained' : 'outlined'} onClick={() => switchControl(true)}>Control</Button>
+                                        </ButtonGroup>
                                         <Button variant="outlined" onClick={startQuiz}>Start Quiz</Button>
                                     </motion.div>}
                                 {room.state === 'active' && quiz &&

@@ -55,9 +55,47 @@
 
 .resultContainer {
     display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    height: 100%;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.resultContainer div {
+    display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
+}
+
+.resultBlock {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 40%;
+    min-width: 400px;
+    height: 400px;
+}
+
+.layoutItem {
+    width: 75%;
+    height: 75%;
+    border: dashed red;
+}
+
+.pieContainer{
+    width: 100%;
+    height: 100%;
+}
+
+.imgTitleContainer {
+    width: 100%;
+    height: 100%;
+    gap: 1rem;
 }
 
 .resultImgContainer {
@@ -65,8 +103,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    width: 163px;
-    height: 163px;
+    width: 60%;
+    height: 80%;
     border-radius: 0.5rem;
     overflow: hidden;
     outline-style: solid;
@@ -75,6 +113,6 @@
 }
 
 .resultImgContainer img {
-    max-width: 100%;
-    max-height: auto;
+    width: 100%;
+    height: auto;
 }

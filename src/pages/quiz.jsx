@@ -5,7 +5,7 @@ import io from "socket.io-client"
 import { motion } from "framer-motion"
 import ChartPie from '../components/ChartPie'
 import ChartRadar from '@/components/ChartRadar'
-import { Button } from '@mui/material';
+import { Button, Box, Grid } from '@mui/material';
 
 let socket
 
@@ -27,6 +27,7 @@ export default withRouter((props) => {
     const [allSubResults, setAllSubResults] = useState([])
     const [questionTransition, setQuestionTransition] = useState(false)
     const [disableOptions, setDisableOptions] = useState(false)
+    const [layout, setLayout] = useState([])
 
     useEffect(() => {
         if (!room) {
@@ -44,6 +45,38 @@ export default withRouter((props) => {
             setResults(getResults())
             setAllResults(getAllResults())
             setAllSubResults(getAllSubResults())
+            setLayout([
+                {
+                    value:
+                        <Box className={styles.layoutItem}>
+                            {results.map((result, i) =>
+                                <div className={styles.imgTitleContainer} key={`Result: ${i}`}>
+                                    <div className={styles.resultImgContainer}>
+                                        <img src={result.img} alt={result.img.split('.')[0]} title={result.img.split('.')[0]} />
+                                    </div>
+                                    <h2>{result.name}</h2>
+                                </div>
+                            )}
+                        </Box>
+                },
+                {
+                    value:
+                        <Box className={styles.layoutItem}>
+                            <div className={styles.pieContainer}>
+                                <ChartPie data={allResults} totalPoints={allResults.reduce((acc, result) => acc + result.points, 0)} />
+                            </div>
+                        </Box>
+                },
+                {
+                    value: <Box className={styles.layoutItem}><h2>Preferência Cerebral</h2></Box>
+                },
+                {
+                    value:
+                        <Box className={styles.layoutItem}>
+                            <ChartRadar data={getRadarData()} max={25} />
+                        </Box>
+                }
+            ])
         }
     }, [room, quiz])
 
@@ -307,26 +340,11 @@ export default withRouter((props) => {
                         animate={{ opacity: 1 }}
                         transition={{ delay: TRANSITION_DURATION / 2000, duration: TRANSITION_DURATION / 1000, ease: [.62, -0.18, .32, 1.17] }}
                     >
-                        <div>
-                            {results.map((result, i) =>
-                                <div key={`Result: ${i}`}>
-                                    <div className={styles.resultImgContainer}>
-                                        <img src={result.img} alt={result.img.split('.')[0]} title={result.img.split('.')[0]} />
-                                    </div>
-                                    <h2>{result.name}</h2>
-                                </div>
-                            )}
-                        </div>
-                        <div style={{ width: '400px', height: '200px', marginTop: '2rem' }}>
-                            <ChartPie data={allResults} totalPoints={allResults.reduce((acc, result) => acc + result.points, 0)} />
-                        </div>
-                        <h2>Preferência Cerebral</h2>
-                        <div style={{ width: '600px', height: '600px' }}>
-                            <ChartRadar data={getRadarData()} max={25} />
-                        </div>
+                        {quiz && layout.map((item, i) => <Box className={styles.resultBlock} key={i}>{item.value}</Box>)
+                        }
                         <h2>Características Principais</h2>
                         {results.map((result, i) =>
-                            <p>{result.description1}</p>
+                            <p key={i}>{result.description1}</p>
                         )}
                     </motion.div>
                 }
