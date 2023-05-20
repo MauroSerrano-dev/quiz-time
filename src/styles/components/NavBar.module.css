@@ -5,12 +5,14 @@
     width: 100%;
     justify-content: space-between;
     align-items: center;
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: var(--body-background-color);
     transition: all 650ms ease-in-out;
     z-index: 1;
+    border-bottom: solid var(--global-white);
     margin-bottom: 2rem;
     padding-left: 1rem;
     padding-right: 1rem;
+    --text-color: var(--text-white);
 }
 
 .leftSide {
