@@ -44,8 +44,9 @@ export default withRouter((props) => {
         if (room && quiz && (room.state === 'finish' || room.state === 'results' || getPlayer()?.state === 'result')) {
             const myResults = getResults()
             const myAllResults = getAllResults()
-            const myRadarData = getRadarData()
             const myAllSubResults = getAllSubResults()
+            const chartRadarIndex = quiz.layout.findIndex(item => item.name === 'ChartRadar')
+            const myRadarData = chartRadarIndex !== -1 ? getRadarData(quiz.layout[chartRadarIndex].radarOrder, myAllResults, myAllSubResults) : []
             setResults(myResults)
             setAllResults(myAllResults)
             setAllSubResults(myAllSubResults)
@@ -266,8 +267,8 @@ export default withRouter((props) => {
         return room.players.filter(player => player.email === session.user.email)[0]
     }
 
-    function getRadarData() {
-        return quiz.radarOrder.map(name => allResults.concat(allSubResults).find(e => e.name === name))
+    function getRadarData(order, allResults, allSubResults) {
+        return order.map(name => allResults.concat(allSubResults).find(e => e.name === name))
     }
 
     return (
