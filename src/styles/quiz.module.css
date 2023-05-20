@@ -80,39 +80,3 @@
     min-width: 400px;
     height: 400px;
 }
-
-.layoutItem {
-    width: 75%;
-    height: 75%;
-    border: dashed red;
-}
-
-.pieContainer{
-    width: 100%;
-    height: 100%;
-}
-
-.imgTitleContainer {
-    width: 100%;
-    height: 100%;
-    gap: 1rem;
-}
-
-.resultImgContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    width: 60%;
-    height: 80%;
-    border-radius: 0.5rem;
-    overflow: hidden;
-    outline-style: solid;
-    outline-width: 2px;
-    outline-color: rgb(197, 197, 197);
-}
-
-.resultImgContainer img {
-    width: 100%;
-    height: auto;
-}

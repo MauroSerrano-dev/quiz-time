@@ -3,9 +3,8 @@ import { useEffect, useState } from 'react'
 import { withRouter } from 'next/router'
 import io from "socket.io-client"
 import { motion } from "framer-motion"
-import ChartPie from '../components/ChartPie'
-import ChartRadar from '@/components/ChartRadar'
 import { Button, Box, Grid } from '@mui/material';
+import { getLayout } from '../../utils/layout'
 
 let socket
 
@@ -50,42 +49,7 @@ export default withRouter((props) => {
             setResults(myResults)
             setAllResults(myAllResults)
             setAllSubResults(myAllSubResults)
-            console.log(results)
-            console.log(myAllResults)
-            console.log(myAllSubResults)
-            console.log(myRadarData)
-            setLayout([
-                {
-                    value:
-                        <Box className={styles.layoutItem}>
-                            {myResults.map((result, i) =>
-                                <div className={styles.imgTitleContainer} key={`Result: ${i}`}>
-                                    <div className={styles.resultImgContainer}>
-                                        <img src={result.img} alt={result.img.split('.')[0]} title={result.img.split('.')[0]} />
-                                    </div>
-                                    <h2>{result.name}</h2>
-                                </div>
-                            )}
-                        </Box>
-                },
-                {
-                    value:
-                        <Box className={styles.layoutItem}>
-                            <div className={styles.pieContainer}>
-                                <ChartPie data={myAllResults} totalPoints={myAllResults.reduce((acc, result) => acc + result.points, 0)} />
-                            </div>
-                        </Box>
-                },
-                {
-                    value: <Box className={styles.layoutItem}><h2>Preferência Cerebral</h2></Box>
-                },
-                {
-                    value:
-                        <Box className={styles.layoutItem}>
-                            <ChartRadar data={myRadarData} max={25} />
-                        </Box>
-                }
-            ])
+            setLayout(getLayout(quiz.layout, myResults, myAllResults, myRadarData))
         }
     }, [room, quiz])
 
@@ -337,12 +301,7 @@ export default withRouter((props) => {
                         animate={{ opacity: 1 }}
                         transition={{ delay: TRANSITION_DURATION / 2000, duration: TRANSITION_DURATION / 1000, ease: [.62, -0.18, .32, 1.17] }}
                     >
-                        {quiz && layout.map((item, i) => <Box className={styles.resultBlock} key={i}>{item.value}</Box>)
-                        }
-                        <h2>Características Principais</h2>
-                        {results.map((result, i) =>
-                            <p key={i}>{result.description1}</p>
-                        )}
+                        {layout.map((item, i) => <Box className={styles.resultBlock} key={i}>{item.value}</Box>)}
                     </motion.div>
                 }
             </main>

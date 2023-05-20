@@ -270,22 +270,23 @@ const quiz = {
         },
     ],
     results: [
-        { name: result1, description1: 'Fazer rápido', img: 'shark.jpg', color: '#ABDEE6' },
-        { name: result2, description1: 'Fazer junto', img: 'cat.jpg', color: '#FFD8BE' },
-        { name: result3, description1: 'Fazer diferente', img: 'eagle.jpg', color: '#FFF7D2' },
-        { name: result4, description1: 'Fazer certo', img: 'wolf.jpg', color: '#CBAACB' },
+        { name: result1, texts: [{ ref: 'Preferência Cerebral', value: 'Fazer rápido' }, { ref: 'Preferências Cerebral', value: 'Fazersadsa rápido' }], img: 'shark.jpg', color: '#ABDEE6' },
+        { name: result2, texts: [{ ref: 'Preferência Cerebral', value: 'Fazer junto' }], img: 'cat.jpg', color: '#FFD8BE' },
+        { name: result3, texts: [{ ref: 'Preferência Cerebral', value: 'Fazer diferente' }], img: 'eagle.jpg', color: '#FFF7D2' },
+        { name: result4, texts: [{ ref: 'Preferência Cerebral', value: 'Fazer certo' }], img: 'wolf.jpg', color: '#CBAACB' },
     ],
     resultLayout: [],
     subResults: [
-        { name: subResult1, description1: '', img: '', color: '' },
-        { name: subResult3, description1: '', img: '', color: '' },
-        { name: subResult2, description1: '', img: '', color: '' },
-        { name: subResult4, description1: '', img: '', color: '' },
+        { name: subResult1, texts: [], img: '', color: '' },
+        { name: subResult3, texts: [], img: '', color: '' },
+        { name: subResult2, texts: [], img: '', color: '' },
+        { name: subResult4, texts: [], img: '', color: '' },
     ],
-    radarOrder: radarOrder,
     layout: [
-        {name: 'ChartPie', legend: true},
-        {name: 'ChartRadar', radarOrder: radarOrder},
+        { name: 'Image' },
+        { name: 'ChartPie', legend: true },
+        { name: 'ChartRadar', radarOrder: radarOrder },
+        { name: 'Title', title: 'Preferência Cerebral' }
     ]
 }
 
