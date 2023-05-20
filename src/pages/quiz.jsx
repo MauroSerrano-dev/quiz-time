@@ -42,14 +42,19 @@ export default withRouter((props) => {
             updateOptionSelected()
         }
         if (room && quiz && (room.state === 'finish' || room.state === 'results' || getPlayer()?.state === 'result')) {
-            setResults(getResults())
-            setAllResults(getAllResults())
-            setAllSubResults(getAllSubResults())
+            const myResults = getResults()
+            const myAllResults = getAllResults()
+            const myRadarData = getRadarData()
+            const myAllSubResults = getAllSubResults()
+            setResults(myResults)
+            setAllResults(myAllResults)
+            setAllSubResults(myAllSubResults)
+            console.log(results)
             setLayout([
                 {
                     value:
                         <Box className={styles.layoutItem}>
-                            {results.map((result, i) =>
+                            {myResults.map((result, i) =>
                                 <div className={styles.imgTitleContainer} key={`Result: ${i}`}>
                                     <div className={styles.resultImgContainer}>
                                         <img src={result.img} alt={result.img.split('.')[0]} title={result.img.split('.')[0]} />
@@ -63,7 +68,7 @@ export default withRouter((props) => {
                     value:
                         <Box className={styles.layoutItem}>
                             <div className={styles.pieContainer}>
-                                <ChartPie data={allResults} totalPoints={allResults.reduce((acc, result) => acc + result.points, 0)} />
+                                <ChartPie data={myAllResults} totalPoints={myAllResults.reduce((acc, result) => acc + result.points, 0)} />
                             </div>
                         </Box>
                 },
@@ -73,7 +78,7 @@ export default withRouter((props) => {
                 {
                     value:
                         <Box className={styles.layoutItem}>
-                            <ChartRadar data={getRadarData()} max={25} />
+                            <ChartRadar data={myRadarData} max={25} />
                         </Box>
                 }
             ])
