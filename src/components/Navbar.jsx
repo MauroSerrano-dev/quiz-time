@@ -3,13 +3,13 @@ import Link from 'next/link'
 import styles from '../styles/components/NavBar.module.css'
 import { useRouter } from 'next/router'
 import { Button } from '@mui/material';
+import AvatarMenu from './AvatarMenu';
 
 const MENU_LIST = [
     { name: 'Main', href: '/' },
     { name: 'Lobby', href: '/lobby' },
     { name: 'Quiz Builder', href: '/quiz-builder' },
     { name: 'Configuration', href: '/configuration' },
-    { name: 'Support', href: '/support' },
 ]
 
 export default function Navbar(props) {
@@ -44,17 +44,12 @@ export default function Navbar(props) {
                 <div className={styles.rightSide}>
                     {session &&
                         <div className={styles.rightSideLogin}>
-                            <div className={styles.avatarContainer}>
-                                <div className={styles.userName}>
-                                    <p>{session.user.name}</p>
-                                </div>
-                            </div>
-                            <Button variant="outlined" size='small' onClick={() => signOut()}>Sign out</Button>
+                            <AvatarMenu session={session} signOut={signOut} />
                         </div>
                     }
                     {!session &&
                         <div>
-                            <Button variant="outlined" size='small' onClick={() => signIn()}>Sign in</Button>
+                            <Button variant="outlined" className={styles.loginButton} onClick={() => signIn()}>Sign in</Button>
                         </div>
                     }
                     <div onClick={() => setNavActive(!navActive)} className={styles.nav_menu_bar}>

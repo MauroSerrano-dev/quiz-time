@@ -163,6 +163,11 @@
     gap: 0.5rem;
 }
 
+.loginButton {
+    height: 25px;
+    width: 110px;
+}
+
 /* Enable hover only on non-touch devices */
 @media (hover: hover) and (pointer: fine) {}
 
