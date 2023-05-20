@@ -50,6 +50,9 @@ export default withRouter((props) => {
             setAllResults(myAllResults)
             setAllSubResults(myAllSubResults)
             console.log(results)
+            console.log(myAllResults)
+            console.log(myAllSubResults)
+            console.log(myRadarData)
             setLayout([
                 {
                     value:
@@ -245,18 +248,6 @@ export default withRouter((props) => {
     }
 
     function getAllSubResults() {
-        console.log(quiz.subResults.map(result => {
-            return {
-                ...result, points: getPlayer()?.answers
-                    .reduce((acc, answer) =>
-                        acc + answer.actions.reduce((accumulator, action) =>
-                            action.profile === result.name
-                                ? accumulator + action.points
-                                : accumulator
-                            , 0)
-                        , 0)
-            }
-        }).sort((a, b) => b.points - a.points))
         return quiz.subResults.map(result => {
             return {
                 ...result, points: getPlayer()?.answers

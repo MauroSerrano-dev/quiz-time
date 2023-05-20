@@ -42,7 +42,6 @@ export default withRouter((props) => {
         });
 
         socket.on("updateFields", (roomAttFields) => {
-            console.log(roomAttFields)
             const firstKey = Object.keys(roomAttFields)[0]
             if (firstKey.includes('players') && firstKey !== 'players') {
                 setRoom(prev => { return { ...prev, players: prev.players.filter(player => player.email !== roomAttFields[firstKey].email).concat(roomAttFields[firstKey]) } })

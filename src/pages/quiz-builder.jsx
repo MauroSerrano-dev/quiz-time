@@ -45,10 +45,6 @@ export default function QuizBuilder() {
         }
     }, [building])
 
-    useEffect(() => {
-        console.log(quiz)
-    }, [quiz])
-
     function handleSelectMode(gModeName) {
         setBuilding(true)
         setQuiz(prev => { return { ...prev, mode: gModeName } })
