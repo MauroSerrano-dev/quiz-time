@@ -1,3 +1,5 @@
+import { Button } from "@mui/material"
+
 const result1 = 'Ativador(a)'
 const result2 = 'Comunicador(a)'
 const result3 = 'Idealizador(a)'
@@ -308,7 +310,17 @@ export default function Settings() {
     return (
         <div>
             <main>
-                {process.env.NODE_ENV === 'development' && <button onClick={handlePopulate}>Populate</button>}
+                {process.env.NODE_ENV === 'development' &&
+                    <div>
+                        <Button onClick={handlePopulate}>Populate</Button>
+                        <a href="https://buy.stripe.com/test_8wMcQCdo95m1fg47st" target="_blank">
+                            <Button>Adquirir Plano Silver</Button>
+                        </a>
+                        <a href="https://buy.stripe.com/test_00g03Q5VH6q59VK8ww" target="_blank">
+                            <Button>Adquirir Plano Premium</Button>
+                        </a>
+                    </div>
+                }
             </main>
         </div>
     );
