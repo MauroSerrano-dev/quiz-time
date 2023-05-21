@@ -8,20 +8,24 @@ export default async function handler(req, res) {
     }
 
     else if (req.method === "POST") {
-        console.log(req.body)
+        console.log(req.body.object)
+        console.log(req.body.object.payment_link)
+        console.log(req.body.object.data.customer_details.email)
+        const link = req.body.object.payment_link
+        const email = req.body.object.data.customer_details.email
         try {
             let plan
-            if (req.body.payment_link === "plink_1NA3MIHqx2KsFA9zcbgjXuBF")
+            if (link === "plink_1NA3MIHqx2KsFA9zcbgjXuBF")
                 plan = 'Premium'
-            if (req.body.payment_link === "plink_1NA4OTHqx2KsFA9zesGMYepK")
+            if (link === "plink_1NA4OTHqx2KsFA9zesGMYepK")
                 plan = 'Silver'
             if (plan)
-                updateUserPlan(req.body.data.customer_details.email, plan)
+                updateUserPlan(email, plan)
         }
         catch (error) {
             console.error(`Error: ${error}`);
         }
-        res.status(201).json({ message: `Plano do User ${req.body.data.customer_details.email} Atualizado com Sucesso!` })
+        res.status(201).json({ message: `Plano do User ${email} Atualizado com Sucesso!` })
     }
 
     else if (req.method === "PATCH") {
