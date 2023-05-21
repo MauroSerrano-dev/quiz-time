@@ -8,12 +8,12 @@ export default async function handler(req, res) {
     }
 
     else if (req.method === "POST") {
-        const { email } = req.body.data.customer_details
+        const email = req.body.data.customer_details.email
         const link = req.body.payment_link
         let plan
-        if (link=== "plink_1NA3MIHqx2KsFA9zcbgjXuBF")
+        if (link === "plink_1NA3MIHqx2KsFA9zcbgjXuBF")
             plan = 'premium'
-        if (link=== "plink_1NA4OTHqx2KsFA9zesGMYepK")
+        if (link === "plink_1NA4OTHqx2KsFA9zesGMYepK")
             plan = 'silver'
         if (plan)
             updateUserPlan(email, plan)
