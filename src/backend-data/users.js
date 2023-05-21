@@ -17,5 +17,5 @@ async function updateUserPlan(email, plan) {
 }
 
 export {
-    updateUser,
+    updateUserPlan,
 }
