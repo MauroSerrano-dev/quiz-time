@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react'
 import { withRouter } from 'next/router'
 import io from "socket.io-client"
 import { motion } from "framer-motion"
-import { Button, Box, Grid } from '@mui/material';
+import { Button, Box, Grid, TextField } from '@mui/material';
 import { getLayout } from '../../utils/layout'
+import { showErrorToast } from '../../utils/toasts'
 
 let socket
 
@@ -27,11 +28,12 @@ export default withRouter((props) => {
     const [questionTransition, setQuestionTransition] = useState(false)
     const [disableOptions, setDisableOptions] = useState(false)
     const [layout, setLayout] = useState([])
+    const [locked, setLocked] = useState(false)
+    const [unlockCode, setUnlockCode] = useState('')
 
     useEffect(() => {
         if (!room) {
             getQuiz()
-            getRoom()
             socketInitializer()
         }
     }, [session])
@@ -54,6 +56,11 @@ export default withRouter((props) => {
     }, [room, quiz])
 
     useEffect(() => {
+        if (room && room.private && !joined && session.user.email !== room.owner)
+            lockRoom()
+    }, [room])
+
+    useEffect(() => {
         setTimeout(() => setDots(prev => prev.length >= 3 ? '' : prev + '.'), 500)
     }, [dots])
 
@@ -67,9 +74,6 @@ export default withRouter((props) => {
             .then(response => response.json())
             .then(response => setQuiz(response.quiz))
             .catch(err => console.error(err))
-    }
-
-    async function getRoom() {
     }
 
     const socketInitializer = async () => {
@@ -178,8 +182,18 @@ export default withRouter((props) => {
     }
 
     function leaveQuiz() {
+        if (room.private)
+            lockRoom()
         setJoined(false)
         socket.emit("updateRoom", { ...room, players: room.players.filter(player => player.email !== session.user.email) });
+    }
+
+    function lockRoom() {
+        setLocked(true)
+    }
+
+    function unlockRoom() {
+        setLocked(false)
     }
 
     function getResults() {
@@ -235,6 +249,23 @@ export default withRouter((props) => {
         return order.map(name => allResults.concat(allSubResults).find(e => e.name === name))
     }
 
+    function handleUnlockChange(event) {
+        setUnlockCode(event.target.value)
+    }
+
+    function handleSubmitUnlock(event) {
+        if (event._reactName === 'onClick' || event.key === 'Enter') {
+            if (unlockCode === room.password) {
+                joinQuiz()
+                unlockRoom()
+                setUnlockCode('')
+            }
+            else {
+                showErrorToast("Senha incorreta.", 3000)
+            }
+        }
+    }
+
     return (
         <motion.div className={styles.container}
             initial={{ opacity: 0 }}
@@ -243,66 +274,86 @@ export default withRouter((props) => {
         >
             <main>
                 <h3 className={styles.roomName}>{quizName}</h3>
-                {room && room.state === 'disable' &&
+                {room &&
                     <div>
-                        {!joined &&
-                            <Button variant="outlined" onClick={joinQuiz}>Join</Button>
-                        }
-                        {joined &&
+                        {room.state === 'disable' &&
                             <div>
-                                <div className={styles.watingContainer}>
-                                    <h3 className={styles.watingMsg}>Aguarde enquanto o Quiz começa{dots}</h3>
-                                </div>
-                                <Button variant="outlined" onClick={leaveQuiz}>Leave</Button>
+                                {!joined &&
+                                    <div>
+                                        {locked &&
+                                            <div>
+                                                <h3>Insira a Senha</h3>
+                                                <TextField
+                                                    value={unlockCode}
+                                                    onChange={handleUnlockChange}
+                                                    onKeyDown={handleSubmitUnlock}
+                                                    id="outlined-basic"
+                                                    label="Senha"
+                                                    variant='outlined'
+                                                    autoComplete='off'
+                                                />
+                                            </div>
+                                        }
+                                        <Button variant="outlined" onClick={locked ? handleSubmitUnlock : joinQuiz}>Entrar</Button>
+                                    </div>
+                                }
+                                {joined &&
+                                    <div>
+                                        <div className={styles.watingContainer}>
+                                            <h3 className={styles.watingMsg}>Aguarde enquanto o Quiz começa{dots}</h3>
+                                        </div>
+                                        <Button variant="outlined" onClick={leaveQuiz}>Sair</Button>
+                                    </div>
+                                }
                             </div>
                         }
-                    </div>
-                }
-                {room && room.state === 'active' && quiz && joined && getPlayer().state === 'answering' &&
-                    <div className={styles.questionOptions}>
-                        <motion.div
-                            className={styles.questionContainer}
-                            initial={{ opacity: 0 }}
-                            animate={questionTransition ? { opacity: 0 } : { opacity: 1 }}
-                            transition={{ duration: TRANSITION_DURATION / 1000, ease: [.62, -0.18, .32, 1.17] }}
-                        >
-                            <h2>{room.control ? room.currentQuestion + 1 : getPlayer().currentQuestion + 1}. {quiz.questions[room.control ? room.currentQuestion : getPlayer().currentQuestion].content}</h2>
-                        </motion.div>
-                        <div className={styles.optionsContainer}>
-                            {quiz.questions[room.control ? room.currentQuestion : getPlayer().currentQuestion].options.map((option, i) =>
-                                <Button
-                                    variant={optionSelected === i ? 'contained' : 'outlined'}
-                                    key={`Option: ${i}`}
-                                    /* className={`${styles.option} ${optionSelected === i ? styles.optionSelected : ''}`} */
-                                    onClick={() => room.control ? answerControl(i) : answer(i)}
-                                    sx={{ pointerEvents: disableOptions ? 'none' : 'auto', width: '350px', height: '50px' }}
+                        {room.state === 'active' && quiz && joined && getPlayer().state === 'answering' &&
+                            <div className={styles.questionOptions}>
+                                <motion.div
+                                    className={styles.questionContainer}
+                                    initial={{ opacity: 0 }}
+                                    animate={questionTransition ? { opacity: 0 } : { opacity: 1 }}
+                                    transition={{ duration: TRANSITION_DURATION / 1000, ease: [.62, -0.18, .32, 1.17] }}
                                 >
-                                    <motion.p
-                                        initial={{ opacity: 0, color: 'var(--text-white)' }}
-                                        animate={questionTransition ? { opacity: 0 } : { opacity: 1 }}
-                                        transition={{ duration: TRANSITION_DURATION / 1000, ease: [.62, -0.18, .32, 1.17] }}
-                                    >
-                                        {option.content}
-                                    </motion.p>
-                                </Button>)
-                            }
-                        </div>
+                                    <h2>{room.control ? room.currentQuestion + 1 : getPlayer().currentQuestion + 1}. {quiz.questions[room.control ? room.currentQuestion : getPlayer().currentQuestion].content}</h2>
+                                </motion.div>
+                                <div className={styles.optionsContainer}>
+                                    {quiz.questions[room.control ? room.currentQuestion : getPlayer().currentQuestion].options.map((option, i) =>
+                                        <Button
+                                            variant={optionSelected === i ? 'contained' : 'outlined'}
+                                            key={`Option: ${i}`}
+                                            /* className={`${styles.option} ${optionSelected === i ? styles.optionSelected : ''}`} */
+                                            onClick={() => room.control ? answerControl(i) : answer(i)}
+                                            sx={{ pointerEvents: disableOptions ? 'none' : 'auto', width: '350px', height: '50px' }}
+                                        >
+                                            <motion.p
+                                                initial={{ opacity: 0, color: 'var(--text-white)' }}
+                                                animate={questionTransition ? { opacity: 0 } : { opacity: 1 }}
+                                                transition={{ duration: TRANSITION_DURATION / 1000, ease: [.62, -0.18, .32, 1.17] }}
+                                            >
+                                                {option.content}
+                                            </motion.p>
+                                        </Button>)
+                                    }
+                                </div>
+                            </div>
+                        }
+                        {quiz && room.state === 'finish' && joined &&
+                            <div>
+                                <h2>Finalizado</h2>
+                            </div>
+                        }
+                        {quiz && (room.state === 'results' || getPlayer()?.state === 'result') && results && joined &&
+                            <motion.div
+                                className={styles.resultContainer}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: TRANSITION_DURATION / 2000, duration: TRANSITION_DURATION / 1000, ease: [.62, -0.18, .32, 1.17] }}
+                            >
+                                {layout.map((item, i) => <Box className={styles.resultBlock} key={i}>{item.value}</Box>)}
+                            </motion.div>
+                        }
                     </div>
-                }
-                {room && quiz && room.state === 'finish' && joined &&
-                    <div>
-                        <h2>Finalizado</h2>
-                    </div>
-                }
-                {room && quiz && (room.state === 'results' || getPlayer()?.state === 'result') && results && joined &&
-                    <motion.div
-                        className={styles.resultContainer}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: TRANSITION_DURATION / 2000, duration: TRANSITION_DURATION / 1000, ease: [.62, -0.18, .32, 1.17] }}
-                    >
-                        {layout.map((item, i) => <Box className={styles.resultBlock} key={i}>{item.value}</Box>)}
-                    </motion.div>
                 }
             </main>
         </motion.div>

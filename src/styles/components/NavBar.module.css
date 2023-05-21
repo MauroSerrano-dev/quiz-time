@@ -5,7 +5,7 @@
     width: 100%;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--body-background-color);
+    background-color: transparent;
     transition: all 650ms ease-in-out;
     z-index: 1;
     border-bottom: solid var(--global-white);
@@ -198,7 +198,8 @@
         width: 150px;
         min-height: calc(100vh - 60px);
         height: 60px;
-        background-color: #3d485b;
+        background-color: var(--body-background-color);
+        border-left: solid var(--global-white);
         row-gap: 24px;
         right: -288px;
         padding: 24px 16px;

@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Head from 'next/head'
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import MontserratRegular from '../../public/fonts/montserrat.ttf';
+import { useEffect } from 'react';
 
 const mainTheme = createTheme({
   palette: {
@@ -25,6 +26,19 @@ const mainTheme = createTheme({
 function MyApp(props) {
   const { Component, pageProps } = props
 
+  useEffect(() => {
+    const blob = document.getElementsByClassName('blob')[0]
+    if (blob) {
+      document.addEventListener('mousemove', event => {
+        const { clientX, clientY } = event
+        blob.animate({
+          left: `${clientX}px`,
+          top: `${clientY}px`
+        }, { duration: 3000, fill: 'forwards' })
+      })
+    }
+  }, [])
+
   return (
     <div>
       <Head>
@@ -34,6 +48,8 @@ function MyApp(props) {
         <link rel="icon" href="/quiz-time-logo.png" />
       </Head>
       <ThemeProvider theme={mainTheme}>
+        {/* <div className='blob'></div>
+        <div className='blur'></div> */}
         <SessionProvider>
           <DataHandler pageProps={pageProps} Component={Component} />
           <ToastContainer newestOnTop transition={Flip} style={{ color: 'white' }} className="foo" />

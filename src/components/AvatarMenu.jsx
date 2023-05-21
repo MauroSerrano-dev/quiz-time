@@ -29,9 +29,9 @@ export default function AvatarMenu(props) {
   const handleClose = () => {
     setAnchorEl(null)
   }
-  const handleSupport = () => {
+  function handleChange(targetPage) {
     setAnchorEl(null)
-    Router.push('/support')
+    Router.push(`/${targetPage}`)
   }
   const handleLogout = () => {
     setAnchorEl(null)
@@ -49,7 +49,7 @@ export default function AvatarMenu(props) {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
           >
-            <Avatar src={session.user.image} referrerpolicy="no-referrer" sx={{ width: 50, height: 50 }} />
+            <Avatar src={session.user.image} referrerPolicy="no-referrer" alt="Avatar" sx={{ width: 50, height: 50 }} />
           </IconButton>
         </Tooltip>
       </Box>
@@ -96,13 +96,13 @@ export default function AvatarMenu(props) {
           My Quizzes
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={() => handleChange('settings')}>
           <ListItemIcon>
             <Settings fontSize="medium" />
           </ListItemIcon>
           Settings
         </MenuItem>
-        <MenuItem onClick={handleSupport}>
+        <MenuItem onClick={() => handleChange('support')}>
           <ListItemIcon>
             <SupportAgentIcon fontSize="medium" />
           </ListItemIcon>

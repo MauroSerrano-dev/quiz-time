@@ -9,7 +9,6 @@ const MENU_LIST = [
     { name: 'Main', href: '/' },
     { name: 'Lobby', href: '/lobby' },
     { name: 'Quiz Builder', href: '/quiz-builder' },
-    { name: 'Configuration', href: '/configuration' },
 ]
 
 export default function Navbar(props) {

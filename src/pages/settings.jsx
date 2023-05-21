@@ -290,7 +290,7 @@ const quiz = {
     ]
 }
 
-export default function Configuration() {
+export default function Settings() {
 
     async function handlePopulate() {
 
