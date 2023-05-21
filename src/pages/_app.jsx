@@ -7,6 +7,7 @@ import Head from 'next/head'
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import MontserratRegular from '../../public/fonts/montserrat.ttf';
 import { useEffect } from 'react';
+import Script from 'next/script';
 
 const mainTheme = createTheme({
   palette: {
@@ -45,7 +46,9 @@ function MyApp(props) {
         <title>Quiz Time</title>
         <meta name="description" content="Quiz Buider App" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="referrer" content="no-referrer" />
         <link rel="icon" href="/quiz-time-logo.png" />
+        <Script src="https://js.stripe.com/v3/" async></Script>
       </Head>
       <ThemeProvider theme={mainTheme}>
         {/* <div className='blob'></div>

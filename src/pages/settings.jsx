@@ -1,4 +1,5 @@
 import { Button } from "@mui/material"
+import { checkout } from "./api/checkout"
 
 const result1 = 'Ativador(a)'
 const result2 = 'Comunicador(a)'
@@ -292,7 +293,8 @@ const quiz = {
     ]
 }
 
-export default function Settings() {
+export default function Settings(props) {
+    const { session } = props
 
     async function handlePopulate() {
 
@@ -312,14 +314,27 @@ export default function Settings() {
             <main>
                 {process.env.NODE_ENV === 'development' &&
                     <div>
-                        <Button onClick={handlePopulate}>Populate</Button>
+                        <Button variant="outlined" onClick={handlePopulate}>Populate</Button>
                     </div>
                 }
-                <a href="https://buy.stripe.com/test_8wMcQCdo95m1fg47st" target="_blank">
-                    <Button>Adquirir Plano Silver</Button>
-                </a>
+                <Button
+                    variant="outlined"
+                    onClick={() =>
+                        checkout({
+                            lineItems: [
+                                {
+                                    price: 'price_1NA6YMG4uTYyyhYycTjRNYk7',
+                                    quantity: 1,
+                                }
+                            ],
+                            mode: 'subscription',
+                            email: session.user.email
+                        })}
+                >
+                    Adquirir Plano Silver
+                </Button>
                 <a href="https://buy.stripe.com/test_00g03Q5VH6q59VK8ww" target="_blank">
-                    <Button>Adquirir Plano Premium</Button>
+                    <Button variant="outlined" >Adquirir Plano Premium</Button>
                 </a>
             </main>
         </div>

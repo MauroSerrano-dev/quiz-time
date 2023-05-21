@@ -14,6 +14,6 @@ export default async function handler(req, res) {
             plan = 'Silver'
         if (plan)
             updateUserPlan(email, plan)
-        res.status(201).json({ message: `Plano do User ${email} Atualizado para ${plan} com Sucesso!` })
+        res.status(201).json({ message: JSON.stringify(req.body) })
     }
 }

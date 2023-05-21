@@ -18,6 +18,8 @@ export default function AvatarMenu(props) {
   const { signOut, session } = props
 
   React.useEffect(() => {
+    console.log(session.user.name)
+    console.log(session.user.email)
     console.log(session.user.image)
   }, [])
 
@@ -49,7 +51,7 @@ export default function AvatarMenu(props) {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
           >
-            <Avatar src={session.user.image} referrerPolicy="no-referrer" alt="Avatar" sx={{ width: 50, height: 50 }} />
+            <Avatar src={session.user.image} alt="Avatar" sx={{ width: 50, height: 50 }}>{!session.user.image && session.user.name[0]}</Avatar>
           </IconButton>
         </Tooltip>
       </Box>
