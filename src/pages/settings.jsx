@@ -313,14 +313,14 @@ export default function Settings() {
                 {process.env.NODE_ENV === 'development' &&
                     <div>
                         <Button onClick={handlePopulate}>Populate</Button>
-                        <a href="https://buy.stripe.com/test_8wMcQCdo95m1fg47st" target="_blank">
-                            <Button>Adquirir Plano Silver</Button>
-                        </a>
-                        <a href="https://buy.stripe.com/test_00g03Q5VH6q59VK8ww" target="_blank">
-                            <Button>Adquirir Plano Premium</Button>
-                        </a>
                     </div>
                 }
+                <a href="https://buy.stripe.com/test_8wMcQCdo95m1fg47st" target="_blank">
+                    <Button>Adquirir Plano Silver</Button>
+                </a>
+                <a href="https://buy.stripe.com/test_00g03Q5VH6q59VK8ww" target="_blank">
+                    <Button>Adquirir Plano Premium</Button>
+                </a>
             </main>
         </div>
     );
