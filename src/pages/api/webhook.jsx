@@ -8,14 +8,16 @@ export default async function handler(req, res) {
     }
 
     else if (req.method === "POST") {
+        const { email } = req.body.data.customer_details
+        const link = req.body.payment_link
         let plan
-        if (req.body.payment_link === "plink_1NA3MIHqx2KsFA9zcbgjXuBF")
+        if (link=== "plink_1NA3MIHqx2KsFA9zcbgjXuBF")
             plan = 'premium'
-        if(req.body.payment_link === "plink_1NA4OTHqx2KsFA9zesGMYepK") 
+        if (link=== "plink_1NA4OTHqx2KsFA9zesGMYepK")
             plan = 'silver'
         if (plan)
-            updateUserPlan(req.body.data.customer_details.email, plan)
-        res.status(201).json({ message: "Plano Atualizado com Sucesso!" })
+            updateUserPlan(email, plan)
+        res.status(201).json({ message: `Plano do User ${email} Atualizado com Sucesso!` })
     }
 
     else if (req.method === "PATCH") {
