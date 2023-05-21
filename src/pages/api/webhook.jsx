@@ -11,6 +11,7 @@ export default async function handler(req, res) {
         console.log(req.body)
         console.log(req.body.payment_link)
         console.log(req.body.data.customer_details)
+        console.log(req.body.data.object.customer_details)
         const link = req.body.object.payment_link
         const email = req.body.object.data.customer_details.email
         try {
