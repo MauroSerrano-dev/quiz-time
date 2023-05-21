@@ -334,9 +334,23 @@ export default function Settings(props) {
                 >
                     Adquirir Plano Silver
                 </Button>
-                <a href="https://buy.stripe.com/test_00g03Q5VH6q59VK8ww" target="_blank">
-                    <Button variant="outlined" >Adquirir Plano Premium</Button>
-                </a>
+                <Button
+                    variant="outlined"
+                    onClick={() =>
+                        checkout({
+                            lineItems: [
+                                {
+                                    price: 'price_1NA6YpG4uTYyyhYy8kU1vygT',
+                                    quantity: 1,
+                                }
+                            ],
+                            mode: 'subscription',
+                            email: session.user.email,
+                            plan: 'Premium'
+                        })}
+                >
+                    Adquirir Plano Premium
+                </Button>
             </main>
         </div>
     );
