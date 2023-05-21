@@ -3,13 +3,13 @@ const { getMongoCollection } = require("./utils/mongodb");
 const DATABASE = process.env.MONGODB_DB;
 const COLLECTION_NAME = 'users';
 
-async function updateUser() {
+async function updateUserPlan(email, plan) {
     const collection = await getMongoCollection(DATABASE, COLLECTION_NAME);
     const result = await collection.updateOne(
-        { email: 'mauro.r.serrano.f@gmail.com' },
+        { email: email },
         {
             $set: {
-                'subscriptionPlan': 'premium'
+                'subscriptionPlan': plan
             }
         }
     )

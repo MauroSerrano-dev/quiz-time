@@ -1,4 +1,4 @@
-import {updateUser } from "../../backend-data/users";
+import { updateUserPlan } from "../../backend-data/users";
 
 export default async function handler(req, res) {
 
@@ -8,7 +8,11 @@ export default async function handler(req, res) {
     }
 
     else if (req.method === "POST") {
-        updateUser()
+        let plan
+        if (req.payment_link === "plink_1NA3MIHqx2KsFA9zcbgjXuBF")
+            plan = 'premium'
+        if (plan)
+            updateUserPlan(req.data.customer_details.email, plan)
         res.status(201).json({ message: "Plano Atualizado com Sucesso!" })
     }
 
