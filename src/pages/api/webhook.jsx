@@ -1,4 +1,4 @@
-/* import { } from "../../backend-data/users"; */
+import {updateUser } from "../../backend-data/users";
 
 export default async function handler(req, res) {
 
@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     }
 
     else if (req.method === "POST") {
-        console.log('req', req.body);
+        updateUser()
         res.status(201).json({ message: "Plano Atualizado com Sucesso!" })
     }
 
