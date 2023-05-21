@@ -8,6 +8,7 @@ export default async function handler(req, res) {
     }
 
     else if (req.method === "POST") {
+        console.log('email', req.body.data.customer_details.email, req.body.payment_link)
         let plan
         if (req.payment_link === "plink_1NA3MIHqx2KsFA9zcbgjXuBF")
             plan = 'premium'
