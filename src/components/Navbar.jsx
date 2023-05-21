@@ -43,6 +43,7 @@ export default function Navbar(props) {
                 <div className={styles.rightSide}>
                     {session &&
                         <div className={styles.rightSideLogin}>
+                            <h2>{session.user.subscriptionPlan}</h2>
                             <AvatarMenu session={session} signOut={signOut} />
                         </div>
                     }
