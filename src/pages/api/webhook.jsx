@@ -8,6 +8,7 @@ export default async function handler(req, res) {
     }
 
     else if (req.method === "POST") {
+        console.log(req.body)
         try {
             let plan
             if (req.body.payment_link === "plink_1NA3MIHqx2KsFA9zcbgjXuBF")
