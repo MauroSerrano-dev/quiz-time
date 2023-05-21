@@ -15,7 +15,7 @@ export default NextAuth({
           id: profile.email,
           name: profile.name,
           email: profile.email,
-          subscriptionPlan: 'free',
+          subscriptionPlan: 'Free',
           image: profile.picture,
           createAt: new Date(),
           quizzesInfos: [{ name: 'Perfil Comportamental', purchaseDate: '', type: 'standard' }],
