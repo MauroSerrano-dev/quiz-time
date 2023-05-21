@@ -9,7 +9,7 @@ async function updateUser() {
         { email: 'mauro.r.serrano.f@gmail.com' },
         {
             $set: {
-                'plan': 'premium'
+                'subscriptionPlan': 'premium'
             }
         }
     )
