@@ -1,24 +1,22 @@
 import { loadStripe } from '@stripe/stripe-js';
 
 export async function checkout(props) {
-    const { lineItems, mode, email } = props
+    const { lineItems, mode, email, plan } = props;
+    console.log(lineItems, mode, email, plan)
+    const stripe = await loadStripe(process.env.NEXT_PUBLIC_API_KEY);
 
-    let stripePromise = null
+    const session = await fetch('/api/checkoutSession', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            lineItems,
+            mode,
+            customerEmail: email,
+            metadata: { plan },
+        }),
+    }).then((response) => response.json());
 
-    function getStripe() {
-        if (!stripePromise) {
-            stripePromise = loadStripe(process.env.NEXT_PUBLIC_API_KEY)
-        }
-        return stripePromise
-    }
-
-    const stripe = await getStripe()
-
-    await stripe.redirectToCheckout({
-        mode: mode,
-        lineItems,
-        successUrl: `${window.location.origin}/lobby`,
-        cancelUrl: window.location.origin,
-        customerEmail: email
-    })
+    await stripe.redirectToCheckout({ sessionId: session.id });
 }

@@ -328,7 +328,8 @@ export default function Settings(props) {
                                 }
                             ],
                             mode: 'subscription',
-                            email: session.user.email
+                            email: session.user.email,
+                            plan: 'Silver'
                         })}
                 >
                     Adquirir Plano Silver
