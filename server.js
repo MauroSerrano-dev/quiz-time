@@ -4,7 +4,6 @@ const next = require('next');
 const dev = process.env.NODE_ENV === 'development';
 const app = next({ dev });
 const handle = app.getRequestHandler();
-const apiRoute = require('./src/pages/api/checkoutSession');
 
 app.prepare().then(() => {
     const server = express();
@@ -16,8 +15,6 @@ app.prepare().then(() => {
             next();
         }
     });
-
-    server.all('/api/checkoutSession', apiRoute);
 
     server.all('*', (req, res) => {
         return handle(req, res)
