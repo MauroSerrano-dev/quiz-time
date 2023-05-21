@@ -18,7 +18,6 @@ export default async function handler(req, res) {
                 updateUserPlan(req.body.data.customer_details.email, plan)
         }
         catch (error) {
-            res.status(500).json({ msg: `Error: ${error}` })
             console.error(`Error: ${error}`);
         }
         res.status(201).json({ message: `Plano do User ${req.body.data.customer_details.email} Atualizado com Sucesso!` })
