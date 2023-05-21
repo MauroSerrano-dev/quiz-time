@@ -22,7 +22,7 @@ export default async function handler(req, res) {
         catch (error) {
             console.error(`Error: ${error}`);
         }
-        res.status(201).json({ message: `Plano do User ${email} Atualizado com Sucesso!` })
+        res.status(201).json({ message: `Plano do User ${email} Atualizado para ${plan} com Sucesso!` })
     }
 
     else if (req.method === "PATCH") {
