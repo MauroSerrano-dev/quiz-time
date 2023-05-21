@@ -8,9 +8,9 @@ export default async function handler(req, res) {
         console.log(link)
         console.log(email)
         let plan
-        if (link === "plink_1NA3MIHqx2KsFA9zcbgjXuBF")
+        if (link === "plink_1NA6b9G4uTYyyhYy9Ven8Yr0")
             plan = 'Premium'
-        if (link === "plink_1NA4OTHqx2KsFA9zesGMYepK")
+        if (link === "plink_1NA6lGG4uTYyyhYygoXXm9AD")
             plan = 'Silver'
         if (plan)
             updateUserPlan(email, plan)
