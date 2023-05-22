@@ -357,7 +357,7 @@ export default function Settings(props) {
                         checkout({
                             lineItems: [
                                 {
-                                    price: 'price_1NA6YpG4uTYyyhYy8kU1vygT',
+                                    price: 'price_1NANwwG4uTYyyhYysapo5kKv',
                                     quantity: 1,
                                 }
                             ],
