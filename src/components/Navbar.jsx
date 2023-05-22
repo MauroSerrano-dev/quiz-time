@@ -4,6 +4,8 @@ import styles from '../styles/components/NavBar.module.css'
 import { useRouter } from 'next/router'
 import { Button } from '@mui/material';
 import AvatarMenu from './AvatarMenu';
+import { MenuToggle } from './MenuToggle';
+import { useCycle } from 'framer-motion';
 
 const MENU_LIST = [
     { name: 'Main', href: '/' },
@@ -15,11 +17,13 @@ export default function Navbar(props) {
     const { session, signIn, signOut } = props
     const [navActive, setNavActive] = useState(false)
     const { pathname } = useRouter()
+    const [isOpen, toggleOpen] = useCycle(false, true);
 
     return (
         <div>
             <div className={styles.container}>
                 <div className={styles.leftSide}>
+                    {/* <MenuToggle toggle={() => toggleOpen()} /> */}
                     <Link legacyBehavior href={'/'}>
                         <a>
                             <img className={styles.logo} src='/quiz-time-logo.png' />
