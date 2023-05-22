@@ -340,6 +340,23 @@ export default function Settings(props) {
                         checkout({
                             lineItems: [
                                 {
+                                    price: 'price_1NANnGG4uTYyyhYyRIGefjQr',
+                                    quantity: 1,
+                                }
+                            ],
+                            mode: 'subscription',
+                            email: session.user.email,
+                            plan: 'Gold'
+                        })}
+                >
+                    Adquirir Plano Gold
+                </Button>
+                <Button
+                    variant="outlined"
+                    onClick={() =>
+                        checkout({
+                            lineItems: [
+                                {
                                     price: 'price_1NA6YpG4uTYyyhYy8kU1vygT',
                                     quantity: 1,
                                 }

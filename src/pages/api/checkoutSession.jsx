@@ -11,13 +11,13 @@ export default async function createCheckoutSession(req, res) {
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card', 'paypal'],
-      payment_method: {},
       line_items: lineItems,
       mode: mode,
       customer_email: customerEmail,
       metadata: metadata,
       success_url: 'https://quiztime.pt',
       cancel_url: 'https://quiztime.pt',
+      allow_promotion_codes: true,
     });
 
     res.status(200).json({ id: session.id });
