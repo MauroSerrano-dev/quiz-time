@@ -38,7 +38,8 @@ export default function Pricing(props) {
                         onClick={() => callCheckout('price_1NANnGG4uTYyyhYyRIGefjQr', 'Gold')}
                         recurrent={'mês'}
                         backgroundColor={'#e6e6e6'}
-                        outline={'solid 1px #dadada'} />
+                        outline={'solid 1px #dadada'}
+                        tag={'Mais Popular'} />
                     <PriceTable
                         title={'Quiz Time Premium'}
                         price={'€ 39,90'}

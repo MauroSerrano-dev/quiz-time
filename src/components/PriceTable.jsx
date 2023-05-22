@@ -2,10 +2,17 @@ import { Box, Button, Container } from "@mui/material";
 import styles from '@/styles/components/PriceTable.module.css'
 
 export default function PriceTable(props) {
-    const { backgroundColor, outline, price, recurrent, title, onClick } = props
+    const { backgroundColor, outline, price, recurrent, title, onClick, tag } = props
 
     return (
         <Box className={styles.container} style={{ backgroundColor, outline }}>
+            <div className={styles.tagContainer}>
+                {tag &&
+                    <div className={styles.tag}>
+                        <div className={styles.glow}></div>
+                        <h6>{tag}</h6>
+                    </div>}
+            </div>
             <Box className={styles.top}>
                 <img src='/quiz-time-logo.png' className={styles.itemImg} />
                 <h2 className={styles.title}>{title}</h2>
