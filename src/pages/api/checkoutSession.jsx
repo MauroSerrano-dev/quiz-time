@@ -16,7 +16,7 @@ export default async function createCheckoutSession(req, res) {
       customer_email: customerEmail,
       metadata: metadata,
       success_url: 'https://quiztime.pt',
-      cancel_url: 'https://quiztime.pt',
+      cancel_url: 'https://quiztime.pt/pricing',
       allow_promotion_codes: true,
     });
 

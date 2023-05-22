@@ -1,5 +1,4 @@
 import { Button } from "@mui/material"
-import { checkout } from "./api/checkout"
 
 const result1 = 'Ativador(a)'
 const result2 = 'Comunicador(a)'
@@ -317,57 +316,6 @@ export default function Settings(props) {
                         <Button variant="outlined" onClick={handlePopulate}>Populate</Button>
                     </div>
                 }
-                <Button
-                    variant="outlined"
-                    onClick={() =>
-                        checkout({
-                            lineItems: [
-                                {
-                                    price: 'price_1NA6YMG4uTYyyhYycTjRNYk7',
-                                    quantity: 1,
-                                }
-                            ],
-                            mode: 'subscription',
-                            email: session.user.email,
-                            plan: 'Silver'
-                        })}
-                >
-                    Adquirir Plano Silver
-                </Button>
-                <Button
-                    variant="outlined"
-                    onClick={() =>
-                        checkout({
-                            lineItems: [
-                                {
-                                    price: 'price_1NANnGG4uTYyyhYyRIGefjQr',
-                                    quantity: 1,
-                                }
-                            ],
-                            mode: 'subscription',
-                            email: session.user.email,
-                            plan: 'Gold'
-                        })}
-                >
-                    Adquirir Plano Gold
-                </Button>
-                <Button
-                    variant="outlined"
-                    onClick={() =>
-                        checkout({
-                            lineItems: [
-                                {
-                                    price: 'price_1NANwwG4uTYyyhYysapo5kKv',
-                                    quantity: 1,
-                                }
-                            ],
-                            mode: 'subscription',
-                            email: session.user.email,
-                            plan: 'Premium'
-                        })}
-                >
-                    Adquirir Plano Premium
-                </Button>
             </main>
         </div>
     );
