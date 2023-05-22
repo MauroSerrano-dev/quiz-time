@@ -10,8 +10,8 @@ export default async function createCheckoutSession(req, res) {
 
   try {
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card', 'link'],
-      payment_method: { card: { wallet: ['google_pay', 'apple_pay'] } },
+      payment_method_types: ['card', 'paypal'],
+      payment_method: {},
       line_items: lineItems,
       mode: mode,
       customer_email: customerEmail,
