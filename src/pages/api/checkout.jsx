@@ -1,8 +1,7 @@
 import { loadStripe } from '@stripe/stripe-js';
 
 export async function checkout(props) {
-    const { lineItems, mode, email, plan } = props;
-    console.log(lineItems, mode, email, plan)
+    const { lineItems, mode, email, planName } = props;
     const stripe = await loadStripe(process.env.NEXT_PUBLIC_API_KEY);
 
     const session = await fetch('/api/checkoutSession', {
@@ -14,7 +13,7 @@ export async function checkout(props) {
             lineItems,
             mode,
             customerEmail: email,
-            metadata: { plan },
+            metadata: { planName: planName },
         }),
     }).then((response) => response.json());
 
