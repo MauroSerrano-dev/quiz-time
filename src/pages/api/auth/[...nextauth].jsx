@@ -3,7 +3,6 @@ import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import GoogleProvider from 'next-auth/providers/google';
 import { getClientPromise } from "../../../backend-data/utils/mongodb";
 import { createCustomer, getCustomerByEmail } from "../../../backend-data/utils/stripe";
-import { setCustomerIdInDatabase } from '../../../backend-data/users'
 
 export default NextAuth({
   providers: [
@@ -26,27 +25,24 @@ export default NextAuth({
     }),
   ],
   callbacks: {
-    session: async (props) => {
-      const {session, user} = props
-      // Verifique se o usuário está definido e possui um e-mail
-      console.log(session, user)
+    session: async (session) => {
+      return Promise.resolve(session);
+    },
+    async signIn(props) {
+      const { user, account, profile } = props;
       if (user && user.email) {
         try {
           const existingCustomer = await getCustomerByEmail(user.email);
-          if (!existingCustomer) {
-            // O customer não existe, crie um novo customer no Stripe
-            const customerId = await createCustomer(user.email, user.name);
-
-            // Atualize o campo 'stripeCustomerId' no banco de dados
-            await setCustomerIdInDatabase(user.email, customerId);
-          }
+          if (existingCustomer)
+            return true
+          await createCustomer(user.email, user.name);
+          return true
         } catch (error) {
-          console.error("Erro ao criar/atualizar o customer:", error);
+          console.error("Error creating customer:", error);
+          return false
         }
       }
-
-      // Retorne a sessão atualizada
-      return Promise.resolve(props);
+      return true
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
