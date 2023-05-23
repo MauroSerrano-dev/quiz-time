@@ -11,6 +11,27 @@ let socket
 
 const TRANSITION_DURATION = 200
 
+const container = {
+    hidden: { opacity: 1, scale: 0 },
+    visible: {
+        opacity: 1,
+        scale: 1,
+        transition: {
+            delay: 0.5,
+            delayChildren: 0.8,
+            staggerChildren: 0.25,
+        }
+    }
+}
+
+const item = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+        y: 0,
+        opacity: 1
+    }
+}
+
 export default withRouter((props) => {
     const { session } = props
     const { code } = props.router.query
@@ -317,25 +338,32 @@ export default withRouter((props) => {
                                 >
                                     <h2>{room.control ? room.currentQuestion + 1 : getPlayer().currentQuestion + 1}. {quiz.questions[room.control ? room.currentQuestion : getPlayer().currentQuestion].content}</h2>
                                 </motion.div>
-                                <div className={styles.optionsContainer}>
+                                <motion.div
+                                    className={styles.optionsContainer}
+                                    variants={container}
+                                    initial="hidden"
+                                    animate="visible"
+                                >
                                     {quiz.questions[room.control ? room.currentQuestion : getPlayer().currentQuestion].options.map((option, i) =>
-                                        <Button
-                                            variant={optionSelected === i ? 'contained' : 'outlined'}
-                                            key={`Option: ${i}`}
-                                            /* className={`${styles.option} ${optionSelected === i ? styles.optionSelected : ''}`} */
-                                            onClick={() => room.control ? answerControl(i) : answer(i)}
-                                            sx={{ pointerEvents: disableOptions ? 'none' : 'auto', width: '350px', height: '50px' }}
-                                        >
-                                            <motion.p
-                                                initial={{ opacity: 0, color: 'var(--text-white)' }}
-                                                animate={questionTransition ? { opacity: 0 } : { opacity: 1 }}
-                                                transition={{ duration: TRANSITION_DURATION / 1000, ease: [.62, -0.18, .32, 1.17] }}
+                                        <motion.div key={`Option: ${i}`} variants={item}>
+                                            <Button
+                                                variant={optionSelected === i ? 'contained' : 'outlined'}
+                                                key={`Option: ${i}`}
+                                                /* className={`${styles.option} ${optionSelected === i ? styles.optionSelected : ''}`} */
+                                                onClick={() => room.control ? answerControl(i) : answer(i)}
+                                                sx={{ pointerEvents: disableOptions ? 'none' : 'auto', width: '350px', height: '50px' }}
                                             >
-                                                {option.content}
-                                            </motion.p>
-                                        </Button>)
-                                    }
-                                </div>
+                                                <motion.p
+                                                    initial={{ opacity: 0, color: 'var(--text-white)' }}
+                                                    animate={questionTransition ? { opacity: 0 } : { opacity: 1 }}
+                                                    transition={{ duration: TRANSITION_DURATION / 1000, ease: [.62, -0.18, .32, 1.17] }}
+                                                >
+                                                    {option.content}
+                                                </motion.p>
+                                            </Button>
+                                        </motion.div>
+                                    )}
+                                </motion.div>
                             </div>
                         }
                         {quiz && room.state === 'finish' && joined &&

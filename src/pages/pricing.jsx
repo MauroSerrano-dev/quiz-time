@@ -27,9 +27,10 @@ export default function Pricing(props) {
             opacity: 1,
             scale: 1,
             transition: {
-                delay: 0.5,
-                delayChildren: 0.8,
-                staggerChildren: 0.2,
+                delay: 0.9,
+                delayChildren: 1.2,
+                staggerChildren: 0.3,
+                duration: 0.2,
             }
         }
     }
