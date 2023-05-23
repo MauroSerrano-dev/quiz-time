@@ -1,4 +1,4 @@
-import { setUserPlan } from "../../backend-data/users";
+/* import { setCustomerIdInDatabase } from "../../backend-data/users";
 
 export default async function handler(req, res) {
 
@@ -10,12 +10,7 @@ export default async function handler(req, res) {
             setUserPlan(email, plan)
             res.status(200).json({ message: `Plano do User ${email} Atualizado para ${plan} com Sucesso!` })
         }
-        else if (type === 'customer.subscription.updated') {
-            const customerId = req.body.data.object.customer
-            const status = req.body.data.object.status
-            res.status(200).json({ message: `Status da Subscription do Customer ${customerId} Atualizado para ${status}!` })
-        }
         else
             res.status(200).json({ message: 'Outros eventos!' })
     }
-}
+} */
