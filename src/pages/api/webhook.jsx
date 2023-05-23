@@ -9,9 +9,9 @@ export default async function handler(req, res) {
             const email = req.body.data.object.customer_details.email
             const planName = req.body.data.object.metadata.planName
             await setUserPlan(email, { name: planName, status: 'active' })
-            res.status(200).json({ message: `User ${email} Adquiriu ${plan}!` })
+            res.status(200).json({ message: `User ${email} Adquiriu ${planName}!` })
         }
-        else if (type === 'customer.subscription.updated') {
+        else if (type === 'customer.subscription.updated' || type === 'customer.subscription.deleted') {
             const customerId = req.body.data.object.customer
             const status = req.body.data.object.status
             const email = await getCustomerEmail(customerId)
