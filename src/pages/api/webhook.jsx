@@ -11,6 +11,12 @@ export default async function handler(req, res) {
             res.status(201).json({ message: `Plano do User ${email} Atualizado para ${plan} com Sucesso!` })
         }
         else if (type === 'subscription_schedule.canceled')
-            res.status(201).json({ message: `Plano do User ${email} Cancelado!` })
+            res.status(201).json({ message: `Plano do User ${email} subscription_schedule.canceled!` })
+        else if (type === 'customer.subscription.updated')
+            res.status(201).json({ message: `Plano do User ${email} customer.subscription.updated!` })
+        else if (type === 'customer.subscription.deleted')
+            res.status(201).json({ message: `Plano do User ${email} customer.subscription.deleted!` })
+        else if (type === 'customer.subscription.created')
+            res.status(201).json({ message: `Plano do User ${email} customer.subscription.created!` })
     }
 }
