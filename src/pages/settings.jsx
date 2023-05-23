@@ -316,6 +316,9 @@ export default function Settings(props) {
                         <Button variant="outlined" onClick={handlePopulate}>Populate</Button>
                     </div>
                 }
+                <a href='https://billing.stripe.com/p/login/test_dR68y53sd60y5gI144' target='_blank'>
+                    <Button variant="outlined" >Gerenciar Assinatura</Button>
+                </a>
             </main>
         </div>
     );
