@@ -38,5 +38,6 @@ async function getCustomerByEmail(email) {
 
 module.exports = {
   createCustomer,
-  getCustomerByEmail
+  getCustomerByEmail,
+  getCustomerEmail
 }

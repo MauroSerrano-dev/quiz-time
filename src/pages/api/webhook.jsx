@@ -1,4 +1,4 @@
-import { getCustomerByEmail } from "@/backend-data/utils/stripe";
+import { getCustomerEmail } from "@/backend-data/utils/stripe";
 import { setUserPlan } from "../../backend-data/users";
 
 export default async function handler(req, res) {
@@ -14,7 +14,7 @@ export default async function handler(req, res) {
         else if (type === 'customer.subscription.updated') {
             const customerId = req.body.data.object.customer
             const status = req.body.data.object.status
-            const email = await getCustomerByEmail(customerId)
+            const email = await getCustomerEmail(customerId)
             res.status(200).json({ message: `Status de Subscription do ${email} Atualizado para ${status}!` })
         }
         else
