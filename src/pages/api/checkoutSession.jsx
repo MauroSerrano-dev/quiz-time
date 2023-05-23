@@ -9,12 +9,22 @@ export default async function createCheckoutSession(req, res) {
   const { lineItems, mode, customerEmail, metadata } = req.body;
 
   try {
+    // Verificar se o cliente já existe no Stripe pelo email
+    let customer = await stripe.customers.list({ email: customerEmail });
+
+    if (customer.data.length > 0) {
+      // Cliente já existe, utilizar o primeiro cliente encontrado
+      customer = customer.data[0];
+    } else {
+      // Cliente não existe, criar um novo cliente no Stripe
+      customer = await stripe.customers.create({ email: customerEmail });
+    }
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card', 'paypal'],
       line_items: lineItems,
       mode: mode,
-      customer_email: customerEmail,
       metadata: metadata,
+      customer: customer.id,
       success_url: 'https://quiztime.pt',
       cancel_url: 'https://quiztime.pt/pricing',
       allow_promotion_codes: true,

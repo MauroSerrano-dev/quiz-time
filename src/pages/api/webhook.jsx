@@ -11,7 +11,7 @@ export default async function handler(req, res) {
             await setUserPlan(email, { name: planName, status: 'active' })
             res.status(200).json({ message: `User ${email} Adquiriu ${planName}!` })
         }
-        else if (type === 'customer.subscription.updated' || type === 'customer.subscription.deleted') {
+        else if (type === 'customer.subscription.updated') {
             const customerId = req.body.data.object.customer
             const status = req.body.data.object.status
             const email = await getCustomerEmail(customerId)
@@ -19,6 +19,17 @@ export default async function handler(req, res) {
             const plan = await getPlanById(planId)
             const planName = plan.metadata.name
             await setUserPlan(email, { name: planName, status: status })
+            res.status(200).json({ message: `Subscription do ${email} está ${status} no plano ${planName}!` })
+        }
+        else if (type === 'customer.subscription.deleted') {
+            const customerId = req.body.data.object.customer
+            const status = req.body.data.object.status
+            const email = await getCustomerEmail(customerId)
+            const planId = req.body.data.object.plan.id
+            const plan = await getPlanById(planId)
+            const planName = plan.metadata.name
+            const cancellation_details = req.body.data.object.cancellation_details
+            await setUserPlan(email, { name: planName, status: status, cancellation_details: cancellation_details })
             res.status(200).json({ message: `Subscription do ${email} está ${status} no plano ${planName}!` })
         }
         else
