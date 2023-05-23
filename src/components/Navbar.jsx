@@ -8,7 +8,6 @@ import { MenuToggle } from './MenuToggle';
 import { useCycle } from 'framer-motion';
 
 const MENU_LIST = [
-    { name: 'Main', href: '/' },
     { name: 'Lobby', href: '/lobby' },
     { name: 'Quiz Builder', href: '/quiz-builder' },
 ]

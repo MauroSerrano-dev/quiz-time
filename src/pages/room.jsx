@@ -111,8 +111,7 @@ export default withRouter((props) => {
                     <div className={styles.roomContainer}>
                         <h1 className={styles.roomName}>Essa é a sala: {room.name}</h1>
                         {session.user.email === room.owner &&
-                            <div>
-
+                            <section className={styles.ownerView}>
                                 {room.state === 'disable' &&
                                     <motion.div
                                         initial={{ opacity: 0, y: 30 }}
@@ -135,8 +134,8 @@ export default withRouter((props) => {
                                             </a>
                                         </div>
                                         <ButtonGroup>
-                                            <Button sx={{width: '120px'}} variant={room.control ? 'outlined' : 'contained'} onClick={() => switchControl(false)}>Auto-Play</Button>
-                                            <Button sx={{width: '120px'}} variant={room.control ? 'contained' : 'outlined'} onClick={() => switchControl(true)}>Control</Button>
+                                            <Button sx={{ width: '120px' }} variant={room.control ? 'outlined' : 'contained'} onClick={() => switchControl(false)}>Auto-Play</Button>
+                                            <Button sx={{ width: '120px' }} variant={room.control ? 'contained' : 'outlined'} onClick={() => switchControl(true)}>Control</Button>
                                         </ButtonGroup>
                                         <Button variant="outlined" onClick={startQuiz}>Start Quiz</Button>
                                     </motion.div>}
@@ -148,21 +147,20 @@ export default withRouter((props) => {
                                         className={styles.activeContainer}
                                     >
                                         {room.control &&
-                                            <div>
+                                            <section className={styles.questionOptions}>
                                                 <div className={styles.questionContainer}>
                                                     <h2>{room.currentQuestion + 1}. {quiz.questions[room.currentQuestion].content}</h2>
                                                 </div>
                                                 <div className={styles.optionsContainer}>
-                                                    <Button variant="outlined">{quiz.questions[room.currentQuestion].options[0].content}</Button>
-                                                    <Button variant="outlined">{quiz.questions[room.currentQuestion].options[1].content}</Button>
-                                                    <Button variant="outlined">{quiz.questions[room.currentQuestion].options[2].content}</Button>
-                                                    <Button variant="outlined">{quiz.questions[room.currentQuestion].options[3].content}</Button>
+                                                    {quiz.questions[room.currentQuestion].options.map((option, i) =>
+                                                        <Button className={styles.optionButton} variant="outlined" key={`Option: ${i}`}><h3>{option.content}</h3></Button>
+                                                    )}
                                                 </div>
                                                 <div>
                                                     <Button variant="contained" onClick={prevQuestion} disabled={room.currentQuestion === 0}>Prev Question</Button>
                                                     <Button variant="contained" onClick={nextQuestion}>Next Question</Button>
                                                 </div>
-                                            </div>
+                                            </section>
                                         }
                                         <Button variant="outlined" onClick={resetQuiz}>Reset Quiz</Button>
                                     </motion.div>
@@ -183,7 +181,7 @@ export default withRouter((props) => {
                                         {room.players.map((player, i) => <li key={`Player: ${i}`}><p>{player.name} {player.answers.some((answer, i) => i === room.currentQuestion) ? 'check' : ''}</p></li>)}
                                     </ol>
                                 </div>
-                            </div>
+                            </section>
                         }
                         {session.user.email !== room.owner &&
                             <div>

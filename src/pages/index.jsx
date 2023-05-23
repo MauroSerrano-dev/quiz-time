@@ -9,12 +9,18 @@ export default function Index(props) {
       <Head>
       </Head>
       <main>
+        <section className={`${styles.demo} ${styles.one}`}>
+          <div className={styles.crowdContainer}>
+            <img src='/crowd.jpg' className={styles.crowdImg} />
+            <img src='/tela.jpg' className={styles.telaImg} />
+          </div>
+        </section>
         <section className={styles.demo}>
           <div className={styles.demoTitle}>
             <h1>Crowd de palestra com um quiz mudando randomicamente o design e perguntas e respostas</h1>
             <p>Transforme suas apresentações mais interativas e divertidas, seja lembrado, seja marcante</p>
           </div>
-          <img src='/pc-cel.png' className={styles.pcImg} />
+          <img src='/pc-cel.png' className={styles.pcCelImg} />
         </section>
         <section className={styles.demo}>
           <div className={styles.demoTitle}>
