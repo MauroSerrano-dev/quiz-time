@@ -7,7 +7,7 @@ import { motion } from "framer-motion"
 export default function Pricing(props) {
     const { session } = props
 
-    function callCheckout(price, plan) {
+    function callCheckout(price, planName) {
         checkout({
             lineItems: [
                 {
@@ -17,7 +17,7 @@ export default function Pricing(props) {
             ],
             mode: 'subscription',
             email: session.user.email,
-            plan: plan
+            planName: planName
         })
     }
 
