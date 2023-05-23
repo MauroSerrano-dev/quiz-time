@@ -18,5 +18,11 @@ export default async function handler(req, res) {
             res.status(201).json({ message: 'customer.subscription.deleted!' })
         else if (type === 'customer.subscription.created')
             res.status(201).json({ message: 'customer.subscription.created!' })
+        else if (type === 'customer.updated')
+            res.status(201).json({ message: 'customer.updated!' })
+        else if (type === 'customer.deleted')
+            res.status(201).json({ message: 'customer.deleted!' })
+        else if (type === 'customer.created')
+            res.status(201).json({ message: 'customer.created!' })
     }
 }
