@@ -1,5 +1,15 @@
 const stripe = require('stripe')(process.env.NEXT_PUBLIC_SECRET_KEY)
 
+async function getCustomerEmail(customerId) {
+  try {
+    const customer = await stripe.customers.retrieve(customerId);
+    return customer.email;
+  } catch (error) {
+    console.error('Erro ao obter o email do cliente:', error);
+    throw error;
+  }
+}
+
 async function createCustomer(email, name) {
   try {
     const customer = await stripe.customers.create({
