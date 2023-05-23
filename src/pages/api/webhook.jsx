@@ -18,7 +18,8 @@ export default async function handler(req, res) {
             const planId = req.body.data.object.plan.id
             const plan = await getPlanById(planId)
             const planName = plan.metadata.name
-            res.status(200).json({ message: `Subscription do ${email} está ${status} no plano ${planName}!`, plan: plan })
+            await setUserPlan(email, planName)
+            res.status(200).json({ message: `Subscription do ${email} está ${status} no plano ${planName}!` })
         }
         else
             res.status(200).json({ message: 'Outros eventos!' })
