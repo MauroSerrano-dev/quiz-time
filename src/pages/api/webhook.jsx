@@ -10,19 +10,7 @@ export default async function handler(req, res) {
             updateUserPlan(email, plan)
             res.status(201).json({ message: `Plano do User ${email} Atualizado para ${plan} com Sucesso!` })
         }
-        else if (type === 'subscription_schedule.canceled')
-            res.status(201).json({ message: 'subscription_schedule.canceled!' })
-        else if (type === 'customer.subscription.updated')
-            res.status(201).json({ message: 'customer.subscription.updated!' })
-        else if (type === 'customer.subscription.deleted')
-            res.status(201).json({ message: 'customer.subscription.deleted!' })
-        else if (type === 'customer.subscription.created')
-            res.status(201).json({ message: 'customer.subscription.created!' })
-        else if (type === 'customer.updated')
-            res.status(201).json({ message: 'customer.updated!' })
-        else if (type === 'customer.deleted')
-            res.status(201).json({ message: 'customer.deleted!' })
-        else if (type === 'customer.created')
-            res.status(201).json({ message: 'customer.created!' })
+        else
+            res.status(201).json({ message: 'Else!' })
     }
 }
