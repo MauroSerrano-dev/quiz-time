@@ -7,9 +7,9 @@ export default async function handler(req, res) {
         const type = req.body.type
         if (type === 'checkout.session.completed') {
             const email = req.body.data.object.customer_details.email
-            const plan = req.body.data.object.metadata.plan
-            await setUserPlan(email, plan)
-            res.status(200).json({ message: `Plano do User ${email} Atualizado para ${plan} com Sucesso!` })
+            const planName = req.body.data.object.metadata.plan
+            await setUserPlan(email, { name: planName, status: 'active' })
+            res.status(200).json({ message: `User ${email} Adquiriu ${plan}!` })
         }
         else if (type === 'customer.subscription.updated') {
             const customerId = req.body.data.object.customer
@@ -18,7 +18,7 @@ export default async function handler(req, res) {
             const planId = req.body.data.object.plan.id
             const plan = await getPlanById(planId)
             const planName = plan.metadata.name
-            await setUserPlan(email, planName)
+            await setUserPlan(email, { name: planName, status: status })
             res.status(200).json({ message: `Subscription do ${email} está ${status} no plano ${planName}!` })
         }
         else

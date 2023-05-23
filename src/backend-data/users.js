@@ -22,7 +22,7 @@ async function setUserPlan(email, plan) {
         { email: email },
         {
             $set: {
-                'subscriptionPlan': plan
+                'plan': plan
             }
         }
     )
