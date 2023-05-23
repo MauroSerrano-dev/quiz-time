@@ -25,12 +25,9 @@ export default async function handler(req, res) {
             const customerId = req.body.data.object.customer
             const status = req.body.data.object.status
             const email = await getCustomerEmail(customerId)
-            const planId = req.body.data.object.plan.id
-            const plan = await getPlanById(planId)
-            const planName = plan.metadata.name
             const cancellation_details = req.body.data.object.cancellation_details
-            await setUserPlan(email, { name: planName, status: status, cancellation_details: cancellation_details })
-            res.status(200).json({ message: `Subscription do ${email} está ${status} no plano ${planName}!` })
+            await setUserPlan(email, { name: 'Free', status: status, cancellation_details: cancellation_details })
+            res.status(200).json({ message: `Subscription do ${email} está ${status}!` })
         }
         else
             res.status(200).json({ message: 'Outros eventos!' })
