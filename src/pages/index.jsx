@@ -9,6 +9,13 @@ export default function Index(props) {
       <Head>
       </Head>
       <main>
+        <section className={styles.demo}>
+          <div className={styles.demoTitle}>
+            <h1>Exemplo de title</h1>
+            <p>Exemplo de paragrafo</p>
+          </div>
+          <img src='/pc-cel.png' className={styles.pcImg} />
+        </section>
       </main>
     </div>
   );

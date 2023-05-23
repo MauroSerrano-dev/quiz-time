@@ -1,0 +1,23 @@
+.demo {
+    background-color: var(--logo-color);
+    width: 200%;
+    padding-left: 50%;
+    padding-right: 50%;
+    height: 400px;
+    display: flex;
+    flex-direction: row;
+    place-items: center;
+    box-shadow: inset 0px 5px 20px black,
+    inset 0px 0px 20px black;
+}
+
+.demoTitle {
+    width: 50%;
+}
+
+.pcImg {
+    width: 740px;
+    position: relative;
+    bottom: -39.5px;
+    left: -70px;
+}
