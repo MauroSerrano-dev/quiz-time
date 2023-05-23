@@ -1,5 +1,15 @@
 const stripe = require('stripe')(process.env.NEXT_PUBLIC_SECRET_KEY)
 
+async function getPlanById(planId) {
+  try {
+    const plan = await stripe.plans.retrieve(planId);
+    return plan;
+  } catch (error) {
+    console.error("Erro ao buscar o plano:", error);
+    return null;
+  }
+}
+
 async function getCustomerEmail(customerId) {
   try {
     const customer = await stripe.customers.retrieve(customerId);
@@ -39,5 +49,6 @@ async function getCustomerByEmail(email) {
 module.exports = {
   createCustomer,
   getCustomerByEmail,
-  getCustomerEmail
+  getCustomerEmail,
+  getPlanById
 }

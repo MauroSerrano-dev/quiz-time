@@ -1,4 +1,4 @@
-import { getCustomerEmail } from "@/backend-data/utils/stripe";
+import { getCustomerEmail, getPlanById } from "@/backend-data/utils/stripe";
 import { setUserPlan } from "../../backend-data/users";
 
 export default async function handler(req, res) {
@@ -15,8 +15,9 @@ export default async function handler(req, res) {
             const customerId = req.body.data.object.customer
             const status = req.body.data.object.status
             const email = await getCustomerEmail(customerId)
-            const plan = req.body.data.object.plan.id
-            res.status(200).json({ message: `Subscription do ${email} está ${status} no plano ${plan}!` })
+            const planId = req.body.data.object.plan.id
+            const plan = await getPlanById(planId)
+            res.status(200).json({ message: `Subscription do ${email} está ${status} no plano ${planId}!`, plan: plan })
         }
         else
             res.status(200).json({ message: 'Outros eventos!' })
