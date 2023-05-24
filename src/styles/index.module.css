@@ -1,18 +1,24 @@
-.demo {
+.sectionsContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.section {
     background-color: var(--logo-color);
     width: 200%;
     padding-left: 50%;
     padding-right: 50%;
-    height: 400px;
+    height: 450px;
     display: flex;
     flex-direction: row;
     place-items: center;
-    box-shadow: inset 0px 5px 20px black,
-        inset 0px 0px 20px black;
+    border-bottom: 1px black solid;
 }
 
 .one {
-    box-shadow: inset 0px 0px 0px black;
     height: auto;
 }
 
