@@ -1,7 +1,8 @@
 import { withRouter } from 'next/router'
 import styles from '../styles/profiles.module.css'
 import { useEffect, useState } from 'react'
-import { IconButton } from '@mui/material'
+import { Button } from '@mui/material'
+import EditIcon from '@mui/icons-material/Edit';
 
 export default withRouter((props) => {
     const { session } = props
@@ -29,7 +30,11 @@ export default withRouter((props) => {
             {user &&
                 <main>
                     <div className={styles.header}>
-                        <IconButton>Edite</IconButton>
+                        {session.user.id === id &&
+                            <Button variant="outlined" startIcon={<EditIcon />}>
+                                Editar
+                            </Button>
+                        }
                     </div>
                     <section className={styles.one}>
                         <div className={styles.avatarContainer}>
@@ -41,6 +46,6 @@ export default withRouter((props) => {
                     </section>
                 </main>
             }
-        </div>
+        </div >
     )
 })

@@ -119,20 +119,11 @@ export default withRouter((props) => {
                                         transition={{ delay: disableShow ? 0.5 : 0, duration: disableShow ? 1.2 : 0.6, easings: ["easeInOut"] }}
                                         className={styles.disableContainer}
                                     >
-                                        <div className={styles.qrContainer}>
-                                            <div className={styles.qrCode}><QRCode value={`quiztime.pt/quiz?code=${code}`} size={200} ecLevel='H' qrStyle='dots' logoImage='quiz-time-logo.png' logoWidth={200 * 0.6} logoOpacity={0.5} eyeColor={{ outer: '#00a0dc', inner: '#005270' }} eyeRadius={5} /></div>
-                                            <h2>Scan Me!</h2>
-                                            <div className={styles.frame}></div>
-                                            <div className={`${styles.frame} ${styles.border}`}></div>
-                                            <div className={styles.textContainer}></div>
-                                        </div>
-                                        <h2>Ou</h2>
-                                        <div className={styles.linkContainer}>
-                                            <h2>Entre no link:</h2>
-                                            <a href={`https://quiztime.pt/quiz?code=${code}`} target='_blank'>
-                                                <h2>quiztime.pt/quiz?code={code}</h2>
-                                            </a>
-                                        </div>
+                                        <ButtonGroup>
+                                            <Button sx={{ width: '120px' }} variant={room.control ? 'outlined' : 'contained'} onClick={() => switchControl(false)}>Auto-Play</Button>
+                                            <Button sx={{ width: '120px' }} variant={room.control ? 'contained' : 'outlined'} onClick={() => switchControl(true)}>Control</Button>
+                                        </ButtonGroup>
+                                        <Button variant="outlined" onClick={startQuiz}>Start Quiz</Button>
                                     </motion.div>}
                                 {room.state === 'active' && quiz &&
                                     <motion.div
@@ -143,21 +134,18 @@ export default withRouter((props) => {
                                     >
                                         {room.control &&
                                             <section className={styles.questionOptions}>
-                                                <div className={styles.questionContainer}>
-                                                    <h2>{room.currentQuestion + 1}. {quiz.questions[room.currentQuestion].content}</h2>
-                                                </div>
-                                                <div className={styles.optionsContainer}>
-                                                    {quiz.questions[room.currentQuestion].options.map((option, i) =>
-                                                        <Button className={styles.optionButton} variant="outlined" key={`Option: ${i}`}><h3>{option.content}</h3></Button>
-                                                    )}
+                                                <div>
+                                                    <Button variant="contained" onClick={prevQuestion} disabled={room.currentQuestion === 0}>Prev Question</Button>
+                                                    <Button variant="contained" onClick={nextQuestion}>Next Question</Button>
                                                 </div>
                                             </section>
                                         }
+                                        <Button variant="outlined" onClick={resetQuiz}>Reset Quiz</Button>
                                     </motion.div>
                                 }
                                 {room.state === 'finish' &&
                                     <div>
-                                        <h2>Finalizado</h2>
+                                        <Button variant="outlined" onClick={showResults}>Mostrar Resultados</Button>
                                     </div>
                                 }
                                 {room.state === 'results' &&
