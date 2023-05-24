@@ -4,7 +4,7 @@ import styles from '../styles/room.module.css'
 import io from "socket.io-client";
 import { useEffect, useState } from 'react';
 import { motion } from "framer-motion"
-import { Button, ButtonGroup } from '@mui/material';
+import { Button } from '@mui/material';
 
 let socket;
 
@@ -46,8 +46,13 @@ export default withRouter((props) => {
             if (firstKey.includes('players') && firstKey !== 'players') {
                 setRoom(prev => { return { ...prev, players: prev.players.filter(player => player.email !== roomAttFields[firstKey].email).concat(roomAttFields[firstKey]) } })
             }
-            else
+            else {
+                if (Object.keys(roomAttFields).some(field => field === 'state')) {
+                    setDisableShow(roomAttFields.state === 'disable')
+                    setActiveShow(roomAttFields.state === 'active')
+                }
                 setRoom(prev => { return { ...prev, ...roomAttFields } })
+            }
         })
     }
 
@@ -61,42 +66,6 @@ export default withRouter((props) => {
             .then(response => response.json())
             .then(response => setQuiz(response.quiz))
             .catch(err => console.error(err))
-    }
-
-    const nextQuestion = async () => {
-        if (room.currentQuestion >= quiz.questions.length - 1)
-            socket.emit("updateRoom", { ...room, state: 'finish' })
-        else
-            socket.emit("updateRoom", { ...room, currentQuestion: room.currentQuestion + 1 })
-    }
-
-    const prevQuestion = async () => {
-        if (room.currentQuestion > 0)
-            socket.emit("updateRoom", { ...room, currentQuestion: room.currentQuestion - 1 })
-    }
-
-    async function showResults() {
-        socket.emit("updateRoom", { ...room, state: 'results' })
-    }
-
-    const resetQuiz = async () => {
-        setDisableShow(true)
-        setActiveShow(false)
-        setTimeout(() => {
-            socket.emit("updateRoom", { ...room, state: 'disable', currentQuestion: 0, players: [] })
-        }, 600)
-    }
-
-    const startQuiz = async () => {
-        setDisableShow(false)
-        setActiveShow(true)
-        setTimeout(() => {
-            socket.emit("updateRoom", { ...room, state: 'active' })
-        }, 600)
-    }
-
-    async function switchControl(isControl) {
-        socket.emit("updateRoom", { ...room, control: isControl })
     }
 
     return (

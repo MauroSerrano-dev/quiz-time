@@ -36,8 +36,6 @@ export default withRouter((props) => {
     const { session } = props
     const { code } = props.router.query
 
-    /* const { quizName } = props */
-    const quizName = 'Perfil Comportamental'
     const [quiz, setQuiz] = useState()
     const [room, setRoom] = useState()
     const [dots, setDots] = useState('')
@@ -54,8 +52,10 @@ export default withRouter((props) => {
 
     useEffect(() => {
         if (!room) {
-            getQuiz()
             socketInitializer()
+        }
+        if (room && !quiz) {
+            getQuiz()
         }
     }, [session])
 
@@ -88,7 +88,7 @@ export default withRouter((props) => {
     async function getQuiz() {
         const options = {
             method: 'GET',
-            headers: { "quizname": quizName },
+            headers: { "quizname": room.quizInfo.name },
         };
 
         await fetch('/api/quizzesStandard', options)
@@ -294,9 +294,9 @@ export default withRouter((props) => {
             transition={{ duration: 0.5, delay: 0.5, ease: [.62, -0.18, .32, 1.17] }}
         >
             <main>
-                <h3 className={styles.roomName}>{quizName}</h3>
                 {room &&
                     <div>
+                        <h3 className={styles.roomName}>{room.quizInfo.name}</h3>
                         {room.state === 'disable' &&
                             <div>
                                 {!joined &&
