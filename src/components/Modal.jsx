@@ -21,12 +21,11 @@ export default function Modal(props) {
         <div>
             <motion.div
                 className={styles.container}
-                initial={{ opacity: 0 }}
-                animate={showModalOpacity ? { opacity: 1 } : { opacity: 0 }}
+                initial={{ opacity: 0, backdropFilter: 'blur(0px)' }}
+                animate={showModalOpacity ? { opacity: 1, backdropFilter: 'blur(2px)' } : { opacity: 0, backdropFilter: 'blur(0px)' }}
                 transition={{ duration: showModalOpacity ? 0.5 : 0.3, ease: [.62, -0.18, .32, 1.17] }}
             >
-                <div className={styles.background} onClick={closeModal}>
-                </div>
+                <div className={styles.background} onClick={closeModal}></div>
                 <motion.div
                     className={styles.modal}
                     style={{ width: width, height: height, minWidth: '250px', minHeight: '350px' }}

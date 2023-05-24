@@ -2,18 +2,13 @@ import styles from '../styles/lobby.module.css'
 import Router from "next/router";
 import { useEffect, useState } from "react";
 import Modal from "../components/Modal";
-import FormGroup from '@mui/material/FormGroup';
 import { validateCodeCharacters, validateCodeLength, containsAccents } from "../../utils/validations";
 import { showInfoToast } from "../../utils/toasts";
 import { motion } from "framer-motion"
-import Switch, { SwitchProps } from '@mui/material/Switch';
-import { TextField, Button, Select, FormControlLabel, MenuItem, OutlinedInput, InputLabel, FormControl } from '@mui/material';
+import Switch from '@mui/material/Switch';
+import { TextField, Button, Select, FormControlLabel, MenuItem, OutlinedInput, InputLabel, FormControl, Box } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import { SelectChangeEvent } from '@mui/material/Select';
 import LoadingButton from '@mui/lab/LoadingButton';
-
-let socket;
 
 export default function Lobby(props) {
     const { session } = props
@@ -166,7 +161,7 @@ export default function Lobby(props) {
                     body={
                         <div className={styles.bodyContainer}>
                             <FormControl sx={{ height: '15%', width: '80%' }}>
-                                <TextField value={newRoom.name} onChange={handleNewCodeChange} id="outlined-basic" label="Nome" variant='outlined' size='small' autoComplete='off' /* inputProps={{ style: { height: "50px", width: '50px' } }} */ />
+                                <TextField value={newRoom.name} onChange={handleNewCodeChange} id="outlined-basic" label="Nome" variant='outlined' size='small' autoComplete='off' />
                             </FormControl>
                             <FormControl sx={{ height: '15%', width: '80%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
                                 <FormControlLabel
@@ -205,40 +200,12 @@ export default function Lobby(props) {
                                             key={`Quiz: ${i}`}
                                             name={quiz.name}
                                             value={i}
-                                        /* style={getStyles(name, personName, theme)} */
                                         >
                                             {quiz.name}
                                         </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
-                            {/* <input className={styles.nameInput} onChange={handleNewCodeChange} value={newRoom.name} placeholder="Nome" />
-                            <div className={styles.privateAndInput}>
-                                <div className={styles.privateContainer}>
-                                    <label>Private: </label>
-                                    <input type="checkbox" onChange={handleNewIsPrivate} checked={newRoom.private} />
-                                </div>
-                                {passwordInputOpen &&
-                                    <motion.input
-                                        className={styles.password}
-                                        onChange={handleNewPasswordChange}
-                                        value={newRoom.password}
-                                        placeholder="Senha"
-                                        animate={newRoom.private ? { width: ['0%', '65%', '65%'], height: ['0%', '0%', '100%'] } : { width: ['65%', '65%', '0%'], height: ['100%', '0%', '0%'] }}
-                                        transition={{ times: [0, 0.5, 1], duration: 1, ease: newRoom.private ? [.62, -0.18, .32, 1.8] : [.52, .03, .24, 1.06] }}
-                                    />
-                                }
-                            </div>
-                            <div className={styles.controlContainer}>
-                                <label>Controlar Perguntas: </label>
-                                <input type="checkbox" onChange={handleNewControl} checked={newRoom.control} />
-                            </div>
-                            <Select
-                                placeholder='Quiz'
-                                className={styles.selectQuiz}
-                                onChange={handleQuizSelectorChange}
-                                options={session.user.quizzesInfos.map((quiz, i) => { return { value: i, label: quiz.name } })}
-                            /> */}
                         </div>
                     }
                     foot={

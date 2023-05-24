@@ -108,7 +108,12 @@ input::placeholder {
   font-family: 'montserrat';
 }
 
-.blob {
+section {
+  width: 100vw;
+  height: 400px;
+}
+
+/* .blob {
   height: 350px;
   aspect-ratio: 1;
   position: fixed;
@@ -131,7 +136,7 @@ input::placeholder {
   position: fixed;
   z-index: -10;
   backdrop-filter: blur(150px);
-}
+} */
 
 /* @media (prefers-color-scheme: light) {
   html {

@@ -25,20 +25,25 @@ export default function AvatarMenu(props) {
 
   const [anchorEl, setAnchorEl] = React.useState(null)
   const open = Boolean(anchorEl)
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
   }
+
   const handleClose = () => {
     setAnchorEl(null)
   }
+  
   function handleChange(targetPage) {
     setAnchorEl(null)
     Router.push(`/${targetPage}`)
   }
+
   const handleLogout = () => {
     setAnchorEl(null)
     signOut()
   }
+
   return (
     <React.Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
@@ -82,10 +87,11 @@ export default function AvatarMenu(props) {
           },
         }}
         sx={{ left: '-10px' }}
+        disableScrollLock={true}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={() => handleChange(`profile?id=${session.user.id}`)}>
           <ListItemIcon>
             <AccountCircleRoundedIcon fontSize="medium" />
           </ListItemIcon>
