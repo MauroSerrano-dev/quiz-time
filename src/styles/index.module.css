@@ -31,6 +31,7 @@
     position: relative;
     bottom: -39.5px;
     left: -70px;
+    pointer-events: none;
 }
 
 .crowdContainer {
@@ -45,6 +46,7 @@
 .crowdImg {
     position: relative;
     width: 100%;
+    pointer-events: none;
 }
 
 .telaImg {
@@ -54,4 +56,5 @@
     left: 29%;
     border-radius: 0.3rem;
     box-shadow: 0px 0px 20px 0px black;
+    pointer-events: none;
 }
