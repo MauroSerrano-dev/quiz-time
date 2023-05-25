@@ -10,7 +10,7 @@ const INICIAL_TICKET = {
 
 export default function Support(props) {
     const { session } = props
-    const [newTicket, setNewTicket] = useState({ ...INICIAL_TICKET, userEmail: session.user.email })
+    const [newTicket, setNewTicket] = useState(INICIAL_TICKET)
 
     async function createNewTicket() {
         const options = {

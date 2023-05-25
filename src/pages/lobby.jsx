@@ -23,7 +23,7 @@ const INICIAL_ROOM = {
 
 export default function Lobby(props) {
     const { session } = props
-    const [newRoom, setNewRoom] = useState({ ...INICIAL_ROOM, owner: session.user.email })
+    const [newRoom, setNewRoom] = useState(INICIAL_ROOM)
     const [searchCode, setSearchCode] = useState('')
     const [newCode, setNewCode] = useState('')
     const [requestState, setRequestState] = useState('denied')
@@ -100,7 +100,7 @@ export default function Lobby(props) {
         setTimeout(() => {
             setPasswordInputOpen(false)
             setShowModal(false)
-            setNewRoom({ ...INICIAL_ROOM, owner: session.user.email })
+            setNewRoom(INICIAL_ROOM)
         }, 300)
     }
 
@@ -129,7 +129,7 @@ export default function Lobby(props) {
         const options = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newRoom)
+            body: JSON.stringify({ ...newRoom, owner: session.user.email })
         }
 
         await fetch('/api/rooms', options)
