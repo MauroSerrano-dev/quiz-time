@@ -1,7 +1,7 @@
-.pieChart {
+#pieChart {
     --text-color: var(--text-black)
 }
-.pieChart ul {
+#pieChart ul {
     padding: 0px;
     margin: 0px;
     text-align: left;

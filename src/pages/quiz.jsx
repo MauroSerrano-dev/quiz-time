@@ -288,7 +288,7 @@ export default withRouter((props) => {
     }
 
     return (
-        <motion.div className={styles.container}
+        <motion.div id={styles.container}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.5, ease: [.62, -0.18, .32, 1.17] }}
@@ -296,7 +296,7 @@ export default withRouter((props) => {
             <main>
                 {room &&
                     <div>
-                        <h3 className={styles.roomName}>{room.quizInfo.name}</h3>
+                        <h3 id={styles.roomName}>{room.quizInfo.name}</h3>
                         {room.state === 'disable' &&
                             <div>
                                 {!joined &&
@@ -320,8 +320,8 @@ export default withRouter((props) => {
                                 }
                                 {joined &&
                                     <div>
-                                        <div className={styles.watingContainer}>
-                                            <h3 className={styles.watingMsg}>Aguarde enquanto o Quiz começa{dots}</h3>
+                                        <div id={styles.watingContainer}>
+                                            <h3 id={styles.watingMsg}>Aguarde enquanto o Quiz começa{dots}</h3>
                                         </div>
                                         <Button variant="outlined" onClick={leaveQuiz}>Sair</Button>
                                     </div>
@@ -329,9 +329,9 @@ export default withRouter((props) => {
                             </div>
                         }
                         {room.state === 'active' && quiz && joined && getPlayer().state === 'answering' &&
-                            <div className={styles.questionOptions}>
+                            <div id={styles.questionOptions}>
                                 <motion.div
-                                    className={styles.questionContainer}
+                                    id={styles.questionContainer}
                                     initial={{ opacity: 0 }}
                                     animate={questionTransition ? { opacity: 0 } : { opacity: 1 }}
                                     transition={{ duration: TRANSITION_DURATION / 1000, ease: [.62, -0.18, .32, 1.17] }}
@@ -339,7 +339,7 @@ export default withRouter((props) => {
                                     <h2>{room.control ? room.currentQuestion + 1 : getPlayer().currentQuestion + 1}. {quiz.questions[room.control ? room.currentQuestion : getPlayer().currentQuestion].content}</h2>
                                 </motion.div>
                                 <motion.div
-                                    className={styles.optionsContainer}
+                                    id={styles.optionsContainer}
                                     variants={container}
                                     initial="hidden"
                                     animate="visible"
@@ -349,7 +349,7 @@ export default withRouter((props) => {
                                             <Button
                                                 variant={optionSelected === i ? 'contained' : 'outlined'}
                                                 key={`Option: ${i}`}
-                                                /* className={`${styles.option} ${optionSelected === i ? styles.optionSelected : ''}`} */
+                                                /* id={`${styles.option} ${optionSelected === i ? styles.optionSelected : ''}`} */
                                                 onClick={() => room.control ? answerControl(i) : answer(i)}
                                                 sx={{ pointerEvents: disableOptions ? 'none' : 'auto', width: '350px', height: '50px' }}
                                             >
@@ -373,12 +373,12 @@ export default withRouter((props) => {
                         }
                         {quiz && (room.state === 'results' || getPlayer()?.state === 'result') && results && joined &&
                             <motion.div
-                                className={styles.resultContainer}
+                                id={styles.resultContainer}
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: TRANSITION_DURATION / 2000, duration: TRANSITION_DURATION / 1000, ease: [.62, -0.18, .32, 1.17] }}
                             >
-                                {layout.map((item, i) => <Box className={styles.resultBlock} key={i}>{item.value}</Box>)}
+                                {layout.map((item, i) => <Box id={styles.resultBlock} key={i}>{item.value}</Box>)}
                             </motion.div>
                         }
                     </div>

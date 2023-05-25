@@ -58,7 +58,7 @@ export default function ChartRadar(props) {
             width={600}
             height={600}
             data={data}
-            className={styles.radarChart}
+            id={styles.radarChart}
         >
             <PolarGrid />
             <PolarAngleAxis dataKey="name" />

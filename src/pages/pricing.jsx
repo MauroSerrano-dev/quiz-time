@@ -49,7 +49,7 @@ export default function Pricing(props) {
             </Head>
             <main>
                 <motion.div
-                    className={styles.pricesContainer}
+                    id={styles.pricesContainer}
                     variants={container}
                     initial="hidden"
                     animate="visible"

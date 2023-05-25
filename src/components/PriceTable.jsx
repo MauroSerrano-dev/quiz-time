@@ -5,24 +5,24 @@ export default function PriceTable(props) {
     const { backgroundColor, outline, price, recurrent, title, onClick, tag } = props
 
     return (
-        <Box className={styles.container} style={{ backgroundColor, outline }}>
-            <div className={styles.tagContainer}>
+        <Box id={styles.container} style={{ backgroundColor, outline }}>
+            <div id={styles.tagContainer}>
                 {tag &&
-                    <div className={styles.tag}>
-                        <div className={styles.glow}></div>
+                    <div id={styles.tag}>
+                        <div id={styles.glow}></div>
                         <h6>{tag}</h6>
                     </div>}
             </div>
-            <Box className={styles.top}>
-                <img src='/quiz-time-logo.png' className={styles.itemImg} />
-                <h2 className={styles.title}>{title}</h2>
+            <Box id={styles.top}>
+                <img src='/quiz-time-logo.png' id={styles.itemImg} />
+                <h2 id={styles.title}>{title}</h2>
             </Box>
-            <Box className={styles.bottom}>
-                <Box className={styles.priceContainer}>
-                    <h1 className={styles.price}>{price}</h1>
-                    {recurrent && <h6 className={styles.time}>/{recurrent}</h6>}
+            <Box id={styles.bottom}>
+                <Box id={styles.priceContainer}>
+                    <h1 id={styles.price}>{price}</h1>
+                    {recurrent && <h6 id={styles.time}>/{recurrent}</h6>}
                 </Box>
-                <Button onClick={onClick} variant="contained" className={styles.submitButton} ><p>Assinar</p></Button>
+                <Button onClick={onClick} variant="contained" id={styles.submitButton} ><p>Assinar</p></Button>
             </Box>
         </Box>
     )

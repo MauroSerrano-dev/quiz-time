@@ -1,8 +1,8 @@
-.main {
+#main {
     gap: 1rem;
 }
 
-.bodyContainer {
+#bodyContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -15,7 +15,7 @@
     gap: 7%;
 }
 
-.headContainer {
+#headContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -25,7 +25,7 @@
     width: 85%;
 }
 
-.footContainer {
+#footContainer {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -35,7 +35,7 @@
     width: 85%;
 }
 
-.privateAndInput {
+#privateAndInput {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -45,12 +45,12 @@
     gap: 1rem;
 }
 
-.nameInput {
+#nameInput {
     width: 80%;
     height: 15%;
 }
 
-.privateContainer {
+#privateContainer {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -61,16 +61,16 @@
     height: 100%;
 }
 
-.privateContainer input {
+#privateContainer input {
     position: relative;
     bottom: -2px;
 }
 
-.selectQuiz {
+#selectQuiz {
     width: 80%;
 }
 
-.controlContainer {
+#controlContainer {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -80,12 +80,12 @@
     height: 15%;
 }
 
-.controlContainer input {
+#controlContainer input {
     position: relative;
     bottom: -2px;
 }
 
-.password {
+#password {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -93,14 +93,41 @@
     height: 100%;
 }
 
-.customLabel {
+#customLabel {
     color: #e5e5e5;
 }
 
-.customLabelFocused {
+#customLabelFocused {
     color: #009fda;
 }
 
-.customLabel:hover {
+#customLabel:hover {
     color: #ffffff;
+}
+
+#bodyContainer span,
+#footContainer button {
+    transition: font-size 500ms ease-in-out;
+}
+
+#bodyContainer span {
+    font-size: 18px;
+}
+
+/* Mobile */
+@media (max-width: 360px) {
+    #bodyContainer span {
+        font-size: 14px;
+    }
+
+    #footContainer button {
+        font-size: 9px;
+    }
+}
+
+/* Tablet and Smaller Desktop */
+@media (min-width: 361px) and (max-width: 700px) {
+    #bodyContainer span {
+        font-size: 16px;
+    }
 }

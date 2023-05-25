@@ -15,8 +15,8 @@ export default function DataHandler(props) {
     return (
         <div>
             {session === null && !FREE_PAGES.includes(Component.name) &&
-                <div className={styles.noSessionContainer}>
-                    <img className={styles.logo} src='/quiz-time-logo.png' />
+                <div id={styles.noSessionContainer}>
+                    <img id={styles.logo} src='/quiz-time-logo.png' />
                     <Button variant="outlined" onClick={() => signIn()}>Sign in</Button>
                 </div>
             }

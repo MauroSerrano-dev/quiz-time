@@ -1,13 +1,13 @@
-.radarChart text {
+#radarChart text {
     fill: var(--text-color);
 }
 
-.radarChart line {
+#radarChart line {
     stroke: var(--text-color);
     opacity: 0.8;
 }
 
-.radarChart path {
+#radarChart path {
     stroke: var(--text-color);
     opacity: 0.8;
 }

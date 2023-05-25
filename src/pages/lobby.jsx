@@ -32,6 +32,19 @@ export default function Lobby(props) {
     const [disableCreateNewRoom, setDisableCreateNewRoom] = useState(false)
     const [passwordInputOpen, setPasswordInputOpen] = useState(false)
     const [firstClickPrivite, setFirstClickPrivite] = useState(false)
+    const [isSmall, setIsSmall] = useState(window.innerWidth <= 360)
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsSmall(window.innerWidth <= 360)
+        }
+
+        window.addEventListener('resize', handleResize)
+
+        return () => {
+            window.removeEventListener('resize', handleResize)
+        }
+    }, [])
 
     function handleCodeChange(event) {
         setSearchCode(event.target.value)
@@ -141,7 +154,7 @@ export default function Lobby(props) {
 
     return (
         <div>
-            <main className={styles.main}>
+            <main id={styles.main}>
                 <TextField
                     value={searchCode}
                     onChange={handleCodeChange}
@@ -157,27 +170,35 @@ export default function Lobby(props) {
                 <Button variant="outlined" onClick={openModal}>
                     Criar Sala
                 </Button>
-                {showModal && <Modal height={'60%'} width={'30%'} minHeight={'350px'} minWidth={'250px'} closeModal={closeModal} showModalOpacity={showModalOpacity}
+                {showModal && <Modal
+                    width={'550px'}
+                    height={'450px'}
+                    widthMobile={'350px'}
+                    heightMobile={'450px'}
+                    widthSmall={'250px'}
+                    heightSmall={'450px'}
+                    closeModal={closeModal}
+                    showModalOpacity={showModalOpacity}
                     head={
-                        <div className={styles.headContainer}>
+                        <div id={styles.headContainer}>
                             <h2>Criar Sala</h2>
                         </div>
                     }
                     body={
-                        <div className={styles.bodyContainer}>
+                        <div id={styles.bodyContainer}>
                             <FormControl sx={{ height: '15%', width: '80%' }}>
                                 <TextField value={newRoom.name} onChange={handleNewCodeChange} id="outlined-basic" label="Nome" variant='outlined' size='small' autoComplete='off' />
                             </FormControl>
                             <FormControl sx={{ height: '15%', width: '80%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
                                 <FormControlLabel
-                                    control={<Switch />}
+                                    control={<Switch size={isSmall ? 'small' : 'medium'} />}
                                     label="Private:"
                                     labelPlacement="start"
                                     onChange={handleNewIsPrivate}
                                     checked={newRoom.private}
                                 />
                                 <motion.div
-                                    className={styles.password}
+                                    id={styles.password}
                                     onChange={handleNewPasswordChange}
                                     initial={{ width: '0%', pointerEvents: 'none', opacity: 0 }}
                                     animate={newRoom.private ? { width: '100%', opacity: [0, 1, 1], pointerEvents: 'auto' } : { width: '0%', opacity: firstClickPrivite ? [1, 1, 0] : [0, 0, 0], pointerEvents: 'none' }}
@@ -188,7 +209,7 @@ export default function Lobby(props) {
                                     </FormControl>
                                 </motion.div>
                             </FormControl>
-                            <FormControlLabel onChange={handleNewControl} checked={newRoom.control} control={<Switch />} label="Controlar Perguntas:" labelPlacement="start" />
+                            <FormControlLabel onChange={handleNewControl} checked={newRoom.control} control={<Switch size={isSmall ? 'small' : 'medium'} />} label="Controlar Perguntas:" labelPlacement="start" />
                             <FormControl sx={{ width: '80%' }}>
                                 <InputLabel size='small' id="select-label">Quiz</InputLabel>
                                 <Select
@@ -214,7 +235,7 @@ export default function Lobby(props) {
                         </div>
                     }
                     foot={
-                        <div className={styles.footContainer}>
+                        <div id={styles.footContainer}>
                             <Button
                                 onClick={closeModal}
                                 variant="contained"

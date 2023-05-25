@@ -70,34 +70,34 @@ export default withRouter((props) => {
     }
 
     return (
-        <div className={styles.container}>
+        <div id={styles.container}>
             <main>
                 {room && Object.keys(room).length === 0 &&
                     <div>
-                        <h1 className={styles.roomName}>Esta sala não existe</h1>
+                        <h1 id={styles.roomName}>Esta sala não existe</h1>
                     </div>
                 }
                 {room && Object.keys(room).length > 0 &&
-                    <div className={styles.roomContainer}>
-                        <h1 className={styles.roomName}>Essa é a sala: {room.name}</h1>
+                    <div id={styles.roomContainer}>
+                        <h1 id={styles.roomName}>Essa é a sala: {room.name}</h1>
                         {session.user.email === room.owner &&
-                            <section className={styles.ownerView}>
+                            <section id={styles.ownerView}>
                                 {room.state === 'disable' &&
                                     <motion.div
                                         initial={{ opacity: 0, y: 30 }}
                                         animate={disableShow ? { opacity: 1, y: 0 } : { opacity: 0, y: 0 }}
                                         transition={{ delay: disableShow ? 0.5 : 0, duration: disableShow ? 1.2 : 0.6, easings: ["easeInOut"] }}
-                                        className={styles.disableContainer}
+                                        id={styles.disableContainer}
                                     >
-                                        <div className={styles.qrContainer}>
-                                            <div className={styles.qrCode}><QRCode value={`quiztime.pt/quiz?code=${code}`} size={200} ecLevel='H' qrStyle='dots' logoImage='quiz-time-logo.png' logoWidth={200 * 0.6} logoOpacity={0.5} eyeColor={{ outer: '#00a0dc', inner: '#005270' }} eyeRadius={5} /></div>
+                                        <div id={styles.qrContainer}>
+                                            <div id={styles.qrCode}><QRCode value={`quiztime.pt/quiz?code=${code}`} size={200} ecLevel='H' qrStyle='dots' logoImage='quiz-time-logo.png' logoWidth={200 * 0.6} logoOpacity={0.5} eyeColor={{ outer: '#00a0dc', inner: '#005270' }} eyeRadius={5} /></div>
                                             <h2>Scan Me!</h2>
                                             <div className={styles.frame}></div>
-                                            <div className={`${styles.frame} ${styles.border}`}></div>
-                                            <div className={styles.textContainer}></div>
+                                            <div className={styles.frame} id={styles.border}></div>
+                                            <div id={styles.textContainer}></div>
                                         </div>
                                         <h2>Ou</h2>
-                                        <div className={styles.linkContainer}>
+                                        <div id={styles.linkContainer}>
                                             <h2>Entre no link:</h2>
                                             <a href={`https://quiztime.pt/quiz?code=${code}`} target='_blank'>
                                                 <h2>quiztime.pt/quiz?code={code}</h2>
@@ -114,16 +114,16 @@ export default withRouter((props) => {
                                         initial={{ opacity: 0 }}
                                         animate={activeShow ? { opacity: 1 } : { opacity: 0 }}
                                         transition={{ delay: activeShow ? 0.5 : 0, duration: activeShow ? 1.2 : 0.6, easings: ["easeInOut"] }}
-                                        className={styles.activeContainer}
+                                        id={styles.activeContainer}
                                     >
                                         {room.control &&
-                                            <section className={styles.questionOptions}>
-                                                <div className={styles.questionContainer}>
+                                            <section id={styles.questionOptions}>
+                                                <div id={styles.questionContainer}>
                                                     <h2>{room.currentQuestion + 1}. {quiz.questions[room.currentQuestion].content}</h2>
                                                 </div>
-                                                <div className={styles.optionsContainer}>
+                                                <div id={styles.optionsContainer}>
                                                     {quiz.questions[room.currentQuestion].options.map((option, i) =>
-                                                        <Button className={styles.optionButton} variant="outlined" key={`Option: ${i}`}><h3>{option.content}</h3></Button>
+                                                        <Button id={styles.optionButton} variant="outlined" key={`Option: ${i}`}><h3>{option.content}</h3></Button>
                                                     )}
                                                 </div>
                                             </section>
@@ -140,7 +140,7 @@ export default withRouter((props) => {
                                         <h2>Finalizado</h2>
                                     </div>
                                 }
-                                <div className={styles.playersList}>
+                                <div id={styles.playersList}>
                                     <h3>Players</h3>
                                     <ol>
                                         {room.players.map((player, i) => <li key={`Player: ${i}`}><p>{player.name} {player.answers.some((answer, i) => i === room.currentQuestion) ? 'check' : ''}</p></li>)}

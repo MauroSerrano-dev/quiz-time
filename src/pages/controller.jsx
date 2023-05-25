@@ -1,6 +1,6 @@
 import { withRouter } from 'next/router'
 import { QRCode } from 'react-qrcode-logo';
-import styles from '../styles/room.module.css'
+import styles from '../styles/controller.module.css'
 import io from "socket.io-client";
 import { useEffect, useState } from 'react';
 import { motion } from "framer-motion"
@@ -100,24 +100,24 @@ export default withRouter((props) => {
     }
 
     return (
-        <div className={styles.container}>
+        <div id={styles.container}>
             <main>
                 {room && Object.keys(room).length === 0 &&
                     <div>
-                        <h1 className={styles.roomName}>Esta sala não existe</h1>
+                        <h1 id={styles.roomName}>Esta sala não existe</h1>
                     </div>
                 }
                 {room && Object.keys(room).length > 0 &&
-                    <div className={styles.roomContainer}>
-                        <h1 className={styles.roomName}>Essa é a sala: {room.name}</h1>
+                    <div id={styles.roomContainer}>
+                        <h1 id={styles.roomName}>Essa é a sala: {room.name}</h1>
                         {session.user.email === room.owner &&
-                            <section className={styles.ownerView}>
+                            <section id={styles.ownerView}>
                                 {room.state === 'disable' &&
                                     <motion.div
                                         initial={{ opacity: 0, y: 30 }}
                                         animate={disableShow ? { opacity: 1, y: 0 } : { opacity: 0, y: 0 }}
                                         transition={{ delay: disableShow ? 0.5 : 0, duration: disableShow ? 1.2 : 0.6, easings: ["easeInOut"] }}
-                                        className={styles.disableContainer}
+                                        id={styles.disableContainer}
                                     >
                                         <ButtonGroup>
                                             <Button sx={{ width: '120px' }} variant={room.control ? 'outlined' : 'contained'} onClick={() => switchControl(false)}>Auto-Play</Button>
@@ -130,10 +130,10 @@ export default withRouter((props) => {
                                         initial={{ opacity: 0 }}
                                         animate={activeShow ? { opacity: 1 } : { opacity: 0 }}
                                         transition={{ delay: activeShow ? 0.5 : 0, duration: activeShow ? 1.2 : 0.6, easings: ["easeInOut"] }}
-                                        className={styles.activeContainer}
+                                        id={styles.activeContainer}
                                     >
                                         {room.control &&
-                                            <section className={styles.questionOptions}>
+                                            <section id={styles.questionOptions}>
                                                 <div>
                                                     <Button variant="contained" onClick={prevQuestion} disabled={room.currentQuestion === 0}>Prev Question</Button>
                                                     <Button variant="contained" onClick={nextQuestion}>Next Question</Button>
@@ -153,7 +153,7 @@ export default withRouter((props) => {
                                         <h2>Finalizado</h2>
                                     </div>
                                 }
-                                <div className={styles.playersList}>
+                                <div id={styles.playersList}>
                                     <h3>Players</h3>
                                     <ol>
                                         {room.players.map((player, i) => <li key={`Player: ${i}`}><p>{player.name} {player.answers.some((answer, i) => i === room.currentQuestion) ? 'check' : ''}</p></li>)}

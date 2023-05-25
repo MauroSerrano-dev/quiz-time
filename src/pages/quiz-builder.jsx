@@ -59,14 +59,14 @@ export default function QuizBuilder() {
             <main>
                 <h1>Quiz Builder!</h1>
                 {!quiz.mode
-                    ? <div className={styles.optionsContainer}>
+                    ? <div id={styles.optionsContainer}>
                         {GAME_MODES.map((gMode, i) =>
-                            <div key={`Game Mode: ${i}`} className={styles.gameOption} onClick={() => handleSelectMode(gMode.name)}>
+                            <div key={`Game Mode: ${i}`} id={styles.gameOption} onClick={() => handleSelectMode(gMode.name)}>
                                 <h2>{gMode.name}</h2>
                             </div>)
                         }
                     </div>
-                    : <div className={styles.editorContainer}>
+                    : <div id={styles.editorContainer}>
                         <h3>{quiz.name}</h3>
                         <input value={quiz.name} onChange={handleNameChange} />
                     </div>

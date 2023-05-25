@@ -1,4 +1,4 @@
-.optionsContainer{
+#optionsContainer{
     --size: 20vw;
     display: flex;
     flex-direction: row;
@@ -10,7 +10,7 @@
     border-style: dashed;
 }
 
-.gameOption {
+#gameOption {
     width: var(--size);
     height: var(--size);
 
@@ -25,12 +25,12 @@
 
 }
 
-.gameOption h2{
+#gameOption h2{
     margin-top: 20%;
     font-size: calc(var(--size) / 7);
 }
 
-.editorContainer {
+#editorContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -43,7 +43,7 @@
 
 /* Enable hover only on non-touch devices */
 @media (hover: hover) and (pointer: fine) {
-    .gameOption {
+    #gameOption {
         cursor: pointer;
     }
 }

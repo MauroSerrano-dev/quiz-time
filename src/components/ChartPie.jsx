@@ -51,7 +51,7 @@ export default class ChartPie extends PureComponent {
     render() {
         return (
             <ResponsiveContainer width="100%" height="100%">
-                <PieChart className={styles.pieChart} style={{ outline: 'none' }} width={400} height={400}>
+                <PieChart id={styles.pieChart} style={{ outline: 'none' }} width={400} height={400}>
                     <Legend layout="vertical" verticalAlign="middle" align="right" />
                     <Pie
                         stroke={'white'}
@@ -70,7 +70,7 @@ export default class ChartPie extends PureComponent {
                             <Cell key={`Cell: ${i}`} fill={result.color} />
                         ))}
                     </Pie>
-                    <Tooltip labelStyle={{color: 'red'}} itemStyle={{backgroundColor: 'blue'}} className={styles.tooltip} content={(event) => CustomTooltip(event, this.props.totalPoints)} />
+                    <Tooltip labelStyle={{color: 'red'}} itemStyle={{backgroundColor: 'blue'}} id={styles.tooltip} content={(event) => CustomTooltip(event, this.props.totalPoints)} />
                 </PieChart>
             </ResponsiveContainer>
         );

@@ -26,18 +26,18 @@ export default withRouter((props) => {
     }
 
     return (
-        <div className={styles.container}>
+        <div id={styles.container}>
             {user &&
                 <main>
-                    <div className={styles.header}>
+                    <div id={styles.header}>
                         {session.user.id === id &&
                             <Button variant="outlined" startIcon={<EditIcon />}>
                                 Editar
                             </Button>
                         }
                     </div>
-                    <section className={styles.one}>
-                        <div className={styles.avatarContainer}>
+                    <section id={styles.one}>
+                        <div id={styles.avatarContainer}>
                             <img src={user.image} />
                         </div>
                         <div>

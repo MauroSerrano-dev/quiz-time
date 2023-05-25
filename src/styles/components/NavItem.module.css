@@ -1,16 +1,16 @@
-.nav_link {
+#nav_link {
     font-size: 18px;
     position: relative;
     transition: all 0.2s;
 }
 
-.nav_link:hover {
+#nav_link:hover {
     font-weight: bold;
 }
 
 @media screen and (min-width: 768px) {
 
-    .nav_link::before {
+    #nav_link::before {
         content: '';
         position: absolute;
         width: 0%;
@@ -21,7 +21,7 @@
         transition: all 0.2s;
     }
 
-    .nav_link:hover:before {
+    #nav_link:hover:before {
         width: 100%;
     }
 }

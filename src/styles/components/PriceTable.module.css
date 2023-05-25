@@ -1,19 +1,19 @@
-.container,
-.top,
-.bottom,
-.itemImg,
-.submitButton,
-.submitButton p,
-.title,
-.priceContainer,
-.price,
-.time,
-.tag,
-.tag h6 {
+#container,
+#top,
+#bottom,
+#itemImg,
+#submitButton,
+#submitButton p,
+#title,
+#priceContainer,
+#price,
+#time,
+#tag,
+#tag h6 {
     transition: all 400ms ease-in-out;
 }
 
-.container {
+#container {
     --size: 250px;
     display: flex;
     flex-direction: column;
@@ -26,7 +26,7 @@
     padding-right: calc(var(--size) * 0.12);
 }
 
-.top {
+#top {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -35,7 +35,7 @@
     height: 30%;
 }
 
-.bottom {
+#bottom {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -44,48 +44,48 @@
     height: 30%;
 }
 
-.itemImg {
+#itemImg {
     width: 60%;
     height: auto;
 }
 
-.submitButton {
+#submitButton {
     width: 100%;
     height: 35%;
 }
 
-.submitButton p {
+#submitButton p {
     --text-color: var(--text-white) font-size: calc(var(--size) * 0.06);
 }
 
-.title {
+#title {
     font-size: calc(var(--size) * 0.07);
 }
 
-.priceContainer {
+#priceContainer {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: flex-end;
 }
 
-.price {
+#price {
     font-size: calc(var(--size) * 0.13);
 }
 
-.time {
+#time {
     font-size: calc(var(--size) * 0.05);
     position: relative;
     bottom: 20%;
     --text-color: #a6a6cc
 }
 
-.tagContainer {
+#tagContainer {
     width: 100%;
     height: 5%;
 }
 
-.tag {
+#tag {
     background-color: #f2f2f2;
     outline: solid 1px #dadada;
     width: 45%;
@@ -98,12 +98,12 @@
     overflow: hidden;
 }
 
-.tag h6 {
+#tag h6 {
     font-size: calc(var(--size) * 0.04);
     z-index: 10;
 }
 
-.glow {
+#glow {
     background-color: rgba(59, 59, 59);
     box-shadow: 0px 0px 15px 20px rgba(59, 59, 59);
     height: 80%;

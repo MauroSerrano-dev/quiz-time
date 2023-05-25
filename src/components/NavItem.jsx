@@ -5,7 +5,7 @@ import styles from '@/styles/components/NavItem.module.css'
 const NavItem = ({ href, text, active }) => {
     return(
         <Link legacyBehavior href={href}>
-            <a className={`${styles.nav_link} ${active ? 'active' : ''}`}>
+            <a id={styles.nav_link}>
                 {text}
             </a>
         </Link>
