@@ -19,7 +19,7 @@ export default function Support(props) {
             body: JSON.stringify(newTicket)
         }
 
-        await fetch('/api/ticket', options)
+        await fetch('/api/tickets', options)
             .then(response => response.json())
             .then(response => console.log(response))
             .catch(err => console.error(err))
