@@ -5,6 +5,7 @@ import io from "socket.io-client";
 import { useEffect, useState } from 'react';
 import { motion } from "framer-motion"
 import { Button } from '@mui/material';
+import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 
 let socket;
 
@@ -102,6 +103,11 @@ export default withRouter((props) => {
                                                 <h2>quiztime.pt/quiz?code={code}</h2>
                                             </a>
                                         </div>
+                                        <a href={`https://quiztime.pt/controller?code=${code}`} target='_blank'>
+                                            <Button variant="outlined" endIcon={<SportsEsportsIcon />}>
+                                                Controller
+                                            </Button>
+                                        </a>
                                     </motion.div>}
                                 {room.state === 'active' && quiz &&
                                     <motion.div

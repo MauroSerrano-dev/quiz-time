@@ -10,9 +10,20 @@ import { TextField, Button, Select, FormControlLabel, MenuItem, OutlinedInput, I
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import LoadingButton from '@mui/lab/LoadingButton';
 
+const INICIAL_ROOM = {
+    name: '',
+    code: '',
+    private: false,
+    control: false,
+    password: '',
+    state: 'disable',
+    quizInfo: { name: '', purchaseDate: '', type: '' },
+    currentQuestion: 0, players: []
+}
+
 export default function Lobby(props) {
     const { session } = props
-    const [newRoom, setNewRoom] = useState({ name: '', code: '', private: false, control: false, password: '', state: 'disable', quizInfo: { name: '', purchaseDate: '', type: '' } })
+    const [newRoom, setNewRoom] = useState({ ...INICIAL_ROOM, owner: session.user.email })
     const [searchCode, setSearchCode] = useState('')
     const [newCode, setNewCode] = useState('')
     const [requestState, setRequestState] = useState('denied')
@@ -21,12 +32,6 @@ export default function Lobby(props) {
     const [disableCreateNewRoom, setDisableCreateNewRoom] = useState(false)
     const [passwordInputOpen, setPasswordInputOpen] = useState(false)
     const [firstClickPrivite, setFirstClickPrivite] = useState(false)
-
-    useEffect(() => {
-        if (!newRoom.owner) {
-            setNewRoom(prev => { return { ...prev, owner: session.user.email } })
-        }
-    }, [session])
 
     function handleCodeChange(event) {
         setSearchCode(event.target.value)
@@ -95,7 +100,7 @@ export default function Lobby(props) {
         setTimeout(() => {
             setPasswordInputOpen(false)
             setShowModal(false)
-            setNewRoom(prev => { return { ...prev, password: '', code: '', name: '', private: false, control: false, quizInfo: { name: '', purchaseDate: '', type: '' } } })
+            setNewRoom({ ...INICIAL_ROOM, owner: session.user.email })
         }, 300)
     }
 
@@ -125,7 +130,7 @@ export default function Lobby(props) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(newRoom)
-        };
+        }
 
         await fetch('/api/rooms', options)
             .then(response => response.json())

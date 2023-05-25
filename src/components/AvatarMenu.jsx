@@ -17,12 +17,6 @@ import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 export default function AvatarMenu(props) {
   const { signOut, session } = props
 
-  React.useEffect(() => {
-    console.log(session.user.name)
-    console.log(session.user.email)
-    console.log(session.user.image)
-  }, [])
-
   const [anchorEl, setAnchorEl] = React.useState(null)
   const open = Boolean(anchorEl)
 
@@ -101,7 +95,7 @@ export default function AvatarMenu(props) {
           <ListItemIcon>
             <ContactSupportIcon fontSize="medium" />
           </ListItemIcon>
-          My Quizzes
+          Quiz List
         </MenuItem>
         <Divider />
         <MenuItem onClick={() => handleChange('settings')}>

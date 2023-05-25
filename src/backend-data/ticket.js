@@ -1,32 +1,32 @@
 const { getMongoCollection } = require("./utils/mongodb");
 
 const DATABASE = process.env.MONGODB_DB;
-const COLLECTION_NAME = process.env.COLL_ROOMS;
+const COLLECTION_NAME = process.env.COLL_TICKETS;
 
-async function getRoom(code) {
+async function getTicket(id) {
   const collection = await getMongoCollection(DATABASE, COLLECTION_NAME);
-  const result = await collection.findOne({ code: code });
+  const result = await collection.findOne({ _id: id });
   return result;
 }
 
-async function addRoom(room) {
+async function addTicket(ticket) {
   const collection = await getMongoCollection(DATABASE, COLLECTION_NAME);
-  const result = await collection.insertOne(room);
+  const result = await collection.insertOne(ticket);
   return result.insertedId;
 }
 
-async function updateRoom(room) {
+async function updateTicket(ticket) {
   const collection = await getMongoCollection(DATABASE, COLLECTION_NAME);
-  delete room._id;
+  delete ticket._id;
   const result = await collection.updateOne(
-    { code: room.code },
-    { $set: { ...room } }
+    { id: ticket.id },
+    { $set: { ...ticket } }
   );
   return result;
 }
 
 export {
-  getRoom,
-  updateRoom,
-  addRoom
+  getTicket,
+  updateTicket,
+  addTicket
 }

@@ -8,10 +8,11 @@ export default async function handler(req, res) {
     }
 
     else if (req.method === "POST") {
-        const id = await addRoom(req.body);
+        const newRoom = req.body
+        const id = await addRoom(newRoom);
         res.status(201).json({
-          message: "Room Criada com Sucesso!",
-          _id: id,
+            message: 'Room Criada com Sucesso!',
+            _id: id,
         })
     }
 
@@ -19,7 +20,7 @@ export default async function handler(req, res) {
         const { room } = req.body
         updateRoom(room)
         res.status(200).json({
-            message: `Room Atualizada com Sucesso!`
+            message: "Room Atualizada com Sucesso!"
         })
     }
 }

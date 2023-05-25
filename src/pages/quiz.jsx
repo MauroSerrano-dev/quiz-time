@@ -57,7 +57,7 @@ export default withRouter((props) => {
         if (room && !quiz) {
             getQuiz()
         }
-    }, [session])
+    }, [room])
 
     useEffect(() => {
         if (room && joined && room.control) {
