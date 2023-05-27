@@ -113,6 +113,14 @@
 #bodyContainer span {
     font-size: 18px;
 }
+/* 
+#nameInput fieldset {
+    border-color: red;
+} */
+
+/* #nameInput input:hover #nameInput fieldset {
+    border-color: red;
+} */
 
 /* Mobile */
 @media (max-width: 360px) {

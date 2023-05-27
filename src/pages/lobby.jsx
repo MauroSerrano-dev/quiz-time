@@ -9,6 +9,38 @@ import Switch from '@mui/material/Switch';
 import { TextField, Button, Select, FormControlLabel, MenuItem, OutlinedInput, InputLabel, FormControl, Box } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import LoadingButton from '@mui/lab/LoadingButton';
+import { styled } from '@mui/system';
+
+const CustomTextField = styled(TextField)(({ theme }) => ({
+    '& .MuiFormLabel-root': {
+        color: '#ffffff',
+        transition: 'all 0.25s ease',
+        '&.Mui-focused': {
+            color: theme.palette.primary.main,
+        },
+    },
+    '& .MuiOutlinedInput-root': {
+        '& input': {
+            transition: 'all 0.25s ease',
+            color: '#ffffff',
+        },
+        '& fieldset': {
+            transition: 'border-color 0.25s ease',
+            borderColor: '#ffffff90',
+        },
+        '&:hover fieldset': {
+            borderColor: '#ffffff',
+        },
+        '&.Mui-focused': {
+            '& fieldset': {
+                borderColor: theme.palette.primary.main,
+            },
+            '& input': {
+                color: theme.palette.primary.main,
+            },
+        },
+    },
+}));
 
 const INICIAL_ROOM = {
     name: '',
@@ -153,17 +185,21 @@ export default function Lobby(props) {
     }
 
     return (
-        <div>
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.2, ease: [.62, -0.18, .32, 1.17] }}>
             <main id={styles.main}>
-                <TextField
-                    value={searchCode}
-                    onChange={handleCodeChange}
-                    onKeyDown={handleSubmitCode}
-                    id="outlined-basic"
-                    label="Nome da Sala"
-                    variant='outlined'
-                    autoComplete='off'
-                />
+                <div id={styles.nameInput}>
+                    <CustomTextField
+                        value={searchCode}
+                        onChange={handleCodeChange}
+                        onKeyDown={handleSubmitCode}
+                        label="Nome da Sala"
+                        variant='outlined'
+                        autoComplete='off'
+                    />
+                </div>
                 <Button variant="outlined" onClick={handleSubmitCode} disabled={searchCode === ''} >
                     Entrar
                 </Button>
@@ -251,6 +287,7 @@ export default function Lobby(props) {
                                 color="success"
                                 variant="contained"
                                 endIcon={disableCreateNewRoom && <AddCircleOutlineIcon />}
+                                
                                 sx={{ width: '30%', height: '55%' }}
                             >
                                 {disableCreateNewRoom ? 'Criando' : 'Criar'}
@@ -259,6 +296,6 @@ export default function Lobby(props) {
                     }
                 />}
             </main>
-        </div>
+        </motion.div>
     )
 }

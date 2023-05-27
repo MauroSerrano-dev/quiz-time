@@ -349,7 +349,7 @@ export default withRouter((props) => {
                                             <Button
                                                 variant={optionSelected === i ? 'contained' : 'outlined'}
                                                 key={`Option: ${i}`}
-                                                /* id={`${styles.option} ${optionSelected === i ? styles.optionSelected : ''}`} */
+                                                className={styles.option}
                                                 onClick={() => room.control ? answerControl(i) : answer(i)}
                                                 sx={{ pointerEvents: disableOptions ? 'none' : 'auto', width: '350px', height: '50px' }}
                                             >
@@ -373,6 +373,7 @@ export default withRouter((props) => {
                         }
                         {quiz && (room.state === 'results' || getPlayer()?.state === 'result') && results && joined &&
                             <motion.div
+
                                 id={styles.resultContainer}
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}

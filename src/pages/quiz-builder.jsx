@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import styles from '../styles/quizBuilder.module.css'
 import { useRouter } from 'next/router';
+import { motion } from "framer-motion"
 
 const GAME_MODES = [
     { name: 'Profile' },
@@ -55,8 +56,10 @@ export default function QuizBuilder() {
     }
 
     return (
-        <div>
-            <main>
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.2, ease: [.62, -0.18, .32, 1.17] }}>            <main>
                 <h1>Quiz Builder!</h1>
                 {!quiz.mode
                     ? <div id={styles.optionsContainer}>
@@ -72,6 +75,6 @@ export default function QuizBuilder() {
                     </div>
                 }
             </main>
-        </div>
+        </motion.div>
     )
 }
