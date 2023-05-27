@@ -99,11 +99,11 @@ export default withRouter((props) => {
                                         <h2>Ou</h2>
                                         <div id={styles.linkContainer}>
                                             <h2>Entre no link:</h2>
-                                            <a href={`https://quiztime.pt/quiz?code=${code}`} target='_blank'>
+                                            <a href={`${process.env.SITE_URL}/quiz?code=${code}`} target='_blank'>
                                                 <h2>quiztime.pt/quiz?code={code}</h2>
                                             </a>
                                         </div>
-                                        <a href={`https://quiztime.pt/controller?code=${code}`} target='_blank'>
+                                        <a href={`${process.env.SITE_URL}/controller?code=${code}`} target='_blank'>
                                             <Button variant="outlined" endIcon={<SportsEsportsIcon />}>
                                                 Controller
                                             </Button>
