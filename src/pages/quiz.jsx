@@ -355,9 +355,11 @@ export default withRouter((props) => {
                                                     pointerEvents: disableOptions ? 'none' : 'auto',
                                                     width: '350px',
                                                     height: '50px',
-                                                    '&:hover': {
-                                                        border: '1px solid rgba(0, 159, 218, 0.5)',
-                                                        backgroundColor: optionSelected === i ? '' : 'transparent',
+                                                    '@media (hover: none) and (pointer: coarse)': {
+                                                        '&:hover': {
+                                                            border: '1px solid rgba(0, 159, 218, 0.5)',
+                                                            backgroundColor: optionSelected === i ? '' : 'transparent',
+                                                        }
                                                     }
                                                 }}
                                             >
