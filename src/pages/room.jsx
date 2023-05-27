@@ -100,7 +100,7 @@ export default withRouter((props) => {
                                         <div id={styles.linkContainer}>
                                             <h2>Entre no link:</h2>
                                             <a href={`${process.env.SITE_URL}/quiz?code=${code}`} target='_blank'>
-                                                <h2>quiztime.pt/quiz?code={code}</h2>
+                                                <h2>{process.env.SITE_URL}/quiz?code={code}</h2>
                                             </a>
                                         </div>
                                         <a href={`${process.env.SITE_URL}/controller?code=${code}`} target='_blank'>
