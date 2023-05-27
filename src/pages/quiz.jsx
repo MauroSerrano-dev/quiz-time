@@ -351,7 +351,15 @@ export default withRouter((props) => {
                                                 key={`Option: ${i}`}
                                                 className={styles.option}
                                                 onClick={() => room.control ? answerControl(i) : answer(i)}
-                                                sx={{ pointerEvents: disableOptions ? 'none' : 'auto', width: '350px', height: '50px' }}
+                                                sx={{
+                                                    pointerEvents: disableOptions ? 'none' : 'auto',
+                                                    width: '350px',
+                                                    height: '50px',
+                                                    '&:hover': {
+                                                        border: '1px solid rgba(0, 159, 218, 0.5)',
+                                                        backgroundColor: optionSelected === i ? '' : 'transparent',
+                                                    }
+                                                }}
                                             >
                                                 <motion.p
                                                     initial={{ opacity: 0, color: 'var(--text-white)' }}
