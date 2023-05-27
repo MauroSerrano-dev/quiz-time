@@ -6,7 +6,7 @@ import { validateCodeCharacters, validateCodeLength, containsAccents } from "../
 import { showInfoToast } from "../../utils/toasts";
 import { motion } from "framer-motion"
 import Switch from '@mui/material/Switch';
-import { TextField, Button, Select, FormControlLabel, MenuItem, OutlinedInput, InputLabel, FormControl, Box } from '@mui/material';
+import { TextField, Button, Select, FormControlLabel, FormGroup, MenuItem, OutlinedInput, InputLabel, FormControl, Box } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { styled } from '@mui/system';
@@ -227,6 +227,7 @@ export default function Lobby(props) {
                             </FormControl>
                             <FormControl sx={{ height: '15%', width: '80%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
                                 <FormControlLabel
+                                    className={styles.labelSwitch}
                                     control={<Switch size={isSmall ? 'small' : 'medium'} />}
                                     label="Private:"
                                     labelPlacement="start"
@@ -245,7 +246,14 @@ export default function Lobby(props) {
                                     </FormControl>
                                 </motion.div>
                             </FormControl>
-                            <FormControlLabel onChange={handleNewControl} checked={newRoom.control} control={<Switch size={isSmall ? 'small' : 'medium'} />} label="Controlar Perguntas:" labelPlacement="start" />
+                            <FormControlLabel
+                                className={styles.labelSwitch}
+                                onChange={handleNewControl}
+                                checked={newRoom.control}
+                                control={<Switch size={isSmall ? 'small' : 'medium'} />}
+                                label="Controlar Perguntas:"
+                                labelPlacement="start"
+                            />
                             <FormControl sx={{ width: '80%' }}>
                                 <InputLabel size='small' id="select-label">Quiz</InputLabel>
                                 <Select
@@ -287,7 +295,7 @@ export default function Lobby(props) {
                                 color="success"
                                 variant="contained"
                                 endIcon={disableCreateNewRoom && <AddCircleOutlineIcon />}
-                                
+
                                 sx={{ width: '30%', height: '55%' }}
                             >
                                 {disableCreateNewRoom ? 'Criando' : 'Criar'}

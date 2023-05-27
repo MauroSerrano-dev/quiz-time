@@ -105,14 +105,15 @@
     color: #ffffff;
 }
 
-#bodyContainer span,
+.labelSwitch span:last-of-type,
 #footContainer button {
     transition: font-size 500ms ease-in-out;
 }
 
-#bodyContainer span {
+.labelSwitch span:last-of-type {
     font-size: 18px;
 }
+
 /* 
 #nameInput fieldset {
     border-color: red;
@@ -124,7 +125,7 @@
 
 /* Mobile */
 @media (max-width: 360px) {
-    #bodyContainer span {
+    .labelSwitch span:last-of-type {
         font-size: 14px;
     }
 
@@ -135,7 +136,7 @@
 
 /* Tablet and Smaller Desktop */
 @media (min-width: 361px) and (max-width: 700px) {
-    #bodyContainer span {
+    .labelSwitch span:last-of-type {
         font-size: 16px;
     }
 }
