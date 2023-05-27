@@ -103,7 +103,7 @@ export default withRouter((props) => {
                                                 <h2>{process.env.NEXT_PUBLIC_SITE_URL}/quiz?code={code}</h2>
                                             </a>
                                         </div>
-                                        <a href={`${process.env.SITE_URL}/controller?code=${code}`} target='_blank'>
+                                        <a href={`${process.env.NEXT_PUBLIC_SITE_URL}/controller?code=${code}`} target='_blank'>
                                             <Button variant="outlined" endIcon={<SportsEsportsIcon />}>
                                                 Controller
                                             </Button>
