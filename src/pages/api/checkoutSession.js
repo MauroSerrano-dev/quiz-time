@@ -17,8 +17,8 @@ export default async function createCheckoutSession(req, res) {
       mode: mode,
       metadata: metadata,
       customer: customer.id,
-      success_url: process.env.SITE_URL,
-      cancel_url: `${process.env.SITE_URL}/pricing`,
+      success_url: process.env.NEXT_PUBLIC_SITE_URL,
+      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/pricing`,
       allow_promotion_codes: true,
     });
 
