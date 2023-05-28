@@ -31,10 +31,7 @@ export default withRouter((props) => {
 
     const socketInitializer = async () => {
         const options = {
-            method: 'GET',
-            headers: {
-                code: code
-            },
+            method: 'GET'
         }
         await fetch("/api/socket", options)
 
@@ -47,13 +44,16 @@ export default withRouter((props) => {
         });
 
         socket.on("updateFields", (roomAttFields) => {
-            const firstKey = Object.keys(roomAttFields)[0]
-            if (firstKey.includes('players') && firstKey !== 'players') {
-                setRoom(prev => { return { ...prev, players: prev.players.filter(player => player.email !== roomAttFields[firstKey].email).concat(roomAttFields[firstKey]) } })
+            if (roomAttFields.code === code) {
+                const firstKey = Object.keys(roomAttFields)[0]
+                if (firstKey.includes('players') && firstKey !== 'players') {
+                    setRoom(prev => { return { ...prev, players: prev.players.filter(player => player.email !== roomAttFields[firstKey].email).concat(roomAttFields[firstKey]) } })
+                }
+                else
+                    setRoom(prev => { return { ...prev, ...roomAttFields } })
             }
-            else
-                setRoom(prev => { return { ...prev, ...roomAttFields } })
         })
+
     }
 
     async function getQuiz() {
