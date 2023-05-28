@@ -24,18 +24,20 @@ export default function SocketHandler(req, res) {
   mongoose.connection.once("open", () => {
     console.log("MongoDB database connected")
 
+    const filter = [{ $match: { 'fullDocument.code': req.headers.code } }]
     // Create a change stream for the rooms collection
     console.log("Setting change streams")
-    const changeStream = mongoose.connection.collection(process.env.COLL_ROOMS).watch()
+    const changeStream = mongoose.connection.collection(process.env.COLL_ROOMS).watch([], { fullDocument: 'updateLookup', filter })
 
     // Listen for "change" events on the change stream
     changeStream.on("change", (change) => {
-      if (change.updateDescription) {
-        const roomAttFields = { ...change.updateDescription.updatedFields }
-        io.emit("updateFields", roomAttFields)
+      if(change.fullDocument.code === req.headers.code) {
+        if (change.updateDescription) {
+          const roomAttFields = { ...change.updateDescription.updatedFields }
+          io.emit("updateFields", roomAttFields)
+        }
       }
     });
-
   });
 
   // Initialize socket server
@@ -117,19 +119,6 @@ export default function SocketHandler(req, res) {
           /* io.emit("updateRoomError", err); */
         })
     })
-
-    // Get the current value of "active" from the rooms collection
-    /*     mongoose.connection.collection(process.env.COLL_ROOMS).findOne({ code: req.headers.code })
-          .then((result) => {
-            console.log('code', req.headers.code, result)
-            if (result) {
-              const quiz = { ...result };
-              socket.emit("getQuizForPlayer", quiz);
-            }
-          })
-          .catch((err) => {
-            console.log('Error getting data:', err);
-          }); */
   });
 
 

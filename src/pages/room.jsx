@@ -31,7 +31,12 @@ export default withRouter((props) => {
     }, [room])
 
     const socketInitializer = async () => {
-        const options = { method: 'GET' }
+        const options = {
+            method: 'GET',
+            headers: {
+                code: code
+            },
+        }
         await fetch("/api/socket", options)
 
         socket = io({ query: { code: code } })
@@ -40,7 +45,7 @@ export default withRouter((props) => {
             setRoom(room)
             setDisableShow(room.state === 'disable')
             setActiveShow(room.state === 'active')
-        });
+        })
 
         socket.on("updateFields", (roomAttFields) => {
             const firstKey = Object.keys(roomAttFields)[0]

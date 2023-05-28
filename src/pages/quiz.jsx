@@ -118,7 +118,12 @@ export default withRouter((props) => {
     }
 
     const socketInitializer = async () => {
-        const options = { method: 'GET' }
+        const options = {
+            method: 'GET',
+            headers: {
+                code: code
+            },
+        }
         await fetch("/api/socket", options)
 
         socket = io({ query: { code: code } });
