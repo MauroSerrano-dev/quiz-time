@@ -57,7 +57,6 @@ export default function SocketHandler(req, res) {
 
     // Listen for "updateRoom" events emitted by the client
     socket.on("updateRoom", (updatedRoom) => {
-      console.log('a', updatedRoom)
       const RoomModel = mongoose.models.room
         ? mongoose.model("room")
         : mongoose.model("room", {

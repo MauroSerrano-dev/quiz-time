@@ -49,6 +49,26 @@ export default withRouter((props) => {
     const [layout, setLayout] = useState([])
     const [locked, setLocked] = useState(false)
     const [unlockCode, setUnlockCode] = useState('')
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkIsMobile = () => {
+            setIsMobile(
+                'ontouchstart' in window ||
+                navigator.maxTouchPoints > 0 ||
+                navigator.msMaxTouchPoints > 0
+            )
+        }
+
+        checkIsMobile()
+
+        window.addEventListener('resize', checkIsMobile)
+
+        return () => {
+            window.removeEventListener('resize', checkIsMobile);
+        }
+    }, []);
+
 
     useEffect(() => {
         if (!room) {
@@ -352,16 +372,20 @@ export default withRouter((props) => {
                                                 className={styles.option}
                                                 onClick={() => room.control ? answerControl(i) : answer(i)}
                                                 sx={{
-                                                    pointerEvents: disableOptions ? 'none' : 'auto',
-                                                    width: '350px',
-                                                    height: '50px',
-                                                    '@media (hover: none) and (pointer: coarse)': {
-                                                        '&:hover': {
-                                                            border: '1px solid rgba(0, 159, 218, 0.5)',
-                                                            border: '1px solid red',
-                                                            backgroundColor: optionSelected === i ? '' : 'transparent',
+                                                    ...{
+                                                        pointerEvents: disableOptions ? 'none' : 'auto',
+                                                        width: '350px',
+                                                        height: '50px',
+                                                    },
+                                                    ...(isMobile
+                                                        ? {
+                                                            '&:hover': {
+                                                                border: '1px solid rgba(0, 159, 218, 0.5)',
+                                                                backgroundColor: optionSelected === i ? '' : 'transparent',
+                                                            }
                                                         }
-                                                    }
+                                                        : {}
+                                                    )
                                                 }}
                                             >
                                                 <motion.p
