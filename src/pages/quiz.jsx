@@ -358,6 +358,7 @@ export default withRouter((props) => {
                                                     '@media (hover: none) and (pointer: coarse)': {
                                                         '&:hover': {
                                                             border: '1px solid rgba(0, 159, 218, 0.5)',
+                                                            border: '1px solid red',
                                                             backgroundColor: optionSelected === i ? '' : 'transparent',
                                                         }
                                                     }
