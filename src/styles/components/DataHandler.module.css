@@ -17,3 +17,15 @@
     max-width: 300px;
     width: 50%;
 }
+
+#componentContainer {
+    padding: 80px;
+    transition: padding 650ms ease-in-out;
+}
+
+/* Mobile, Tablet and Smaller Desktop*/
+@media (max-width: 1120px) {
+    #componentContainer {
+        padding: 60px;
+    }
+}

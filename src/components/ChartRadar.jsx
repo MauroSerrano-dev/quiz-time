@@ -51,24 +51,26 @@ export default function ChartRadar(props) {
     const { data, max } = props
 
     return (
-        <RadarChart
-            cx={300}
-            cy={250}
-            outerRadius={120}
-            width={600}
-            height={600}
-            data={data}
-            id={styles.radarChart}
-        >
-            <PolarGrid />
-            <PolarAngleAxis dataKey="name" />
-            <Radar
-                name="Mike"
-                dataKey="points"
-                stroke="#009fda"
-                fill="#009fda"
-                fillOpacity={0.6}
-            />
-        </RadarChart>
+        <div id={styles.container}>
+            <RadarChart
+                cx={300}
+                cy={250}
+                outerRadius={120}
+                width={600}
+                height={500}
+                data={data}
+                className={styles.radarChart}
+            >
+                <PolarGrid />
+                <PolarAngleAxis dataKey="name" />
+                <Radar
+                    name="Mike"
+                    dataKey="points"
+                    stroke="#009fda"
+                    fill="#009fda"
+                    fillOpacity={0.6}
+                />
+            </RadarChart>
+        </div>
     )
 }

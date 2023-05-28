@@ -24,7 +24,9 @@ export default function DataHandler(props) {
                 (session || FREE_PAGES.includes(Component.name)) &&
                 <div>
                     <Navbar session={session} signIn={signIn} signOut={signOut} />
-                    <Component {...pageProps} session={session} />
+                    <div id={styles.componentContainer} >
+                        <Component{...pageProps} session={session} />
+                    </div>
                 </div>
             }
         </div>

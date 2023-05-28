@@ -58,25 +58,29 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    width: 90%;
+    width: 100%;
     height: 100%;
     gap: 1rem;
     flex-wrap: wrap;
 }
 
-#resultContainer div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+#resultBlock {
+    width: 40%;
 }
 
-#resultBlock {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    width: 40%;
-    min-width: 400px;
-    height: 400px;
+/* Small Mobile */
+@media (max-width: 350px) {
+    #resultBlock {
+        width: 255px;
+    }
 }
+
+/* Mobile */
+@media (min-width: 351px) and (max-width: 700px) {
+    #resultBlock {
+        width: 351px;
+    }
+}
+
+/* Tablet and Smaller Desktop */
+@media (min-width: 701px) and (max-width: 1120px) {}

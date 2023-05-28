@@ -1,11 +1,11 @@
 #container {
-    position: relative;
+    position: absolute;
     display: flex;
     height: 80px;
     width: 100%;
     justify-content: space-between;
     align-items: center;
-    background-color: transparent;
+    background-color: var(--body-background-color);
     transition: all 650ms ease-in-out;
     z-index: 1;
     border-bottom: solid var(--global-white);
@@ -163,7 +163,7 @@
 /* Mobile, Tablet and Smaller Desktop*/
 @media (max-width: 1120px) {
     #container {
-        height: 70px;
+        height: 60px;
     }
 
     #nav_menu_bar {

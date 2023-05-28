@@ -1,7 +1,14 @@
-#pieChart {
-    --text-color: var(--text-black)
+#container {
+    scale: 1.1;
+    padding-right: 2rem;
 }
-#pieChart ul {
+
+.pieChart {
+    --text-color: var(--text-black);
+    outline: none;
+}
+
+.pieChart ul {
     padding: 0px;
     margin: 0px;
     text-align: left;
@@ -10,3 +17,20 @@
     align-items: flex-start;
     justify-content: center;
 }
+
+/* Small Mobile */
+@media (max-width: 350px) {
+    #container {
+        scale: 0.73;
+    }
+}
+
+/* Mobile */
+@media (min-width: 351px) and (max-width: 700px) {
+    #container {
+        scale: 0.9;
+    }
+}
+
+/* Tablet and Smaller Desktop */
+@media (min-width: 701px) and (max-width: 1120px) {}

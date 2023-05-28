@@ -1,5 +1,5 @@
-import React, { PureComponent } from 'react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import React, { PureComponent, useEffect, useState } from 'react';
+import { PieChart, Pie, Cell, Legend, Tooltip } from 'recharts';
 import { easeInOut, motion } from 'framer-motion';
 import styles from '../styles/components/ChartPie.module.css'
 
@@ -45,13 +45,12 @@ const CustomTooltip = (event, totalPoints) => {
     return null;
 }
 
-
 export default class ChartPie extends PureComponent {
 
     render() {
         return (
-            <ResponsiveContainer width="100%" height="100%">
-                <PieChart id={styles.pieChart} style={{ outline: 'none' }} width={400} height={400}>
+            <div id={styles.container}>
+                <PieChart className={styles.pieChart} width={400} height={400}>
                     <Legend layout="vertical" verticalAlign="middle" align="right" />
                     <Pie
                         stroke={'white'}
@@ -70,9 +69,8 @@ export default class ChartPie extends PureComponent {
                             <Cell key={`Cell: ${i}`} fill={result.color} />
                         ))}
                     </Pie>
-                    <Tooltip labelStyle={{color: 'red'}} itemStyle={{backgroundColor: 'blue'}} id={styles.tooltip} content={(event) => CustomTooltip(event, this.props.totalPoints)} />
                 </PieChart>
-            </ResponsiveContainer>
+            </div>
         );
     }
 }
