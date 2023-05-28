@@ -31,8 +31,8 @@ export default function SocketHandler(req, res) {
     // Listen for "change" events on the change stream
     changeStream.on("change", (change) => {
       if (change.updateDescription) {
-        const roomAttFields = { ...change.updateDescription.updatedFields, code: change.fullDocument.code}
-        io.emit("updateFields", roomAttFields)
+        const roomAttFields = { ...change.updateDescription.updatedFields, code: change.fullDocument.code }
+        io.emit(`updateFieldsRoom${change.fullDocument.code}`, roomAttFields)
       }
     })
   })
@@ -43,7 +43,6 @@ export default function SocketHandler(req, res) {
   res.socket.server.io = io;
 
   io.on("connection", (socket) => {
-    console.log('socket.handshake.headers.referer ----->', socket.handshake.query.code)
     console.log('Socket.io client connected');
     // Get the current value of "active" from the process.env.COLL_ROOMS collection
     mongoose.connection.collection(process.env.COLL_ROOMS).findOne({ code: socket.handshake.query.code })

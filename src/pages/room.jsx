@@ -44,19 +44,17 @@ export default withRouter((props) => {
             setActiveShow(room.state === 'active')
         })
 
-        socket.on("updateFields", (roomAttFields) => {
-            if (roomAttFields.code === code) {
-                const firstKey = Object.keys(roomAttFields)[0]
-                if (firstKey.includes('players') && firstKey !== 'players') {
-                    setRoom(prev => { return { ...prev, players: prev.players.filter(player => player.email !== roomAttFields[firstKey].email).concat(roomAttFields[firstKey]) } })
+        socket.on(`updateFieldsRoom${code}`, (roomAttFields) => {
+            const firstKey = Object.keys(roomAttFields)[0]
+            if (firstKey.includes('players') && firstKey !== 'players') {
+                setRoom(prev => { return { ...prev, players: prev.players.filter(player => player.email !== roomAttFields[firstKey].email).concat(roomAttFields[firstKey]) } })
+            }
+            else {
+                if (Object.keys(roomAttFields).some(field => field === 'state')) {
+                    setDisableShow(roomAttFields.state === 'disable')
+                    setActiveShow(roomAttFields.state === 'active')
                 }
-                else {
-                    if (Object.keys(roomAttFields).some(field => field === 'state')) {
-                        setDisableShow(roomAttFields.state === 'disable')
-                        setActiveShow(roomAttFields.state === 'active')
-                    }
-                    setRoom(prev => { return { ...prev, ...roomAttFields } })
-                }
+                setRoom(prev => { return { ...prev, ...roomAttFields } })
             }
         })
     }

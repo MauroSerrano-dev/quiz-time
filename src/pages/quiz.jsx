@@ -134,31 +134,28 @@ export default withRouter((props) => {
             setRoom(startRoom)
         });
 
-        socket.on("updateFields", (roomAttFields) => {
-            if (roomAttFields.code === code) {
-
-                if (roomAttFields.state === 'active') {
-                    setTimeout(() =>
-                        setQuestionTransition(false)
-                        , TRANSITION_DURATION)
-                }
-                const firstKey = Object.keys(roomAttFields)[0]
-                if (roomAttFields.players && roomAttFields.players.every(player => player.email !== session.user.email))
-                    setJoined(false)
-                if (roomAttFields.currentQuestion !== undefined) {
-                    setQuestionTransition(true)
-                    setTimeout(() => {
-                        setRoom(prev => { return { ...prev, ...roomAttFields } })
-                        setQuestionTransition(false)
-                    }, TRANSITION_DURATION)
-                }
-                else if (firstKey.includes('players') && firstKey !== 'players') {
-                    setRoom(prev => { return { ...prev, players: prev.players.filter(player => player.email !== roomAttFields[firstKey].email).concat(roomAttFields[firstKey]) } })
-                    turnOffTransition()
-                }
-                else {
+        socket.on(`updateFieldsRoom${code}`, (roomAttFields) => {
+            if (roomAttFields.state === 'active') {
+                setTimeout(() =>
+                    setQuestionTransition(false)
+                    , TRANSITION_DURATION)
+            }
+            const firstKey = Object.keys(roomAttFields)[0]
+            if (roomAttFields.players && roomAttFields.players.every(player => player.email !== session.user.email))
+                setJoined(false)
+            if (roomAttFields.currentQuestion !== undefined) {
+                setQuestionTransition(true)
+                setTimeout(() => {
                     setRoom(prev => { return { ...prev, ...roomAttFields } })
-                }
+                    setQuestionTransition(false)
+                }, TRANSITION_DURATION)
+            }
+            else if (firstKey.includes('players') && firstKey !== 'players') {
+                setRoom(prev => { return { ...prev, players: prev.players.filter(player => player.email !== roomAttFields[firstKey].email).concat(roomAttFields[firstKey]) } })
+                turnOffTransition()
+            }
+            else {
+                setRoom(prev => { return { ...prev, ...roomAttFields } })
             }
         })
     }
