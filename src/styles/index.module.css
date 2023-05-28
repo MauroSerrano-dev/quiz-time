@@ -8,13 +8,11 @@
 
 .section {
     background-color: var(--logo-color);
-    width: 200%;
-    padding-left: 50%;
-    padding-right: 50%;
+    width: 100%;
     height: 450px;
     display: flex;
     flex-direction: row;
-    place-items: center;
+    align-items: center;
     border-bottom: 1px black solid;
 }
 
