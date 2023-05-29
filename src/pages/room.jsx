@@ -141,13 +141,17 @@ export default withRouter((props) => {
                                         <h2>Finalizado</h2>
                                     </div>
                                 }
-                                <PlayersList players={room.players} />
-                                {/* <div id={styles.playersList}>
-                                    <h3>Players</h3>
-                                    {room.players.map((player, i) =>
-                                        <p key={`Player: ${i}`}>{player.user.name} {player.answers.some((answer) => answer.questionIndex === room.currentQuestion) ? 'check' : ''}</p>
-                                    )}
-                                </div> */}
+                                {quiz &&
+                                    <PlayersList
+                                        players={
+                                            room.players.sort((a, b) => b.answers.length !== a.answers.length
+                                                ? b.answers.length - a.answers.length
+                                                : new Date(a.lastAnswerDate) - new Date(b.lastAnswerDate)
+                                            )
+                                        }
+                                        totalQuestions={quiz.questions.length}
+                                    />
+                                }
                             </section>
                         }
                         {session.user.email !== room.owner &&

@@ -3,7 +3,7 @@ import styles from '../styles/components/PlayersList.module.css'
 import PlayerCard from './PlayerCard'
 
 export default function PlayersList(props) {
-    const { players } = props
+    const { players, totalQuestions } = props
     const [open, setOpen] = useState(false)
 
     function switchOpen() {
@@ -11,28 +11,29 @@ export default function PlayersList(props) {
     }
 
     const styleOpen = {
-        right: '0px',
-        paddingRight: '0px'
+        marginRight: '0px'
     }
 
     const styleClose = {
-        right: '-225px',
     }
 
     return (
         <div
             id={styles.container}
-            style={open ? styleOpen : styleClose}
+            style={{ right: open ? '0px' : '-299px' }}
         >
             <div
                 id={styles.tabContainer}
                 onClick={switchOpen}
+                style={open ? styleOpen : styleClose}
             >
                 <p>Players</p>
             </div>
             <div id={styles.playersContainer}>
                 <div id={styles.players}>
-                    {players.map((player, i) => <PlayerCard key={`Player: ${i}`} player={player} ></PlayerCard>)}
+                    {players.concat(players).concat(players).concat(players).map((player, i) =>
+                        <PlayerCard key={`Player: ${i}`} player={player} progress={(player.answers.length / totalQuestions) * 100} ></PlayerCard>
+                    )}
                 </div>
             </div>
         </div>

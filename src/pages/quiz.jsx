@@ -216,6 +216,7 @@ export default withRouter((props) => {
                     ...player,
                     currentQuestion: showResult ? player.currentQuestion : player.currentQuestion + 1,
                     state: showResult ? 'result' : player.state,
+                    lastAnswerDate: new Date(),
                     answers: [...player.answers, { ...quiz.questions[player.currentQuestion].options[option], questionIndex: player.currentQuestion, optionIndex: option }]
                 }, code
             )

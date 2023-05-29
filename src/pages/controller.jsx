@@ -91,7 +91,7 @@ export default withRouter((props) => {
         }, 600)
     }
 
-    const startQuiz = async () => {
+    function startQuiz() {
         setDisableShow(false)
         setActiveShow(true)
         setTimeout(() => {
@@ -99,7 +99,7 @@ export default withRouter((props) => {
         }, 600)
     }
 
-    async function switchControl(isControl) {
+    function switchControl(isControl) {
         socket.emit("updateRoom", { ...room, control: isControl })
     }
 
