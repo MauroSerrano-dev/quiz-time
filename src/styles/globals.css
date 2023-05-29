@@ -27,7 +27,7 @@
 }
 
 ::-webkit-scrollbar-track {
-  background-color: (--body-background-color);
+  background-color: var(--body-background-color);
   border-radius: 5rem;
 }
 
@@ -137,6 +137,20 @@ section {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  align-items: center;
+}
+
+.flex-row-start {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.flex-row-center {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
   align-items: center;
 }
 

@@ -227,7 +227,23 @@ export default withRouter((props) => {
 
     function joinQuiz() {
         setJoined(true)
-        socket.emit("updateRoom", { ...room, players: [...room.players, { email: session.user.email, name: session.user.name, answers: [], currentQuestion: 0, state: 'answering' }] });
+        socket.emit("updateRoom",
+            {
+                ...room,
+                players:
+                    [
+                        ...room.players,
+                        {
+                            email: session.user.email,
+                            name: session.user.name,
+                            image: session.user.image,
+                            answers: [],
+                            currentQuestion: 0,
+                            state: 'answering'
+                        }
+                    ]
+            }
+        )
     }
 
     function leaveQuiz() {

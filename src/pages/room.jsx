@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { motion } from "framer-motion"
 import { Button } from '@mui/material';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
+import PlayersList from '@/components/PlayersList';
 
 let socket;
 
@@ -149,12 +150,13 @@ export default withRouter((props) => {
                                         <h2>Finalizado</h2>
                                     </div>
                                 }
-                                <div id={styles.playersList}>
+                                <PlayersList players={room.players} />
+                                {/* <div id={styles.playersList}>
                                     <h3>Players</h3>
                                     {room.players.map((player, i) =>
                                         <p key={`Player: ${i}`}>{player.name} {player.answers.some((answer) => answer.questionIndex === room.currentQuestion) ? 'check' : ''}</p>
                                     )}
-                                </div>
+                                </div> */}
                             </section>
                         }
                         {session.user.email !== room.owner &&

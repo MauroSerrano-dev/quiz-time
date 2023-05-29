@@ -1,0 +1,11 @@
+#container {
+    text-align: center;
+
+    width: 200px;
+    height: 70px;
+
+    border-radius: 0.5rem;
+    border: dashed red 1px;
+    overflow: hidden;
+    gap: 0.5rem;
+}
