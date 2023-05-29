@@ -40,9 +40,11 @@ export default withRouter((props) => {
         socket = io({ query: { code: code } })
 
         socket.on("getData", (room) => {
-            setRoom(room)
-            setDisableShow(room.state === 'disable')
-            setActiveShow(room.state === 'active')
+            if(room.code) {
+                setRoom(room)
+                setDisableShow(room.state === 'disable')
+                setActiveShow(room.state === 'active')
+            }
         })
 
         socket.on(`updateFieldsRoom${code}`, (roomAttFields) => {
@@ -52,7 +54,7 @@ export default withRouter((props) => {
                     return {
                         ...prev,
                         players: prev.players
-                            .filter(player => player.email !== roomAttFields[firstKey].email)
+                            .filter(player => player.user.email !== roomAttFields[firstKey].email)
                             .concat(roomAttFields[firstKey])
                     }
                 })
@@ -82,7 +84,7 @@ export default withRouter((props) => {
     return (
         <div id={styles.container}>
             <main>
-                {room && Object.keys(room).length === 0 &&
+                {!room &&
                     <div>
                         <h1 id={styles.roomName}>Esta sala não existe</h1>
                     </div>
@@ -154,7 +156,7 @@ export default withRouter((props) => {
                                 {/* <div id={styles.playersList}>
                                     <h3>Players</h3>
                                     {room.players.map((player, i) =>
-                                        <p key={`Player: ${i}`}>{player.name} {player.answers.some((answer) => answer.questionIndex === room.currentQuestion) ? 'check' : ''}</p>
+                                        <p key={`Player: ${i}`}>{player.user.name} {player.answers.some((answer) => answer.questionIndex === room.currentQuestion) ? 'check' : ''}</p>
                                     )}
                                 </div> */}
                             </section>

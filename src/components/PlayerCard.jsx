@@ -6,8 +6,8 @@ export default function PlayerCard(props) {
 
     return (
         <div id={styles.container} className='flex-row-center'>
-            <Avatar src={player.image} />
-            <p>{player.name}</p>
+            <Avatar src={player.user.image} />
+            <p>{player.user.name}</p>
         </div>
     )
 }

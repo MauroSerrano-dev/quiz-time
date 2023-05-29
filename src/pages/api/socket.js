@@ -104,7 +104,7 @@ export default function SocketHandler(req, res) {
           }
         },
         {
-          arrayFilters: [{ 'element.email': player.email }]
+          arrayFilters: [{ 'element.email': player.user.email }]
         }
       )
         .then(() => {
@@ -116,7 +116,31 @@ export default function SocketHandler(req, res) {
           /* io.emit("updateRoomError", err); */
         })
     })
-  });
+
+    // Listen for "updateAnswer" events emitted by the client
+    socket.on("joinRoom", (player, code) => {
+      const RoomModel = mongoose.models.room
+        ? mongoose.model("room")
+        : mongoose.model("room", {
+          code: String,
+          players: Array,
+        }, 'rooms');
+      RoomModel.updateOne(
+        { code: code },
+        {
+          $push: { players: player }
+        }
+      )
+        .then(() => {
+          console.log("JoinRoom successfully");
+          /* io.emit("updateRoomSuccess", updatedRoom); */
+        })
+        .catch((err) => {
+          console.log("Error joinRoom:", err);
+          /* io.emit("updateRoomError", err); */
+        })
+    })
+  })
 
 
   console.log("Setting up socket");

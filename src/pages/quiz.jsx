@@ -126,13 +126,15 @@ export default withRouter((props) => {
         socket = io({ query: { code: code, } });
 
         socket.on("getData", (startRoom) => {
-            if (startRoom.players.some(player => player.email === session.user.email)) {
-                setJoined(true)
-                if (startRoom.players.filter(player => player.email === session.user.email)[0].answers.some(answer => answer.questionIndex === startRoom.currentQuestion) && startRoom.control)
-                    setOptionSelected(startRoom.players.filter(player => player.email === session.user.email)[0].answers.filter(answer => answer.questionIndex === startRoom.currentQuestion)[0].optionIndex)
+            if (startRoom.code) {
+                if (startRoom.players.some(player => player.user.email === session.user.email)) {
+                    setJoined(true)
+                    if (startRoom.players.filter(player => player.user.email === session.user.email)[0].answers.some(answer => answer.questionIndex === startRoom.currentQuestion) && startRoom.control)
+                        setOptionSelected(startRoom.players.filter(player => player.user.email === session.user.email)[0].answers.filter(answer => answer.questionIndex === startRoom.currentQuestion)[0].optionIndex)
+                }
+                setRoom(startRoom)
             }
-            setRoom(startRoom)
-        });
+        })
 
         socket.on(`updateFieldsRoom${code}`, (roomAttFields) => {
             if (roomAttFields.state === 'active') {
@@ -141,7 +143,7 @@ export default withRouter((props) => {
                     , TRANSITION_DURATION)
             }
             const firstKey = Object.keys(roomAttFields)[0]
-            if (roomAttFields.players && roomAttFields.players.every(player => player.email !== session.user.email))
+            if (roomAttFields.players && roomAttFields.players.every(player => player.user.email !== session.user.email))
                 setJoined(false)
             if (roomAttFields.currentQuestion !== undefined) {
                 setQuestionTransition(true)
@@ -151,7 +153,7 @@ export default withRouter((props) => {
                 }, TRANSITION_DURATION)
             }
             else if (firstKey.includes('players') && firstKey !== 'players') {
-                setRoom(prev => { return { ...prev, players: prev.players.filter(player => player.email !== roomAttFields[firstKey].email).concat(roomAttFields[firstKey]) } })
+                setRoom(prev => { return { ...prev, players: prev.players.filter(player => player.user.email !== roomAttFields[firstKey].email).concat(roomAttFields[firstKey]) } })
                 turnOffTransition()
             }
             else {
@@ -227,22 +229,13 @@ export default withRouter((props) => {
 
     function joinQuiz() {
         setJoined(true)
-        socket.emit("updateRoom",
+        socket.emit("joinRoom",
             {
-                ...room,
-                players:
-                    [
-                        ...room.players,
-                        {
-                            email: session.user.email,
-                            name: session.user.name,
-                            image: session.user.image,
-                            answers: [],
-                            currentQuestion: 0,
-                            state: 'answering'
-                        }
-                    ]
-            }
+                user: session.user,
+                answers: [],
+                currentQuestion: 0,
+                state: 'answering'
+            }, code
         )
     }
 
@@ -250,7 +243,7 @@ export default withRouter((props) => {
         if (room.private)
             lockRoom()
         setJoined(false)
-        socket.emit("updateRoom", { ...room, players: room.players.filter(player => player.email !== session.user.email) });
+        socket.emit("updateRoom", { ...room, players: room.players.filter(player => player.user.email !== session.user.email) });
     }
 
     function lockRoom() {
@@ -307,7 +300,7 @@ export default withRouter((props) => {
     }
 
     function getPlayer() {
-        return room.players.filter(player => player.email === session.user.email)[0]
+        return room.players.filter(player => player.user.email === session.user.email)[0]
     }
 
     function getRadarData(order, allResults, allSubResults) {
