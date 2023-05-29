@@ -31,7 +31,7 @@ export default function SocketHandler(req, res) {
     // Listen for "change" events on the change stream
     changeStream.on("change", (change) => {
       if (change.updateDescription) {
-        io.emit(`updateFieldsRoom${change.fullDocument.code}`, {roomAtt: change.fullDocument, fields: change.updateDescription.updatedFields})
+        io.emit(`updateFieldsRoom${change.fullDocument.code}`, { roomAtt: change.fullDocument, fields: change.updateDescription.updatedFields })
       }
     })
   })
@@ -55,6 +55,7 @@ export default function SocketHandler(req, res) {
 
     // Listen for "updateRoom" events emitted by the client
     socket.on("updateRoom", (updatedRoom) => {
+      console.log(updatedRoom)
       const RoomModel = mongoose.models.room
         ? mongoose.model("room")
         : mongoose.model("room", {
@@ -66,14 +67,7 @@ export default function SocketHandler(req, res) {
           control: Boolean,
         }, 'rooms');
       RoomModel.updateOne(
-        { code: updatedRoom.code },
-        {
-          ...updatedRoom,
-          currentQuestion: updatedRoom.currentQuestion,
-          players: updatedRoom.players,
-          state: updatedRoom.state,
-          control: updatedRoom.control
-        })
+        { code: updatedRoom.code }, updatedRoom)
         .then(() => {
           console.log("Room updated successfully");
           /* io.emit("updateRoomSuccess", updatedRoom); */
