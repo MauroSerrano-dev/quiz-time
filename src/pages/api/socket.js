@@ -43,6 +43,7 @@ export default function SocketHandler(req, res) {
 
   io.on("connection", (socket) => {
     console.log('Socket.io client connected');
+    const roomCollection = mongoose.connection.collection("rooms");
     // Get the current value of "active" from the process.env.COLL_ROOMS collection
     mongoose.connection.collection(process.env.COLL_ROOMS).findOne({ code: socket.handshake.query.code })
       .then((result) => {
@@ -55,19 +56,12 @@ export default function SocketHandler(req, res) {
 
     // Listen for "updateRoom" events emitted by the client
     socket.on("updateRoom", (updatedRoom) => {
-      console.log(updatedRoom)
-      const RoomModel = mongoose.models.room
-        ? mongoose.model("room")
-        : mongoose.model("room", {
-          code: String,
-          owner: String,
-          currentQuestion: Number,
-          players: Array,
-          state: String,
-          control: Boolean,
-        }, 'rooms');
-      RoomModel.updateOne(
-        { code: updatedRoom.code }, updatedRoom)
+      delete updatedRoom._id
+      // Obtenha uma referência à coleção "rooms" do MongoDB
+      roomCollection.updateOne(
+        { code: updatedRoom.code },
+        { $set: updatedRoom }
+      )
         .then(() => {
           console.log("Room updated successfully");
           /* io.emit("updateRoomSuccess", updatedRoom); */
@@ -75,21 +69,12 @@ export default function SocketHandler(req, res) {
         .catch((err) => {
           console.log("Error updating room:", err);
           /* io.emit("updateRoomError", err); */
-        })
+        });
     })
 
     // Listen for "updateAnswer" events emitted by the client
     socket.on("updateAnswer", (player, code) => {
-      const RoomModel = mongoose.models.room
-        ? mongoose.model("room")
-        : mongoose.model("room", {
-          code: String,
-          owner: String,
-          currentQuestion: Number,
-          players: Array,
-          state: String,
-        }, 'rooms');
-      RoomModel.updateOne(
+      roomCollection.updateOne(
         { code: code },
         {
           $set: {
@@ -112,13 +97,7 @@ export default function SocketHandler(req, res) {
 
     // Listen for "joinRoom" events emitted by the client
     socket.on("joinRoom", (player, code) => {
-      const RoomModel = mongoose.models.room
-        ? mongoose.model("room")
-        : mongoose.model("room", {
-          code: String,
-          players: Array,
-        }, 'rooms');
-      RoomModel.updateOne(
+      roomCollection.updateOne(
         { code: code },
         {
           $push: { players: player }
@@ -135,14 +114,7 @@ export default function SocketHandler(req, res) {
     })
     // Listen for "leaveRoom" events emitted by the client
     socket.on("leaveRoom", (playerEmail, code) => {
-      console.log('leaveRoomdsadsa')
-      const RoomModel = mongoose.models.room
-        ? mongoose.model("room")
-        : mongoose.model("room", {
-          code: String,
-          players: Array,
-        }, 'rooms');
-      RoomModel.updateOne(
+      roomCollection.updateOne(
         { code: code },
         {
           $pull: { players: { "user.email": playerEmail } }
