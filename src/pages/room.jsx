@@ -47,7 +47,14 @@ export default withRouter((props) => {
         socket.on(`updateFieldsRoom${code}`, (roomAttFields) => {
             const firstKey = Object.keys(roomAttFields)[0]
             if (firstKey.includes('players') && firstKey !== 'players') {
-                setRoom(prev => { return { ...prev, players: prev.players.filter(player => player.email !== roomAttFields[firstKey].email).concat(roomAttFields[firstKey]) } })
+                setRoom(prev => {
+                    return {
+                        ...prev,
+                        players: prev.players
+                            .filter(player => player.email !== roomAttFields[firstKey].email)
+                            .concat(roomAttFields[firstKey])
+                    }
+                })
             }
             else {
                 if (Object.keys(roomAttFields).some(field => field === 'state')) {
@@ -144,9 +151,9 @@ export default withRouter((props) => {
                                 }
                                 <div id={styles.playersList}>
                                     <h3>Players</h3>
-                                    <ol>
-                                        {room.players.map((player, i) => <li key={`Player: ${i}`}><p>{player.name} {player.answers.some((answer, i) => i === room.currentQuestion) ? 'check' : ''}</p></li>)}
-                                    </ol>
+                                    {room.players.map((player, i) =>
+                                        <p key={`Player: ${i}`}>{player.name} {player.answers.some((answer) => answer.questionIndex === room.currentQuestion) ? 'check' : ''}</p>
+                                    )}
                                 </div>
                             </section>
                         }

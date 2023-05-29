@@ -158,9 +158,9 @@ export default withRouter((props) => {
                                 }
                                 <div id={styles.playersList}>
                                     <h3>Players</h3>
-                                    <ol>
-                                        {room.players.map((player, i) => <li key={`Player: ${i}`}><p>{player.name} {player.answers.some((answer, i) => i === room.currentQuestion) ? 'check' : ''}</p></li>)}
-                                    </ol>
+                                    {room.players.map((player, i) =>
+                                        <p key={`Player: ${i}`}>{player.name} {player.answers.some((answer) => answer.questionIndex === room.currentQuestion) ? 'check' : ''}</p>
+                                    )}
                                 </div>
                             </section>
                         }

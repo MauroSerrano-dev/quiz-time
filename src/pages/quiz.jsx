@@ -168,6 +168,7 @@ export default withRouter((props) => {
     }
 
     function answerControl(option) {
+        console.log((option))
         const player = getPlayer()
         if (optionSelected === option) {
             setOptionSelected()
@@ -183,8 +184,13 @@ export default withRouter((props) => {
             socket.emit("updateAnswer",
                 {
                     ...player,
-                    answers: player.answers.filter(answer => answer.questionIndex !== room.currentQuestion).concat([{ ...quiz.questions[room.currentQuestion].options[option], questionIndex: room.currentQuestion, optionIndex: option }])
-                }
+                    answers: player.answers.filter(answer => answer.questionIndex !== room.currentQuestion)
+                        .concat([{
+                            ...quiz.questions[room.currentQuestion].options[option],
+                            questionIndex: room.currentQuestion,
+                            optionIndex: option
+                        }])
+                }, code
             )
         }
     }
