@@ -45,13 +45,12 @@ export default withRouter((props) => {
             }
         })
 
-        socket.on(`updateFieldsRoom${code}`, (roomAttFields) => {
-            const firstKey = Object.keys(roomAttFields)[0]
-            if (firstKey.includes('players') && firstKey !== 'players') {
-                setRoom(prev => { return { ...prev, players: prev.players.filter(player => player.user.email !== roomAttFields[firstKey].email).concat(roomAttFields[firstKey]) } })
-            }
-            else
-                setRoom(prev => { return { ...prev, ...roomAttFields } })
+        socket.on(`updateFieldsRoom${code}`, (att) => {
+            const { roomAtt } = att
+            console.log(roomAtt)
+            setDisableShow(roomAtt.state === 'disable')
+            setActiveShow(roomAtt.state === 'active')
+            setRoom(roomAtt)
         })
 
     }

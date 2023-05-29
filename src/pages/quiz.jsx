@@ -97,6 +97,7 @@ export default withRouter((props) => {
     }, [room, quiz])
 
     useEffect(() => {
+        console.log(room)
         if (room && room.private && !joined && session.user.email !== room.owner)
             lockRoom()
     }, [room])
@@ -126,6 +127,7 @@ export default withRouter((props) => {
         socket = io({ query: { code: code, } });
 
         socket.on("getData", (startRoom) => {
+            console.log('startRoom', startRoom)
             if (startRoom.code) {
                 if (startRoom.players.some(player => player.user.email === session.user.email)) {
                     setJoined(true)
@@ -136,28 +138,28 @@ export default withRouter((props) => {
             }
         })
 
-        socket.on(`updateFieldsRoom${code}`, (roomAttFields) => {
-            if (roomAttFields.state === 'active') {
+        socket.on(`updateFieldsRoom${code}`, (att) => {
+            const { roomAtt, fields } = att
+            console.log('dsadadsadas', roomAtt)
+            console.log(fields)
+            if (fields.state === 'active') {
                 setTimeout(() =>
-                    setQuestionTransition(false)
-                    , TRANSITION_DURATION)
+                    setQuestionTransition(false), TRANSITION_DURATION)
             }
-            const firstKey = Object.keys(roomAttFields)[0]
-            if (roomAttFields.players && roomAttFields.players.every(player => player.user.email !== session.user.email))
+            const firstKey = Object.keys(fields)[0]
+            if (roomAtt.players.every(player => player.user.email !== session.user.email))
                 setJoined(false)
-            if (roomAttFields.currentQuestion !== undefined) {
+            if (fields.currentQuestion !== undefined) {
                 setQuestionTransition(true)
                 setTimeout(() => {
-                    setRoom(prev => { return { ...prev, ...roomAttFields } })
+                    setRoom(roomAtt)
                     setQuestionTransition(false)
                 }, TRANSITION_DURATION)
             }
-            else if (firstKey.includes('players') && firstKey !== 'players') {
-                setRoom(prev => { return { ...prev, players: prev.players.filter(player => player.user.email !== roomAttFields[firstKey].email).concat(roomAttFields[firstKey]) } })
-                turnOffTransition()
-            }
             else {
-                setRoom(prev => { return { ...prev, ...roomAttFields } })
+                if (firstKey.includes('players') && firstKey !== 'players' && fields[firstKey].user.email === session.user.email)
+                    turnOffTransition()
+                setRoom(roomAtt)
             }
         })
     }
@@ -228,6 +230,7 @@ export default withRouter((props) => {
     }
 
     function joinQuiz() {
+        console.log('join')
         setJoined(true)
         socket.emit("joinRoom",
             {

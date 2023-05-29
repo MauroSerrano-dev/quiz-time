@@ -31,8 +31,7 @@ export default function SocketHandler(req, res) {
     // Listen for "change" events on the change stream
     changeStream.on("change", (change) => {
       if (change.updateDescription) {
-        const roomAttFields = { ...change.updateDescription.updatedFields, code: change.fullDocument.code }
-        io.emit(`updateFieldsRoom${change.fullDocument.code}`, roomAttFields)
+        io.emit(`updateFieldsRoom${change.fullDocument.code}`, {roomAtt: change.fullDocument, fields: change.updateDescription.updatedFields})
       }
     })
   })
@@ -104,12 +103,12 @@ export default function SocketHandler(req, res) {
           }
         },
         {
-          arrayFilters: [{ 'element.email': player.user.email }]
+          arrayFilters: [{ 'element.user.email': player.user.email }]
         }
       )
         .then(() => {
           console.log("Answer updated successfully");
-          /* io.emit("updateRoomSuccess", updatedRoom); */
+          /* io.emit("updateRoomSuccess", updateAnswer); */
         })
         .catch((err) => {
           console.log("Error updating answer:", err);
@@ -117,7 +116,7 @@ export default function SocketHandler(req, res) {
         })
     })
 
-    // Listen for "updateAnswer" events emitted by the client
+    // Listen for "joinRoom" events emitted by the client
     socket.on("joinRoom", (player, code) => {
       const RoomModel = mongoose.models.room
         ? mongoose.model("room")
@@ -137,6 +136,33 @@ export default function SocketHandler(req, res) {
         })
         .catch((err) => {
           console.log("Error joinRoom:", err);
+          /* io.emit("updateRoomError", err); */
+        })
+    })
+    // Listen for "leaveRoom" events emitted by the client
+    socket.on("leaveRoom", (playerEmail, code) => {
+      console.log('leaveRoomdsadsa')
+      const RoomModel = mongoose.models.room
+        ? mongoose.model("room")
+        : mongoose.model("room", {
+          code: String,
+          players: Array,
+        }, 'rooms');
+      RoomModel.updateOne(
+        { code: code },
+        {
+          $pull: { players: { "user.email": playerEmail } }
+        },
+        {
+          arrayFilters: [{ "element.user.email": playerEmail }]
+        }
+      )
+        .then(() => {
+          console.log("leaveRoom successfully");
+          /* io.emit("updateRoomSuccess", updatedRoom); */
+        })
+        .catch((err) => {
+          console.log("Error leaveRoom:", err);
           /* io.emit("updateRoomError", err); */
         })
     })

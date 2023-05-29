@@ -32,9 +32,9 @@ export default function PlayersList(props) {
             </div>
             <div id={styles.playersContainer}>
                 <div id={styles.players}>
-                    {players.concat(players).concat(players).concat(players).concat(players).concat(players).concat(players).concat(players).concat(players).map((player, i) => <PlayerCard key={`Player: ${i}`} player={player} ></PlayerCard>)}
+                    {players.map((player, i) => <PlayerCard key={`Player: ${i}`} player={player} ></PlayerCard>)}
                 </div>
             </div>
-        </div >
+        </div>
     )
 }

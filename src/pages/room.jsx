@@ -15,6 +15,7 @@ export default withRouter((props) => {
     const [room, setRoom] = useState()
     const [disableShow, setDisableShow] = useState(false)
     const [activeShow, setActiveShow] = useState(false)
+    const [showContent, setShowContent] = useState(false)
     const [quiz, setQuiz] = useState()
 
     const { code } = props.router.query
@@ -40,32 +41,20 @@ export default withRouter((props) => {
         socket = io({ query: { code: code } })
 
         socket.on("getData", (room) => {
-            if(room.code) {
+            if (room.code) {
                 setRoom(room)
                 setDisableShow(room.state === 'disable')
                 setActiveShow(room.state === 'active')
             }
+            setShowContent(true)
         })
 
-        socket.on(`updateFieldsRoom${code}`, (roomAttFields) => {
-            const firstKey = Object.keys(roomAttFields)[0]
-            if (firstKey.includes('players') && firstKey !== 'players') {
-                setRoom(prev => {
-                    return {
-                        ...prev,
-                        players: prev.players
-                            .filter(player => player.user.email !== roomAttFields[firstKey].email)
-                            .concat(roomAttFields[firstKey])
-                    }
-                })
-            }
-            else {
-                if (Object.keys(roomAttFields).some(field => field === 'state')) {
-                    setDisableShow(roomAttFields.state === 'disable')
-                    setActiveShow(roomAttFields.state === 'active')
-                }
-                setRoom(prev => { return { ...prev, ...roomAttFields } })
-            }
+        socket.on(`updateFieldsRoom${code}`, (att) => {
+            const { roomAtt } = att
+            console.log(roomAtt)
+            setDisableShow(roomAtt.state === 'disable')
+            setActiveShow(roomAtt.state === 'active')
+            setRoom(roomAtt)
         })
     }
 
@@ -84,7 +73,7 @@ export default withRouter((props) => {
     return (
         <div id={styles.container}>
             <main>
-                {!room &&
+                {!room && showContent &&
                     <div>
                         <h1 id={styles.roomName}>Esta sala não existe</h1>
                     </div>
