@@ -1,5 +1,11 @@
 #container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
     text-align: center;
+
+    position: absolute;
 
     width: 270px;
     height: 70px;
@@ -8,8 +14,11 @@
 
     border-radius: 0.5rem;
     border: dashed red 1px;
+    background-color: var(--body-background-color);
     overflow: hidden;
     gap: 0.5rem;
+
+    transition: top 400ms ease-in-out;
 }
 
 #avatarContainer {
@@ -34,6 +43,7 @@
     width: 95%;
     height: 5px;
     background-color: rgb(155, 155, 155);
+    outline: solid 1px black;
     border-radius: 2rem;
     overflow: hidden;
 }

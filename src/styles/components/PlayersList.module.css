@@ -14,6 +14,11 @@
     user-select: none;
 }
 
+#placer {
+    width: 270px;
+    height: 70px;
+}
+
 #tabContainer {
     display: flex;
     flex-direction: column;

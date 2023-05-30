@@ -143,12 +143,7 @@ export default withRouter((props) => {
                                 }
                                 {quiz &&
                                     <PlayersList
-                                        players={
-                                            room.players.sort((a, b) => b.answers.length !== a.answers.length
-                                                ? b.answers.length - a.answers.length
-                                                : new Date(a.lastAnswerDate) - new Date(b.lastAnswerDate)
-                                            )
-                                        }
+                                        players={room.players}
                                         totalQuestions={quiz.questions.length}
                                     />
                                 }
