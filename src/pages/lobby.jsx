@@ -65,7 +65,7 @@ export default function Lobby(props) {
     const [disableCreateNewRoom, setDisableCreateNewRoom] = useState(false)
     const [passwordInputOpen, setPasswordInputOpen] = useState(false)
     const [firstClickPrivite, setFirstClickPrivite] = useState(false)
-    const [isSmall, setIsSmall] = useState(window.innerWidth <= 360)
+    const [isSmall, setIsSmall] = useState()
 
     useEffect(() => {
         const handleResize = () => {

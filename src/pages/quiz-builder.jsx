@@ -10,7 +10,9 @@ const GAME_MODES = [
     { name: "Who's Most Likely To" },
 ]
 
-export default function QuizBuilder() {
+export default function QuizBuilder(props) {
+    const { session } = props
+
     const [building, setBuilding] = useState(false)
     const [quiz, setQuiz] = useState({ name: 'My Quiz Name' })
     const router = useRouter();
