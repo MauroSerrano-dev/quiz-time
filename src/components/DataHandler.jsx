@@ -13,6 +13,10 @@ export default function DataHandler(props) {
     const { Component, pageProps } = props
     const { data: session } = useSession()
 
+    useEffect(() => {
+        console.log(Component.name)
+    }, [])
+
     return (
         <div>
             {session === null && !FREE_PAGES.includes(Component.name) &&
