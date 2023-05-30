@@ -9,7 +9,7 @@ const INICIAL_TICKET = {
 }
 
 export default function Support(props) {
-    const { session } = props
+    const { session, signIn } = props
     const [newTicket, setNewTicket] = useState(INICIAL_TICKET)
 
     async function createNewTicket() {
@@ -28,7 +28,7 @@ export default function Support(props) {
     return (
         <div>
             {session === null
-                ? <NoSessionPage />
+                ? <NoSessionPage signIn={signIn} />
                 : <div>
                     <main>
                         {/* <Select

@@ -10,7 +10,7 @@ import NoSessionPage from '@/components/NoSessionPage';
 let socket;
 
 export default withRouter((props) => {
-    const { session } = props
+    const { session, signIn } = props
     const [room, setRoom] = useState()
     const [disableShow, setDisableShow] = useState(false)
     const [activeShow, setActiveShow] = useState(false)
@@ -107,7 +107,7 @@ export default withRouter((props) => {
     return (
         <div>
             {session === null
-                ? <NoSessionPage />
+                ? <NoSessionPage signIn={signIn} />
                 : <div id={styles.container}>
                     <main>
                         {room && Object.keys(room).length === 0 &&

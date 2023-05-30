@@ -13,7 +13,7 @@ export default function DataHandler(props) {
         <div>
             <Navbar session={session} signIn={signIn} signOut={signOut} />
             <div id={styles.componentContainer} >
-                <Component{...pageProps} session={session} />
+                <Component{...pageProps} session={session} signIn={signIn} />
             </div>
         </div>
     )

@@ -34,7 +34,7 @@ const item = {
 }
 
 export default withRouter((props) => {
-    const { session } = props
+    const { session, signIn } = props
     const { code } = props.router.query
 
     const [quiz, setQuiz] = useState()
@@ -341,7 +341,7 @@ export default withRouter((props) => {
     return (
         <div>
             {session === null
-                ? <NoSessionPage />
+                ? <NoSessionPage signIn={signIn} />
                 : <motion.div id={styles.container}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}

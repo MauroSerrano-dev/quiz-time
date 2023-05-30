@@ -6,7 +6,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import NoSessionPage from '@/components/NoSessionPage';
 
 export default withRouter((props) => {
-    const { session } = props
+    const { session, signIn } = props
     const { id } = props.router.query
     const [user, setUser] = useState()
 
@@ -29,7 +29,7 @@ export default withRouter((props) => {
     return (
         <div>
             {session === null
-                ? <NoSessionPage />
+                ? <NoSessionPage signIn={signIn} />
                 : <div id={styles.container}>
                     {user &&
                         <main>

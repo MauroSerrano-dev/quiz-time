@@ -11,7 +11,7 @@ const GAME_MODES = [
 ]
 
 export default function QuizBuilder(props) {
-    const { session } = props
+    const { session, signIn } = props
 
     const [building, setBuilding] = useState(false)
     const [quiz, setQuiz] = useState({ name: 'My Quiz Name' })
@@ -61,7 +61,7 @@ export default function QuizBuilder(props) {
     return (
         <div>
             {session === null
-                ? <NoSessionPage />
+                ? <NoSessionPage signIn={signIn} />
                 : <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}

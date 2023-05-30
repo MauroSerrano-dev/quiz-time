@@ -55,7 +55,7 @@ const INICIAL_ROOM = {
 }
 
 export default function Lobby(props) {
-    const { session } = props
+    const { session, signIn } = props
     const [newRoom, setNewRoom] = useState(INICIAL_ROOM)
     const [searchCode, setSearchCode] = useState('')
     const [newCode, setNewCode] = useState('')
@@ -188,7 +188,7 @@ export default function Lobby(props) {
     return (
         <div>
             {session === null
-                ? <NoSessionPage />
+                ? <NoSessionPage signIn={signIn} />
                 : <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
