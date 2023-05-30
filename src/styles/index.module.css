@@ -3,11 +3,26 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+    position: relative;
     text-align: center;
     height: calc(100vh - 80px);
+    overflow: hidden;
+}
+
+#scrollDiv {
     overflow-y: auto;
     overflow-x: hidden;
-    transition: all 250ms ease-in-out;
+    position: absolute;
+    width: 100%;
+    height: calc(100vh - 80px);
+}
+
+/* #scrollDiv::-webkit-scrollbar {
+    display: none;
+} */
+
+#insideScrollDiv {
+    height: 200%;
 }
 
 .section {
@@ -19,6 +34,10 @@
 
     background-color: var(--logo-color);
     border-bottom: 1px black solid;
+}
+
+#zero {
+    height: 65%;
 }
 
 #one {
