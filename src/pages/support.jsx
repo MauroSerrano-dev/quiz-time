@@ -2,6 +2,7 @@ import { useState } from 'react'
 import styles from '../styles/support.module.css'
 import { Button, Select, TextField } from '@mui/material'
 import SendIcon from '@mui/icons-material/Send';
+import NoSessionPage from '@/components/NoSessionPage';
 
 const INICIAL_TICKET = {
     category: '',
