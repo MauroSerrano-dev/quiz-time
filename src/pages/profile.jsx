@@ -3,6 +3,7 @@ import styles from '../styles/profiles.module.css'
 import { useEffect, useState } from 'react'
 import { Button } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit';
+import NoSessionPage from '@/components/NoSessionPage';
 
 export default withRouter((props) => {
     const { session } = props
@@ -26,26 +27,31 @@ export default withRouter((props) => {
     }
 
     return (
-        <div id={styles.container}>
-            {user &&
-                <main>
-                    <div id={styles.header}>
-                        {session.user.id === id &&
-                            <Button variant="outlined" startIcon={<EditIcon />}>
-                                Editar
-                            </Button>
-                        }
-                    </div>
-                    <section id={styles.one}>
-                        <div id={styles.avatarContainer}>
-                            <img src={user.image} />
-                        </div>
-                        <div>
-                            <h2>{user.name}</h2>
-                        </div>
-                    </section>
-                </main>
+        <div>
+            {session === null
+                ? <NoSessionPage />
+                : <div id={styles.container}>
+                    {user &&
+                        <main>
+                            <div id={styles.header}>
+                                {session.user.id === id &&
+                                    <Button variant="outlined" startIcon={<EditIcon />}>
+                                        Editar
+                                    </Button>
+                                }
+                            </div>
+                            <section id={styles.one}>
+                                <div id={styles.avatarContainer}>
+                                    <img src={user.image} />
+                                </div>
+                                <div>
+                                    <h2>{user.name}</h2>
+                                </div>
+                            </section>
+                        </main>
+                    }
+                </div >
             }
-        </div >
+        </div>
     )
 })

@@ -450,7 +450,7 @@ export default function Settings(props) {
                         { "profile": "Atuante", "points": 1 }],
                         "questionIndex": 1,
                         "optionIndex": 1
-                    }, 
+                    },
                     {
                         "content": "Seja amigável, carinhoso e compreensivo",
                         "actions": [{
@@ -835,17 +835,22 @@ export default function Settings(props) {
 
     return (
         <div>
-            <main>
-                {process.env.NODE_ENV === 'development' &&
-                    <div>
-                        <Button variant="outlined" onClick={handlePopulateQuiz}>Populate Quiz</Button>
-                        <Button variant="outlined" onClick={handlePopulateRoom}>Populate Room</Button>
-                    </div>
-                }
-                <a href='https://billing.stripe.com/p/login/test_dR68y53sd60y5gI144' target='_blank'>
-                    <Button variant="outlined" >Gerenciar Assinatura</Button>
-                </a>
-            </main>
+            {session === null
+                ? <NoSessionPage />
+                : <div>
+                    <main>
+                        {process.env.NODE_ENV === 'development' &&
+                            <div>
+                                <Button variant="outlined" onClick={handlePopulateQuiz}>Populate Quiz</Button>
+                                <Button variant="outlined" onClick={handlePopulateRoom}>Populate Room</Button>
+                            </div>
+                        }
+                        <a href='https://billing.stripe.com/p/login/test_dR68y53sd60y5gI144' target='_blank'>
+                            <Button variant="outlined" >Gerenciar Assinatura</Button>
+                        </a>
+                    </main>
+                </div>
+            }
         </div>
-    );
+    )
 }

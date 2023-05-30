@@ -27,8 +27,11 @@ export default function Support(props) {
 
     return (
         <div>
-            <main>
-                {/* <Select
+            {session === null
+                ? <NoSessionPage />
+                : <div>
+                    <main>
+                        {/* <Select
                     labelId="select-label"
                     id="select"
                     name={newRoom.quizInfo.name}
@@ -47,17 +50,19 @@ export default function Support(props) {
                         </MenuItem>
                     ))}
                 </Select> */}
-                <TextField
-                    id="standard-multiline-static"
-                    label="Ticket"
-                    multiline
-                    rows={8}
-                    variant="filled"
-                />
-                <Button variant="outlined" endIcon={<SendIcon />}>
-                    Enviar
-                </Button>
-            </main>
+                        <TextField
+                            id="standard-multiline-static"
+                            label="Ticket"
+                            multiline
+                            rows={8}
+                            variant="filled"
+                        />
+                        <Button variant="outlined" endIcon={<SendIcon />}>
+                            Enviar
+                        </Button>
+                    </main>
+                </div>
+            }
         </div>
     )
 }

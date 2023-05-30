@@ -5,6 +5,7 @@ import io from "socket.io-client";
 import { useEffect, useState } from 'react';
 import { motion } from "framer-motion"
 import { Button, ButtonGroup } from '@mui/material';
+import NoSessionPage from '@/components/NoSessionPage';
 
 let socket;
 
@@ -104,75 +105,80 @@ export default withRouter((props) => {
     }
 
     return (
-        <div id={styles.container}>
-            <main>
-                {room && Object.keys(room).length === 0 &&
-                    <div>
-                        <h1 id={styles.roomName}>Esta sala não existe</h1>
-                    </div>
-                }
-                {room && Object.keys(room).length > 0 &&
-                    <div id={styles.roomContainer}>
-                        <h1 id={styles.roomName}>Essa é a sala: {room.name}</h1>
-                        {session.user.email === room.owner &&
-                            <section id={styles.ownerView}>
-                                {room.state === 'disable' &&
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 30 }}
-                                        animate={disableShow ? { opacity: 1, y: 0 } : { opacity: 0, y: 0 }}
-                                        transition={{ delay: disableShow ? 0.5 : 0, duration: disableShow ? 1.2 : 0.6, easings: ["easeInOut"] }}
-                                        id={styles.disableContainer}
-                                    >
-                                        <ButtonGroup>
-                                            <Button sx={{ width: '120px' }} variant={room.control ? 'outlined' : 'contained'} onClick={() => switchControl(false)}>Auto-Play</Button>
-                                            <Button sx={{ width: '120px' }} variant={room.control ? 'contained' : 'outlined'} onClick={() => switchControl(true)}>Control</Button>
-                                        </ButtonGroup>
-                                        <Button variant="outlined" onClick={startQuiz}>Start Quiz</Button>
-                                    </motion.div>}
-                                {room.state === 'active' && quiz &&
-                                    <motion.div
-                                        initial={{ opacity: 0 }}
-                                        animate={activeShow ? { opacity: 1 } : { opacity: 0 }}
-                                        transition={{ delay: activeShow ? 0.5 : 0, duration: activeShow ? 1.2 : 0.6, easings: ["easeInOut"] }}
-                                        id={styles.activeContainer}
-                                    >
-                                        {room.control &&
-                                            <section id={styles.questionOptions}>
-                                                <div>
-                                                    <Button variant="contained" onClick={prevQuestion} disabled={room.currentQuestion === 0}>Prev Question</Button>
-                                                    <Button variant="contained" onClick={nextQuestion}>Next Question</Button>
-                                                </div>
-                                            </section>
-                                        }
-                                        <Button variant="outlined" onClick={resetQuiz}>Reset Quiz</Button>
-                                    </motion.div>
-                                }
-                                {room.state === 'finish' &&
-                                    <div>
-                                        <Button variant="outlined" onClick={showResults}>Mostrar Resultados</Button>
-                                    </div>
-                                }
-                                {room.state === 'results' &&
-                                    <div>
-                                        <h2>Finalizado</h2>
-                                    </div>
-                                }
-                                <div id={styles.playersList}>
-                                    <h3>Players</h3>
-                                    {room.players.map((player, i) =>
-                                        <p key={`Player: ${i}`}>{player.user.name} {player.answers.some((answer) => answer.questionIndex === room.currentQuestion) ? 'check' : ''}</p>
-                                    )}
-                                </div>
-                            </section>
-                        }
-                        {session.user.email !== room.owner &&
+        <div>
+            {session === null
+                ? <NoSessionPage />
+                : <div id={styles.container}>
+                    <main>
+                        {room && Object.keys(room).length === 0 &&
                             <div>
-                                <h3>Esta é a visão de quem não é dono da sala</h3>
+                                <h1 id={styles.roomName}>Esta sala não existe</h1>
                             </div>
                         }
-                    </div>
-                }
-            </main>
+                        {room && Object.keys(room).length > 0 &&
+                            <div id={styles.roomContainer}>
+                                <h1 id={styles.roomName}>Essa é a sala: {room.name}</h1>
+                                {session.user.email === room.owner &&
+                                    <section id={styles.ownerView}>
+                                        {room.state === 'disable' &&
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 30 }}
+                                                animate={disableShow ? { opacity: 1, y: 0 } : { opacity: 0, y: 0 }}
+                                                transition={{ delay: disableShow ? 0.5 : 0, duration: disableShow ? 1.2 : 0.6, easings: ["easeInOut"] }}
+                                                id={styles.disableContainer}
+                                            >
+                                                <ButtonGroup>
+                                                    <Button sx={{ width: '120px' }} variant={room.control ? 'outlined' : 'contained'} onClick={() => switchControl(false)}>Auto-Play</Button>
+                                                    <Button sx={{ width: '120px' }} variant={room.control ? 'contained' : 'outlined'} onClick={() => switchControl(true)}>Control</Button>
+                                                </ButtonGroup>
+                                                <Button variant="outlined" onClick={startQuiz}>Start Quiz</Button>
+                                            </motion.div>}
+                                        {room.state === 'active' && quiz &&
+                                            <motion.div
+                                                initial={{ opacity: 0 }}
+                                                animate={activeShow ? { opacity: 1 } : { opacity: 0 }}
+                                                transition={{ delay: activeShow ? 0.5 : 0, duration: activeShow ? 1.2 : 0.6, easings: ["easeInOut"] }}
+                                                id={styles.activeContainer}
+                                            >
+                                                {room.control &&
+                                                    <section id={styles.questionOptions}>
+                                                        <div>
+                                                            <Button variant="contained" onClick={prevQuestion} disabled={room.currentQuestion === 0}>Prev Question</Button>
+                                                            <Button variant="contained" onClick={nextQuestion}>Next Question</Button>
+                                                        </div>
+                                                    </section>
+                                                }
+                                                <Button variant="outlined" onClick={resetQuiz}>Reset Quiz</Button>
+                                            </motion.div>
+                                        }
+                                        {room.state === 'finish' &&
+                                            <div>
+                                                <Button variant="outlined" onClick={showResults}>Mostrar Resultados</Button>
+                                            </div>
+                                        }
+                                        {room.state === 'results' &&
+                                            <div>
+                                                <h2>Finalizado</h2>
+                                            </div>
+                                        }
+                                        <div id={styles.playersList}>
+                                            <h3>Players</h3>
+                                            {room.players.map((player, i) =>
+                                                <p key={`Player: ${i}`}>{player.user.name} {player.answers.some((answer) => answer.questionIndex === room.currentQuestion) ? 'check' : ''}</p>
+                                            )}
+                                        </div>
+                                    </section>
+                                }
+                                {session.user.email !== room.owner &&
+                                    <div>
+                                        <h3>Esta é a visão de quem não é dono da sala</h3>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </main>
+                </div>
+            }
         </div>
     )
 })

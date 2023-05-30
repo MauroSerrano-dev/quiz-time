@@ -7,6 +7,7 @@ import { motion } from "framer-motion"
 import { Button } from '@mui/material';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import PlayersList from '@/components/PlayersList';
+import NoSessionPage from '@/components/NoSessionPage';
 
 let socket;
 
@@ -71,92 +72,97 @@ export default withRouter((props) => {
     }
 
     return (
-        <div id={styles.container}>
-            <main>
-                {!room && showContent &&
-                    <div>
-                        <h1 id={styles.roomName}>Esta sala não existe</h1>
-                    </div>
-                }
-                {room && Object.keys(room).length > 0 &&
-                    <div id={styles.roomContainer}>
-                        <h1 id={styles.roomName}>Essa é a sala: {room.name}</h1>
-                        {session.user.email === room.owner &&
-                            <section id={styles.ownerView}>
-                                {room.state === 'disable' &&
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 30 }}
-                                        animate={disableShow ? { opacity: 1, y: 0 } : { opacity: 0, y: 0 }}
-                                        transition={{ delay: disableShow ? 0.5 : 0, duration: disableShow ? 1.2 : 0.6, easings: ["easeInOut"] }}
-                                        id={styles.disableContainer}
-                                    >
-                                        <div id={styles.qrContainer}>
-                                            <div id={styles.qrCode}><QRCode value={`quiztime.pt/quiz?code=${code}`} size={200} ecLevel='H' qrStyle='dots' logoImage='quiz-time-logo.png' logoWidth={200 * 0.6} logoOpacity={0.5} eyeColor={{ outer: '#00a0dc', inner: '#005270' }} eyeRadius={5} /></div>
-                                            <h2>Scan Me!</h2>
-                                            <div className={styles.frame}></div>
-                                            <div className={styles.frame} id={styles.border}></div>
-                                            <div id={styles.textContainer}></div>
-                                        </div>
-                                        <h2>Ou</h2>
-                                        <div id={styles.linkContainer}>
-                                            <h2>Entre no link:</h2>
-                                            <a href={`${process.env.NEXT_PUBLIC_SITE_URL}/quiz?code=${code}`} target='_blank'>
-                                                <h2>{process.env.NEXT_PUBLIC_SITE_DOMAIN}/quiz?code={code}</h2>
-                                            </a>
-                                        </div>
-                                        <a href={`${process.env.NEXT_PUBLIC_SITE_URL}/controller?code=${code}`} target='_blank'>
-                                            <Button variant="outlined" endIcon={<SportsEsportsIcon />}>
-                                                Controller
-                                            </Button>
-                                        </a>
-                                    </motion.div>}
-                                {room.state === 'active' && quiz &&
-                                    <motion.div
-                                        initial={{ opacity: 0 }}
-                                        animate={activeShow ? { opacity: 1 } : { opacity: 0 }}
-                                        transition={{ delay: activeShow ? 0.5 : 0, duration: activeShow ? 1.2 : 0.6, easings: ["easeInOut"] }}
-                                        id={styles.activeContainer}
-                                    >
-                                        {room.control &&
-                                            <section id={styles.questionOptions}>
-                                                <div id={styles.questionContainer}>
-                                                    <h2>{room.currentQuestion + 1}. {quiz.questions[room.currentQuestion].content}</h2>
-                                                </div>
-                                                <div id={styles.optionsContainer}>
-                                                    {quiz.questions[room.currentQuestion].options.map((option, i) =>
-                                                        <Button id={styles.optionButton} variant="outlined" key={`Option: ${i}`}><h3>{option.content}</h3></Button>
-                                                    )}
-                                                </div>
-                                            </section>
-                                        }
-                                    </motion.div>
-                                }
-                                {room.state === 'finish' &&
-                                    <div>
-                                        <h2>Finalizado</h2>
-                                    </div>
-                                }
-                                {room.state === 'results' &&
-                                    <div>
-                                        <h2>Finalizado</h2>
-                                    </div>
-                                }
-                                {quiz &&
-                                    <PlayersList
-                                        players={room.players}
-                                        totalQuestions={quiz.questions.length}
-                                    />
-                                }
-                            </section>
-                        }
-                        {session.user.email !== room.owner &&
+        <div>
+            {session === null
+                ? <NoSessionPage />
+                : <div id={styles.container}>
+                    <main>
+                        {!room && showContent &&
                             <div>
-                                <h3>Esta é a visão de quem não é dono da sala</h3>
+                                <h1 id={styles.roomName}>Esta sala não existe</h1>
                             </div>
                         }
-                    </div>
-                }
-            </main>
+                        {room && Object.keys(room).length > 0 &&
+                            <div id={styles.roomContainer}>
+                                <h1 id={styles.roomName}>Essa é a sala: {room.name}</h1>
+                                {session.user.email === room.owner &&
+                                    <section id={styles.ownerView}>
+                                        {room.state === 'disable' &&
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 30 }}
+                                                animate={disableShow ? { opacity: 1, y: 0 } : { opacity: 0, y: 0 }}
+                                                transition={{ delay: disableShow ? 0.5 : 0, duration: disableShow ? 1.2 : 0.6, easings: ["easeInOut"] }}
+                                                id={styles.disableContainer}
+                                            >
+                                                <div id={styles.qrContainer}>
+                                                    <div id={styles.qrCode}><QRCode value={`quiztime.pt/quiz?code=${code}`} size={200} ecLevel='H' qrStyle='dots' logoImage='quiz-time-logo.png' logoWidth={200 * 0.6} logoOpacity={0.5} eyeColor={{ outer: '#00a0dc', inner: '#005270' }} eyeRadius={5} /></div>
+                                                    <h2>Scan Me!</h2>
+                                                    <div className={styles.frame}></div>
+                                                    <div className={styles.frame} id={styles.border}></div>
+                                                    <div id={styles.textContainer}></div>
+                                                </div>
+                                                <h2>Ou</h2>
+                                                <div id={styles.linkContainer}>
+                                                    <h2>Entre no link:</h2>
+                                                    <a href={`${process.env.NEXT_PUBLIC_SITE_URL}/quiz?code=${code}`} target='_blank'>
+                                                        <h2>{process.env.NEXT_PUBLIC_SITE_DOMAIN}/quiz?code={code}</h2>
+                                                    </a>
+                                                </div>
+                                                <a href={`${process.env.NEXT_PUBLIC_SITE_URL}/controller?code=${code}`} target='_blank'>
+                                                    <Button variant="outlined" endIcon={<SportsEsportsIcon />}>
+                                                        Controller
+                                                    </Button>
+                                                </a>
+                                            </motion.div>}
+                                        {room.state === 'active' && quiz &&
+                                            <motion.div
+                                                initial={{ opacity: 0 }}
+                                                animate={activeShow ? { opacity: 1 } : { opacity: 0 }}
+                                                transition={{ delay: activeShow ? 0.5 : 0, duration: activeShow ? 1.2 : 0.6, easings: ["easeInOut"] }}
+                                                id={styles.activeContainer}
+                                            >
+                                                {room.control &&
+                                                    <section id={styles.questionOptions}>
+                                                        <div id={styles.questionContainer}>
+                                                            <h2>{room.currentQuestion + 1}. {quiz.questions[room.currentQuestion].content}</h2>
+                                                        </div>
+                                                        <div id={styles.optionsContainer}>
+                                                            {quiz.questions[room.currentQuestion].options.map((option, i) =>
+                                                                <Button id={styles.optionButton} variant="outlined" key={`Option: ${i}`}><h3>{option.content}</h3></Button>
+                                                            )}
+                                                        </div>
+                                                    </section>
+                                                }
+                                            </motion.div>
+                                        }
+                                        {room.state === 'finish' &&
+                                            <div>
+                                                <h2>Finalizado</h2>
+                                            </div>
+                                        }
+                                        {room.state === 'results' &&
+                                            <div>
+                                                <h2>Finalizado</h2>
+                                            </div>
+                                        }
+                                        {quiz &&
+                                            <PlayersList
+                                                players={room.players}
+                                                totalQuestions={quiz.questions.length}
+                                            />
+                                        }
+                                    </section>
+                                }
+                                {session.user.email !== room.owner &&
+                                    <div>
+                                        <h3>Esta é a visão de quem não é dono da sala</h3>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </main>
+                </div>
+            }
         </div>
     )
 })
