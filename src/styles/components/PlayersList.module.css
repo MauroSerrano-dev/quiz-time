@@ -14,12 +14,9 @@
     user-select: none;
 }
 
-#placer {
-    width: 270px;
-    height: 70px;
-}
-
 #tabContainer {
+    position: absolute;
+    right: 134px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -31,11 +28,11 @@
     border: solid var(--logo-color) 1px;
     background-color: var(--body-background-color);
     cursor: pointer;
-    transition: margin-right 200ms ease-in-out;
+    transition: right 200ms ease-in-out;
 }
 
 #tabContainer:hover {
-    margin-right: 4px;
+    right: 138px;
 }
 
 #tabContainer p {
@@ -44,17 +41,13 @@
 }
 
 #playersContainer {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    padding-top: 8px;
+    position: absolute;
     padding-bottom: 8px;
     padding-right: 8px;
     padding-left: 11.5px;
-    gap: 0.5rem;
-    border: solid yellow 1px;
+    border: solid var(--logo-color) 1px;
     border-bottom-left-radius: 0.5rem;
+    background-color: var(--body-background-color);
 
     width: auto;
     max-height: 75vh;
@@ -66,7 +59,6 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 0.5rem;
 }
 
 #playersContainer::-webkit-scrollbar {

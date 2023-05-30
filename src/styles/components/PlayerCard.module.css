@@ -7,13 +7,10 @@
 
     position: absolute;
 
-    width: 270px;
-    height: 70px;
-
     padding: 0.5rem;
 
     border-radius: 0.5rem;
-    border: dashed red 1px;
+    border: solid var(--logo-color) 1px;
     background-color: var(--body-background-color);
     overflow: hidden;
     gap: 0.5rem;

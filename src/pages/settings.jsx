@@ -295,8 +295,7 @@ const quiz = {
 export default function Settings(props) {
     const { session } = props
 
-    async function handlePopulate() {
-
+    async function handlePopulateQuiz() {
         const options = {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
@@ -308,12 +307,539 @@ export default function Settings(props) {
         console.log(json)
     }
 
+    const newRoom = {
+        "name": "test",
+        "code": "test",
+        "private": false,
+        "control": false,
+        "password": "",
+        "state": "active",
+        "quizInfo": { "name": "Perfil Comportamental", "purchaseDate": "", "type": "standard" },
+        "currentQuestion": 0,
+        "players": [
+            {
+                "user": {
+                    "id": "64730ab674fb9de3f50709bb",
+                    "name": "Mauro Serrano Dev",
+                    "email": "mauro.serrano.dev@gmail.com",
+                    "image": "https://lh3.googleusercontent.com/a/AAcHTtcggnb2BK_MtbyXGi1t99d7Wgs4jevmZgNX5DiT=s96-c",
+                    "createAt": "2023-05-28T08:03:02.233Z",
+                    "quizzesInfos": [
+                        {
+                            "name": "Perfil Comportamental",
+                            "purchaseDate": "",
+                            "type": "standard"
+                        }
+                    ],
+                    "quizzesCustom": [],
+                    "purchases": [],
+                    "plan": { "name": "Free" },
+                    "emailVerified": null
+                },
+                "answers": [],
+                "currentQuestion": 0,
+                "state": "answering",
+                "lastAnswerDate": "2023-05-30T01:45:20.586Z"
+            },
+            {
+                "user": {
+                    "id": "64730ab674fb9de3f50709bb",
+                    "name": "Test 1",
+                    "email": "test1@gmail.com",
+                    "image": "https://lh3.googleusercontent.com/a/AAcHTtcggnb2BK_MtbyXGi1t99d7Wgs4jevmZgNX5DiT=s96-c",
+                    "createAt": "2023-05-28T08:03:02.233Z",
+                    "quizzesInfos": [
+                        {
+                            "name": "Perfil Comportamental",
+                            "purchaseDate": "",
+                            "type": "standard"
+                        }
+                    ],
+                    "quizzesCustom": [],
+                    "purchases": [],
+                    "plan": { "name": "Free" },
+                    "emailVerified": null
+                },
+                "answers": [
+                    {
+                        "content": "Idealista, criativo e visionário",
+                        "actions": [{ "profile": "Idealizador(a)", "points": 1 },
+                        { "profile": "Pensante", "points": 1 },
+                        { "profile": "Criativo(a)", "points": 1 }],
+                        "questionIndex": 0,
+                        "optionIndex": 0
+                    },
+                ],
+                "currentQuestion": 1,
+                "state": "answering",
+                "lastAnswerDate": "2023-05-30T01:45:20.586Z"
+            },
+            {
+                "user": {
+                    "id": "64730ab674fb9de3f50709bb",
+                    "name": "Test 2",
+                    "email": "test2@gmail.com",
+                    "image": "https://lh3.googleusercontent.com/a/AAcHTtcggnb2BK_MtbyXGi1t99d7Wgs4jevmZgNX5DiT=s96-c",
+                    "createAt": "2023-05-28T08:03:02.233Z",
+                    "quizzesInfos": [
+                        {
+                            "name": "Perfil Comportamental",
+                            "purchaseDate": "",
+                            "type": "standard"
+                        }
+                    ],
+                    "quizzesCustom": [],
+                    "purchases": [],
+                    "plan": { "name": "Free" },
+                    "emailVerified": null
+                },
+                "answers": [
+                    {
+                        "content": "Idealista, criativo e visionário",
+                        "actions": [{ "profile": "Idealizador(a)", "points": 1 },
+                        { "profile": "Pensante", "points": 1 },
+                        { "profile": "Criativo(a)", "points": 1 }],
+                        "questionIndex": 0,
+                        "optionIndex": 0
+                    },
+                    {
+                        "content": "Conversar com os passageiros",
+                        "actions": [{ "profile": "Comunicador(a)", "points": 1 },
+                        { "profile": "Criativo(a)", "points": 1 },
+                        { "profile": "Atuante", "points": 1 }],
+                        "questionIndex": 1,
+                        "optionIndex": 1
+                    },
+                ],
+                "currentQuestion": 2,
+                "state": "answering",
+                "lastAnswerDate": "2023-05-30T01:45:20.586Z"
+            },
+            {
+                "user": {
+                    "id": "64730ab674fb9de3f50709bb",
+                    "name": "Test 3",
+                    "email": "test3@gmail.com",
+                    "image": "https://lh3.googleusercontent.com/a/AAcHTtcggnb2BK_MtbyXGi1t99d7Wgs4jevmZgNX5DiT=s96-c",
+                    "createAt": "2023-05-28T08:03:02.233Z",
+                    "quizzesInfos": [
+                        {
+                            "name": "Perfil Comportamental",
+                            "purchaseDate": "",
+                            "type": "standard"
+                        }
+                    ],
+                    "quizzesCustom": [],
+                    "purchases": [],
+                    "plan": { "name": "Free" },
+                    "emailVerified": null
+                },
+                "answers": [
+                    {
+                        "content": "Idealista, criativo e visionário",
+                        "actions": [{ "profile": "Idealizador(a)", "points": 1 },
+                        { "profile": "Pensante", "points": 1 },
+                        { "profile": "Criativo(a)", "points": 1 }],
+                        "questionIndex": 0,
+                        "optionIndex": 0
+                    },
+                    {
+                        "content": "Conversar com os passageiros",
+                        "actions": [{ "profile": "Comunicador(a)", "points": 1 },
+                        { "profile": "Criativo(a)", "points": 1 },
+                        { "profile": "Atuante", "points": 1 }],
+                        "questionIndex": 1,
+                        "optionIndex": 1
+                    }, 
+                    {
+                        "content": "Seja amigável, carinhoso e compreensivo",
+                        "actions": [{
+                            "profile": "Comunicador(a)",
+                            "points": 1
+                        },
+                        { "profile": "Criativo(a)", "points": 1 },
+                        { "profile": "Atuante", "points": 1 }],
+                        "questionIndex": 2,
+                        "optionIndex": 3
+                    },
+                ],
+                "currentQuestion": 3,
+                "state": "answering",
+                "lastAnswerDate": "2023-05-30T01:45:20.586Z"
+            },
+            {
+                "user": {
+                    "id": "64730ab674fb9de3f50709bb",
+                    "name": "Test 4",
+                    "email": "test4@gmail.com",
+                    "image": "https://lh3.googleusercontent.com/a/AAcHTtcggnb2BK_MtbyXGi1t99d7Wgs4jevmZgNX5DiT=s96-c",
+                    "createAt": "2023-05-28T08:03:02.233Z",
+                    "quizzesInfos": [
+                        {
+                            "name": "Perfil Comportamental",
+                            "purchaseDate": "",
+                            "type": "standard"
+                        }
+                    ],
+                    "quizzesCustom": [],
+                    "purchases": [],
+                    "plan": { "name": "Free" },
+                    "emailVerified": null
+                },
+                "answers": [
+                    {
+                        "content": "Idealista, criativo e visionário",
+                        "actions": [{ "profile": "Idealizador(a)", "points": 1 },
+                        { "profile": "Pensante", "points": 1 },
+                        { "profile": "Criativo(a)", "points": 1 }],
+                        "questionIndex": 0,
+                        "optionIndex": 0
+                    },
+                    {
+                        "content": "Conversar com os passageiros",
+                        "actions": [{ "profile": "Comunicador(a)", "points": 1 },
+                        { "profile": "Criativo(a)", "points": 1 },
+                        { "profile": "Atuante", "points": 1 }],
+                        "questionIndex": 1,
+                        "optionIndex": 1
+                    }, {
+                        "content": "Seja amigável, carinhoso e compreensivo",
+                        "actions": [{
+                            "profile": "Comunicador(a)",
+                            "points": 1
+                        },
+                        { "profile": "Criativo(a)", "points": 1 },
+                        { "profile": "Atuante", "points": 1 }],
+                        "questionIndex": 2,
+                        "optionIndex": 3
+                    },
+                    {
+                        "content": "Ter incertezas",
+                        "actions": [{
+                            "profile": "Idealizador(a)",
+                            "points": 1
+                        },
+                        { "profile": "Pensante", "points": 1 },
+                        { "profile": "Criativo(a)", "points": 1 }],
+                        "questionIndex": 3,
+                        "optionIndex": 0
+                    },
+                    {
+                        "content": "Tenho novidades",
+                        "actions": [{
+                            "profile": "Idealizador(a)",
+                            "points": 1
+                        },
+                        { "profile": "Pensante", "points": 1 },
+                        { "profile": "Criativo(a)", "points": 1 }],
+                        "questionIndex": 4,
+                        "optionIndex": 1
+                    },
+                ],
+                "currentQuestion": 5,
+                "state": "answering",
+                "lastAnswerDate": "2023-05-30T01:45:20.586Z"
+            },
+            {
+                "user": {
+                    "id": "64730ab674fb9de3f50709bb",
+                    "name": "Test 5",
+                    "email": "test5@gmail.com",
+                    "image": "https://lh3.googleusercontent.com/a/AAcHTtcggnb2BK_MtbyXGi1t99d7Wgs4jevmZgNX5DiT=s96-c",
+                    "createAt": "2023-05-28T08:03:02.233Z",
+                    "quizzesInfos": [
+                        {
+                            "name": "Perfil Comportamental",
+                            "purchaseDate": "",
+                            "type": "standard"
+                        }
+                    ],
+                    "quizzesCustom": [],
+                    "purchases": [],
+                    "plan": { "name": "Free" },
+                    "emailVerified": null
+                },
+                "answers": [
+                    {
+                        "content": "Idealista, criativo e visionário",
+                        "actions": [{ "profile": "Idealizador(a)", "points": 1 },
+                        { "profile": "Pensante", "points": 1 },
+                        { "profile": "Criativo(a)", "points": 1 }],
+                        "questionIndex": 0,
+                        "optionIndex": 0
+                    },
+                    {
+                        "content": "Conversar com os passageiros",
+                        "actions": [{ "profile": "Comunicador(a)", "points": 1 },
+                        { "profile": "Criativo(a)", "points": 1 },
+                        { "profile": "Atuante", "points": 1 }],
+                        "questionIndex": 1,
+                        "optionIndex": 1
+                    }, {
+                        "content": "Seja amigável, carinhoso e compreensivo",
+                        "actions": [{
+                            "profile": "Comunicador(a)",
+                            "points": 1
+                        },
+                        { "profile": "Criativo(a)", "points": 1 },
+                        { "profile": "Atuante", "points": 1 }],
+                        "questionIndex": 2,
+                        "optionIndex": 3
+                    },
+                    {
+                        "content": "Ter incertezas",
+                        "actions": [{
+                            "profile": "Idealizador(a)",
+                            "points": 1
+                        },
+                        { "profile": "Pensante", "points": 1 },
+                        { "profile": "Criativo(a)", "points": 1 }],
+                        "questionIndex": 3,
+                        "optionIndex": 0
+                    },
+                    {
+                        "content": "Tenho novidades",
+                        "actions": [{
+                            "profile": "Idealizador(a)",
+                            "points": 1
+                        },
+                        { "profile": "Pensante", "points": 1 },
+                        { "profile": "Criativo(a)", "points": 1 }],
+                        "questionIndex": 4,
+                        "optionIndex": 1
+                    },
+                    {
+                        "content": "Um homem prevenido vale por dois",
+                        "actions": [{
+                            "profile": "Organizador(a)",
+                            "points": 1
+                        },
+                        {
+                            "profile": "Pensante",
+                            "points": 1
+                        },
+                        {
+                            "profile": "Lógico(a)",
+                            "points": 1
+                        }],
+                        "questionIndex": 5,
+                        "optionIndex": 3
+                    },
+                ],
+                "currentQuestion": 6,
+                "state": "answering",
+                "lastAnswerDate": "2023-05-30T01:45:20.586Z"
+            },
+            {
+                "user": {
+                    "id": "64730ab674fb9de3f50709bb",
+                    "name": "Test 6",
+                    "email": "test6@gmail.com",
+                    "image": "https://lh3.googleusercontent.com/a/AAcHTtcggnb2BK_MtbyXGi1t99d7Wgs4jevmZgNX5DiT=s96-c",
+                    "createAt": "2023-05-28T08:03:02.233Z",
+                    "quizzesInfos": [
+                        {
+                            "name": "Perfil Comportamental",
+                            "purchaseDate": "",
+                            "type": "standard"
+                        }
+                    ],
+                    "quizzesCustom": [],
+                    "purchases": [],
+                    "plan": { "name": "Free" },
+                    "emailVerified": null
+                },
+                "answers": [],
+                "currentQuestion": 0,
+                "state": "answering",
+                "lastAnswerDate": "2023-05-30T01:45:20.586Z"
+            },
+            {
+                "user": {
+                    "id": "64730ab674fb9de3f50709bb",
+                    "name": "Test 7",
+                    "email": "test7@gmail.com",
+                    "image": "https://lh3.googleusercontent.com/a/AAcHTtcggnb2BK_MtbyXGi1t99d7Wgs4jevmZgNX5DiT=s96-c",
+                    "createAt": "2023-05-28T08:03:02.233Z",
+                    "quizzesInfos": [
+                        {
+                            "name": "Perfil Comportamental",
+                            "purchaseDate": "",
+                            "type": "standard"
+                        }
+                    ],
+                    "quizzesCustom": [],
+                    "purchases": [],
+                    "plan": { "name": "Free" },
+                    "emailVerified": null
+                },
+                "answers": [
+                    {
+                        "content": "Idealista, criativo e visionário",
+                        "actions": [{ "profile": "Idealizador(a)", "points": 1 },
+                        { "profile": "Pensante", "points": 1 },
+                        { "profile": "Criativo(a)", "points": 1 }],
+                        "questionIndex": 0,
+                        "optionIndex": 0
+                    },
+                    {
+                        "content": "Conversar com os passageiros",
+                        "actions": [{ "profile": "Comunicador(a)", "points": 1 },
+                        { "profile": "Criativo(a)", "points": 1 },
+                        { "profile": "Atuante", "points": 1 }],
+                        "questionIndex": 1,
+                        "optionIndex": 1
+                    }, {
+                        "content": "Seja amigável, carinhoso e compreensivo",
+                        "actions": [{
+                            "profile": "Comunicador(a)",
+                            "points": 1
+                        },
+                        { "profile": "Criativo(a)", "points": 1 },
+                        { "profile": "Atuante", "points": 1 }],
+                        "questionIndex": 2,
+                        "optionIndex": 3
+                    },
+                    {
+                        "content": "Ter incertezas",
+                        "actions": [{
+                            "profile": "Idealizador(a)",
+                            "points": 1
+                        },
+                        { "profile": "Pensante", "points": 1 },
+                        { "profile": "Criativo(a)", "points": 1 }],
+                        "questionIndex": 3,
+                        "optionIndex": 0
+                    },
+                    {
+                        "content": "Tenho novidades",
+                        "actions": [{
+                            "profile": "Idealizador(a)",
+                            "points": 1
+                        },
+                        { "profile": "Pensante", "points": 1 },
+                        { "profile": "Criativo(a)", "points": 1 }],
+                        "questionIndex": 4,
+                        "optionIndex": 1
+                    },
+                    {
+                        "content": "Um homem prevenido vale por dois",
+                        "actions": [{
+                            "profile": "Organizador(a)",
+                            "points": 1
+                        },
+                        {
+                            "profile": "Pensante",
+                            "points": 1
+                        },
+                        {
+                            "profile": "Lógico(a)",
+                            "points": 1
+                        }],
+                        "questionIndex": 5,
+                        "optionIndex": 3
+                    },
+                ],
+                "currentQuestion": 6,
+                "state": "answering",
+                "lastAnswerDate": "2023-05-30T01:45:20.586Z"
+            },
+            {
+                "user": {
+                    "id": "64730ab674fb9de3f50709bb",
+                    "name": "Test 8",
+                    "email": "test8@gmail.com",
+                    "image": "https://lh3.googleusercontent.com/a/AAcHTtcggnb2BK_MtbyXGi1t99d7Wgs4jevmZgNX5DiT=s96-c",
+                    "createAt": "2023-05-28T08:03:02.233Z",
+                    "quizzesInfos": [
+                        {
+                            "name": "Perfil Comportamental",
+                            "purchaseDate": "",
+                            "type": "standard"
+                        }
+                    ],
+                    "quizzesCustom": [],
+                    "purchases": [],
+                    "plan": { "name": "Free" },
+                    "emailVerified": null
+                },
+                "answers": [],
+                "currentQuestion": 0,
+                "state": "answering",
+                "lastAnswerDate": "2023-05-30T01:45:20.586Z"
+            },
+            {
+                "user": {
+                    "id": "64730ab674fb9de3f50709bb",
+                    "name": "Test 9",
+                    "email": "test9@gmail.com",
+                    "image": "https://lh3.googleusercontent.com/a/AAcHTtcggnb2BK_MtbyXGi1t99d7Wgs4jevmZgNX5DiT=s96-c",
+                    "createAt": "2023-05-28T08:03:02.233Z",
+                    "quizzesInfos": [
+                        {
+                            "name": "Perfil Comportamental",
+                            "purchaseDate": "",
+                            "type": "standard"
+                        }
+                    ],
+                    "quizzesCustom": [],
+                    "purchases": [],
+                    "plan": { "name": "Free" },
+                    "emailVerified": null
+                },
+                "answers": [],
+                "currentQuestion": 0,
+                "state": "answering",
+                "lastAnswerDate": "2023-05-30T01:45:20.586Z"
+            },
+            {
+                "user": {
+                    "id": "64730ab674fb9de3f50709bb",
+                    "name": "Test 10",
+                    "email": "test10@gmail.com",
+                    "image": "https://lh3.googleusercontent.com/a/AAcHTtcggnb2BK_MtbyXGi1t99d7Wgs4jevmZgNX5DiT=s96-c",
+                    "createAt": "2023-05-28T08:03:02.233Z",
+                    "quizzesInfos": [
+                        {
+                            "name": "Perfil Comportamental",
+                            "purchaseDate": "",
+                            "type": "standard"
+                        }
+                    ],
+                    "quizzesCustom": [],
+                    "purchases": [],
+                    "plan": { "name": "Free" },
+                    "emailVerified": null
+                },
+                "answers": [],
+                "currentQuestion": 0,
+                "state": "answering",
+                "lastAnswerDate": "2023-05-30T01:45:20.586Z"
+            }
+        ],
+        "owner": "mauro.serrano.dev@gmail.com"
+    }
+
+    async function handlePopulateRoom() {
+        const options = {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ room: newRoom }),
+        }
+
+        await fetch('/api/rooms', options)
+            .then(response => response.json())
+            .then(response => console.log(response))
+            .catch(err => console.error(err))
+    }
+
     return (
         <div>
             <main>
                 {process.env.NODE_ENV === 'development' &&
                     <div>
-                        <Button variant="outlined" onClick={handlePopulate}>Populate</Button>
+                        <Button variant="outlined" onClick={handlePopulateQuiz}>Populate Quiz</Button>
+                        <Button variant="outlined" onClick={handlePopulateRoom}>Populate Room</Button>
                     </div>
                 }
                 <a href='https://billing.stripe.com/p/login/test_dR68y53sd60y5gI144' target='_blank'>

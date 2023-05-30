@@ -2,10 +2,10 @@ import { Avatar } from '@mui/material'
 import styles from '../styles/components/PlayerCard.module.css'
 
 export default function PlayerCard(props) {
-    const { player, progress, top, zIndex } = props
+    const { player, progress, top, zIndex, width, height } = props
 
     return (
-        <div id={styles.container} style={{ top: top, zIndex: zIndex }}>
+        <div id={styles.container} style={{ top: top ? top : 0, zIndex: zIndex ? zIndex : 0, width: width, height: height }}>
             <div id={styles.avatarContainer}>
                 <Avatar src={player.user.image} />
             </div>

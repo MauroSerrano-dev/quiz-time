@@ -3,6 +3,15 @@ import styles from '../styles/components/PlayersList.module.css'
 import PlayerCard from './PlayerCard'
 import { motion } from "framer-motion"
 
+const ITEM_SIZE = {
+    width: 250,
+    height: 70,
+}
+const LIST_SIZE = {
+    paddingTop: 8,
+    gap: 8,
+}
+
 export default function PlayersList(props) {
     const { players, totalQuestions } = props
     const [open, setOpen] = useState(false)
@@ -13,7 +22,7 @@ export default function PlayersList(props) {
     }
 
     const styleOpen = {
-        marginRight: '0px'
+        right: `${ITEM_SIZE.width * 0.545}px`
     }
 
     const styleClose = {
@@ -26,14 +35,13 @@ export default function PlayersList(props) {
                 ? b.answers.length - a.answers.length
                 : new Date(a.lastAnswerDate) - new Date(b.lastAnswerDate)
         )
-
         setItems(players.map(player => { return { ...player, position: sortedPlayers.findIndex(p => p.user.email === player.user.email) } }))
     }, [players])
 
     return (
         <div
             id={styles.container}
-            style={{ right: open ? '0px' : '-299px' }}
+            style={{ right: open ? `${ITEM_SIZE.width * 0.56}px` : `-${ITEM_SIZE.width * 0.56}px` }}
         >
             <div
                 id={styles.tabContainer}
@@ -42,19 +50,21 @@ export default function PlayersList(props) {
             >
                 <p>Players</p>
             </div>
-            <div id={styles.playersContainer}>
-                <div id={styles.players}>
+            <div id={styles.playersContainer} style={{ paddingTop: `${LIST_SIZE.paddingTop}px` }}>
+                <div id={styles.players} style={{ gap: `${LIST_SIZE.gap}px` }}>
                     {items.map((player, i) =>
                         <PlayerCard
                             key={`Player: ${i}`}
                             player={player}
                             progress={(player.answers.length / totalQuestions) * 100}
-                            top={`${9 + (79 * player.position)}px`}
+                            top={`${(LIST_SIZE.paddingTop + 1) + ((ITEM_SIZE.height + LIST_SIZE.gap) * player.position)}px`}
                             zIndex={players.length - player.position}
+                            width={`${ITEM_SIZE.width}px`}
+                            height={`${ITEM_SIZE.height}px`}
                         />
                     )}
                     {players.map((player, i) =>
-                        <div key={`Placer ${i}`} id={styles.placer}></div>
+                        <div key={`Placer ${i}`} style={{ width: `${ITEM_SIZE.width}px`, height: `${ITEM_SIZE.height}px` }}></div>
                     )}
                 </div>
             </div>
