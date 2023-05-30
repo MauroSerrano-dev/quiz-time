@@ -13,20 +13,16 @@ export default function DataHandler(props) {
     const { Component, pageProps } = props
     const { data: session } = useSession()
 
-    useEffect(() => {
-        console.log(Component.name)
-    }, [])
-
     return (
         <div>
-            {session === null && !FREE_PAGES.includes(Component.name) &&
+            {session === null &&
                 <div id={styles.noSessionContainer}>
                     <img id={styles.logo} src='/quiz-time-logo.png' />
                     <Button variant="outlined" onClick={() => signIn()}>Sign in</Button>
                 </div>
             }
             {
-                (session || FREE_PAGES.includes(Component.name)) &&
+                session &&
                 <div>
                     <Navbar session={session} signIn={signIn} signOut={signOut} />
                     <div id={styles.componentContainer} >
