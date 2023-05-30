@@ -5,7 +5,8 @@ import { useEffect } from "react"
 import { Button } from '@mui/material';
 
 const FREE_PAGES = [
-    'Support'
+    'Support',
+    'Index'
 ]
 
 export default function DataHandler(props) {
