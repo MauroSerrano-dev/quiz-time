@@ -2,6 +2,7 @@ import { useSession, signIn, signOut } from "next-auth/react"
 import Navbar from './Navbar'
 import styles from '../styles/components/DataHandler.module.css'
 import { Button } from '@mui/material';
+import { useState } from "react";
 
 const FREE_PAGES = [
     'Support',
@@ -11,7 +12,7 @@ const FREE_PAGES = [
 export default function DataHandler(props) {
     const { Component, pageProps } = props
     const { data: session } = useSession()
-    const [pageName, setPageName] = (Component.name)
+    const [pageName, setPageName] = useState(Component.name)
 
     return (
         <div>
