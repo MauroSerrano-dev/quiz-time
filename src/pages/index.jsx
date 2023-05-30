@@ -15,29 +15,31 @@ export default function Index(props) {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3, duration: 0.5, easings: ["easeInOut"] }}
       >
-        <section className={styles.section} id={styles.one}>
-          <div id={styles.crowdContainer}>
-            <img src='/crowd.jpg' id={styles.crowdImg} />
-            <img src='/tela.jpg' id={styles.telaImg} />
+        <div>
+          <div className={styles.section} id={styles.one}>
+            <div id={styles.crowdContainer}>
+              <img src='/crowd.jpg' id={styles.crowdImg} />
+              <img src='/tela.jpg' id={styles.telaImg} />
+            </div>
           </div>
-        </section>
-        <section className={styles.section}>
-          <div id={styles.demoTitle}>
-            <h1>Crowd de palestra com um quiz mudando randomicamente o design e perguntas e respostas</h1>
-            <p>Transforme suas apresentações mais interativas e divertidas, seja lembrado, seja marcante</p>
+          <div className={styles.section}>
+            <div id={styles.demoTitle}>
+              <h1>Crowd de palestra com um quiz mudando randomicamente o design e perguntas e respostas</h1>
+              <p>Transforme suas apresentações mais interativas e divertidas, seja lembrado, seja marcante</p>
+            </div>
+            <img src='/pc-cel.png' id={styles.pcCelImg} />
           </div>
-          <img src='/pc-cel.png' id={styles.pcCelImg} />
-        </section>
-        <section className={styles.section}>
-          <div id={styles.demoTitle}>
-            <h1>Recolha os dados do seu publico, os resultados, nomes, emails</h1>
+          <div className={styles.section}>
+            <div id={styles.demoTitle}>
+              <h1>Recolha os dados do seu publico, os resultados, nomes, emails</h1>
+            </div>
           </div>
-        </section>
-        <section className={styles.section}>
-          <div id={styles.demoTitle}>
-            <h1>Capture emails do seu público 24/7</h1>
+          <div className={styles.section}>
+            <div id={styles.demoTitle}>
+              <h1>Capture emails do seu público 24/7</h1>
+            </div>
           </div>
-        </section>
+        </div>
       </motion.div>
     </div >
   );
