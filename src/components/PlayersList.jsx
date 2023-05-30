@@ -12,13 +12,32 @@ const LIST_SIZE = {
     gap: 8,
 }
 
+const container = {
+    hidden: { opacity: 1, scale: 0 },
+    visible: {
+        opacity: 1,
+        scale: 1,
+        transition: {
+            delay: 0,
+            delayChildren: 0.25,
+            duration: 0.2,
+        }
+    }
+}
+
 export default function PlayersList(props) {
     const { players, totalQuestions } = props
     const [open, setOpen] = useState(false)
     const [items, setItems] = useState(players)
+    const [showPlayers, setShowPlayers] = useState(false)
 
-    function switchOpen() {
+    function handleTabClick() {
         setOpen(prev => !prev)
+        if (!showPlayers)
+            setShowPlayers(prev => !prev)
+        else {
+            setTimeout(() => setShowPlayers(prev => !prev), 205)
+        }
     }
 
     const styleOpen = {
@@ -45,13 +64,19 @@ export default function PlayersList(props) {
         >
             <div
                 id={styles.tabContainer}
-                onClick={switchOpen}
+                onClick={handleTabClick}
                 style={open ? styleOpen : styleClose}
             >
                 <p>Players</p>
             </div>
             <div id={styles.playersContainer} style={{ paddingTop: `${LIST_SIZE.paddingTop}px` }}>
-                <div id={styles.players} style={{ gap: `${LIST_SIZE.gap}px` }}>
+                <motion.div
+                    id={styles.players}
+                    style={{ gap: `${LIST_SIZE.gap}px` }}
+                    variants={container}
+                    initial="hidden"
+                    animate={showPlayers ? "visible" : "hidden"}
+                >
                     {items.map((player, i) =>
                         <PlayerCard
                             key={`Player: ${i}`}
@@ -66,7 +91,7 @@ export default function PlayersList(props) {
                     {players.map((player, i) =>
                         <div key={`Placer ${i}`} style={{ width: `${ITEM_SIZE.width}px`, height: `${ITEM_SIZE.height}px` }}></div>
                     )}
-                </div>
+                </motion.div>
             </div>
         </div>
     )

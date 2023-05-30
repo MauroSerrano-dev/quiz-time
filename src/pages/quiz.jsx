@@ -131,8 +131,11 @@ export default withRouter((props) => {
             if (startRoom.code) {
                 if (startRoom.players.some(player => player.user.email === session.user.email)) {
                     setJoined(true)
-                    if (startRoom.players.filter(player => player.user.email === session.user.email)[0].answers.some(answer => answer.questionIndex === startRoom.currentQuestion) && startRoom.control)
-                        setOptionSelected(startRoom.players.filter(player => player.user.email === session.user.email)[0].answers.filter(answer => answer.questionIndex === startRoom.currentQuestion)[0].optionIndex)
+                    if (startRoom.players.filter(player => player.user.email === session.user.email)[0].answers
+                        .some(answer => answer.questionIndex === startRoom.currentQuestion) && startRoom.control)
+                        setOptionSelected(startRoom.players
+                            .filter(player => player.user.email === session.user.email)[0].answers
+                            .filter(answer => answer.questionIndex === startRoom.currentQuestion)[0].optionIndex)
                 }
                 setRoom(startRoom)
             }
@@ -140,13 +143,12 @@ export default withRouter((props) => {
 
         socket.on(`updateFieldsRoom${code}`, (att) => {
             const { roomAtt, fields } = att
-            console.log('dsadadsadas', roomAtt)
-            console.log(fields)
+            console.log('roomAtt', roomAtt)
+            console.log('fields', fields)
             if (fields.state === 'active') {
                 setTimeout(() =>
                     setQuestionTransition(false), TRANSITION_DURATION)
             }
-            const firstKey = Object.keys(fields)[0]
             if (roomAtt.players.every(player => player.user.email !== session.user.email))
                 setJoined(false)
             if (fields.currentQuestion !== undefined) {
@@ -157,7 +159,7 @@ export default withRouter((props) => {
                 }, TRANSITION_DURATION)
             }
             else {
-                if (firstKey.includes('players') && firstKey !== 'players' && fields[firstKey].user.email === session.user.email)
+                if (Object.keys(fields).some(key => key.includes('players.') && fields[key].user.email === session.user.email))
                     turnOffTransition()
                 setRoom(roomAtt)
             }
@@ -217,7 +219,14 @@ export default withRouter((props) => {
                     currentQuestion: showResult ? player.currentQuestion : player.currentQuestion + 1,
                     state: showResult ? 'result' : player.state,
                     lastAnswerDate: new Date(),
-                    answers: [...player.answers, { ...quiz.questions[player.currentQuestion].options[option], questionIndex: player.currentQuestion, optionIndex: option }]
+                    answers: [
+                        ...player.answers,
+                        {
+                            ...quiz.questions[player.currentQuestion].options[option],
+                            questionIndex: player.currentQuestion,
+                            optionIndex: option
+                        }
+                    ]
                 }, code
             )
         }, TRANSITION_DURATION * 2.1 + 400)

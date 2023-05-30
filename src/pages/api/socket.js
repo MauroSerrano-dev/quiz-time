@@ -56,6 +56,14 @@ export default function SocketHandler(req, res) {
 
     // Listen for "updateRoom" events emitted by the client
     socket.on("updateRoom", (updatedRoom) => {
+      delete updatedRoom.expireAt
+      // Verifique se o campo 'expireAt' existe no documento
+      const newExpireAt = new Date()
+      newExpireAt.setSeconds(newExpireAt.getSeconds() + 1)
+
+      // Atualize o campo 'expireAt' com o novo tempo de expiração
+      updatedRoom.expireAt = newExpireAt;
+
       delete updatedRoom._id
       // Obtenha uma referência à coleção "rooms" do MongoDB
       roomCollection.updateOne(
@@ -74,11 +82,14 @@ export default function SocketHandler(req, res) {
 
     // Listen for "updateAnswer" events emitted by the client
     socket.on("updateAnswer", (player, code) => {
+      const newExpireAt = new Date()
+      newExpireAt.setSeconds(newExpireAt.getSeconds() + 86400)
       roomCollection.updateOne(
         { code: code },
         {
           $set: {
-            'players.$[element]': player
+            'players.$[element]': player,
+            expireAt: newExpireAt
           }
         },
         {
@@ -97,10 +108,17 @@ export default function SocketHandler(req, res) {
 
     // Listen for "joinRoom" events emitted by the client
     socket.on("joinRoom", (player, code) => {
+      const newExpireAt = new Date()
+      newExpireAt.setSeconds(newExpireAt.getSeconds() + 86400)
       roomCollection.updateOne(
         { code: code },
         {
-          $push: { players: player }
+          $push: {
+            players: player
+          },
+          $set: {
+            expireAt: newExpireAt
+          }
         }
       )
         .then(() => {
