@@ -44,8 +44,14 @@
     pointer-events: none;
 }
 
-#demoTitle {
+#halfSection {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
     width: 50%;
+    height: 100%;
 }
 
 #telaImg {
@@ -64,6 +70,31 @@
     bottom: -39.5px;
     left: -70px;
     pointer-events: none;
+}
+
+#tvContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    position: relative;
+    width: 550px;
+    height: 550px;
+}
+
+#tvImg {
+    position: relative;
+    left: 0%;
+    bottom: 0%;
+    width: 100%;
+}
+
+#insideTvImg {
+    position: absolute;
+    left: 20%;
+    bottom: 33%;
+    width: 67.5%;
 }
 
 /* Mobile, Tablet and Smaller Desktop*/
