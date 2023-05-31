@@ -227,7 +227,7 @@ export default function Lobby(props) {
                             body={
                                 <div id={styles.bodyContainer}>
                                     <FormControl sx={{ height: '15%', width: '80%' }}>
-                                        <TextField value={newRoom.name} onChange={handleNewCodeChange} id="outlined-basic" label="Nome" variant='outlined' size='small' autoComplete='off' />
+                                        <TextField value={newRoom.name} onChange={handleNewCodeChange} label="Nome" variant='outlined' size='small' autoComplete='off' />
                                     </FormControl>
                                     <FormControl sx={{ height: '15%', width: '80%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
                                         <FormControlLabel
@@ -246,7 +246,7 @@ export default function Lobby(props) {
                                             transition={{ times: [0, 0.8, 1], duration: 1, ease: newRoom.private ? [.62, -0.18, .32, 1.8] : [.52, .03, .24, 1.06] }}
                                         >
                                             <FormControl sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
-                                                <TextField value={newRoom.password} id="outlined-basic" label="Senha" variant='outlined' size='small' autoComplete='off' />
+                                                <TextField value={newRoom.password} label="Senha" variant='outlined' size='small' autoComplete='off' />
                                             </FormControl>
                                         </motion.div>
                                     </FormControl>

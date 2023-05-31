@@ -68,13 +68,15 @@ export default withRouter((props) => {
         return () => {
             window.removeEventListener('resize', checkIsMobile);
         }
-    }, []);
-
+    }, [])
 
     useEffect(() => {
-        if (!room) {
+        if (!room && code && session) {
             socketInitializer()
         }
+    }, [session, code])
+
+    useEffect(() => {
         if (room && !quiz) {
             getQuiz()
         }
@@ -98,7 +100,6 @@ export default withRouter((props) => {
     }, [room, quiz])
 
     useEffect(() => {
-        console.log(room)
         if (room && room.private && !joined && session.user.email !== room.owner)
             lockRoom()
     }, [room])
@@ -124,12 +125,11 @@ export default withRouter((props) => {
             method: 'GET'
         }
         await fetch("/api/socket", options)
-
+        console.log('code', code)
         socket = io({ query: { code: code, } });
 
         socket.on("getData", (startRoom) => {
-            console.log('startRoom', startRoom)
-            if (startRoom.code) {
+            if (startRoom) {
                 if (startRoom.players.some(player => player.user.email === session.user.email)) {
                     setJoined(true)
                     if (startRoom.players.filter(player => player.user.email === session.user.email)[0].answers

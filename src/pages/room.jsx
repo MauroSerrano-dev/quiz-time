@@ -16,16 +16,16 @@ export default withRouter((props) => {
     const [room, setRoom] = useState()
     const [disableShow, setDisableShow] = useState(false)
     const [activeShow, setActiveShow] = useState(false)
-    const [showContent, setShowContent] = useState(false)
+    const [noRoom, setNoRoom] = useState(false)
     const [quiz, setQuiz] = useState()
 
     const { code } = props.router.query
 
     useEffect(() => {
-        if (!room) {
+        if (!room && code && session) {
             socketInitializer()
         }
-    }, [session])
+    }, [session, code])
 
     useEffect(() => {
         if (room && !quiz) {
@@ -42,12 +42,15 @@ export default withRouter((props) => {
         socket = io({ query: { code: code } })
 
         socket.on("getData", (room) => {
-            if (room.code) {
+            console.log('getData', room)
+            if (room) {
                 setRoom(room)
                 setDisableShow(room.state === 'disable')
                 setActiveShow(room.state === 'active')
             }
-            setShowContent(true)
+            else {
+                setNoRoom(true)
+            }
         })
 
         socket.on(`updateFieldsRoom${code}`, (att) => {
@@ -77,12 +80,12 @@ export default withRouter((props) => {
                 ? <NoSessionPage signIn={signIn} />
                 : <div id={styles.container}>
                     <main>
-                        {!room && showContent &&
+                        {!room && noRoom &&
                             <div>
                                 <h1 id={styles.roomName}>Esta sala não existe</h1>
                             </div>
                         }
-                        {room && Object.keys(room).length > 0 &&
+                        {room &&
                             <div id={styles.roomContainer}>
                                 <h1 id={styles.roomName}>Essa é a sala: {room.name}</h1>
                                 {session.user.email === room.owner &&

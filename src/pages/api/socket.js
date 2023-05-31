@@ -42,17 +42,18 @@ export default function SocketHandler(req, res) {
   res.socket.server.io = io;
 
   io.on("connection", (socket) => {
-    console.log('Socket.io client connected');
-    const roomCollection = mongoose.connection.collection("rooms");
+    console.log('Socket.io client connected')
+    const roomCollection = mongoose.connection.collection("rooms")
+
     // Get the current value of "active" from the process.env.COLL_ROOMS collection
     mongoose.connection.collection(process.env.COLL_ROOMS).findOne({ code: socket.handshake.query.code })
       .then((result) => {
-        const room = { ...result };
-        socket.emit("getData", room);
+        const room = result ? { ...result } : null
+        socket.emit("getData", room)
       })
       .catch((err) => {
-        console.log('Error getting initial data:', err);
-      });
+        console.log('Error getting initial data:', err)
+      })
 
     // Listen for "updateRoom" events emitted by the client
     socket.on("updateRoom", (updatedRoom) => {

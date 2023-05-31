@@ -19,10 +19,10 @@ export default withRouter((props) => {
     const { code } = props.router.query
 
     useEffect(() => {
-        if (!room) {
+        if (!room && code && session) {
             socketInitializer()
         }
-    }, [session])
+    }, [session, code])
 
     useEffect(() => {
         if (room && !quiz) {
@@ -39,16 +39,13 @@ export default withRouter((props) => {
         socket = io({ query: { code: code } })
 
         socket.on("getData", (room) => {
-            if (room.code) {
-                setRoom(room)
-                setDisableShow(room.state === 'disable')
-                setActiveShow(room.state === 'active')
-            }
+            setRoom(room)
+            setDisableShow(room.state === 'disable')
+            setActiveShow(room.state === 'active')
         })
 
         socket.on(`updateFieldsRoom${code}`, (att) => {
             const { roomAtt } = att
-            console.log(roomAtt)
             setDisableShow(roomAtt.state === 'disable')
             setActiveShow(roomAtt.state === 'active')
             setRoom(roomAtt)
