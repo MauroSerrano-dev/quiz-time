@@ -15,7 +15,6 @@ export default function Index(props) {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.3, duration: 1, ease: [.48, 0, .15, 1.01] }}
       >
-
         <div id={styles.sectionsContainer}>
           <div className={styles.section} id={styles.one}>
             <div id={styles.crowdContainer}>
