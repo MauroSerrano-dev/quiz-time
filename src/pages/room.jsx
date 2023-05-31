@@ -42,7 +42,6 @@ export default withRouter((props) => {
         socket = io({ query: { code: code } })
 
         socket.on("getData", (room) => {
-            console.log('getData', room)
             if (room) {
                 setRoom(room)
                 setDisableShow(room.state === 'disable')
@@ -55,7 +54,6 @@ export default withRouter((props) => {
 
         socket.on(`updateFieldsRoom${code}`, (att) => {
             const { roomAtt } = att
-            console.log(roomAtt)
             setDisableShow(roomAtt.state === 'disable')
             setActiveShow(roomAtt.state === 'active')
             setRoom(roomAtt)

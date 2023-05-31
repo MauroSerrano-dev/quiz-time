@@ -23,7 +23,7 @@ export default function Index(props) {
             </div>
           </div>
           <div className={styles.section}>
-            <div id={styles.halfSection}>
+            <div id={styles.halfSection} className={styles.textContainer}>
               <h1>Crowd de palestra com um quiz mudando randomicamente o design e perguntas e respostas</h1>
               <p>Transforme suas apresentações mais interativas e divertidas, seja lembrado, seja marcante</p>
             </div>
@@ -36,12 +36,12 @@ export default function Index(props) {
                 <img src='/tv-mobile.png' id={styles.tvImg} />
               </div>
             </div>
-            <div id={styles.halfSection}>
+            <div id={styles.halfSection} className={styles.textContainer}>
               <h1>Recolha os dados do seu publico, os resultados, nomes, emails</h1>
             </div>
           </div>
           <div className={styles.section}>
-            <div id={styles.halfSection}>
+            <div id={styles.halfSection} className={styles.textContainer}>
               <h1>Capture emails do seu público 24/7</h1>
             </div>
           </div>

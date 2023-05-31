@@ -9,7 +9,6 @@ export default async function handler(req, res) {
 
     else if (req.method === "POST") {
         const newRoom = req.body
-        console.log('absurdo', newRoom)
         const id = await addRoom(newRoom);
         res.status(201).json({
             message: 'Room Criada com Sucesso!',

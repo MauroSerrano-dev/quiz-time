@@ -3,7 +3,7 @@ import Router from "next/router";
 import { useEffect, useState } from "react";
 import Modal from "../components/Modal";
 import { validateCodeCharacters, validateCodeLength, containsAccents } from "../../utils/validations";
-import { showInfoToast } from "../../utils/toasts";
+import { showInfoToast, showErrorToast } from "../../utils/toasts";
 import { motion } from "framer-motion"
 import Switch from '@mui/material/Switch';
 import { TextField, Button, Select, FormControlLabel, FormGroup, MenuItem, OutlinedInput, InputLabel, FormControl, Box } from '@mui/material';
@@ -58,11 +58,11 @@ export default function Lobby(props) {
     const { session, signIn } = props
     const [newRoom, setNewRoom] = useState(INICIAL_ROOM)
     const [searchCode, setSearchCode] = useState('')
+    const [disableCreateNewRoom, setDisableCreateNewRoom] = useState(false)
     const [newCode, setNewCode] = useState('')
     const [requestState, setRequestState] = useState('denied')
     const [showModal, setShowModal] = useState(false)
     const [showModalOpacity, setShowModalOpacity] = useState(false)
-    const [disableCreateNewRoom, setDisableCreateNewRoom] = useState(false)
     const [passwordInputOpen, setPasswordInputOpen] = useState(false)
     const [firstClickPrivite, setFirstClickPrivite] = useState(false)
     const [isSmall, setIsSmall] = useState()
@@ -114,7 +114,7 @@ export default function Lobby(props) {
             const options = {
                 method: 'GET',
                 headers: { "code": convertToCode(searchCode) },
-            };
+            }
             await fetch("/api/rooms", options)
                 .then(response => response.json())
                 .then(response => {
@@ -123,7 +123,7 @@ export default function Lobby(props) {
                     else
                         showInfoToast("Esta sala não existe.", 3000)
                 })
-                .catch(err => console.error(err));
+                .catch(err => console.error(err))
         }
     }
 
@@ -150,6 +150,20 @@ export default function Lobby(props) {
         }, 300)
     }
 
+    async function getRoom(code) {
+        let result
+        const options = {
+            method: 'GET',
+            headers: { "code": code },
+        }
+        await fetch("/api/rooms", options)
+            .then(response => response.json())
+            .then(response => { result = response.room })
+            .catch(err => console.error(err))
+        console.log(result)
+        return result
+    }
+
     async function createNewRoom() {
         if (newRoom.quizInfo.name === '') {
             showInfoToast("Nenhum Quiz Selecitonado.", 3000)
@@ -172,6 +186,10 @@ export default function Lobby(props) {
             return
         }
         setDisableCreateNewRoom(true)
+        if (await getRoom(newRoom.code)) {
+            showErrorToast("Sala já existente, por favor escolha outro nome.", 5000)
+            return
+        }
         const options = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

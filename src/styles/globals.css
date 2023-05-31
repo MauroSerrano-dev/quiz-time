@@ -54,9 +54,7 @@ body {
 }
 
 body {
-  background: var(--body-background);
-  background-color: var(--body-background-color);
-  background-size: var(--body-background-size);
+  background: linear-gradient(165deg, rgb(28, 34, 44), rgb(52, 63, 82));
   -webkit-tap-highlight-color: transparent;
 }
 
