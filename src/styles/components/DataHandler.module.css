@@ -1,11 +1,15 @@
 #componentContainer {
-    padding-top: 80px;
-    transition: padding-top 650ms ease-in-out;
+    margin-top: 70px;
+    height: calc(100vh - 70px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: margin-top 650ms ease-in-out;
 }
 
 /* Mobile, Tablet and Smaller Desktop*/
 @media (max-width: 1120px) {
     #componentContainer {
-        padding-top: 60px;
+        margin-top: 60px;
+        height: calc(100vh - 60px);
     }
 }

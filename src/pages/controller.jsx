@@ -1,5 +1,4 @@
 import { withRouter } from 'next/router'
-import { QRCode } from 'react-qrcode-logo';
 import styles from '../styles/controller.module.css'
 import io from "socket.io-client";
 import { useEffect, useState } from 'react';

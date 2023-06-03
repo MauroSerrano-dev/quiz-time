@@ -1,7 +1,8 @@
 #container {
     position: absolute;
     display: flex;
-    height: 80px;
+    top: 0px;
+    height: 70px;
     width: 100%;
     background-color: var(--body-background-color);
     transition: all 650ms ease-in-out;

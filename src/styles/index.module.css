@@ -6,10 +6,8 @@
     text-align: center;
 
     position: relative;
-    height: calc(100vh - 80px);
+    height: 100%;
     width: 100vw;
-    overflow-y: auto;
-    overflow-x: hidden;
     --text-color: var(--text-white)
 }
 
@@ -110,6 +108,10 @@
     margin-right: 150px;
 }
 
+.textContainer h1{
+    color: var(--primary);
+}
+
 /* Mobile */
 @media (max-width: 700px) {
     #tvContainer {
@@ -128,13 +130,5 @@
     }
     #pcCelImg {
         width: 240px;
-    }
-}
-
-
-/* Mobile, Tablet and Smaller Desktop*/
-@media (max-width: 1120px) {
-    #sectionsContainer {
-        height: calc(100vh - 60px);
     }
 }

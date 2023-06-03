@@ -1,9 +1,6 @@
 import { useSession, signIn, signOut } from "next-auth/react"
 import Navbar from './Navbar'
 import styles from '../styles/components/DataHandler.module.css'
-import { Button } from '@mui/material';
-import { useState } from "react";
-import NoSessionPage from "./NoSessionPage";
 
 export default function DataHandler(props) {
     const { Component, pageProps } = props

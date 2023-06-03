@@ -65,7 +65,7 @@ export default function Modal(props) {
                         width: isMobile ? widthMobile : (isSmall ? widthSmall : width),
                         height: isMobile ? heightMobile : (isSmall ? heightSmall : height),
                     }}
-                    transition={{ duration: showModalOpacity ? 0.5 : 0.3, ease: [.62, -0.18, .32, 1.17] }}
+                    transition={{ duration: showModalOpacity ? 0.5 : 0.3, ease: [.37, .01, 0, 1.02] }}
                 >
                     <div id={styles.content}>
                         <div id={styles.head}>{head}</div>

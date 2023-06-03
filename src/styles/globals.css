@@ -13,7 +13,8 @@
   --text-white: #e5e5e5;
   --text-color: var(--text-black);
   --global-modal-background: rgba(0, 0, 0, 0.3);
-  --logo-color: #009fda
+  --logo-color: #009fda;
+  --primary: #009fda;
 }
 
 /* @media (prefers-color-scheme: light) {
@@ -69,7 +70,6 @@ main {
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding-top: 2rem;
 }
 
 p,
