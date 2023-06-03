@@ -25,7 +25,7 @@ export default function Navbar(props) {
                 id={styles.bodyContainer}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.8, duration: 0.8, ease: [.48, 0, .15, 1.01] }}
+                transition={{ delay: 0, duration: 0, ease: [.48, 0, .15, 1.01] }}
             >
                 <div id={styles.leftSide}>
                     {/* <MenuToggle toggle={() => toggleOpen()} /> */}

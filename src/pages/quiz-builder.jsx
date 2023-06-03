@@ -3,10 +3,16 @@ import styles from '../styles/quizBuilder.module.css'
 import { useRouter } from 'next/router';
 import { motion } from "framer-motion"
 import NoSessionPage from '@/components/NoSessionPage';
-import { Button, TextField, IconButton } from '@mui/material';
+import { Button, TextField, IconButton, Step, StepLabel, Stepper } from '@mui/material';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import { styled } from '@mui/material/styles';
+import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
+import SettingsIcon from '@mui/icons-material/Settings';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import VideoLabelIcon from '@mui/icons-material/VideoLabel';
 
 const GAME_MODES = [
     { name: 'Profile' },
@@ -177,6 +183,68 @@ export default function QuizBuilder(props) {
         }))
     }
 
+    const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
+        [`&.${stepConnectorClasses.alternativeLabel}`]: {
+            top: 22,
+        },
+        [`&.${stepConnectorClasses.active}`]: {
+            [`& .${stepConnectorClasses.line}`]: {
+                backgroundImage:
+                    'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
+            },
+        },
+        [`&.${stepConnectorClasses.completed}`]: {
+            [`& .${stepConnectorClasses.line}`]: {
+                backgroundImage:
+                    'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
+            },
+        },
+        [`& .${stepConnectorClasses.line}`]: {
+            height: 3,
+            border: 0,
+            backgroundColor:
+                theme.palette.mode === 'dark' ? theme.palette.grey[800] : '#eaeaf0',
+            borderRadius: 1,
+        },
+    }));
+
+    function ColorlibStepIcon(props) {
+        const { active, completed, className } = props;
+
+        const icons = {
+            1: <GroupAddIcon />,
+            2: <VideoLabelIcon />,
+            3: <SettingsIcon />,
+        };
+
+        return (
+            <ColorlibStepIconRoot ownerState={{ completed, active }} className={className}>
+                {icons[String(props.icon)]}
+            </ColorlibStepIconRoot>
+        );
+    }
+
+    const ColorlibStepIconRoot = styled('div')(({ theme, ownerState }) => ({
+        backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[700] : '#ccc',
+        zIndex: 1,
+        color: '#fff',
+        width: 50,
+        height: 50,
+        display: 'flex',
+        borderRadius: '50%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        ...(ownerState.active && {
+            backgroundImage:
+                'linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)',
+            boxShadow: '0 4px 10px 0 rgba(0,0,0,.25)',
+        }),
+        ...(ownerState.completed && {
+            backgroundImage:
+                'linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)',
+        }),
+    }));
+
     return (
         <div
             id={styles.container}
@@ -199,10 +267,20 @@ export default function QuizBuilder(props) {
                                 )}
                             </div>
                         </div>
-                        : <div id={styles.editorContainer}>
+                        : quiz.mode === 'Profile' &&
+                        <div id={styles.editorContainer}>
                             <div id={styles.editorHead}>
-                                <h3>{quiz.name}</h3>
-                                <input value={quiz.name} onChange={handleNameChange} />
+                                <Stepper alternativeLabel activeStep={0} connector={<ColorlibConnector />}>
+                                    <Step>
+                                        <StepLabel StepIconComponent={ColorlibStepIcon} >{'Passo 1'}</StepLabel>
+                                    </Step>
+                                    <Step>
+                                        <StepLabel StepIconComponent={ColorlibStepIcon} >{'Passo 2'}</StepLabel>
+                                    </Step>
+                                    <Step>
+                                        <StepLabel StepIconComponent={ColorlibStepIcon} >{'Passo 3'}</StepLabel>
+                                    </Step>
+                                </Stepper>
                             </div>
                             <div id={styles.editorBody}>
                                 <DragDropContext onDragEnd={handleDragEnd}>
