@@ -20,7 +20,7 @@
     border-style: dashed;
 }
 
-#gameOption {
+.gameOption {
     width: var(--size);
     height: var(--size);
 
@@ -35,7 +35,7 @@
 
 }
 
-#gameOption h2 {
+.gameOption h2 {
     margin-top: 20%;
     font-size: calc(var(--size) / 7);
 }
@@ -72,7 +72,7 @@
     align-items: center;
     justify-content: flex-start;
     width: 15%;
-    min-width: 150px;
+    min-width: 200px;
     height: 100%;
     border: blue dashed 2px;
     overflow: auto;
@@ -81,24 +81,40 @@
 #slidesContainer {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    width: 100%;
-    gap: 0.5rem;
+    width: 90%;
     padding-top: 1.5rem;
     padding-bottom: 1.5rem;
 }
 
-#slideContainer {
+.slideContainer {
     display: flex;
     width: 90%;
-    height: 150px;
-    background-color: rgba(0, 0, 255, 0.292);
+    height: 140px;
+    background-color: rgba(0, 0, 255, 0.203);
+    margin-bottom: 0.5rem;
+}
+
+.buttonsContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    height: 100%;
+    width: 20%;
+}
+
+.slide {
+    height: 100%;
+    width: 80%;
 }
 
 #addQuestionButton {
-    width: 90%;
+    width: 50%;
     font-size: 13px;
+    line-height: 17px;
 }
 
 #middleContainer {
@@ -109,14 +125,14 @@
 
 #rightContainer {
     width: 15%;
-    min-width: 150px;
+    min-width: 200px;
     height: 100%;
     border: yellow dashed 2px;
 }
 
 /* Enable hover only on non-touch devices */
 @media (hover: hover) and (pointer: fine) {
-    #gameOption {
+    .gameOption {
         cursor: pointer;
     }
 }
