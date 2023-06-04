@@ -272,7 +272,7 @@ const quiz = {
         },
     ],
     results: [
-        { name: result1, texts: [{ ref: 'Preferência Cerebral', value: 'Fazer rápido' }, { ref: 'Preferências Cerebral', value: 'Fazersadsa rápido' }], img: 'shark.jpg', color: '#ABDEE6' },
+        { name: result1, texts: [{ ref: 'Preferência Cerebral', value: 'Fazer rápido' }], img: 'shark.jpg', color: '#ABDEE6' },
         { name: result2, texts: [{ ref: 'Preferência Cerebral', value: 'Fazer junto' }], img: 'cat.jpg', color: '#FFD8BE' },
         { name: result3, texts: [{ ref: 'Preferência Cerebral', value: 'Fazer diferente' }], img: 'eagle.jpg', color: '#FFF7D2' },
         { name: result4, texts: [{ ref: 'Preferência Cerebral', value: 'Fazer certo' }], img: 'wolf.jpg', color: '#CBAACB' },
