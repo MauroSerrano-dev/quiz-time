@@ -13,7 +13,11 @@ const GAME_MODES = [
 
 const INICIAL_QUIZ = {
     name: 'My Quiz Name',
-    results: [],
+    results: [
+        {
+            name: '',
+        }
+    ],
     questions: [
         {
             content: '1',

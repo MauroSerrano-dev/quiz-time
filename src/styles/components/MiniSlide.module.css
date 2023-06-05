@@ -1,0 +1,10 @@
+#container {
+    background-color: var(--global-white);
+    width: 155px;
+    height: 100px;
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}

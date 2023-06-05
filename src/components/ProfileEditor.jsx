@@ -19,6 +19,7 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd'
 import QuizIcon from '@mui/icons-material/Quiz';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import { useState } from 'react'
+import MiniSlide from './MiniSlide'
 
 export default function ProfileEditor(props) {
     const {
@@ -28,20 +29,49 @@ export default function ProfileEditor(props) {
         handleOptionChange,
         handleDuplicateSlide,
         handleDeleteSlide,
-        handleAddQuestion
+        handleAddQuestion,
     } = props
 
     const [step, setStep] = useState(0)
+    const [currentSlide, setCurrentSlide] = useState(0)
 
-
-    function handleDragEnd(result) {
-        if (!result.destination) {
-            return
+    function handleDragEndProfiles(res) {
+        if (res.destination) {
+            if (res.source.index === currentSlide)
+                setCurrentSlide(res.destination.index)
+            else if (res.source.index > currentSlide && res.destination.index <= currentSlide)
+                setCurrentSlide(prev => prev + 1)
+            else if (res.source.index < currentSlide && res.destination.index >= currentSlide)
+                setCurrentSlide(prev => prev - 1)
         }
+        else
+            return
+
+        const results = Array.from(quiz.results)
+        const [reorderedProfiles] = results.splice(res.source.index, 1)
+        results.splice(res.destination.index, 0, reorderedProfiles)
+
+        setQuiz(prev => ({
+            ...prev,
+            results,
+        }))
+    }
+
+    function handleDragEndQuestions(res) {
+        if (res.destination) {
+            if (res.source.index === currentSlide)
+                setCurrentSlide(res.destination.index)
+            else if (res.source.index > currentSlide && res.destination.index <= currentSlide)
+                setCurrentSlide(prev => prev + 1)
+            else if (res.source.index < currentSlide && res.destination.index >= currentSlide)
+                setCurrentSlide(prev => prev - 1)
+        }
+        else
+            return
 
         const questions = Array.from(quiz.questions)
-        const [reorderedQuestion] = questions.splice(result.source.index, 1)
-        questions.splice(result.destination.index, 0, reorderedQuestion)
+        const [reorderedQuestion] = questions.splice(res.source.index, 1)
+        questions.splice(res.destination.index, 0, reorderedQuestion)
 
         setQuiz(prev => ({
             ...prev,
@@ -64,6 +94,29 @@ export default function ProfileEditor(props) {
                 {icons[String(props.icon)]}
             </ColorlibStepIconRoot>
         )
+    }
+
+    function handleAddProfile() {
+        setQuiz(prev => ({ ...prev, results: [...prev.results, { name: '' }] }))
+        setCurrentSlide(quiz.results.length)
+    }
+
+    function handleDeleteProfile(event, index) {
+        event.stopPropagation()
+        if (currentSlide === quiz.results.length - 1)
+            setCurrentSlide(quiz.results.length - 2)
+        setQuiz(prev => ({ ...prev, results: prev.results.filter((result, i) => index !== i) }))
+    }
+
+    function handleDuplicateProfile(event, index) {
+        event.stopPropagation()
+        setQuiz((prev, i) => ({
+            ...prev,
+            results: prev.results.slice(0, index + 1)
+                .concat(prev.results[index])
+                .concat(prev.results.slice(index + 1, prev.results.length))
+
+        }))
     }
 
     const ColorlibStepIconRoot = styled('div')(({ theme, ownerState }) => ({
@@ -114,7 +167,22 @@ export default function ProfileEditor(props) {
     }))
 
     function handleChangeStep(newStep) {
+        setCurrentSlide(0)
         setStep(newStep)
+    }
+
+    function changeCurrentSlide(index) {
+        setCurrentSlide(index)
+    }
+
+    function handleProfileNameChange(event) {
+        setQuiz(prev => ({
+            ...prev,
+            results: prev.results.map((result, i) =>
+                currentSlide === i
+                    ? { name: event.target.value }
+                    : result)
+        }))
     }
 
     return (
@@ -136,7 +204,7 @@ export default function ProfileEditor(props) {
                 </Stepper>
             </div>
             <div id={styles.editorBody}>
-                <DragDropContext onDragEnd={handleDragEnd}>
+                <DragDropContext onDragEnd={step === 0 || step === 2 ? handleDragEndProfiles : handleDragEndQuestions}>
                     <div id={styles.leftContainer}>
                         <Droppable droppableId="slides">
                             {(provided, snapshot) => (
@@ -149,11 +217,24 @@ export default function ProfileEditor(props) {
                                         <Draggable key={i} draggableId={`slide-${i}`} index={i}>
                                             {(provided, snapshot) => (
                                                 <div
-                                                    className={styles.slideContainer}
+                                                    className={`${currentSlide === i && styles.currentSlide} ${styles.slideContainer}`}
+                                                    onClick={() => changeCurrentSlide(i)}
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
                                                 >
+                                                    <div className={styles.buttonsContainer} >
+                                                        <IconButton onClick={(e) => handleDuplicateProfile(e, i)} size='small' aria-label="copy">
+                                                            <ContentCopyIcon />
+                                                        </IconButton>
+                                                        <IconButton onClick={(e) => handleDeleteProfile(e, i)} size='small' aria-label="delete">
+                                                            <DeleteForeverIcon />
+                                                        </IconButton>
+                                                    </div>
+                                                    <div className={styles.slide}>
+                                                        <h4>{i + 1}</h4>
+                                                        <MiniSlide name={result.name} />
+                                                    </div>
                                                 </div>
                                             )}
                                         </Draggable>
@@ -162,17 +243,18 @@ export default function ProfileEditor(props) {
                                         <Draggable key={i} draggableId={`slide-${i}`} index={i}>
                                             {(provided, snapshot) => (
                                                 <div
-                                                    className={styles.slideContainer}
+                                                    className={`${currentSlide === i && styles.currentSlide} ${styles.slideContainer}`}
+                                                    onClick={() => changeCurrentSlide(i)}
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
                                                 >
                                                     <div className={styles.buttonsContainer} >
-                                                        <IconButton onClick={() => handleDeleteSlide(i)} size='small' aria-label="delete">
-                                                            <DeleteForeverIcon />
-                                                        </IconButton>
-                                                        <IconButton onClick={() => handleDuplicateSlide(i)} size='small' aria-label="copy">
+                                                        <IconButton onClick={(e) => handleDuplicateSlide(e, i)} size='small' aria-label="copy">
                                                             <ContentCopyIcon />
+                                                        </IconButton>
+                                                        <IconButton onClick={(e) => handleDeleteSlide(e, i)} size='small' aria-label="delete">
+                                                            <DeleteForeverIcon />
                                                         </IconButton>
                                                     </div>
                                                     <div className={styles.slide}>
@@ -190,20 +272,46 @@ export default function ProfileEditor(props) {
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
-                                                >  
+                                                >
                                                 </div>
                                             )}
                                         </Draggable>
                                     )}
                                     {provided.placeholder}
-                                    <Button id={styles.addQuestionButton} onClick={handleAddQuestion} variant='contained' >Adicionar Pergunta</Button>
+                                    {step === 0 &&
+                                        <Button id={styles.addProfileButton} onClick={handleAddProfile} variant='contained' >Adicionar Perfil</Button>
+                                    }
+                                    {step === 1 &&
+                                        <Button id={styles.addQuestionButton} onClick={handleAddQuestion} variant='contained' >Adicionar Pergunta</Button>
+                                    }
                                 </div>
                             )}
                         </Droppable>
                     </div>
                 </DragDropContext>
                 <div id={styles.middleContainer}>
-                    <TextField onChange={handleQuestionChange} variant='filled' autoComplete='off' />
+                    {step === 0 && quiz.results.length > 0 &&
+                        <div>
+                            <TextField
+                                value={quiz.results[currentSlide].name}
+                                label="Profile Name"
+                                onChange={handleProfileNameChange}
+                                variant='filled'
+                                autoComplete='off'
+                            />
+                        </div>
+                    }
+                    {step === 1 &&
+                        <div>
+                            <TextField
+                                value={quiz.questions[currentSlide].content}
+                                label="Profile Name"
+                                onChange={handleQuestionChange}
+                                variant='filled'
+                                autoComplete='off'
+                            />
+                        </div>
+                    }
                 </div>
                 <div id={styles.rightContainer}>
                 </div>
