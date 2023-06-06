@@ -113,6 +113,11 @@
 }
 
 .uploadImg {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
     position: absolute;
     height: 100%;
     width: 100%;
@@ -136,6 +141,9 @@
 
 .uploadImg::-webkit-file-upload-button {
     cursor: pointer;
+    position: absolute;
+    left: 34%;
+    bottom: 75%;
 }
 
 .uploadImg::-ms-browse {
@@ -143,6 +151,10 @@
 }
 
 .uploadImgInside::-webkit-file-upload-button {
+    cursor: pointer;
+    position: absolute;
+    left: -160%;
+    bottom: 200%;
     cursor: pointer;
 }
 

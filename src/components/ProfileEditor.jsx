@@ -33,6 +33,7 @@ export default function ProfileEditor(props) {
     const [step, setStep] = useState(0)
     const [currentSlide, setCurrentSlide] = useState(0)
     const [imgState, setImgState] = useState(false)
+    const [profileColor, setProfileColor] = useState('#ffffff')
 
     function handleAddQuestion() {
         setQuiz(prev => ({
@@ -232,13 +233,29 @@ export default function ProfileEditor(props) {
     }
 
     function handleColorChange(event) {
-        setQuiz(prev => ({
-            ...prev,
-            results: prev.results.map((result, i) =>
-                currentSlide === i
-                    ? { ...result, color: event }
-                    : result)
-        }))
+        setProfileColor(typeof event === 'string' ? event : event.target.value)
+
+        if (typeof event === 'string') {
+            setQuiz(prev => ({
+                ...prev,
+                results: prev.results.map((result, i) =>
+                    currentSlide === i
+                        ? { ...result, color: event }
+                        : result)
+            }))
+        }
+        else {
+            const regex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3,4})$/;
+            if (regex.test(event.target.value)) {
+                setQuiz(prev => ({
+                    ...prev,
+                    results: prev.results.map((result, i) =>
+                        currentSlide === i
+                            ? { ...result, color: event.target.value }
+                            : result)
+                }))
+            }
+        }
     }
 
     return (
@@ -296,12 +313,12 @@ export default function ProfileEditor(props) {
                                                         <h4>{i + 1}</h4>
                                                         <div className={styles.slideBoard} style={{ backgroundColor: quiz.results[i].color }}>
                                                             {quiz.results[i].img.content !== '' &&
-                                                            <div className={styles.slideImgContainer}>
-                                                                <img
-                                                                    style={imgState ? { height: 'auto', width: '100%' } : { height: '100%', width: 'auto' }}
-                                                                    src={quiz.results[i].img.content}
-                                                                />
-                                                            </div>
+                                                                <div className={styles.slideImgContainer}>
+                                                                    <img
+                                                                        style={imgState ? { height: 'auto', width: '100%' } : { height: '100%', width: 'auto' }}
+                                                                        src={quiz.results[i].img.content}
+                                                                    />
+                                                                </div>
                                                             }
                                                             <h2>{result.name}</h2>
                                                         </div>
@@ -398,10 +415,11 @@ export default function ProfileEditor(props) {
                             <HexColorPicker
                                 id={styles.colorPicker}
                                 onChange={handleColorChange}
-                                color={quiz.results[currentSlide].color}
+                                color={profileColor}
                             />
                             <TextField
-                                value={quiz.results[currentSlide].color}
+                                value={profileColor}
+                                onChange={handleColorChange}
                                 variant='standard'
                                 sx={{ width: '60%', height: '200px' }}
                                 autoComplete='off'
