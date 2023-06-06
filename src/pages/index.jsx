@@ -11,8 +11,8 @@ export default function Index(props) {
       </Head>
       <motion.div
         id={styles.container}
-        initial={{ opacity: 0, scale: 1.5 }}
-        animate={{ opacity: 1, scale: 1 }}
+        initial={{ opacity: 0, scale: 1.5, y: 250 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ delay: 0.3, duration: 1, ease: [.48, 0, .15, 1.01] }}
       >
         <div id={styles.sectionsContainer}>

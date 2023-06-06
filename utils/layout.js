@@ -40,7 +40,7 @@ function insertLayout(item, results, allResults, radarData) {
                                 key={`Result: ${i}`}
                             >
                                 <div className={styles.resultImgContainer}>
-                                    <img src={result.img} alt={result.img.split('.')[0]} title={result.img.split('.')[0]} />
+                                    <img src={result.img.content} alt={result.img.name} title={result.img.name} />
                                 </div>
                                 <h2>{result.name}</h2>
                             </div>

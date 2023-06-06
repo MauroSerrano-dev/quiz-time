@@ -124,6 +124,11 @@ section {
   align-items: center;
 }
 
+.size100 {
+  height: 100%;
+  width: 100%;
+}
+
 .flex-start {
   display: flex;
   flex-direction: column;

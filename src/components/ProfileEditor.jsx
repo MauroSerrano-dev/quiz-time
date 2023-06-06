@@ -10,6 +10,9 @@ import {
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { styled } from '@mui/material/styles'
 import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector'
+import React from 'react';
+import { HexColorPicker } from "react-colorful"
+import { motion } from "framer-motion"
 
 // ICONS
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
@@ -20,20 +23,40 @@ import QuizIcon from '@mui/icons-material/Quiz';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import { useState } from 'react'
 import MiniSlide from './MiniSlide'
+import { showInfoToast } from '../../utils/toasts'
+import FileInput from './FileInput'
+
 
 export default function ProfileEditor(props) {
-    const {
-        quiz,
-        setQuiz,
-        handleQuestionChange,
-        handleOptionChange,
-        handleDuplicateSlide,
-        handleDeleteSlide,
-        handleAddQuestion,
-    } = props
+    const { quiz, setQuiz } = props
 
     const [step, setStep] = useState(0)
     const [currentSlide, setCurrentSlide] = useState(0)
+    const [imgState, setImgState] = useState(false)
+
+    function handleAddQuestion() {
+        setQuiz(prev => ({
+            ...prev,
+            questions: [...prev.questions, INICIAL_QUIZ.questions[0]]
+        }))
+    }
+
+    function handleDeleteSlide(index) {
+        setQuiz((prev, i) => ({
+            ...prev,
+            questions: prev.questions.filter((question, i) => i != index)
+        }))
+    }
+
+    function handleDuplicateSlide(index) {
+        setQuiz((prev, i) => ({
+            ...prev,
+            questions: prev.questions.slice(0, index + 1)
+                .concat(prev.questions[index])
+                .concat(prev.questions.slice(index + 1, prev.questions.length))
+
+        }))
+    }
 
     function handleDragEndProfiles(res) {
         if (res.destination) {
@@ -97,8 +120,21 @@ export default function ProfileEditor(props) {
     }
 
     function handleAddProfile() {
-        setQuiz(prev => ({ ...prev, results: [...prev.results, { name: '' }] }))
-        setCurrentSlide(quiz.results.length)
+        if (quiz.results.length >= 16)
+            showInfoToast("Número máximo de 16 perfis atingido.", 3000)
+        else {
+            setQuiz(prev => ({
+                ...prev,
+                results: [
+                    ...prev.results,
+                    {
+                        name: '',
+                        color: '#ffffff',
+                        img: { content: '', name: '', type: '' }
+                    }]
+            }))
+            setCurrentSlide(quiz.results.length)
+        }
     }
 
     function handleDeleteProfile(event, index) {
@@ -180,13 +216,38 @@ export default function ProfileEditor(props) {
             ...prev,
             results: prev.results.map((result, i) =>
                 currentSlide === i
-                    ? { name: event.target.value }
+                    ? { ...result, name: event.target.value }
+                    : result)
+        }))
+    }
+
+    function handleQuestionChange(event) {
+        setQuiz(prev => ({
+            ...prev,
+            questions: prev.questions.map((question, i) =>
+                currentSlide === i
+                    ? { ...question, content: event.target.value }
+                    : question)
+        }))
+    }
+
+    function handleColorChange(event) {
+        setQuiz(prev => ({
+            ...prev,
+            results: prev.results.map((result, i) =>
+                currentSlide === i
+                    ? { ...result, color: event }
                     : result)
         }))
     }
 
     return (
-        <div id={styles.editorContainer}>
+        <motion.div
+            id={styles.editorContainer}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.2, ease: [.62, -0.18, .32, 1.17] }}
+        >
             <div id={styles.editorHead}>
                 <Stepper alternativeLabel activeStep={step} connector={<ColorlibConnector />}>
                     <Step>
@@ -223,17 +284,27 @@ export default function ProfileEditor(props) {
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
                                                 >
-                                                    <div className={styles.buttonsContainer} >
-                                                        <IconButton onClick={(e) => handleDuplicateProfile(e, i)} size='small' aria-label="copy">
+                                                    <div className={`${styles.buttonsContainer} ${currentSlide !== i && styles.showOnHover}`}                                                    >
+                                                        <IconButton onClick={(e) => handleDuplicateProfile(e, i)} aria-label="copy" sx={{ scale: '0.7', margin: '-4px' }}>
                                                             <ContentCopyIcon />
                                                         </IconButton>
-                                                        <IconButton onClick={(e) => handleDeleteProfile(e, i)} size='small' aria-label="delete">
-                                                            <DeleteForeverIcon />
+                                                        <IconButton onClick={(e) => handleDeleteProfile(e, i)} aria-label="delete" sx={{ scale: '0.7', margin: '-4px' }}>
+                                                            <DeleteForeverIcon sx={{ scale: '1.2' }} />
                                                         </IconButton>
                                                     </div>
                                                     <div className={styles.slide}>
                                                         <h4>{i + 1}</h4>
-                                                        <MiniSlide name={result.name} />
+                                                        <div className={styles.slideBoard} style={{ backgroundColor: quiz.results[i].color }}>
+                                                            {quiz.results[i].img.content !== '' &&
+                                                            <div className={styles.slideImgContainer}>
+                                                                <img
+                                                                    style={imgState ? { height: 'auto', width: '100%' } : { height: '100%', width: 'auto' }}
+                                                                    src={quiz.results[i].img.content}
+                                                                />
+                                                            </div>
+                                                            }
+                                                            <h2>{result.name}</h2>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             )}
@@ -291,7 +362,14 @@ export default function ProfileEditor(props) {
                 </DragDropContext>
                 <div id={styles.middleContainer}>
                     {step === 0 && quiz.results.length > 0 &&
-                        <div>
+                        <div className='flex-start'>
+                            <FileInput
+                                quiz={quiz}
+                                setQuiz={setQuiz}
+                                currentSlide={currentSlide}
+                                imgState={imgState}
+                                setImgState={setImgState}
+                            />
                             <TextField
                                 value={quiz.results[currentSlide].name}
                                 label="Profile Name"
@@ -305,17 +383,33 @@ export default function ProfileEditor(props) {
                         <div>
                             <TextField
                                 value={quiz.questions[currentSlide].content}
-                                label="Profile Name"
+                                label="Question"
                                 onChange={handleQuestionChange}
                                 variant='filled'
+                                autoComplete='off'
+                            />
+
+                        </div>
+                    }
+                </div>
+                <div id={styles.rightContainer}>
+                    {step === 0 && quiz.results.length > 0 &&
+                        <div className='flex-start' style={{ paddingTop: '20px' }} >
+                            <HexColorPicker
+                                id={styles.colorPicker}
+                                onChange={handleColorChange}
+                                color={quiz.results[currentSlide].color}
+                            />
+                            <TextField
+                                value={quiz.results[currentSlide].color}
+                                variant='standard'
+                                sx={{ width: '60%', height: '200px' }}
                                 autoComplete='off'
                             />
                         </div>
                     }
                 </div>
-                <div id={styles.rightContainer}>
-                </div>
             </div>
-        </div>
+        </motion.div>
     )
 }

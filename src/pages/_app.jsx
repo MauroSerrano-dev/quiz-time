@@ -16,7 +16,11 @@ const mainTheme = createTheme({
     },
     secondary: {
       main: '#e5e5e5'
-    }
+    },
+    neutral: {
+      main: '#ffffff',
+      contrastText: '#ffffff',
+    },
   },
   typography: {
     fontFamily: [MontserratRegular, 'Arial', 'sans-serif',

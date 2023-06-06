@@ -7,7 +7,7 @@ import ProfileEditor from '@/components/ProfileEditor';
 
 const GAME_MODES = [
     { name: 'Profile' },
-    { name: 'Certa Resposta' },
+    { name: 'Right or Wrong' },
     { name: "Who's Most Likely To" },
 ]
 
@@ -16,6 +16,12 @@ const INICIAL_QUIZ = {
     results: [
         {
             name: '',
+            color: '#ffffff',
+            img: {
+                content: '',
+                name: '',
+                type: ''
+            }
         }
     ],
     questions: [
@@ -120,49 +126,6 @@ export default function QuizBuilder(props) {
         setQuiz(prev => { return { ...prev, mode: gModeName } })
     }
 
-    function handleNameChange(event) {
-        setQuiz(prev => { return { ...prev, name: event.target.value } })
-    }
-
-    function handleAddQuestion() {
-        setQuiz(prev => ({
-            ...prev,
-            questions: [...prev.questions, INICIAL_QUIZ.questions[0]]
-        }))
-    }
-
-    function handleQuestionChange(event, index) {
-        setQuiz(prev => ({
-            ...prev,
-            questions: prev.questions.map((question, i) =>
-                index === i
-                    ? { ...question, content: event.target.value }
-                    : question
-            )
-        }))
-    }
-
-    function handleOptionChange(event) {
-
-    }
-
-    function handleDeleteSlide(index) {
-        setQuiz((prev, i) => ({
-            ...prev,
-            questions: prev.questions.filter((question, i) => i != index)
-        }))
-    }
-
-    function handleDuplicateSlide(index) {
-        setQuiz((prev, i) => ({
-            ...prev,
-            questions: prev.questions.slice(0, index + 1)
-                .concat(prev.questions[index])
-                .concat(prev.questions.slice(index + 1, prev.questions.length))
-
-        }))
-    }
-
     return (
         <div
             id={styles.container}
@@ -173,7 +136,8 @@ export default function QuizBuilder(props) {
                     id={styles.sessionContainer}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ duration: 0.5, delay: 0.2, ease: [.62, -0.18, .32, 1.17] }}>
+                    transition={{ duration: 0.5, delay: 0.2, ease: [.62, -0.18, .32, 1.17] }}
+                >
                     {!quiz.mode
                         ? <div className='flex-center'>
                             <h1>Escolha um Quiz!</h1>
@@ -189,11 +153,6 @@ export default function QuizBuilder(props) {
                         <ProfileEditor
                             quiz={quiz}
                             setQuiz={setQuiz}
-                            handleAddQuestion={handleAddQuestion}
-                            handleQuestionChange={handleQuestionChange}
-                            handleOptionChange={handleOptionChange}
-                            handleDuplicateSlide={handleDuplicateSlide}
-                            handleDeleteSlide={handleDeleteSlide}
                         />
                     }
                 </motion.div>

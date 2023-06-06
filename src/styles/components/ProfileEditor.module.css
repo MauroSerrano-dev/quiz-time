@@ -53,17 +53,22 @@
 }
 
 .currentSlide {
-    background-color: rgb(81, 172, 184)
+    background-color: #97bad7
 }
 
 .buttonsContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 2px;
+    justify-content: flex-end;
     height: 100%;
     width: 20%;
+    padding-bottom: 15px;
+}
+
+.showOnHover {
+    opacity: 0;
+    transition: opacity ease 300ms;
 }
 
 .slide {
@@ -73,6 +78,24 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
+}
+
+.slideBoard {
+    width: 155px;
+    height: 100px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    outline: solid 3px;
+    outline-color: transparent;
+    transition: outline-color ease 300ms;
+}
+
+#colorPicker {
+    width: 150px;
+    height: 150px;
 }
 
 #addProfileButton {
@@ -100,4 +123,35 @@
     min-width: 200px;
     height: 100%;
     border: yellow dashed 2px;
+}
+
+.slideImgContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    position: relative;
+    width: 40%;
+    height: 45%;
+
+    border-radius: 9px;
+    box-shadow: 0px 0px 10px 0px;
+    overflow: hidden;
+}
+
+.slideImgContainer img {
+    position: relative;
+    display: flex;
+    width: 100%;
+}
+
+/* HOVER */
+
+.slideContainer:hover .showOnHover {
+    opacity: 1;
+}
+
+.slideContainer:hover .slideBoard {
+    outline-color: rgb(104, 104, 104);
 }
