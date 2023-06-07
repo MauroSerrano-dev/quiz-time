@@ -45,35 +45,35 @@ export default function Modal(props) {
     }
 
     return (
-        <div>
+        <motion.div
+            id={styles.container}
+            initial={{ opacity: 0 }}
+            animate={showModalOpacity ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: showModalOpacity ? 0.5 : 0.5, ease: [.62, -0.18, .32, 1.17] }}
+        >
+            <div id={styles.background} onClick={closeModal}></div>
             <motion.div
-                id={styles.container}
-                initial={{ opacity: 0 }}
-                animate={showModalOpacity ? { opacity: 1 } : { opacity: 0 }}
-                transition={{ duration: showModalOpacity ? 0.5 : 0.3, ease: [.62, -0.18, .32, 1.17] }}
+                id={styles.modal}
+                initial={{
+                    scale: 0.6,
+                    opacity: 0,
+                    width: isMobile ? widthMobile : (isSmall ? widthSmall : width),
+                    height: isMobile ? heightMobile : (isSmall ? heightSmall : height),
+                }}
+                animate={{
+                    scale: showModalOpacity ? 1 : 0.8,
+                    opacity: showModalOpacity ? 1 : 0,
+                    width: isMobile ? widthMobile : (isSmall ? widthSmall : width),
+                    height: isMobile ? heightMobile : (isSmall ? heightSmall : height),
+                }}
+                transition={{ duration: showModalOpacity ? 0.5 : 0.5, ease: [.37, .01, 0, 1.02] }}
             >
-                <div id={styles.background} onClick={closeModal}></div>
-                <motion.div
-                    id={styles.modal}
-                    initial={{
-                        scale: 0.7,
-                        width: isMobile ? widthMobile : (isSmall ? widthSmall : width),
-                        height: isMobile ? heightMobile : (isSmall ? heightSmall : height),
-                    }}
-                    animate={{
-                        scale: showModalOpacity ? 1 : 0.7,
-                        width: isMobile ? widthMobile : (isSmall ? widthSmall : width),
-                        height: isMobile ? heightMobile : (isSmall ? heightSmall : height),
-                    }}
-                    transition={{ duration: showModalOpacity ? 0.5 : 0.3, ease: [.37, .01, 0, 1.02] }}
-                >
-                    <div id={styles.content}>
-                        <div id={styles.head}>{head}</div>
-                        <div id={styles.body}>{body}</div>
-                        <div id={styles.foot}>{foot}</div>
-                    </div>
-                </motion.div>
+                <div id={styles.content}>
+                    <div id={styles.head}>{head}</div>
+                    <div id={styles.body}>{body}</div>
+                    <div id={styles.foot}>{foot}</div>
+                </div>
             </motion.div>
-        </div>
+        </motion.div>
     )
 }

@@ -32,8 +32,7 @@ export default function ProfileEditor(props) {
 
     const [step, setStep] = useState(0)
     const [currentSlide, setCurrentSlide] = useState(0)
-    const [imgState, setImgState] = useState(false)
-    const [profileColor, setProfileColor] = useState('#ffffff')
+    const [notInDragNDropState, setNotInDragNDropState] = useState(true)
 
     function handleAddQuestion() {
         setQuiz(prev => ({
@@ -60,6 +59,7 @@ export default function ProfileEditor(props) {
     }
 
     function handleDragEndProfiles(res) {
+        setNotInDragNDropState(false)
         if (res.destination) {
             if (res.source.index === currentSlide)
                 setCurrentSlide(res.destination.index)
@@ -79,6 +79,7 @@ export default function ProfileEditor(props) {
             ...prev,
             results,
         }))
+        setTimeout(() => setNotInDragNDropState(true), 300)
     }
 
     function handleDragEndQuestions(res) {
@@ -131,7 +132,7 @@ export default function ProfileEditor(props) {
                     {
                         name: '',
                         color: '#ffffff',
-                        img: { content: '', name: '', type: '' }
+                        img: { content: '', name: '', type: '', positionToFit: '' }
                     }]
             }))
             setCurrentSlide(quiz.results.length)
@@ -233,29 +234,18 @@ export default function ProfileEditor(props) {
     }
 
     function handleColorChange(event) {
-        setProfileColor(typeof event === 'string' ? event : event.target.value)
+        setQuiz(prev => ({
+            ...prev,
+            results: prev.results.map((result, i) =>
+                currentSlide === i
+                    ? { ...result, color: typeof event === 'string' ? event : event.target.value }
+                    : result)
+        }))
+    }
 
-        if (typeof event === 'string') {
-            setQuiz(prev => ({
-                ...prev,
-                results: prev.results.map((result, i) =>
-                    currentSlide === i
-                        ? { ...result, color: event }
-                        : result)
-            }))
-        }
-        else {
-            const regex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3,4})$/;
-            if (regex.test(event.target.value)) {
-                setQuiz(prev => ({
-                    ...prev,
-                    results: prev.results.map((result, i) =>
-                        currentSlide === i
-                            ? { ...result, color: event.target.value }
-                            : result)
-                }))
-            }
-        }
+    function isValidHexColor(string) {
+        const regex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3,4})$/;
+        return regex.test(string)
     }
 
     return (
@@ -295,7 +285,7 @@ export default function ProfileEditor(props) {
                                         <Draggable key={i} draggableId={`slide-${i}`} index={i}>
                                             {(provided, snapshot) => (
                                                 <div
-                                                    className={`${currentSlide === i && styles.currentSlide} ${styles.slideContainer}`}
+                                                    className={`${styles.slideContainer} ${currentSlide === i && styles.currentSlide} ${notInDragNDropState && styles.notInDragNDrop}`}
                                                     onClick={() => changeCurrentSlide(i)}
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
@@ -315,12 +305,14 @@ export default function ProfileEditor(props) {
                                                             {quiz.results[i].img.content !== '' &&
                                                                 <div className={styles.slideImgContainer}>
                                                                     <img
-                                                                        style={imgState ? { height: 'auto', width: '100%' } : { height: '100%', width: 'auto' }}
+                                                                        style={result.img.positionToFit === 'vertical' ? { height: 'auto', width: '100%' } : { height: '100%', width: 'auto' }}
                                                                         src={quiz.results[i].img.content}
                                                                     />
                                                                 </div>
                                                             }
-                                                            <h2>{result.name}</h2>
+                                                            <div>
+                                                                <h4>{result.name}</h4>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -384,8 +376,6 @@ export default function ProfileEditor(props) {
                                 quiz={quiz}
                                 setQuiz={setQuiz}
                                 currentSlide={currentSlide}
-                                imgState={imgState}
-                                setImgState={setImgState}
                             />
                             <TextField
                                 value={quiz.results[currentSlide].name}
@@ -415,10 +405,10 @@ export default function ProfileEditor(props) {
                             <HexColorPicker
                                 id={styles.colorPicker}
                                 onChange={handleColorChange}
-                                color={profileColor}
+                                color={quiz.results[currentSlide].color}
                             />
                             <TextField
-                                value={profileColor}
+                                value={quiz.results[currentSlide].color}
                                 onChange={handleColorChange}
                                 variant='standard'
                                 sx={{ width: '60%', height: '200px' }}

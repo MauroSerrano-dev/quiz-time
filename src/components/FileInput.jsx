@@ -11,7 +11,7 @@ import CropIcon from '@mui/icons-material/Crop'
 import InfoIcon from '@mui/icons-material/Info'
 
 export default function FileInput(props) {
-    const { quiz, setQuiz, currentSlide, imgState, setImgState } = props
+    const { quiz, setQuiz, currentSlide } = props
 
     const [isDraggingOver, setIsDraggingOver] = useState(false)
 
@@ -56,8 +56,20 @@ export default function FileInput(props) {
                 const img = new Image()
 
                 img.onload = function () {
-                    console.log(this.width)
-                    setImgState(this.height > this.width || (this.width / this.height <= 500 / 300))
+                    setQuiz(prev => ({
+                        ...prev,
+                        results: prev.results.map((result, i) =>
+                            currentSlide === i
+                                ? {
+                                    ...result, img: {
+                                        ...result.img,
+                                        positionToFit: this.height > this.width || (this.width / this.height <= 500 / 300)
+                                            ? 'vertical'
+                                            : 'horizontal',
+                                    }
+                                }
+                                : result)
+                    }))
                     URL.revokeObjectURL(url)
                 }
 
@@ -73,7 +85,14 @@ export default function FileInput(props) {
                         ...prev,
                         results: prev.results.map((result, i) =>
                             currentSlide === i
-                                ? { ...result, img: { content: fileContent, name: fileName, type: fileType } }
+                                ? {
+                                    ...result, img: {
+                                        ...result.img,
+                                        content: fileContent,
+                                        name: fileName,
+                                        type: fileType,
+                                    }
+                                }
                                 : result)
                     }))
                 }
@@ -87,7 +106,7 @@ export default function FileInput(props) {
             ...prev,
             results: prev.results.map((result, i) =>
                 currentSlide === i
-                    ? { ...result, img: { content: '', name: '', type: '' } }
+                    ? { ...result, img: { content: '', name: '', type: '', positionToFit: '' } }
                     : result)
         }))
     }
@@ -111,7 +130,7 @@ export default function FileInput(props) {
                 {quiz.results[currentSlide].img.content !== ''
                     ? <div className={styles.userImgContainer}>
                         <img
-                            style={imgState ? { height: 'auto', width: '100%' } : { height: '100%', width: 'auto' }}
+                            style={quiz.results[currentSlide].img.positionToFit === 'vertical' ? { height: 'auto', width: '100%' } : { height: '100%', width: 'auto' }}
                             src={quiz.results[currentSlide].img.content}
                         />
                     </div>

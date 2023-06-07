@@ -1,5 +1,18 @@
-#main {
+#container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     gap: 1rem;
+    width: 100%;
+    height: 100%;
+}
+
+#floatButton {
+    position: absolute;
+    right: 50px;
+    bottom: 20px;
+    z-index: 0;
 }
 
 #bodyContainer {
@@ -43,11 +56,6 @@
     width: 80%;
     height: 15%;
     gap: 1rem;
-}
-
-#nameInput {
-    width: 80%;
-    height: 15%;
 }
 
 #privateContainer {

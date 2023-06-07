@@ -11,6 +11,8 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { styled } from '@mui/system';
 import NoSessionPage from '@/components/NoSessionPage';
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
 
 const CustomTextField = styled(TextField)(({ theme }) => ({
     '& .MuiFormLabel-root': {
@@ -110,20 +112,25 @@ export default function Lobby(props) {
     }
 
     async function handleSubmitCode(event) {
-        if ((event._reactName === 'onClick' || event.key === 'Enter') && searchCode !== '') {
-            const options = {
-                method: 'GET',
-                headers: { "code": convertToCode(searchCode) },
+        if ((event._reactName === 'onClick' || event.key === 'Enter')) {
+            if (searchCode === '') {
+                showErrorToast("Ops! É necessário informar o nome da sala.", 3000)
             }
-            await fetch("/api/rooms", options)
-                .then(response => response.json())
-                .then(response => {
-                    if (response.room)
-                        Router.push(`/quiz?code=${convertToCode(searchCode)}`)
-                    else
-                        showInfoToast("Esta sala não existe.", 3000)
-                })
-                .catch(err => console.error(err))
+            else {
+                const options = {
+                    method: 'GET',
+                    headers: { "code": convertToCode(searchCode) },
+                }
+                await fetch("/api/rooms", options)
+                    .then(response => response.json())
+                    .then(response => {
+                        if (response.room)
+                            Router.push(`/quiz?code=${convertToCode(searchCode)}`)
+                        else
+                            showErrorToast("Ops! Esta sala não existe.", 3000)
+                    })
+                    .catch(err => console.error(err))
+            }
         }
     }
 
@@ -204,128 +211,140 @@ export default function Lobby(props) {
     }
 
     return (
-        <div>
+        <div className='flex-center size100'>
             {session === null
                 ? <NoSessionPage signIn={signIn} />
                 : <motion.div
+                    id={styles.container}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.5, delay: 0.2, ease: [.62, -0.18, .32, 1.17] }}>
-                    <main id={styles.main}>
-                        <div id={styles.nameInput}>
-                            <CustomTextField
-                                value={searchCode}
-                                onChange={handleCodeChange}
-                                onKeyDown={handleSubmitCode}
-                                label="Nome da Sala"
-                                variant='outlined'
-                                autoComplete='off'
-                            />
-                        </div>
-                        <Button variant="outlined" onClick={handleSubmitCode} disabled={searchCode === ''} >
-                            Entrar
-                        </Button>
-                        <Button variant="outlined" onClick={openModal}>
-                            Criar Sala
-                        </Button>
-                        {showModal && <Modal
-                            width={'550px'}
-                            height={'450px'}
-                            widthMobile={'350px'}
-                            heightMobile={'450px'}
-                            widthSmall={'250px'}
-                            heightSmall={'450px'}
-                            closeModal={closeModal}
-                            showModalOpacity={showModalOpacity}
-                            head={
-                                <div id={styles.headContainer}>
-                                    <h2>Criar Sala</h2>
-                                </div>
-                            }
-                            body={
-                                <div id={styles.bodyContainer}>
-                                    <FormControl sx={{ height: '15%', width: '80%' }}>
-                                        <TextField value={newRoom.name} onChange={handleNewCodeChange} label="Nome" variant='outlined' size='small' autoComplete='off' />
-                                    </FormControl>
-                                    <FormControl sx={{ height: '15%', width: '80%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
-                                        <FormControlLabel
-                                            className={styles.labelSwitch}
-                                            control={<Switch size={isSmall ? 'small' : 'medium'} />}
-                                            label="Private:"
-                                            labelPlacement="start"
-                                            onChange={handleNewIsPrivate}
-                                            checked={newRoom.private}
-                                        />
-                                        <motion.div
-                                            id={styles.password}
-                                            onChange={handleNewPasswordChange}
-                                            initial={{ width: '0%', pointerEvents: 'none', opacity: 0 }}
-                                            animate={newRoom.private ? { width: '100%', opacity: [0, 1, 1], pointerEvents: 'auto' } : { width: '0%', opacity: firstClickPrivite ? [1, 1, 0] : [0, 0, 0], pointerEvents: 'none' }}
-                                            transition={{ times: [0, 0.8, 1], duration: 1, ease: newRoom.private ? [.62, -0.18, .32, 1.8] : [.52, .03, .24, 1.06] }}
-                                        >
-                                            <FormControl sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
-                                                <TextField value={newRoom.password} label="Senha" variant='outlined' size='small' autoComplete='off' />
-                                            </FormControl>
-                                        </motion.div>
-                                    </FormControl>
+                    <CustomTextField
+                        value={searchCode}
+                        onChange={handleCodeChange}
+                        onKeyDown={handleSubmitCode}
+                        label="Nome da Sala"
+                        variant='outlined'
+                        autoComplete='off'
+                        sx={{
+                            width: '40%',
+                            minWidth: '250px'
+                        }}
+                    />
+                    <Button
+                        id={styles.joinButton}
+                        variant="outlined"
+                        onClick={handleSubmitCode}
+                        sx={{ width: '40%', minWidth: '250px' }}
+                    >
+                        Entrar
+                    </Button>
+                    <Fab
+                        id={styles.floatButton}
+                        onClick={openModal}
+                        color="primary"
+                        aria-label="add"
+                        title="Criar Nova Sala"
+                    >
+                        <AddIcon />
+                    </Fab>
+                    {showModal && <Modal
+                        width={'550px'}
+                        height={'450px'}
+                        widthMobile={'350px'}
+                        heightMobile={'450px'}
+                        widthSmall={'250px'}
+                        heightSmall={'450px'}
+                        closeModal={closeModal}
+                        showModalOpacity={showModalOpacity}
+                        head={
+                            <div id={styles.headContainer}>
+                                <h2>Criar Sala</h2>
+                            </div>
+                        }
+                        body={
+                            <div id={styles.bodyContainer}>
+                                <FormControl sx={{ height: '15%', width: '80%' }}>
+                                    <TextField value={newRoom.name} onChange={handleNewCodeChange} label="Nome" variant='outlined' size='small' autoComplete='off' />
+                                </FormControl>
+                                <FormControl sx={{ height: '15%', width: '80%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
                                     <FormControlLabel
                                         className={styles.labelSwitch}
-                                        onChange={handleNewControl}
-                                        checked={newRoom.control}
                                         control={<Switch size={isSmall ? 'small' : 'medium'} />}
-                                        label="Controlar Perguntas:"
+                                        label="Private:"
                                         labelPlacement="start"
+                                        onChange={handleNewIsPrivate}
+                                        checked={newRoom.private}
                                     />
-                                    <FormControl sx={{ width: '80%' }}>
-                                        <InputLabel size='small' id="select-label">Quiz</InputLabel>
-                                        <Select
-                                            labelId="select-label"
-                                            id="select"
-                                            name={newRoom.quizInfo.name}
-                                            value={session.user.quizzesInfos.reduce((acc, item, i) => item.name === newRoom.quizInfo.name && item.type === newRoom.quizInfo.type ? i : '', '')}
-                                            onChange={handleQuizSelectorChange}
-                                            input={<OutlinedInput label="Quiz" />}
-                                            size='small'
-                                        >
-                                            {session.user.quizzesInfos.map((quiz, i) => (
-                                                <MenuItem
-                                                    key={`Quiz: ${i}`}
-                                                    name={quiz.name}
-                                                    value={i}
-                                                >
-                                                    {quiz.name}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </div>
-                            }
-                            foot={
-                                <div id={styles.footContainer}>
-                                    <Button
-                                        onClick={closeModal}
-                                        variant="contained"
-                                        color="error"
-                                        sx={{ width: '30%', height: '55%' }}
+                                    <motion.div
+                                        id={styles.password}
+                                        onChange={handleNewPasswordChange}
+                                        initial={{ width: '0%', pointerEvents: 'none', opacity: 0 }}
+                                        animate={newRoom.private ? { width: '100%', opacity: [0, 1, 1], pointerEvents: 'auto' } : { width: '0%', opacity: firstClickPrivite ? [1, 1, 0] : [0, 0, 0], pointerEvents: 'none' }}
+                                        transition={{ times: [0, 0.8, 1], duration: 1, ease: newRoom.private ? [.62, -0.18, .32, 1.8] : [.52, .03, .24, 1.06] }}
                                     >
-                                        Cancelar
-                                    </Button>
-                                    <LoadingButton
-                                        onClick={createNewRoom}
-                                        loading={disableCreateNewRoom}
-                                        loadingPosition={disableCreateNewRoom ? 'end' : 'center'}
-                                        color="success"
-                                        variant="contained"
-                                        endIcon={disableCreateNewRoom && <AddCircleOutlineIcon />}
+                                        <FormControl sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
+                                            <TextField value={newRoom.password} label="Senha" variant='outlined' size='small' autoComplete='off' />
+                                        </FormControl>
+                                    </motion.div>
+                                </FormControl>
+                                <FormControlLabel
+                                    className={styles.labelSwitch}
+                                    onChange={handleNewControl}
+                                    checked={newRoom.control}
+                                    control={<Switch size={isSmall ? 'small' : 'medium'} />}
+                                    label="Controlar Perguntas:"
+                                    labelPlacement="start"
+                                />
+                                <FormControl sx={{ width: '80%' }}>
+                                    <InputLabel size='small' id="select-label">Quiz</InputLabel>
+                                    <Select
+                                        labelId="select-label"
+                                        id="select"
+                                        name={newRoom.quizInfo.name}
+                                        value={session.user.quizzesInfos.reduce((acc, item, i) => item.name === newRoom.quizInfo.name && item.type === newRoom.quizInfo.type ? i : '', '')}
+                                        onChange={handleQuizSelectorChange}
+                                        input={<OutlinedInput label="Quiz" />}
+                                        size='small'
+                                    >
+                                        {session.user.quizzesInfos.map((quiz, i) => (
+                                            <MenuItem
+                                                key={`Quiz: ${i}`}
+                                                name={quiz.name}
+                                                value={i}
+                                            >
+                                                {quiz.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </div>
+                        }
+                        foot={
+                            <div id={styles.footContainer}>
+                                <Button
+                                    onClick={closeModal}
+                                    variant="contained"
+                                    color="error"
+                                    sx={{ width: '30%', height: '55%' }}
+                                >
+                                    Cancelar
+                                </Button>
+                                <LoadingButton
+                                    onClick={createNewRoom}
+                                    loading={disableCreateNewRoom}
+                                    loadingPosition={disableCreateNewRoom ? 'end' : 'center'}
+                                    color="success"
+                                    variant="contained"
+                                    endIcon={disableCreateNewRoom && <AddCircleOutlineIcon />}
 
-                                        sx={{ width: '30%', height: '55%' }}
-                                    >
-                                        {disableCreateNewRoom ? 'Criando' : 'Criar'}
-                                    </LoadingButton>
-                                </div>
-                            }
-                        />}
-                    </main>
+                                    sx={{ width: '30%', height: '55%' }}
+                                >
+                                    {disableCreateNewRoom ? 'Criando' : 'Criar'}
+                                </LoadingButton>
+                            </div>
+                        }
+                    />}
                 </motion.div>
             }
         </div>

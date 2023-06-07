@@ -56,6 +56,10 @@
     background-color: #97bad7
 }
 
+.notInDragNDrop {
+    transition: background-color 300ms ease;
+}
+
 .buttonsContainer {
     display: flex;
     flex-direction: column;
@@ -86,7 +90,7 @@
     border-radius: 4px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     outline: solid 3px;
     outline-color: transparent;
@@ -152,6 +156,6 @@
     opacity: 1;
 }
 
-.slideContainer:hover .slideBoard {
+.slideBoard:hover {
     outline-color: rgb(104, 104, 104);
 }
