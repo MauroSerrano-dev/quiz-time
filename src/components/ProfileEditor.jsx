@@ -2,14 +2,9 @@ import styles from '../styles/components/ProfileEditor.module.css'
 import {
     Button,
     TextField,
-    IconButton,
-    Step,
-    StepLabel,
-    Stepper
+    IconButton
 } from '@mui/material'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-import { styled } from '@mui/material/styles'
-import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector'
 import React from 'react';
 import { HexColorPicker } from "react-colorful"
 import { motion } from "framer-motion"
@@ -22,9 +17,10 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd'
 import QuizIcon from '@mui/icons-material/Quiz';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import { useState } from 'react'
-import MiniSlide from './MiniSlide'
 import { showInfoToast } from '../../utils/toasts'
 import FileInput from './FileInput'
+import Stepper from './Stepper'
+import Modal from './Modal'
 
 
 export default function ProfileEditor(props) {
@@ -33,6 +29,8 @@ export default function ProfileEditor(props) {
     const [step, setStep] = useState(0)
     const [currentSlide, setCurrentSlide] = useState(0)
     const [notInDragNDropState, setNotInDragNDropState] = useState(true)
+    const [showModal, setShowModal] = useState(true)
+    const [showModalOpacity, setShowModalOpacity] = useState(true)
 
     function handleAddQuestion() {
         setQuiz(prev => ({
@@ -104,23 +102,6 @@ export default function ProfileEditor(props) {
         }))
     }
 
-    function ColorlibStepIcon(props) {
-        const { active, completed, className } = props;
-
-        const icons = {
-            1: <GroupAddIcon />,
-            2: <QuizIcon />,
-            3: <AssessmentIcon />,
-            4: <SettingsIcon />,
-        }
-
-        return (
-            <ColorlibStepIconRoot ownerState={{ completed, active }} className={className}>
-                {icons[String(props.icon)]}
-            </ColorlibStepIconRoot>
-        )
-    }
-
     function handleAddProfile() {
         if (quiz.results.length >= 16)
             showInfoToast("Número máximo de 16 perfis atingido.", 3000)
@@ -155,58 +136,6 @@ export default function ProfileEditor(props) {
                 .concat(prev.results.slice(index + 1, prev.results.length))
 
         }))
-    }
-
-    const ColorlibStepIconRoot = styled('div')(({ theme, ownerState }) => ({
-        backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[700] : '#ccc',
-        zIndex: 1,
-        color: '#fff',
-        width: 50,
-        height: 50,
-        display: 'flex',
-        borderRadius: '50%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        ...(ownerState.active && {
-            backgroundImage:
-                'linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)',
-            boxShadow: '0 4px 10px 0 rgba(0,0,0,.25)',
-        }),
-        ...(ownerState.completed && {
-            backgroundImage:
-                'linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)',
-        }),
-        transition: 'all ease 2s',
-    }))
-
-    const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
-        [`&.${stepConnectorClasses.alternativeLabel}`]: {
-            top: 22,
-        },
-        [`&.${stepConnectorClasses.active}`]: {
-            [`& .${stepConnectorClasses.line}`]: {
-                backgroundImage:
-                    'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
-            },
-        },
-        [`&.${stepConnectorClasses.completed}`]: {
-            [`& .${stepConnectorClasses.line}`]: {
-                backgroundImage:
-                    'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
-            },
-        },
-        [`& .${stepConnectorClasses.line}`]: {
-            height: 3,
-            border: 0,
-            backgroundColor:
-                theme.palette.mode === 'dark' ? theme.palette.grey[800] : '#eaeaf0',
-            borderRadius: 1,
-        },
-    }))
-
-    function handleChangeStep(newStep) {
-        setCurrentSlide(0)
-        setStep(newStep)
     }
 
     function changeCurrentSlide(index) {
@@ -248,6 +177,13 @@ export default function ProfileEditor(props) {
         return regex.test(string)
     }
 
+    function closeModal() {
+        setShowModalOpacity(false)
+        setTimeout(() => {
+            setShowModal(false)
+        }, 300)
+    }
+
     return (
         <motion.div
             id={styles.editorContainer}
@@ -255,25 +191,84 @@ export default function ProfileEditor(props) {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.2, ease: [.62, -0.18, .32, 1.17] }}
         >
+            {showModal &&
+                <Modal
+                    width={'550px'}
+                    height={'450px'}
+                    widthMobile={'350px'}
+                    heightMobile={'450px'}
+                    widthSmall={'250px'}
+                    heightSmall={'450px'}
+                    closeModal={closeModal}
+                    showModalOpacity={showModalOpacity}
+                    head={
+                        <h2>Crie seu Quiz em Apenas 4 passos!</h2>
+                    }
+                    body={
+                        <div id={styles.infoBody} >
+                            <p>1. Crie os perfis, eles serão os possíveis resultados dos seus jogadores.</p>
+                            <p>2. Crie as perguntas e defina a pontuação de cada uma.</p>
+                            <p>3. Defina a aparência da página no fim do Quiz, podendo incluir gráficos.</p>
+                            <p>4. Escolha o nome do seu Quiz, descrição, e outras informações relevantes.</p>
+                        </div>
+                    }
+                    foot={
+                        <Button
+                            onClick={closeModal}
+                            variant='contained'
+                            color='success'
+                        >
+                            Entendi
+                        </Button>
+                    }
+                />
+            }
             <div id={styles.editorHead}>
-                <Stepper alternativeLabel activeStep={step} connector={<ColorlibConnector />}>
-                    <Step>
-                        <StepLabel onClick={() => handleChangeStep(0)} StepIconComponent={ColorlibStepIcon} >{'Passo 1'}</StepLabel>
-                    </Step>
-                    <Step>
-                        <StepLabel onClick={() => handleChangeStep(1)} StepIconComponent={ColorlibStepIcon} >{'Passo 2'}</StepLabel>
-                    </Step>
-                    <Step>
-                        <StepLabel onClick={() => handleChangeStep(2)} StepIconComponent={ColorlibStepIcon} >{'Passo 3'}</StepLabel>
-                    </Step>
-                    <Step>
-                        <StepLabel onClick={() => handleChangeStep(3)} StepIconComponent={ColorlibStepIcon} >{'Passo 4'}</StepLabel>
-                    </Step>
-                </Stepper>
+                <Stepper
+                    infoMode={showModal}
+                    currentStep={step}
+                    setCurrentStep={setStep}
+                    stepSize={{ width: '50px', height: '50px' }}
+                    pathSize={{ width: showModal ? '30px' : '150px', height: '3px' }}
+                    textColor={'white'}
+                    stepStyle={{
+                        background: 'linear-gradient(165deg, rgb(0, 160, 220), rgb(49, 60, 78))',
+                        transform: showModal && 'rotateZ(-90deg)',
+                    }}
+                    placeholderStepStyle={{
+                        transform: showModal && 'rotateZ(-90deg)',
+                    }}
+                    pathStyle={{
+                        background: 'linear-gradient(165deg, rgb(0, 160, 220), rgb(49, 60, 78))',
+                    }}
+                    containerStyle={{
+                        transform: showModal && 'rotateZ(90deg)',
+                        bottom: showModal ? '-220px' : '0px',
+                        left: showModal ? '-190px' : '0px',
+                    }}
+                    labelStyle={{
+                        opacity: showModal ? 0 : 1
+                    }}
+                    steps={[
+                        <GroupAddIcon sx={{ color: 'white' }} />,
+                        <QuizIcon sx={{ color: 'white' }} />,
+                        <AssessmentIcon sx={{ color: 'white' }} />,
+                        <SettingsIcon sx={{ color: 'white' }} />
+                    ]}
+                    labels={[
+                        'Criar Perfis',
+                        'Criar Perguntas',
+                        'Layout dos Resultados',
+                        'Toques Finais',
+                    ]}
+                />
             </div>
             <div id={styles.editorBody}>
                 <DragDropContext onDragEnd={step === 0 || step === 2 ? handleDragEndProfiles : handleDragEndQuestions}>
-                    <div id={styles.leftContainer}>
+                    <div
+                        id={styles.leftContainer}
+                        style={{ width: step > 2 ? '0%' : '15%' }}
+                    >
                         <Droppable droppableId="slides">
                             {(provided, snapshot) => (
                                 <div
@@ -302,16 +297,14 @@ export default function ProfileEditor(props) {
                                                     <div className={styles.slide}>
                                                         <h4>{i + 1}</h4>
                                                         <div className={styles.slideBoard} style={{ backgroundColor: quiz.results[i].color }}>
-                                                            {quiz.results[i].img.content !== '' &&
-                                                                <div className={styles.slideImgContainer}>
-                                                                    <img
-                                                                        style={result.img.positionToFit === 'vertical' ? { height: 'auto', width: '100%' } : { height: '100%', width: 'auto' }}
-                                                                        src={quiz.results[i].img.content}
-                                                                    />
-                                                                </div>
-                                                            }
-                                                            <div>
-                                                                <h4>{result.name}</h4>
+                                                            <div className={`${styles.slideImgContainer} ${quiz.results[i].img.content === '' && styles.slideImgPlaceholder}`}>
+                                                                <img
+                                                                    style={result.img.positionToFit === 'vertical' ? { height: 'auto', width: '100%' } : { height: '100%', width: 'auto' }}
+                                                                    src={quiz.results[i].img.content}
+                                                                />
+                                                            </div>
+                                                            <div className={result.name !== '' && styles.nameMiniContainer}>
+                                                                <h5>{result.name}</h5>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -369,7 +362,10 @@ export default function ProfileEditor(props) {
                         </Droppable>
                     </div>
                 </DragDropContext>
-                <div id={styles.middleContainer}>
+                <div
+                    id={styles.middleContainer}
+                    style={{ width: step > 2 ? '100%' : '70%' }}
+                >
                     {step === 0 && quiz.results.length > 0 &&
                         <div className='flex-start'>
                             <FileInput
@@ -395,11 +391,13 @@ export default function ProfileEditor(props) {
                                 variant='filled'
                                 autoComplete='off'
                             />
-
                         </div>
                     }
                 </div>
-                <div id={styles.rightContainer}>
+                <div
+                    id={styles.rightContainer}
+                    style={{ width: step > 2 ? '0%' : '15%' }}
+                >
                     {step === 0 && quiz.results.length > 0 &&
                         <div className='flex-start' style={{ paddingTop: '20px' }} >
                             <HexColorPicker
