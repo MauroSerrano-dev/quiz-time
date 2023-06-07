@@ -237,6 +237,10 @@ export default function ProfileEditor(props) {
                     }}
                     placeholderStepStyle={{
                         transform: showModalOpacity && 'rotateZ(-90deg)',
+                        boxShadow: '2px 3px 8px 0px',
+                    }}
+                    placeholderPathStyle={{
+                        boxShadow: '0px 5px 8px 0px',
                     }}
                     pathStyle={{
                         background: 'linear-gradient(165deg, rgb(0, 160, 220), rgb(49, 60, 78))',

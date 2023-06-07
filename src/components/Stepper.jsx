@@ -14,6 +14,7 @@ export default function Stepper(props) {
         labelStyle,
         containerStyle,
         placeholderStepStyle,
+        placeholderPathStyle,
         infoMode
     } = props
 
@@ -30,7 +31,7 @@ export default function Stepper(props) {
                         {i !== 0 &&
                             <div
                                 className={styles.path}
-                                style={{ ...pathSize }}
+                                style={{ ...pathSize, ...placeholderPathStyle }}
                             >
                             </div>
                         }
