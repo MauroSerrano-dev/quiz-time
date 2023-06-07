@@ -229,22 +229,22 @@ export default function ProfileEditor(props) {
                     currentStep={step}
                     setCurrentStep={setStep}
                     stepSize={{ width: '50px', height: '50px' }}
-                    pathSize={{ width: showModal ? '30px' : '150px', height: '3px' }}
+                    pathSize={{ width: showModalOpacity ? '30px' : '150px', height: '3px' }}
                     textColor={'white'}
                     stepStyle={{
                         background: 'linear-gradient(165deg, rgb(0, 160, 220), rgb(49, 60, 78))',
-                        transform: showModal && 'rotateZ(-90deg)',
+                        transform: showModalOpacity && 'rotateZ(-90deg)',
                     }}
                     placeholderStepStyle={{
-                        transform: showModal && 'rotateZ(-90deg)',
+                        transform: showModalOpacity && 'rotateZ(-90deg)',
                     }}
                     pathStyle={{
                         background: 'linear-gradient(165deg, rgb(0, 160, 220), rgb(49, 60, 78))',
                     }}
                     containerStyle={{
-                        transform: showModal && 'rotateZ(90deg)',
-                        bottom: showModal ? '-220px' : '0px',
-                        left: showModal ? '-190px' : '0px',
+                        transform: showModalOpacity && 'rotateZ(90deg)',
+                        bottom: showModalOpacity ? '-220px' : '0px',
+                        left: showModalOpacity ? '-190px' : '0px',
                     }}
                     labelStyle={{
                         opacity: showModal ? 0 : 1
