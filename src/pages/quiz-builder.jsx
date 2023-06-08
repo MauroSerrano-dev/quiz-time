@@ -15,14 +15,32 @@ const INICIAL_QUIZ = {
     name: 'My Quiz Name',
     results: [
         {
-            name: '',
-            color: '#ffffff',
+            name: 'Perfil 1',
+            color: '#ffccb6',
             img: {
                 content: '',
                 name: '',
                 type: ''
             }
-        }
+        },
+        {
+            name: 'Perfil 2',
+            color: '#abdee6',
+            img: {
+                content: '',
+                name: '',
+                type: ''
+            },
+        },
+        {
+            name: 'Perfil 3',
+            color: '#cce2cb',
+            img: {
+                content: '',
+                name: '',
+                type: ''
+            }
+        },
     ],
     questions: [
         {

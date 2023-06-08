@@ -1,0 +1,53 @@
+.button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    
+    outline-style: solid;
+    outline-width: 1px;
+    outline-color: rgba(0, 159, 218, 0.5);
+    border-width: 0px;
+
+    border-radius: 4px;
+    background-color: rgba(0, 159, 218, 0);
+    transition: all ease 200ms;
+}
+
+.symbolContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 20%;
+    height: 100%;
+}
+
+.symbol {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    height: 70%;
+    background-color: white;
+    border-radius: 100%;
+}
+
+.text {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    width: 80%;
+}
+
+.button:hover {
+    outline-color: rgba(0, 159, 218, 1);
+    background-color: rgba(0, 159, 218, 0.04);
+}

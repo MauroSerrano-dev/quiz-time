@@ -23,10 +23,11 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd'
 import QuizIcon from '@mui/icons-material/Quiz';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import PaletteIcon from '@mui/icons-material/Palette';
+import OptionInput from './OptionInput';
 
 const DESIGN_EDIT_OPTIONS = [
-    { title: 'Monocromático'},
-    { title: 'Colorido'},
+    { title: 'Monocromático' },
+    { title: 'Colorido' },
 ]
 
 export default function ProfileEditor(props) {
@@ -301,10 +302,82 @@ export default function ProfileEditor(props) {
                 />
             }
             <div id={styles.editorBody}>
+                <div
+                    id={styles.middleContainer}
+                >
+                    <div id={styles.editorHead}>
+                        <Stepper
+                            currentStep={step}
+                            handleChangeStep={handleChangeStep}
+                            stepSize={{ width: '50px', height: '50px' }}
+                            pathSize={{ width: '120px', height: '3px' }}
+                            textColor={'white'}
+                            stepStyle={{
+                                background: 'linear-gradient(165deg, rgb(0, 160, 220), rgb(49, 60, 78))',
+                            }}
+                            placeholderStepStyle={{
+                                boxShadow: '2px 3px 8px 0px',
+                            }}
+                            placeholderPathStyle={{
+                                boxShadow: '0px 5px 8px 0px',
+                            }}
+                            pathStyle={{
+                                background: 'linear-gradient(165deg, rgb(0, 160, 220), rgb(49, 60, 78))',
+                            }}
+                            steps={[
+                                <GroupAddIcon sx={{ color: 'white' }} />,
+                                <PaletteIcon sx={{ color: 'white' }} />,
+                                <QuizIcon sx={{ color: 'white' }} />,
+                                <AssessmentIcon sx={{ color: 'white' }} />,
+                                <SettingsIcon sx={{ color: 'white' }} />
+                            ]}
+                            labels={[
+                                'Criar Perfis',
+                                'Escolher Design',
+                                'Criar Perguntas',
+                                'Layout dos Resultados',
+                                'Toques Finais',
+                            ]}
+                        />
+                    </div>
+                    {step === 0 && quiz.results.length > 0 &&
+                        <div className='flex-start'>
+                            <FileInput
+                                quiz={quiz}
+                                setQuiz={setQuiz}
+                                currentSlide={currentSlide}
+                            />
+                            <TextField
+                                value={quiz.results[currentSlide].name}
+                                label="Profile Name"
+                                onChange={handleProfileNameChange}
+                                variant='filled'
+                                autoComplete='off'
+                            />
+                        </div>
+                    }
+                    {step === 1 &&
+                        <div>
+                            <OptionInput />
+                            <Button style={{ marginTop: '10px' }} variant='outlined' >Adicionar Perfil</Button>
+                        </div>
+                    }
+                    {step === 2 &&
+                        <div>
+                            <TextField
+                                value={quiz.questions[currentSlide].content}
+                                label="Question"
+                                onChange={handleQuestionChange}
+                                variant='filled'
+                                autoComplete='off'
+                            />
+                        </div>
+                    }
+                </div>
                 <DragDropContext onDragEnd={step === 0 || step === 3 ? handleDragEndProfiles : handleDragEndQuestions}>
                     <div
                         id={styles.leftContainer}
-                        style={{ width: step === 4 ? '0%' : '15%' }}
+                        style={{ width: step === 4 ? '0px' : '220px' }}
                     >
                         <Droppable droppableId="slides">
                             {(provided, snapshot) => (
@@ -313,7 +386,7 @@ export default function ProfileEditor(props) {
                                     {...provided.droppableProps}
                                     ref={provided.innerRef}
                                 >
-                                    {step === 0 && quiz.results.map((result, i) =>
+                                    {(step === 0 || step === 3) && quiz.results.map((result, i) =>
                                         <Draggable key={i} draggableId={`slide-${i}`} index={i}>
                                             {(provided, snapshot) => (
                                                 <div
@@ -389,19 +462,6 @@ export default function ProfileEditor(props) {
                                             )}
                                         </Draggable>
                                     )}
-                                    {step === 3 && quiz.results.map((result, i) =>
-                                        <Draggable key={i} draggableId={`slide-${i}`} index={i}>
-                                            {(provided, snapshot) => (
-                                                <div
-                                                    className={styles.slideContainer}
-                                                    ref={provided.innerRef}
-                                                    {...provided.draggableProps}
-                                                    {...provided.dragHandleProps}
-                                                >
-                                                </div>
-                                            )}
-                                        </Draggable>
-                                    )}
                                     {provided.placeholder}
                                     {step === 0 &&
                                         <Button id={styles.addProfileButton} onClick={handleAddProfile} variant='contained' >Adicionar Perfil</Button>
@@ -414,76 +474,10 @@ export default function ProfileEditor(props) {
                         </Droppable>
                     </div>
                 </DragDropContext>
-                <div
-                    id={styles.middleContainer}
-                    style={{ width: step === 4 ? '100%' : '70%' }}
-                >
-                    <div id={styles.editorHead}>
-                        <Stepper
-                            currentStep={step}
-                            handleChangeStep={handleChangeStep}
-                            stepSize={{ width: '50px', height: '50px' }}
-                            pathSize={{ width: '120px', height: '3px' }}
-                            textColor={'white'}
-                            stepStyle={{
-                                background: 'linear-gradient(165deg, rgb(0, 160, 220), rgb(49, 60, 78))',
-                            }}
-                            placeholderStepStyle={{
-                                boxShadow: '2px 3px 8px 0px',
-                            }}
-                            placeholderPathStyle={{
-                                boxShadow: '0px 5px 8px 0px',
-                            }}
-                            pathStyle={{
-                                background: 'linear-gradient(165deg, rgb(0, 160, 220), rgb(49, 60, 78))',
-                            }}
-                            steps={[
-                                <GroupAddIcon sx={{ color: 'white' }} />,
-                                <PaletteIcon sx={{ color: 'white' }} />,
-                                <QuizIcon sx={{ color: 'white' }} />,
-                                <AssessmentIcon sx={{ color: 'white' }} />,
-                                <SettingsIcon sx={{ color: 'white' }} />
-                            ]}
-                            labels={[
-                                'Criar Perfis',
-                                'Escolher Design',
-                                'Criar Perguntas',
-                                'Layout dos Resultados',
-                                'Toques Finais',
-                            ]}
-                        />
-                    </div>
-                    {step === 0 && quiz.results.length > 0 &&
-                        <div className='flex-start'>
-                            <FileInput
-                                quiz={quiz}
-                                setQuiz={setQuiz}
-                                currentSlide={currentSlide}
-                            />
-                            <TextField
-                                value={quiz.results[currentSlide].name}
-                                label="Profile Name"
-                                onChange={handleProfileNameChange}
-                                variant='filled'
-                                autoComplete='off'
-                            />
-                        </div>
-                    }
-                    {step === 2 &&
-                        <div>
-                            <TextField
-                                value={quiz.questions[currentSlide].content}
-                                label="Question"
-                                onChange={handleQuestionChange}
-                                variant='filled'
-                                autoComplete='off'
-                            />
-                        </div>
-                    }
-                </div>
+
                 <div
                     id={styles.rightContainer}
-                    style={{ width: step === 4 ? '0%' : '15%' }}
+                    style={{ width: step === 4 ? '0px' : '220px' }}
                 >
                     {step === 0 && quiz.results.length > 0 &&
                         <div className='flex-start' style={{ paddingTop: '20px' }} >
