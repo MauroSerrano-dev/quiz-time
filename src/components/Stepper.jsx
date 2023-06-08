@@ -11,16 +11,16 @@ export default function Stepper(props) {
         labels,
         textColor,
         currentStep,
-        setCurrentStep,
+        handleChangeStep,
         labelStyle,
         containerStyle,
         placeholderStepStyle,
         placeholderPathStyle,
     } = props
 
-    function handleChangeStep(index) {
-        if (setCurrentStep)
-            setCurrentStep(index)
+    function changeStep(index) {
+        if (handleChangeStep)
+            handleChangeStep(index)
     }
 
     return (
@@ -37,7 +37,7 @@ export default function Stepper(props) {
                         }
                         <Step
                             icon={icon}
-                            click={() => handleChangeStep(i)}
+                            click={() => changeStep(i)}
                             stepStyle={{ ...stepSize, ...placeholderStepStyle }}
                             label={labels[i]}
                             labelStyle={{ color: i <= currentStep ? textColor : '#616161', ...labelStyle }}
@@ -65,7 +65,7 @@ export default function Stepper(props) {
                         }
                         <Step
                             icon={icon}
-                            click={() => handleChangeStep(i)}
+                            click={() => changeStep(i)}
                             stepStyle={{ ...stepSize, ...stepStyle }}
                             label={labels[i]}
                             labelStyle={labelStyle}

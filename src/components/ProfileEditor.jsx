@@ -8,6 +8,12 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import React from 'react';
 import { HexColorPicker } from "react-colorful"
 import { motion } from "framer-motion"
+import { useState } from 'react'
+import { showInfoToast } from '../../utils/toasts'
+import FileInput from './FileInput'
+import Stepper from './Stepper'
+import Modal from './Modal'
+import Step from './Step';
 
 // ICONS
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
@@ -16,13 +22,12 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import GroupAddIcon from '@mui/icons-material/GroupAdd'
 import QuizIcon from '@mui/icons-material/Quiz';
 import AssessmentIcon from '@mui/icons-material/Assessment';
-import { useState } from 'react'
-import { showInfoToast } from '../../utils/toasts'
-import FileInput from './FileInput'
-import Stepper from './Stepper'
-import Modal from './Modal'
-import Step from './Step';
+import PaletteIcon from '@mui/icons-material/Palette';
 
+const DESIGN_EDIT_OPTIONS = [
+    { title: 'Monocromático'},
+    { title: 'Colorido'},
+]
 
 export default function ProfileEditor(props) {
     const { quiz, setQuiz } = props
@@ -185,6 +190,11 @@ export default function ProfileEditor(props) {
         }, 300)
     }
 
+    function handleChangeStep(newStep) {
+        setCurrentSlide(0)
+        setStep(newStep)
+    }
+
     return (
         <motion.div
             id={styles.editorContainer}
@@ -203,7 +213,7 @@ export default function ProfileEditor(props) {
                     closeModal={closeModal}
                     showModalOpacity={showModalOpacity}
                     head={
-                        <h2>Crie seu Quiz em Apenas 4 passos!</h2>
+                        <h2>Crie seu Quiz em Apenas 5 passos!</h2>
                     }
                     body={
                         <div id={styles.infoBody} >
@@ -222,6 +232,20 @@ export default function ProfileEditor(props) {
                                 <p className={styles.infoText} >1. Crie os perfis, eles serão os possíveis resultados dos seus jogadores.</p>
                             </div>
                             <div className={styles.infoLine}>
+                                <div className={styles.stepInfoContainer}>
+                                    <Step
+                                        stepStyle={{
+                                            width: '50px',
+                                            height: '50px',
+                                            background: 'linear-gradient(165deg, rgb(0, 160, 220), rgb(49, 60, 78))',
+                                            cursor: 'default',
+                                        }}
+                                        icon={<PaletteIcon sx={{ color: 'white' }} />}
+                                    />
+                                </div>
+                                <p className={styles.infoText} >2. Escolha o design do seu Quiz.</p>
+                            </div>
+                            <div className={styles.infoLine}>
                                 <div className={styles.stepInfoContainer} >
                                     <Step
                                         stepStyle={{
@@ -233,7 +257,7 @@ export default function ProfileEditor(props) {
                                         icon={<QuizIcon sx={{ color: 'white' }} />}
                                     />
                                 </div>
-                                <p className={styles.infoText} >2. Crie as perguntas e defina a pontuação de cada uma.</p>
+                                <p className={styles.infoText} >3. Crie as perguntas e defina a pontuação de cada uma.</p>
                             </div>
                             <div className={styles.infoLine}>
                                 <div className={styles.stepInfoContainer} >
@@ -247,7 +271,7 @@ export default function ProfileEditor(props) {
                                         icon={<AssessmentIcon sx={{ color: 'white' }} />}
                                     />
                                 </div>
-                                <p className={styles.infoText} >3. Defina a aparência da página no fim do Quiz, podendo incluir gráficos.</p>
+                                <p className={styles.infoText} >4. Defina a aparência da página no fim do Quiz, podendo incluir gráficos.</p>
                             </div>
                             <div className={styles.infoLine}>
                                 <div className={styles.stepInfoContainer} >
@@ -261,7 +285,7 @@ export default function ProfileEditor(props) {
                                         icon={<SettingsIcon sx={{ color: 'white' }} />}
                                     />
                                 </div>
-                                <p className={styles.infoText} >4. Escolha o nome do seu Quiz, descrição, e outras informações relevantes.</p>
+                                <p className={styles.infoText} >5. Escolha o nome do seu Quiz, descrição, e outras informações relevantes.</p>
                             </div>
                         </div>
                     }
@@ -277,10 +301,10 @@ export default function ProfileEditor(props) {
                 />
             }
             <div id={styles.editorBody}>
-                <DragDropContext onDragEnd={step === 0 || step === 2 ? handleDragEndProfiles : handleDragEndQuestions}>
+                <DragDropContext onDragEnd={step === 0 || step === 3 ? handleDragEndProfiles : handleDragEndQuestions}>
                     <div
                         id={styles.leftContainer}
-                        style={{ width: step > 2 ? '0%' : '15%' }}
+                        style={{ width: step === 4 ? '0%' : '15%' }}
                     >
                         <Droppable droppableId="slides">
                             {(provided, snapshot) => (
@@ -309,11 +333,11 @@ export default function ProfileEditor(props) {
                                                     </div>
                                                     <div className={styles.slide}>
                                                         <h4>{i + 1}</h4>
-                                                        <div className={styles.slideBoard} style={{ backgroundColor: quiz.results[i].color }}>
-                                                            <div className={`${styles.slideImgContainer} ${quiz.results[i].img.content === '' ? styles.slideImgPlaceholder : undefined}`}>
+                                                        <div className={styles.slideBoard} style={{ backgroundColor: result.color }}>
+                                                            <div className={`${styles.slideImgContainer} ${result.img.content === '' ? styles.slideImgPlaceholder : undefined}`}>
                                                                 <img
                                                                     style={result.img.positionToFit === 'vertical' ? { height: 'auto', width: '100%' } : { height: '100%', width: 'auto' }}
-                                                                    src={quiz.results[i].img.content}
+                                                                    src={result.img.content}
                                                                 />
                                                             </div>
                                                             <div className={result.name !== '' ? styles.nameMiniContainer : undefined}>
@@ -325,7 +349,22 @@ export default function ProfileEditor(props) {
                                             )}
                                         </Draggable>
                                     )}
-                                    {step === 1 && quiz.questions.map((question, i) =>
+                                    {step === 1 && DESIGN_EDIT_OPTIONS.map((module, i) =>
+                                        <div
+                                            className={`${styles.slideContainer} ${currentSlide === i ? styles.currentSlide : undefined} ${notInDragNDropState ? styles.notInDragNDrop : undefined}`}
+                                            onClick={() => changeCurrentSlide(i)}
+                                            key={i}
+                                        >
+                                            <div className={`${styles.buttonsContainer} ${currentSlide !== i ? styles.showOnHover : undefined}`}                                                    >
+                                            </div>
+                                            <div className={styles.slide}>
+                                                <h4>{module.title}</h4>
+                                                <div className={styles.slideBoard} style={{ backgroundColor: 'white' }}>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                    {step === 2 && quiz.questions.map((question, i) =>
                                         <Draggable key={i} draggableId={`slide-${i}`} index={i}>
                                             {(provided, snapshot) => (
                                                 <div
@@ -350,7 +389,7 @@ export default function ProfileEditor(props) {
                                             )}
                                         </Draggable>
                                     )}
-                                    {step === 2 && quiz.results.map((result, i) =>
+                                    {step === 3 && quiz.results.map((result, i) =>
                                         <Draggable key={i} draggableId={`slide-${i}`} index={i}>
                                             {(provided, snapshot) => (
                                                 <div
@@ -367,7 +406,7 @@ export default function ProfileEditor(props) {
                                     {step === 0 &&
                                         <Button id={styles.addProfileButton} onClick={handleAddProfile} variant='contained' >Adicionar Perfil</Button>
                                     }
-                                    {step === 1 &&
+                                    {step === 2 &&
                                         <Button id={styles.addQuestionButton} onClick={handleAddQuestion} variant='contained' >Adicionar Pergunta</Button>
                                     }
                                 </div>
@@ -377,14 +416,14 @@ export default function ProfileEditor(props) {
                 </DragDropContext>
                 <div
                     id={styles.middleContainer}
-                    style={{ width: step > 2 ? '100%' : '70%' }}
+                    style={{ width: step === 4 ? '100%' : '70%' }}
                 >
                     <div id={styles.editorHead}>
                         <Stepper
                             currentStep={step}
-                            setCurrentStep={setStep}
+                            handleChangeStep={handleChangeStep}
                             stepSize={{ width: '50px', height: '50px' }}
-                            pathSize={{ width: '150px', height: '3px' }}
+                            pathSize={{ width: '120px', height: '3px' }}
                             textColor={'white'}
                             stepStyle={{
                                 background: 'linear-gradient(165deg, rgb(0, 160, 220), rgb(49, 60, 78))',
@@ -400,12 +439,14 @@ export default function ProfileEditor(props) {
                             }}
                             steps={[
                                 <GroupAddIcon sx={{ color: 'white' }} />,
+                                <PaletteIcon sx={{ color: 'white' }} />,
                                 <QuizIcon sx={{ color: 'white' }} />,
                                 <AssessmentIcon sx={{ color: 'white' }} />,
                                 <SettingsIcon sx={{ color: 'white' }} />
                             ]}
                             labels={[
                                 'Criar Perfis',
+                                'Escolher Design',
                                 'Criar Perguntas',
                                 'Layout dos Resultados',
                                 'Toques Finais',
@@ -428,7 +469,7 @@ export default function ProfileEditor(props) {
                             />
                         </div>
                     }
-                    {step === 1 &&
+                    {step === 2 &&
                         <div>
                             <TextField
                                 value={quiz.questions[currentSlide].content}
@@ -442,7 +483,7 @@ export default function ProfileEditor(props) {
                 </div>
                 <div
                     id={styles.rightContainer}
-                    style={{ width: step > 2 ? '0%' : '15%' }}
+                    style={{ width: step === 4 ? '0%' : '15%' }}
                 >
                     {step === 0 && quiz.results.length > 0 &&
                         <div className='flex-start' style={{ paddingTop: '20px' }} >
