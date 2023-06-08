@@ -41,31 +41,9 @@
     transition: all 500ms ease,
 }
 
-.step {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-
-    background-color: #616161;
-    border-radius: 100%;
-    cursor: pointer;
-    transition: all 500ms ease;
-}
-
 .path {
     position: relative;
     display: flex;
     background-color: #616161;
-    transition: all 500ms ease,
-}
-
-.labels {
-    position: absolute;
-    left: -54px;
-    bottom: -22px;
-    width: 160px;
-    font-size: 11px;
     transition: all 500ms ease,
 }

@@ -1,4 +1,5 @@
 import styles from '@/styles/components/Stepper.module.css'
+import Step from './Step'
 
 export default function Stepper(props) {
     const {
@@ -15,18 +16,17 @@ export default function Stepper(props) {
         containerStyle,
         placeholderStepStyle,
         placeholderPathStyle,
-        infoMode
     } = props
 
     function handleChangeStep(index) {
-        if (!infoMode)
+        if (setCurrentStep)
             setCurrentStep(index)
     }
 
     return (
         <div style={{ ...containerStyle }} className={styles.container}>
             <div className={styles.incompleteContainer}>
-                {steps.map((step, i) =>
+                {steps.map((icon, i) =>
                     <div key={i} className={styles.stepPath}>
                         {i !== 0 &&
                             <div
@@ -35,32 +35,27 @@ export default function Stepper(props) {
                             >
                             </div>
                         }
-                        <div
-                            className={styles.step}
-                            style={{ ...stepSize, ...placeholderStepStyle }}
-                            onClick={() => handleChangeStep(i)}
-                        >
-                            {step}
-                            <h4
-                                style={{
-                                    color: currentStep >= i ? textColor : '#616161',
-                                    ...labelStyle
-                                }}
-                                className={styles.labels}>
-                                {labels[i]}
-                            </h4>
-                        </div>
+                        <Step
+                            icon={icon}
+                            click={() => handleChangeStep(i)}
+                            stepStyle={{ ...stepSize, ...placeholderStepStyle }}
+                            label={labels[i]}
+                            labelStyle={{ color: i <= currentStep ? textColor : '#616161', ...labelStyle }}
+                        />
                     </div>
                 )}
             </div>
             <div
                 className={styles.completeContainer}
                 style={{
-                    width: infoMode ? '100%' : `${currentStep * Number(stepSize.width.split('p')[0]) + currentStep * Number(pathSize.width.split('p')[0]) + Number(stepSize.width.split('p')[0])}px`,
+                    width: `${currentStep * Number(stepSize.width.split('p')[0]) + currentStep * Number(pathSize.width.split('p')[0]) + Number(stepSize.width.split('p')[0])}px`,
                 }}
             >
-                {steps.map((step, i) =>
-                    <div key={i} className={styles.stepPath}>
+                {steps.map((icon, i) =>
+                    <div
+                        key={i}
+                        className={styles.stepPath}
+                    >
                         {i !== 0 &&
                             <div
                                 className={styles.path}
@@ -68,13 +63,13 @@ export default function Stepper(props) {
                             >
                             </div>
                         }
-                        <div
-                            className={styles.step}
-                            style={{ ...stepSize, ...stepStyle }}
-                            onClick={() => handleChangeStep(i)}
-                        >
-                            {step}
-                        </div>
+                        <Step
+                            icon={icon}
+                            click={() => handleChangeStep(i)}
+                            stepStyle={{ ...stepSize, ...stepStyle }}
+                            label={labels[i]}
+                            labelStyle={labelStyle}
+                        />
                     </div>
                 )}
             </div>
