@@ -1,6 +1,6 @@
 
 import styles from '../styles/components/FileInput.module.css'
-import { showInfoToast } from '../../utils/toasts'
+import { showErrorToast } from '../../utils/toasts'
 import { useState } from 'react'
 import { IconButton } from '@mui/material'
 
@@ -44,11 +44,11 @@ export default function FileInput(props) {
 
 
             if (event.target.files.length > 1)
-                showInfoToast("Não é possível carregar multiplos arquivos.", 3000)
+                showErrorToast("Não é possível carregar multiplos arquivos.", 3000)
             else if (file.type.split('/')[0] !== 'image')
-                showInfoToast("Tipo incorreto, por favor insira uma imagem.", 3000)
+                showErrorToast("Tipo incorreto, por favor insira uma imagem.", 3000)
             else if (file.size > 4194304)
-                showInfoToast("Por favor insira uma imagem menor que 4MB.", 3000)
+                showErrorToast("Por favor insira uma imagem menor que 4MB.", 3000)
             else {
                 const reader = new FileReader()
 

@@ -9,7 +9,7 @@ import React from 'react';
 import { HexColorPicker } from "react-colorful"
 import { motion } from "framer-motion"
 import { useState } from 'react'
-import { showInfoToast } from '../../utils/toasts'
+import { showErrorToast } from '../../utils/toasts'
 import FileInput from './FileInput'
 import Stepper from './Stepper'
 import Modal from './Modal'
@@ -24,6 +24,7 @@ import QuizIcon from '@mui/icons-material/Quiz';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import PaletteIcon from '@mui/icons-material/Palette';
 import OptionInput from './OptionInput';
+import { CustomTextField } from '../../utils/mui';
 
 const DESIGN_EDIT_OPTIONS = [
     { title: 'Monocromático' },
@@ -31,7 +32,7 @@ const DESIGN_EDIT_OPTIONS = [
 ]
 
 export default function ProfileEditor(props) {
-    const { quiz, setQuiz } = props
+    const { quiz, setQuiz, INICIAL_QUIZ } = props
 
     const [step, setStep] = useState(0)
     const [currentSlide, setCurrentSlide] = useState(0)
@@ -46,14 +47,16 @@ export default function ProfileEditor(props) {
         }))
     }
 
-    function handleDeleteSlide(index) {
+    function handleDeleteQuestion(event, index) {
+        event.stopPropagation()
         setQuiz((prev, i) => ({
             ...prev,
             questions: prev.questions.filter((question, i) => i != index)
         }))
     }
 
-    function handleDuplicateSlide(index) {
+    function handleDuplicateQuestion(event, index) {
+        event.stopPropagation()
         setQuiz((prev, i) => ({
             ...prev,
             questions: prev.questions.slice(0, index + 1)
@@ -111,7 +114,7 @@ export default function ProfileEditor(props) {
 
     function handleAddProfile() {
         if (quiz.results.length >= 16)
-            showInfoToast("Número máximo de 16 perfis atingido.", 3000)
+            showErrorToast("Número máximo de 16 perfis atingido.", 3000)
         else {
             setQuiz(prev => ({
                 ...prev,
@@ -230,7 +233,7 @@ export default function ProfileEditor(props) {
                                         icon={<GroupAddIcon sx={{ color: 'white' }} />}
                                     />
                                 </div>
-                                <p className={styles.infoText} >1. Crie os perfis, eles serão os possíveis resultados dos seus jogadores.</p>
+                                <h3 className={styles.infoText} >1. Crie os perfis.</h3>
                             </div>
                             <div className={styles.infoLine}>
                                 <div className={styles.stepInfoContainer}>
@@ -244,7 +247,7 @@ export default function ProfileEditor(props) {
                                         icon={<PaletteIcon sx={{ color: 'white' }} />}
                                     />
                                 </div>
-                                <p className={styles.infoText} >2. Escolha o design do seu Quiz.</p>
+                                <h3 className={styles.infoText} >2. Escolha o design.</h3>
                             </div>
                             <div className={styles.infoLine}>
                                 <div className={styles.stepInfoContainer} >
@@ -258,7 +261,7 @@ export default function ProfileEditor(props) {
                                         icon={<QuizIcon sx={{ color: 'white' }} />}
                                     />
                                 </div>
-                                <p className={styles.infoText} >3. Crie as perguntas e defina a pontuação de cada uma.</p>
+                                <h3 className={styles.infoText} >3. Crie as perguntas.</h3>
                             </div>
                             <div className={styles.infoLine}>
                                 <div className={styles.stepInfoContainer} >
@@ -272,7 +275,7 @@ export default function ProfileEditor(props) {
                                         icon={<AssessmentIcon sx={{ color: 'white' }} />}
                                     />
                                 </div>
-                                <p className={styles.infoText} >4. Defina a aparência da página no fim do Quiz, podendo incluir gráficos.</p>
+                                <h3 className={styles.infoText} >4. Defina a aparência da página no fim do Quiz.</h3>
                             </div>
                             <div className={styles.infoLine}>
                                 <div className={styles.stepInfoContainer} >
@@ -286,7 +289,7 @@ export default function ProfileEditor(props) {
                                         icon={<SettingsIcon sx={{ color: 'white' }} />}
                                     />
                                 </div>
-                                <p className={styles.infoText} >5. Escolha o nome do seu Quiz, descrição, e outras informações relevantes.</p>
+                                <h3 className={styles.infoText} >5. Escolha o nome do seu Quiz, descrição, e etc.</h3>
                             </div>
                         </div>
                     }
@@ -310,7 +313,7 @@ export default function ProfileEditor(props) {
                             currentStep={step}
                             handleChangeStep={handleChangeStep}
                             stepSize={{ width: '50px', height: '50px' }}
-                            pathSize={{ width: '120px', height: '3px' }}
+                            pathSize={{ width: '70px', height: '3px' }}
                             textColor={'white'}
                             stepStyle={{
                                 background: 'linear-gradient(165deg, rgb(0, 160, 220), rgb(49, 60, 78))',
@@ -332,11 +335,11 @@ export default function ProfileEditor(props) {
                                 <SettingsIcon sx={{ color: 'white' }} />
                             ]}
                             labels={[
-                                'Criar Perfis',
-                                'Escolher Design',
-                                'Criar Perguntas',
-                                'Layout dos Resultados',
-                                'Toques Finais',
+                                'Perfis',
+                                'Design',
+                                'Perguntas',
+                                'Layout',
+                                'Detalhes',
                             ]}
                         />
                     </div>
@@ -347,7 +350,7 @@ export default function ProfileEditor(props) {
                                 setQuiz={setQuiz}
                                 currentSlide={currentSlide}
                             />
-                            <TextField
+                            <CustomTextField
                                 value={quiz.results[currentSlide].name}
                                 label="Profile Name"
                                 onChange={handleProfileNameChange}
@@ -362,7 +365,7 @@ export default function ProfileEditor(props) {
                             <Button style={{ marginTop: '10px' }} variant='outlined' >Adicionar Perfil</Button>
                         </div>
                     }
-                    {step === 2 &&
+                    {step === 2 && quiz.questions.length > 0 &&
                         <div>
                             <TextField
                                 value={quiz.questions[currentSlide].content}
@@ -448,10 +451,10 @@ export default function ProfileEditor(props) {
                                                     {...provided.dragHandleProps}
                                                 >
                                                     <div className={styles.buttonsContainer} >
-                                                        <IconButton onClick={(e) => handleDuplicateSlide(e, i)} size='small' aria-label="copy">
+                                                        <IconButton onClick={(e) => handleDuplicateQuestion(e, i)} size='small' aria-label="copy">
                                                             <ContentCopyIcon />
                                                         </IconButton>
-                                                        <IconButton onClick={(e) => handleDeleteSlide(e, i)} size='small' aria-label="delete">
+                                                        <IconButton onClick={(e) => handleDeleteQuestion(e, i)} size='small' aria-label="delete">
                                                             <DeleteForeverIcon />
                                                         </IconButton>
                                                     </div>

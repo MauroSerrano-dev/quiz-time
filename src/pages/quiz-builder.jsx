@@ -161,7 +161,11 @@ export default function QuizBuilder(props) {
                             <h1>Escolha um Quiz!</h1>
                             <div id={styles.optionsContainer}>
                                 {GAME_MODES.map((gMode, i) =>
-                                    <div key={`Game Mode: ${i}`} className={styles.gameOption} onClick={() => handleSelectMode(gMode.name)}>
+                                    <div
+                                        key={`Game Mode: ${i}`}
+                                        className={styles.gameOption}
+                                        onClick={() => handleSelectMode(gMode.name)}
+                                    >
                                         <h2>{gMode.name}</h2>
                                     </div>
                                 )}
@@ -171,6 +175,7 @@ export default function QuizBuilder(props) {
                         <ProfileEditor
                             quiz={quiz}
                             setQuiz={setQuiz}
+                            INICIAL_QUIZ={INICIAL_QUIZ}
                         />
                     }
                 </motion.div>

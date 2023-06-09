@@ -9,41 +9,10 @@ import Switch from '@mui/material/Switch';
 import { TextField, Button, Select, FormControlLabel, FormGroup, MenuItem, OutlinedInput, InputLabel, FormControl, Box } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { styled } from '@mui/system';
 import NoSessionPage from '@/components/NoSessionPage';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
-
-const CustomTextField = styled(TextField)(({ theme }) => ({
-    '& .MuiFormLabel-root': {
-        color: '#ffffff',
-        transition: 'all 0.25s ease',
-        '&.Mui-focused': {
-            color: theme.palette.primary.main,
-        },
-    },
-    '& .MuiOutlinedInput-root': {
-        '& input': {
-            transition: 'all 0.25s ease',
-            color: '#ffffff',
-        },
-        '& fieldset': {
-            transition: 'border-color 0.25s ease',
-            borderColor: '#ffffff90',
-        },
-        '&:hover fieldset': {
-            borderColor: '#ffffff',
-        },
-        '&.Mui-focused': {
-            '& fieldset': {
-                borderColor: theme.palette.primary.main,
-            },
-            '& input': {
-                color: theme.palette.primary.main,
-            },
-        },
-    },
-}));
+import { CustomTextField } from '../../utils/mui';
 
 const INICIAL_ROOM = {
     name: '',
