@@ -7,11 +7,10 @@
     
     outline-style: solid;
     outline-width: 1px;
-    outline-color: rgba(0, 159, 218, 0.5);
     border-width: 0px;
 
     border-radius: 4px;
-    background-color: rgba(0, 159, 218, 0);
+    background-color: transparent;
     transition: all ease 200ms;
 }
 
@@ -33,7 +32,6 @@
     text-align: center;
 
     height: 70%;
-    background-color: white;
     border-radius: 100%;
 }
 
@@ -45,9 +43,4 @@
     text-align: center;
 
     width: 80%;
-}
-
-.button:hover {
-    outline-color: rgba(0, 159, 218, 1);
-    background-color: rgba(0, 159, 218, 0.04);
 }

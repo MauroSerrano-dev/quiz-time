@@ -13,6 +13,7 @@ const GAME_MODES = [
 
 const INICIAL_QUIZ = {
     name: 'My Quiz Name',
+    buttonColor: '#009fda',
     results: [
         {
             name: 'Perfil 1',

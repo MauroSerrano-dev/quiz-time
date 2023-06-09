@@ -9,7 +9,7 @@
 
 #editorBody {
     position: relative;
-    
+
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -130,6 +130,7 @@
     align-items: center;
     justify-content: flex-start;
     height: 100%;
+    width: 220px;
     overflow: auto;
 
     background-color: rgb(227, 227, 227);
@@ -164,6 +165,7 @@
     right: 0px;
 
     height: 100%;
+    width: 220px;
     background-color: rgb(227, 227, 227);
     box-shadow: 0px 0px 30px 0px black;
     transition: width 300ms ease;
@@ -246,4 +248,21 @@
 
 .slideBoard:hover {
     outline-color: rgb(104, 104, 104);
+}
+
+/* Mobile and Small Window */
+@media (max-width: 800px) {
+    #leftContainer {
+        bottom: 0px;
+        height: 220px;
+        width: 100%;
+    }
+
+    #rightContainer {
+        width: 0px;
+    }
+
+    #slidesContainer {
+        flex-direction: row;
+    }
 }

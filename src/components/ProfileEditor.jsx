@@ -172,13 +172,20 @@ export default function ProfileEditor(props) {
         }))
     }
 
-    function handleColorChange(event) {
+    function handleProfileColor(event) {
         setQuiz(prev => ({
             ...prev,
             results: prev.results.map((result, i) =>
                 currentSlide === i
                     ? { ...result, color: typeof event === 'string' ? event : event.target.value }
                     : result)
+        }))
+    }
+
+    function handleButtonColor(event) {
+        setQuiz(prev => ({
+            ...prev,
+            buttonColor: typeof event === 'string' ? event : event.target.value
         }))
     }
 
@@ -361,7 +368,7 @@ export default function ProfileEditor(props) {
                     }
                     {step === 1 &&
                         <div>
-                            <OptionInput />
+                            <OptionInput color={quiz.buttonColor} />
                             <Button style={{ marginTop: '10px' }} variant='outlined' >Adicionar Perfil</Button>
                         </div>
                     }
@@ -380,7 +387,7 @@ export default function ProfileEditor(props) {
                 <DragDropContext onDragEnd={step === 0 || step === 3 ? handleDragEndProfiles : handleDragEndQuestions}>
                     <div
                         id={styles.leftContainer}
-                        style={{ width: step === 4 ? '0px' : '220px' }}
+                        style={{ width: step === 4 ? '0px' : undefined }}
                     >
                         <Droppable droppableId="slides">
                             {(provided, snapshot) => (
@@ -480,18 +487,34 @@ export default function ProfileEditor(props) {
 
                 <div
                     id={styles.rightContainer}
-                    style={{ width: step === 4 ? '0px' : '220px' }}
+                    style={{ width: step === 4 ? '0px' : undefined }}
                 >
                     {step === 0 && quiz.results.length > 0 &&
                         <div className='flex-start' style={{ paddingTop: '20px' }} >
                             <HexColorPicker
                                 id={styles.colorPicker}
-                                onChange={handleColorChange}
+                                onChange={handleProfileColor}
                                 color={quiz.results[currentSlide].color}
                             />
                             <TextField
                                 value={quiz.results[currentSlide].color}
-                                onChange={handleColorChange}
+                                onChange={handleProfileColor}
+                                variant='standard'
+                                sx={{ width: '60%', height: '200px' }}
+                                autoComplete='off'
+                            />
+                        </div>
+                    }
+                    {step === 1 && quiz.results.length > 0 &&
+                        <div className='flex-start' style={{ paddingTop: '20px' }} >
+                            <HexColorPicker
+                                id={styles.colorPicker}
+                                onChange={handleButtonColor}
+                                color={quiz.buttonColor}
+                            />
+                            <TextField
+                                value={quiz.buttonColor}
+                                onChange={handleButtonColor}
                                 variant='standard'
                                 sx={{ width: '60%', height: '200px' }}
                                 autoComplete='off'
