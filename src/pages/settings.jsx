@@ -136,7 +136,7 @@ const quiz = {
                 { content: 'Uma grande aventura misteriosa', actions: [{ profile: result3, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult3, points: 1 }] },
                 { content: 'Oportunidade para rever os falecidos', actions: [{ profile: result2, points: 1 }, { profile: subResult3, points: 1 }, { profile: subResult2, points: 1 }] },
                 { content: 'Um modo de receber recompensas', actions: [{ profile: result4, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult4, points: 1 }] },
-                { content: 'Algo que sempe chega muito cedo', actions: [{ profile: result1, points: 1 }, { profile: subResult4, points: 1 }, { profile: subResult2, points: 1 }] },
+                { content: 'Algo que sempre chega muito cedo', actions: [{ profile: result1, points: 1 }, { profile: subResult4, points: 1 }, { profile: subResult2, points: 1 }] },
             ],
             optionsRandom: false
         },
@@ -213,7 +213,7 @@ const quiz = {
         {
             content: 'Tempo para mim é...',
             options: [
-                { content: 'Algo que detesto disperdiçar', actions: [{ profile: result1, points: 1 }, { profile: subResult4, points: 1 }, { profile: subResult2, points: 1 }] },
+                { content: 'Algo que detesto desperdiçar', actions: [{ profile: result1, points: 1 }, { profile: subResult4, points: 1 }, { profile: subResult2, points: 1 }] },
                 { content: 'Um grande ciclo', actions: [{ profile: result2, points: 1 }, { profile: subResult3, points: 1 }, { profile: subResult2, points: 1 }] },
                 { content: 'Uma flecha que leva ao inevitável', actions: [{ profile: result4, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult4, points: 1 }] },
                 { content: 'Irrelevante', actions: [{ profile: result3, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult3, points: 1 }] },

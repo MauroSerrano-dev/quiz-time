@@ -368,8 +368,13 @@ export default function ProfileEditor(props) {
                     }
                     {step === 1 &&
                         <div>
-                            <OptionInput color={quiz.buttonColor} />
-                            <Button style={{ marginTop: '10px' }} variant='outlined' >Adicionar Perfil</Button>
+                            <div className={styles.optionsContainer}>
+                                <OptionInput color={quiz.buttonColor} symbol='A' variant='contained' />
+                                <OptionInput color={quiz.buttonColor} symbol='B' variant='contained' />
+                                <OptionInput color={quiz.buttonColor} symbol='C' variant='contained' />
+                                <OptionInput color={quiz.buttonColor} symbol='D' variant='contained' />
+                            </div>
+                            <Button style={{ marginTop: '10px' }} variant='contained' >Adicionar Perfil</Button>
                         </div>
                     }
                     {step === 2 && quiz.questions.length > 0 &&

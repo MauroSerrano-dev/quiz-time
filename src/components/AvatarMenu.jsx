@@ -13,25 +13,28 @@ import Router from "next/router";
 import SupportAgentIcon from '@mui/icons-material/SupportAgent'
 import ContactSupportIcon from '@mui/icons-material/ContactSupport';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
+import Link from 'next/link'
 
 export default function AvatarMenu(props) {
   const { signOut, session } = props
 
   const [anchorEl, setAnchorEl] = React.useState(null)
-  const open = Boolean(anchorEl)
+  const [open, setOpen] = React.useState(false)
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
+    setOpen(true)
   }
 
   const handleClose = () => {
+    setOpen(false)
     setAnchorEl(null)
   }
-  
-  function handleChange(targetPage) {
+  // Substituído onClick para link behave
+  /* function handleChange(targetPage) {
     setAnchorEl(null)
     Router.push(`/${targetPage}`)
-  }
+  } */
 
   const handleLogout = () => {
     setAnchorEl(null)
@@ -85,12 +88,16 @@ export default function AvatarMenu(props) {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem onClick={() => handleChange(`profile?id=${session.user.id}`)}>
-          <ListItemIcon>
-            <AccountCircleRoundedIcon fontSize="medium" />
-          </ListItemIcon>
-          Profile
-        </MenuItem>
+        <Link legacyBehavior href={`/profile?id=${session.user.id}`}>
+          <a>
+            <MenuItem>
+              <ListItemIcon>
+                <AccountCircleRoundedIcon fontSize="medium" />
+              </ListItemIcon>
+              Profile
+            </MenuItem>
+          </a>
+        </Link>
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
             <ContactSupportIcon fontSize="medium" />
@@ -98,18 +105,26 @@ export default function AvatarMenu(props) {
           Quiz List
         </MenuItem>
         <Divider />
-        <MenuItem onClick={() => handleChange('settings')}>
-          <ListItemIcon>
-            <Settings fontSize="medium" />
-          </ListItemIcon>
-          Settings
-        </MenuItem>
-        <MenuItem onClick={() => handleChange('support')}>
-          <ListItemIcon>
-            <SupportAgentIcon fontSize="medium" />
-          </ListItemIcon>
-          Support
-        </MenuItem>
+        <Link legacyBehavior href={'/settings'}>
+          <a>
+            <MenuItem>
+              <ListItemIcon>
+                <Settings fontSize="medium" />
+              </ListItemIcon>
+              Settings
+            </MenuItem>
+          </a>
+        </Link>
+        <Link legacyBehavior href={'/support'}>
+          <a>
+            <MenuItem>
+              <ListItemIcon>
+                <SupportAgentIcon fontSize="medium" />
+              </ListItemIcon>
+              Support
+            </MenuItem>
+          </a>
+        </Link>
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout fontSize="medium" />

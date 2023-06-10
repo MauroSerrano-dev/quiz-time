@@ -240,6 +240,14 @@
     margin-left: 15px;
 }
 
+.optionsContainer {
+    display: grid;
+    place-content: center;
+    grid-template-columns: 1fr 1fr;
+    row-gap: 1rem;
+    column-gap: 2rem;
+}
+
 /* HOVER */
 
 .slideContainer:hover .showOnHover {
