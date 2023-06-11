@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import styles from '../styles/components/OptionInput.module.css'
-import { BorderColor } from '@mui/icons-material'
 
 const SIZES = new Map([
     [
@@ -14,6 +13,21 @@ const SIZES = new Map([
             height: 60
         }
     ]
+])
+
+const SYMBOLS = new Map([
+    [0, { letter: 'A' }],
+    [1, { letter: 'B' }],
+    [2, { letter: 'C' }],
+    [3, { letter: 'D' }],
+    [4, { letter: 'A' }],
+    [5, { letter: 'B' }],
+    [6, { letter: 'C' }],
+    [7, { letter: 'D' }],
+    [8, { letter: 'A' }],
+    [9, { letter: 'B' }],
+    [10, { letter: 'C' }],
+    [11, { letter: 'D' }],
 ])
 
 const BUTTON_ANIMATION = 'all ease 200ms'
@@ -68,12 +82,11 @@ export default function OptionInput(props) {
     const SYMBOL_VARIANTS = new Map([
         ['outlined', {
             outlineStyle: 'solid',
-            outlineWidth: '2px',
+            outlineWidth: symbol === 'letters' ? '2px' : '0px',
             outlineColor: isHovered ? color : color.concat('c0'),
         }],
         ['contained', {
             backgroundColor: '#1c222c',
-            borderRight: 'solid 1px black'
         }],
     ])
 
@@ -122,8 +135,8 @@ export default function OptionInput(props) {
                         <div
                             className={styles.symbol}
                             style={{
-                                width: `${buttonSize.height * 0.4}px`,
-                                height: `${buttonSize.height * 0.4}px`,
+                                width: symbol === 'letters' ? `${buttonSize.height * 0.4}px` : '0px',
+                                height: symbol === 'letters' ? `${buttonSize.height * 0.4}px` : '0px',
                                 transition: BUTTON_ANIMATION,
                                 ...SYMBOL_VARIANTS.get(variant)
                             }}
@@ -132,10 +145,10 @@ export default function OptionInput(props) {
                                 style={{
                                     ...SYMBOL_TEXT_VARIANTS.get(variant),
                                     transition: BUTTON_ANIMATION,
-                                    fontSize: `${buttonSize.height * 0.3}px`
+                                    fontSize: symbol === 'letters' ? `${buttonSize.height * 0.3}px` : '0px'
                                 }}
                             >
-                                {symbol}
+                                {SYMBOLS.get(index).letter}
                             </h2>
                         </div>
                     </div>

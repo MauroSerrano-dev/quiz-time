@@ -27,6 +27,7 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import PaletteIcon from '@mui/icons-material/Palette';
 import OptionInput from './OptionInput';
 import { CustomTextField } from '../../utils/mui';
+import QuestionField from './QuestionField';
 
 const DESIGN_EDIT_OPTIONS = [
     { title: 'Monocromático', value: 'monochrome' },
@@ -233,6 +234,19 @@ export default function ProfileEditor(props) {
         }))
     }
 
+    function handleButtonSymbolChange(event) {
+        setQuiz(prev => ({
+            ...prev,
+            style: {
+                ...prev.style,
+                button: {
+                    ...prev.style.button,
+                    symbol: event.target.value
+                }
+            }
+        }))
+    }
+
     function handleTemplateChange(index) {
         changeCurrentSlide(index)
         setQuiz(prev => ({
@@ -409,10 +423,8 @@ export default function ProfileEditor(props) {
                     }
                     {step === 1 &&
                         <div className={styles.middleOne}>
-                            <TextField
-                                value='Sua pergunta aqui'
-                                variant='outlined'
-                                autoComplete='off'
+                            <QuestionField
+
                             />
                             <div className={styles.optionsContainer}>
                                 <div className={styles.optionsRow}>
@@ -422,7 +434,7 @@ export default function ProfileEditor(props) {
                                             ? quiz.style.button.color
                                             : '#237e0b'
                                         }
-                                        symbol='A'
+                                        symbol={quiz.style.button.symbol}
                                         variant={quiz.style.button.variant}
                                         text='Opção 1'
                                         size='responsive'
@@ -433,7 +445,7 @@ export default function ProfileEditor(props) {
                                             ? quiz.style.button.color
                                             : '#d01937'
                                         }
-                                        symbol='B'
+                                        symbol={quiz.style.button.symbol}
                                         variant={quiz.style.button.variant}
                                         text='Opção 2'
                                         size='responsive'
@@ -445,7 +457,7 @@ export default function ProfileEditor(props) {
                                         color={quiz.style.button.template === 'monochrome'
                                             ? quiz.style.button.color
                                             : '#e7b509'
-                                        } symbol='C'
+                                        } symbol={quiz.style.button.symbol}
                                         variant={quiz.style.button.variant}
                                         text='Opção 3'
                                         size='responsive'
@@ -455,7 +467,7 @@ export default function ProfileEditor(props) {
                                         color={quiz.style.button.template === 'monochrome'
                                             ? quiz.style.button.color
                                             : '#1260be'
-                                        } symbol='D'
+                                        } symbol={quiz.style.button.symbol}
                                         variant={quiz.style.button.variant}
                                         text='Opção 4'
                                         size='responsive'
@@ -543,7 +555,7 @@ export default function ProfileEditor(props) {
                                                                     ? quiz.style.button.color
                                                                     : '#237e0b'
                                                                 }
-                                                                symbol='A'
+                                                                symbol={quiz.style.button.symbol}
                                                                 variant={quiz.style.button.variant}
                                                                 text='Opção 1'
                                                                 size='responsive'
@@ -554,7 +566,7 @@ export default function ProfileEditor(props) {
                                                                     ? quiz.style.button.color
                                                                     : '#d01937'
                                                                 }
-                                                                symbol='B'
+                                                                symbol={quiz.style.button.symbol}
                                                                 variant={quiz.style.button.variant}
                                                                 text='Opção 2'
                                                                 size='responsive'
@@ -566,7 +578,7 @@ export default function ProfileEditor(props) {
                                                                 color={module.value === 'monochrome'
                                                                     ? quiz.style.button.color
                                                                     : '#e7b509'
-                                                                } symbol='C'
+                                                                } symbol={quiz.style.button.symbol}
                                                                 variant={quiz.style.button.variant}
                                                                 text='Opção 3'
                                                                 size='responsive'
@@ -576,7 +588,7 @@ export default function ProfileEditor(props) {
                                                                 color={module.value === 'monochrome'
                                                                     ? quiz.style.button.color
                                                                     : '#1260be'
-                                                                } symbol='D'
+                                                                } symbol={quiz.style.button.symbol}
                                                                 variant={quiz.style.button.variant}
                                                                 text='Opção 4'
                                                                 size='responsive'
@@ -680,6 +692,23 @@ export default function ProfileEditor(props) {
                                 >
                                     <MenuItem value={'contained'}>Contained</MenuItem>
                                     <MenuItem value={'outlined'}>Outlined</MenuItem>
+                                </Select>
+                            </div>
+                            <div className={styles.inputContainer}>
+                                <h4 className={styles.inputLabel}>
+                                    Símbolo
+                                </h4>
+                                <Select
+                                    value={quiz.style.button.symbol}
+                                    onChange={handleButtonSymbolChange}
+                                    sx={{
+                                        width: '100%',
+                                        height: '35px'
+                                    }}
+                                >
+                                    <MenuItem value={'none'}>Nenhum</MenuItem>
+                                    <MenuItem value={'letters'}>Letras</MenuItem>
+                                    <MenuItem value={'polygons'}>Polígonos</MenuItem>
                                 </Select>
                             </div>
                         </div>

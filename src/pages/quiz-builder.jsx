@@ -17,7 +17,8 @@ const INICIAL_QUIZ = {
         button: {
             color: '#009fda',
             variant: 'contained',
-            template: 'monochrome'
+            template: 'monochrome',
+            symbol: 'letters'
         },
     },
     results: [
