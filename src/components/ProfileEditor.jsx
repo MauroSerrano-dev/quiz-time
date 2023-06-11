@@ -29,8 +29,8 @@ import OptionInput from './OptionInput';
 import { CustomTextField } from '../../utils/mui';
 
 const DESIGN_EDIT_OPTIONS = [
-    { title: 'Monocromático' },
-    { title: 'Colorido' },
+    { title: 'Monocromático', value: 'monochrome' },
+    { title: 'Colorido', value: 'colorful' },
 ]
 
 export default function ProfileEditor(props) {
@@ -210,7 +210,13 @@ export default function ProfileEditor(props) {
     }
 
     function handleChangeStep(newStep) {
-        setCurrentSlide(0)
+        if (newStep === 1)
+            setCurrentSlide(quiz.style.button.template === 'monochrome'
+                ? 0
+                : 1
+            )
+        else
+            setCurrentSlide(0)
         setStep(newStep)
     }
 
@@ -222,6 +228,20 @@ export default function ProfileEditor(props) {
                 button: {
                     ...prev.style.button,
                     variant: event.target.value
+                }
+            }
+        }))
+    }
+
+    function handleTemplateChange(index) {
+        changeCurrentSlide(index)
+        setQuiz(prev => ({
+            ...prev,
+            style: {
+                ...prev.style,
+                button: {
+                    ...prev.style.button,
+                    template: index === 0 ? 'monochrome' : 'colorful'
                 }
             }
         }))
@@ -397,34 +417,48 @@ export default function ProfileEditor(props) {
                             <div className={styles.optionsContainer}>
                                 <div className={styles.optionsRow}>
                                     <OptionInput
-                                        color={quiz.style.button.color}
+                                        index={0}
+                                        color={quiz.style.button.template === 'monochrome'
+                                            ? quiz.style.button.color
+                                            : '#237e0b'
+                                        }
                                         symbol='A'
                                         variant={quiz.style.button.variant}
                                         text='Opção 1'
-                                        size='medium'
+                                        size='responsive'
                                     />
                                     <OptionInput
-                                        color={quiz.style.button.color}
+                                        index={1}
+                                        color={quiz.style.button.template === 'monochrome'
+                                            ? quiz.style.button.color
+                                            : '#d01937'
+                                        }
                                         symbol='B'
                                         variant={quiz.style.button.variant}
                                         text='Opção 2'
-                                        size='medium'
+                                        size='responsive'
                                     />
                                 </div>
                                 <div className={styles.optionsRow}>
                                     <OptionInput
-                                        color={quiz.style.button.color}
-                                        symbol='C'
+                                        index={2}
+                                        color={quiz.style.button.template === 'monochrome'
+                                            ? quiz.style.button.color
+                                            : '#e7b509'
+                                        } symbol='C'
                                         variant={quiz.style.button.variant}
                                         text='Opção 3'
-                                        size='medium'
+                                        size='responsive'
                                     />
                                     <OptionInput
-                                        color={quiz.style.button.color}
-                                        symbol='D'
+                                        index={3}
+                                        color={quiz.style.button.template === 'monochrome'
+                                            ? quiz.style.button.color
+                                            : '#1260be'
+                                        } symbol='D'
                                         variant={quiz.style.button.variant}
                                         text='Opção 4'
-                                        size='medium'
+                                        size='responsive'
                                     />
                                 </div>
                             </div>
@@ -493,7 +527,7 @@ export default function ProfileEditor(props) {
                                     {step === 1 && DESIGN_EDIT_OPTIONS.map((module, i) =>
                                         <div
                                             className={`${styles.slideContainer} ${currentSlide === i ? styles.currentSlide : undefined} ${notInDragNDropState ? styles.notInDragNDrop : undefined}`}
-                                            onClick={() => changeCurrentSlide(i)}
+                                            onClick={() => handleTemplateChange(i)}
                                             key={i}
                                         >
                                             <div className={`${styles.buttonsContainer} ${currentSlide !== i ? styles.showOnHover : undefined}`}                                                    >
@@ -501,6 +535,54 @@ export default function ProfileEditor(props) {
                                             <div className={styles.slide}>
                                                 <h4>{module.title}</h4>
                                                 <div className={styles.slideBoard} style={{ backgroundColor: 'white' }}>
+                                                    <div className={styles.optionsContainerSlide}>
+                                                        <div className={styles.optionsRowSlide}>
+                                                            <OptionInput
+                                                                index={4 + (i * 4)}
+                                                                color={module.value === 'monochrome'
+                                                                    ? quiz.style.button.color
+                                                                    : '#237e0b'
+                                                                }
+                                                                symbol='A'
+                                                                variant={quiz.style.button.variant}
+                                                                text='Opção 1'
+                                                                size='responsive'
+                                                            />
+                                                            <OptionInput
+                                                                index={5 + (i * 4)}
+                                                                color={module.value === 'monochrome'
+                                                                    ? quiz.style.button.color
+                                                                    : '#d01937'
+                                                                }
+                                                                symbol='B'
+                                                                variant={quiz.style.button.variant}
+                                                                text='Opção 2'
+                                                                size='responsive'
+                                                            />
+                                                        </div>
+                                                        <div className={styles.optionsRowSlide}>
+                                                            <OptionInput
+                                                                index={6 + (i * 4)}
+                                                                color={module.value === 'monochrome'
+                                                                    ? quiz.style.button.color
+                                                                    : '#e7b509'
+                                                                } symbol='C'
+                                                                variant={quiz.style.button.variant}
+                                                                text='Opção 3'
+                                                                size='responsive'
+                                                            />
+                                                            <OptionInput
+                                                                index={7 + (i * 4)}
+                                                                color={module.value === 'monochrome'
+                                                                    ? quiz.style.button.color
+                                                                    : '#1260be'
+                                                                } symbol='D'
+                                                                variant={quiz.style.button.variant}
+                                                                text='Opção 4'
+                                                                size='responsive'
+                                                            />
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

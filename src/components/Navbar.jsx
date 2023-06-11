@@ -36,13 +36,18 @@ export default function Navbar(props) {
                     </Link>
                 </div>
                 <div id={styles.middle}>
-                    <div className={`${navActive ? styles.active : ''} ${styles.nav_menu_list}`}>
+                    <div className={`${navActive ? styles.active : undefined} ${styles.nav_menu_list}`}>
                         {MENU_LIST.map((option, i) =>
                             <div onClick={() => { setNavActive(false) }}
                                 key={option.name}>
                                 <Link legacyBehavior href={option.href}>
                                     <a>
-                                        <h1 className={styles.navOption} id={option.href === pathname ? styles.currentPage : ''}>{option.name}</h1>
+                                        <h1
+                                            className={styles.navOption}
+                                            id={option.href === pathname ? styles.currentPage : undefined}
+                                        >
+                                            {option.name}
+                                        </h1>
                                     </a>
                                 </Link>
                             </div>
