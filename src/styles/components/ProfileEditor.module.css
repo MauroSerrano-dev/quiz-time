@@ -248,6 +248,23 @@
     column-gap: 2rem;
 }
 
+.inputContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 80%;
+    gap: 7px;
+}
+
+.inputLabel {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+}
+
 /* HOVER */
 
 .slideContainer:hover .showOnHover {

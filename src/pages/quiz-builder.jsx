@@ -13,7 +13,12 @@ const GAME_MODES = [
 
 const INICIAL_QUIZ = {
     name: 'My Quiz Name',
-    buttonColor: '#009fda',
+    style: {
+        button: {
+            color: '#009fda',
+            variant: 'contained'
+        },
+    },
     results: [
         {
             name: 'Perfil 1',

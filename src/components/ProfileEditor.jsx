@@ -2,7 +2,9 @@ import styles from '../styles/components/ProfileEditor.module.css'
 import {
     Button,
     TextField,
-    IconButton
+    IconButton,
+    Select,
+    MenuItem
 } from '@mui/material'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import React from 'react';
@@ -185,7 +187,13 @@ export default function ProfileEditor(props) {
     function handleButtonColor(event) {
         setQuiz(prev => ({
             ...prev,
-            buttonColor: typeof event === 'string' ? event : event.target.value
+            style: {
+                ...prev.style,
+                button: {
+                    ...prev.style.button,
+                    color: typeof event === 'string' ? event : event.target.value
+                }
+            }
         }))
     }
 
@@ -204,6 +212,19 @@ export default function ProfileEditor(props) {
     function handleChangeStep(newStep) {
         setCurrentSlide(0)
         setStep(newStep)
+    }
+
+    function handleButtonVariantChange(event) {
+        setQuiz(prev => ({
+            ...prev,
+            style: {
+                ...prev.style,
+                button: {
+                    ...prev.style.button,
+                    variant: event.target.value
+                }
+            }
+        }))
     }
 
     return (
@@ -368,13 +389,37 @@ export default function ProfileEditor(props) {
                     }
                     {step === 1 &&
                         <div>
+                            <TextField
+                                value='Sua pergunta aqui'
+                                variant='outlined'
+                                autoComplete='off'
+                            />
                             <div className={styles.optionsContainer}>
-                                <OptionInput color={quiz.buttonColor} symbol='A' variant='contained' />
-                                <OptionInput color={quiz.buttonColor} symbol='B' variant='contained' />
-                                <OptionInput color={quiz.buttonColor} symbol='C' variant='contained' />
-                                <OptionInput color={quiz.buttonColor} symbol='D' variant='contained' />
+                                <OptionInput
+                                    color={quiz.style.button.color}
+                                    symbol='A'
+                                    variant={quiz.style.button.variant}
+                                    text='Opção 1'
+                                />
+                                <OptionInput
+                                    color={quiz.style.button.color}
+                                    symbol='B'
+                                    variant={quiz.style.button.variant}
+                                    text='Opção 2'
+                                />
+                                <OptionInput
+                                    color={quiz.style.button.color}
+                                    symbol='C'
+                                    variant={quiz.style.button.variant}
+                                    text='Opção 3'
+                                />
+                                <OptionInput
+                                    color={quiz.style.button.color}
+                                    symbol='D'
+                                    variant={quiz.style.button.variant}
+                                    text='Opção 4'
+                                />
                             </div>
-                            <Button style={{ marginTop: '10px' }} variant='contained' >Adicionar Perfil</Button>
                         </div>
                     }
                     {step === 2 && quiz.questions.length > 0 &&
@@ -515,15 +560,38 @@ export default function ProfileEditor(props) {
                             <HexColorPicker
                                 id={styles.colorPicker}
                                 onChange={handleButtonColor}
-                                color={quiz.buttonColor}
+                                color={quiz.style.button.color}
                             />
                             <TextField
-                                value={quiz.buttonColor}
+                                value={quiz.style.button.color}
                                 onChange={handleButtonColor}
                                 variant='standard'
-                                sx={{ width: '60%', height: '200px' }}
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    width: '60%',
+                                    height: '60px'
+                                }}
                                 autoComplete='off'
                             />
+                            <div className={styles.inputContainer}>
+                                <h4 className={styles.inputLabel}>
+                                    Estilo do Botão
+                                </h4>
+                                <Select
+                                    value={quiz.style.button.variant}
+                                    onChange={handleButtonVariantChange}
+                                    sx={{
+                                        width: '100%',
+                                        height: '35px'
+                                    }}
+                                >
+                                    <MenuItem value={'contained'}>Contained</MenuItem>
+                                    <MenuItem value={'outlined'}>Outlined</MenuItem>
+                                </Select>
+                            </div>
                         </div>
                     }
                 </div>

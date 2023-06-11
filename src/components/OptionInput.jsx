@@ -23,10 +23,12 @@ export default function OptionInput(props) {
 
     const BUTTON_VARIANTS = new Map([
         ['outlined', {
+            transition: 'all ease 200ms',
             outlineColor: isHovered ? color : color.concat('80'),
             backgroundColor: isHovered ? color.concat('0a') : 'transparent',
         }],
         ['contained', {
+            transition: 'all ease 200ms',
             outline: 'none',
             backgroundColor: isHovered ? color.concat('85') : color,
             boxShadow: isHovered ? '0px 3px 25px -10px' : '0px 3px 20px -15px'
@@ -38,7 +40,25 @@ export default function OptionInput(props) {
             backgroundColor: color
         }],
         ['contained', {
-            backgroundColor: isHovered ? '#ffffff85' : '#ffffff',
+            backgroundColor: '#1c222c',
+        }],
+    ])
+
+    const SYMBOL_TEXT_VARIANTS = new Map([
+        ['outlined', {
+        }],
+        ['contained', {
+            transition: 'all ease 200ms',
+            color: isHovered ? color.concat('85') : color,
+        }],
+    ])
+
+    const TEXT_VARIANTS = new Map([
+        ['outlined', {
+            color: color,
+        }],
+        ['contained', {
+            color: '#1c222c',
         }],
     ])
 
@@ -62,7 +82,6 @@ export default function OptionInput(props) {
             }}
         >
             <div className={styles.symbolContainer}>
-                {/* <GroupAddIcon sx={{ color: 'white' }} /> */}
                 <div
                     className={styles.symbol}
                     style={{
@@ -71,11 +90,23 @@ export default function OptionInput(props) {
                         ...SYMBOL_VARIANTS.get(variant)
                     }}
                 >
-                    <h2>{symbol}</h2>
+                    <h2
+                        style={{
+                            ...SYMBOL_TEXT_VARIANTS.get(variant)
+                        }}
+                    >
+                        {symbol}
+                    </h2>
                 </div>
             </div>
-            <div className={styles.text}>
-                {text}
+            <div className={styles.textContainer}>
+                <p
+                    style={{
+                        ...TEXT_VARIANTS.get(variant)
+                    }}
+                >
+                    {text}
+                </p>
             </div>
         </button>
     )
