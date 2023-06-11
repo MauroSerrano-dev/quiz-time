@@ -41,6 +41,7 @@ export default function OptionInput(props) {
         color,
         symbol,
         variant,
+        noSymbol
     } = props
 
     const [isHovered, setIsHovered] = useState(false);
@@ -132,25 +133,27 @@ export default function OptionInput(props) {
             {buttonSize &&
                 <div className={styles.contentContainer}>
                     <div className={styles.symbolContainer}>
-                        <div
-                            className={styles.symbol}
-                            style={{
-                                width: symbol === 'letters' ? `${buttonSize.height * 0.4}px` : '0px',
-                                height: symbol === 'letters' ? `${buttonSize.height * 0.4}px` : '0px',
-                                transition: BUTTON_ANIMATION,
-                                ...SYMBOL_VARIANTS.get(variant)
-                            }}
-                        >
-                            <h2
+                        {!noSymbol &&
+                            <div
+                                className={styles.symbol}
                                 style={{
-                                    ...SYMBOL_TEXT_VARIANTS.get(variant),
+                                    width: symbol === 'letters' ? `${buttonSize.height * 0.4}px` : '0px',
+                                    height: symbol === 'letters' ? `${buttonSize.height * 0.4}px` : '0px',
                                     transition: BUTTON_ANIMATION,
-                                    fontSize: symbol === 'letters' ? `${buttonSize.height * 0.3}px` : '0px'
+                                    ...SYMBOL_VARIANTS.get(variant)
                                 }}
                             >
-                                {SYMBOLS.get(index).letter}
-                            </h2>
-                        </div>
+                                <h2
+                                    style={{
+                                        ...SYMBOL_TEXT_VARIANTS.get(variant),
+                                        transition: BUTTON_ANIMATION,
+                                        fontSize: symbol === 'letters' ? `${buttonSize.height * 0.3}px` : '0px'
+                                    }}
+                                >
+                                    {SYMBOLS.get(index).letter}
+                                </h2>
+                            </div>
+                        }
                     </div>
                     <div className={styles.textContainer}>
                         <p

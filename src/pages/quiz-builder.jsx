@@ -52,47 +52,7 @@ const INICIAL_QUIZ = {
     ],
     questions: [
         {
-            content: '1',
-            options: [
-                { content: '', action: {} },
-                { content: '', action: {} },
-                { content: '', action: {} },
-                { content: '', action: {} },
-            ],
-            optionsRandom: false
-        },
-        {
-            content: '2',
-            options: [
-                { content: '', action: {} },
-                { content: '', action: {} },
-                { content: '', action: {} },
-                { content: '', action: {} },
-            ],
-            optionsRandom: false
-        },
-        {
-            content: '3',
-            options: [
-                { content: '', action: {} },
-                { content: '', action: {} },
-                { content: '', action: {} },
-                { content: '', action: {} },
-            ],
-            optionsRandom: false
-        },
-        {
-            content: '4',
-            options: [
-                { content: '', action: {} },
-                { content: '', action: {} },
-                { content: '', action: {} },
-                { content: '', action: {} },
-            ],
-            optionsRandom: false
-        },
-        {
-            content: '5',
+            content: 'Escreva Sua Pergunta Aqui',
             options: [
                 { content: '', action: {} },
                 { content: '', action: {} },

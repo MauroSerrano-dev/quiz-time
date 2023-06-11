@@ -546,7 +546,7 @@ export default function ProfileEditor(props) {
                                             </div>
                                             <div className={styles.slide}>
                                                 <h4>{module.title}</h4>
-                                                <div className={styles.slideBoard} style={{ backgroundColor: 'white' }}>
+                                                <div className={styles.slideBoard} style={{ backgroundColor: '#1c222c' }}>
                                                     <div className={styles.optionsContainerSlide}>
                                                         <div className={styles.optionsRowSlide}>
                                                             <OptionInput
