@@ -244,8 +244,8 @@
     display: grid;
     place-content: center;
     grid-template-columns: 1fr 1fr;
-    row-gap: 1rem;
-    column-gap: 2rem;
+    row-gap: 15px;
+    column-gap: 15px;
 }
 
 .inputContainer {

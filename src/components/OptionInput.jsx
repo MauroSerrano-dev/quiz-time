@@ -4,8 +4,8 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd'
 
 const SIZES = new Map([
     ['medium', {
-        width: 250,
-        height: 50
+        width: 500,
+        height: 100
     }]
 ])
 
@@ -23,12 +23,10 @@ export default function OptionInput(props) {
 
     const BUTTON_VARIANTS = new Map([
         ['outlined', {
-            transition: 'all ease 200ms',
             outlineColor: isHovered ? color : color.concat('80'),
             backgroundColor: isHovered ? color.concat('0a') : 'transparent',
         }],
         ['contained', {
-            transition: 'all ease 200ms',
             outline: 'none',
             backgroundColor: isHovered ? color.concat('85') : color,
             boxShadow: isHovered ? '0px 3px 25px -10px' : '0px 3px 20px -15px'
@@ -48,7 +46,6 @@ export default function OptionInput(props) {
         ['outlined', {
         }],
         ['contained', {
-            transition: 'all ease 200ms',
             color: isHovered ? color.concat('85') : color,
         }],
     ])
@@ -59,6 +56,7 @@ export default function OptionInput(props) {
         }],
         ['contained', {
             color: '#1c222c',
+            fontSize: `${SIZES.get(size) * 50}px`
         }],
     ])
 
@@ -78,6 +76,7 @@ export default function OptionInput(props) {
             style={{
                 width: `${SIZES.get(size).width}px`,
                 height: `${SIZES.get(size).height}px`,
+                transition: 'all ease 200ms',
                 ...BUTTON_VARIANTS.get(variant)
             }}
         >
@@ -92,7 +91,9 @@ export default function OptionInput(props) {
                 >
                     <h2
                         style={{
-                            ...SYMBOL_TEXT_VARIANTS.get(variant)
+                            ...SYMBOL_TEXT_VARIANTS.get(variant),
+                            transition: 'all ease 200ms',
+                            fontSize: `${SIZES.get(size).width * 0.08}px`
                         }}
                     >
                         {symbol}
@@ -102,7 +103,8 @@ export default function OptionInput(props) {
             <div className={styles.textContainer}>
                 <p
                     style={{
-                        ...TEXT_VARIANTS.get(variant)
+                        ...TEXT_VARIANTS.get(variant),
+                        fontSize: `${SIZES.get(size).width * 0.065}px`
                     }}
                 >
                     {text}
