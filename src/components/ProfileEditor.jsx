@@ -388,37 +388,45 @@ export default function ProfileEditor(props) {
                         </div>
                     }
                     {step === 1 &&
-                        <div>
+                        <div className={styles.middleOne}>
                             <TextField
                                 value='Sua pergunta aqui'
                                 variant='outlined'
                                 autoComplete='off'
                             />
                             <div className={styles.optionsContainer}>
-                                <OptionInput
-                                    color={quiz.style.button.color}
-                                    symbol='A'
-                                    variant={quiz.style.button.variant}
-                                    text='Opção 1'
-                                />
-                                <OptionInput
-                                    color={quiz.style.button.color}
-                                    symbol='B'
-                                    variant={quiz.style.button.variant}
-                                    text='Opção 2'
-                                />
-                                <OptionInput
-                                    color={quiz.style.button.color}
-                                    symbol='C'
-                                    variant={quiz.style.button.variant}
-                                    text='Opção 3'
-                                />
-                                <OptionInput
-                                    color={quiz.style.button.color}
-                                    symbol='D'
-                                    variant={quiz.style.button.variant}
-                                    text='Opção 4'
-                                />
+                                <div className={styles.optionsRow}>
+                                    <OptionInput
+                                        color={quiz.style.button.color}
+                                        symbol='A'
+                                        variant={quiz.style.button.variant}
+                                        text='Opção 1'
+                                        size='medium'
+                                    />
+                                    <OptionInput
+                                        color={quiz.style.button.color}
+                                        symbol='B'
+                                        variant={quiz.style.button.variant}
+                                        text='Opção 2'
+                                        size='medium'
+                                    />
+                                </div>
+                                <div className={styles.optionsRow}>
+                                    <OptionInput
+                                        color={quiz.style.button.color}
+                                        symbol='C'
+                                        variant={quiz.style.button.variant}
+                                        text='Opção 3'
+                                        size='medium'
+                                    />
+                                    <OptionInput
+                                        color={quiz.style.button.color}
+                                        symbol='D'
+                                        variant={quiz.style.button.variant}
+                                        text='Opção 4'
+                                        size='medium'
+                                    />
+                                </div>
                             </div>
                         </div>
                     }

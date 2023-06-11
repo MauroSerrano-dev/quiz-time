@@ -4,8 +4,8 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd'
 
 const SIZES = new Map([
     ['medium', {
-        width: 500,
-        height: 100
+        width: 300,
+        height: 60
     }]
 ])
 

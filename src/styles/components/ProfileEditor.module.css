@@ -145,6 +145,7 @@
     align-items: center;
     justify-content: flex-start;
     height: 100%;
+    width: calc(100% - 440px);
     transition: width 300ms ease;
     padding-top: 3%;
     gap: 8%;
@@ -241,11 +242,24 @@
 }
 
 .optionsContainer {
-    display: grid;
-    place-content: center;
-    grid-template-columns: 1fr 1fr;
-    row-gap: 15px;
-    column-gap: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    gap: 15px;
+}
+
+.optionsRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 15px;
+    width: 80%;
+    height: 50%;
 }
 
 .inputContainer {
@@ -263,6 +277,17 @@
     align-items: flex-start;
     justify-content: center;
     width: 100%;
+}
+
+.middleOne {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    width: 100%;
+    height: 100%;
 }
 
 /* HOVER */
