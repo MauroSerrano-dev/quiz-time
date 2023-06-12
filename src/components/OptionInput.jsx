@@ -4,6 +4,7 @@ import styles from '../styles/components/OptionInput.module.css'
 import { BsTriangleFill } from "react-icons/bs";
 import { BsCircleFill } from "react-icons/bs";
 import { FaSquare } from "react-icons/fa";
+import { motion } from "framer-motion"
 
 const SIZES = new Map([
     [
@@ -35,14 +36,24 @@ export default function OptionInput(props) {
         index,
         text,
         size = 'medium',
-        color = OPTIONS.get(option).color,
+        colorValue = OPTIONS.get(option).color,
         symbol,
         variant,
         noSymbol,
+        symbolColor,
+        textColor,
     } = props
 
     const [isHovered, setIsHovered] = useState(false)
     const [buttonSize, setButtonSize] = useState()
+    const [color, setColor] = useState(colorValue)
+
+    useEffect(() => {
+        if (colorValue.length === 5)
+            setColor(colorValue.slice(0, 4))
+        else
+            setColor(colorValue)
+    }, [colorValue])
 
     useEffect(() => {
         setButtonSize({
@@ -77,43 +88,52 @@ export default function OptionInput(props) {
     ])
 
     const SYMBOL_POLYGONS = new Map([
-        ['triangle', <BsTriangleFill
-            size='100%'
-            color={variant === 'contained' ? '#1c222c' : color}
-            style={{
-                position: 'absolute',
-                transition: ANIMATION,
-            }}
-        />],
-        ['circle', <BsCircleFill
-            size='100%'
-            color={variant === 'contained'
-                ? '#1c222c'
-                : symbol === 'letters'
-                    ? 'transparent'
-                    : color}
-            style={{
-                position: 'absolute',
-                transition: ANIMATION,
-            }}
-        />],
-        ['square', <FaSquare
-            size='100%'
-            color={variant === 'contained' ? '#1c222c' : color}
-            style={{
-                position: 'absolute',
-                transition: ANIMATION,
-            }} />],
-        ['x', <h1
-            className={styles.teste}
-            style={{
-                transition: ANIMATION,
-                color: variant === 'contained' ? '#1c222c' : color,
-                fontFamily: 'Verdana, Geneva, Tahoma, sans-serif',
-                fontSize: buttonSize
-                    ? `${buttonSize.height * 0.5}px`
-                    : '20px', fontWeight: 'bold'
-            }} >X</h1>],
+        ['triangle',
+            <BsTriangleFill
+                size='100%'
+                color={variant === 'contained' ? symbolColor : color}
+                style={{
+                    position: 'absolute',
+                    transition: ANIMATION,
+                }}
+            />
+        ],
+        ['circle',
+            <BsCircleFill
+                size='100%'
+                color={variant === 'contained'
+                    ? symbolColor
+                    : symbol === 'letters'
+                        ? 'transparent'
+                        : color}
+                style={{
+                    position: 'absolute',
+                    transition: ANIMATION,
+                }}
+            />
+        ],
+        ['square',
+            <FaSquare
+                size='100%'
+                color={variant === 'contained' ? symbolColor : color}
+                style={{
+                    position: 'absolute',
+                    transition: ANIMATION,
+                }} />
+        ],
+        ['x',
+            <h1
+                className={styles.teste}
+                style={{
+                    color: variant === 'contained' ? symbolColor : color,
+                    mozUserSelect: 'none',
+                    webkitUserSelect: 'none',
+                    userSelect: 'none',
+                    fontFamily: 'Verdana, Geneva, Tahoma, sans-serif',
+                }} >
+                X
+            </h1>
+        ],
     ])
 
     const SYMBOL_VARIANTS = new Map([
@@ -127,7 +147,7 @@ export default function OptionInput(props) {
         }],
         ['contained', {
             outlineColor: 'transparent',
-            backgroundColor: '#1c222c',
+            backgroundColor: symbolColor,
         }],
     ])
 
@@ -145,7 +165,7 @@ export default function OptionInput(props) {
             color: color,
         }],
         ['contained', {
-            color: '#1c222c',
+            color: textColor,
             fontSize: `${SIZES.get(size) * 50}px`
         }],
     ])
@@ -191,6 +211,11 @@ export default function OptionInput(props) {
                                     outlineWidth: symbol === 'none' ? '0px' : (buttonSize ? `${buttonSize.height * 0.026}px` : '3px'),
                                     ...SYMBOL_VARIANTS.get(variant),
                                     backgroundColor: 'transparent',
+                                    fontSize: symbol === 'none'
+                                        ? '0px'
+                                        : buttonSize
+                                            ? `${buttonSize.height * 0.27}px`
+                                            : '20px',
                                 }}
                             >
                                 {SYMBOL_POLYGONS.get(symbol === 'polygons'

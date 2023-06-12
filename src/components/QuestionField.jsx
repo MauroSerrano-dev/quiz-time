@@ -7,12 +7,20 @@ export default function QuestionField(props) {
 
     const {
         variant,
-        color,
+        colorValue,
         index,
         value,
         disabled,
     } = props
     const [containerSize, setContainerSize] = useState()
+    const [color, setColor] = useState(colorValue)
+
+    useEffect(() => {
+        if (colorValue.length === 5)
+            setColor(colorValue.slice(0, 4))
+        else
+            setColor(colorValue)
+    }, [colorValue])
 
     const CONTAINER_VARIANTS = new Map([
         ['text', {
@@ -63,8 +71,9 @@ export default function QuestionField(props) {
             style={{
                 transition: ANIMATION,
                 borderStyle: 'solid',
-                borderWidth: containerSize ? `${containerSize.height * 0.026}px` : '3px',
+                borderWidth: containerSize ? `${containerSize.height * 0.026}px` : '0px',
                 fontWeight: 'bold',
+                fontSize: containerSize ? `${containerSize.height * 0.6}px` : '0px',
                 ...CONTAINER_VARIANTS.get(variant)
             }}
             disabled={disabled}

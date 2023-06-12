@@ -19,6 +19,10 @@ import FileInput from './FileInput'
 import Stepper from './Stepper'
 import Modal from './Modal'
 import Step from './Step';
+import ColorInput from './ColorInput';
+import OptionInput from './OptionInput'
+import { CustomTextField } from '../../utils/mui'
+import QuestionField from './QuestionField'
 
 // ICONS
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
@@ -28,9 +32,6 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd'
 import QuizIcon from '@mui/icons-material/Quiz'
 import AssessmentIcon from '@mui/icons-material/Assessment'
 import PaletteIcon from '@mui/icons-material/Palette'
-import OptionInput from './OptionInput'
-import { CustomTextField } from '../../utils/mui'
-import QuestionField from './QuestionField'
 import InterestsIcon from '@mui/icons-material/Interests'
 import PentagonIcon from '@mui/icons-material/Pentagon'
 import GamepadIcon from '@mui/icons-material/Gamepad'
@@ -38,6 +39,7 @@ import LiveHelpIcon from '@mui/icons-material/LiveHelp'
 import LiveHelpRoundedIcon from '@mui/icons-material/LiveHelpRounded'
 import CategoryRoundedIcon from '@mui/icons-material/CategoryRounded'
 import GamepadRoundedIcon from '@mui/icons-material/GamepadRounded'
+import TextFieldsRoundedIcon from '@mui/icons-material/TextFieldsRounded';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -231,6 +233,36 @@ export default function ProfileEditor(props) {
                 question: {
                     ...prev.style.button,
                     color: typeof event === 'string'
+                        ? event
+                        : (event.target.value.length > 7 ? prev.style.question.color : event.target.value)
+                }
+            }
+        }))
+    }
+
+    function handleSymbolColor(event) {
+        setQuiz(prev => ({
+            ...prev,
+            style: {
+                ...prev.style,
+                button: {
+                    ...prev.style.button,
+                    symbolColor: typeof event === 'string'
+                        ? event
+                        : (event.target.value.length > 7 ? prev.style.question.color : event.target.value)
+                }
+            }
+        }))
+    }
+
+    function handleTextColor(event) {
+        setQuiz(prev => ({
+            ...prev,
+            style: {
+                ...prev.style,
+                button: {
+                    ...prev.style.button,
+                    textColor: typeof event === 'string'
                         ? event
                         : (event.target.value.length > 7 ? prev.style.question.color : event.target.value)
                 }
@@ -476,19 +508,23 @@ export default function ProfileEditor(props) {
                     }
                     {step === 1 &&
                         <div className={styles.middleOne}>
-                            <QuestionField
-                                index={0}
-                                value='Sua Pergunta Aqui'
-                                variant={quiz.style.question.variant}
-                                color={quiz.style.question.color}
-                                disabled
-                            />
+                            <div style={{ width: '95%', height: '15%' }}>
+                                <QuestionField
+                                    index={0}
+                                    value='Sua Pergunta Aqui'
+                                    variant={quiz.style.question.variant}
+                                    colorValue={quiz.style.question.color}
+                                    disabled
+                                />
+                            </div>
                             <div className={styles.optionsContainer}>
                                 <div className={styles.optionsRow}>
                                     <OptionInput
+                                        textColor={quiz.style.button.textColor}
+                                        symbolColor={quiz.style.button.symbolColor}
                                         option={0}
                                         index={0}
-                                        color={quiz.style.button.template === 'monochrome'
+                                        colorValue={quiz.style.button.template === 'monochrome'
                                             ? quiz.style.button.color
                                             : '#237e0b'
                                         }
@@ -498,9 +534,11 @@ export default function ProfileEditor(props) {
                                         size='responsive'
                                     />
                                     <OptionInput
+                                        textColor={quiz.style.button.textColor}
+                                        symbolColor={quiz.style.button.symbolColor}
                                         option={1}
                                         index={1}
-                                        color={quiz.style.button.template === 'monochrome'
+                                        colorValue={quiz.style.button.template === 'monochrome'
                                             ? quiz.style.button.color
                                             : '#d01937'
                                         }
@@ -512,9 +550,11 @@ export default function ProfileEditor(props) {
                                 </div>
                                 <div className={styles.optionsRow}>
                                     <OptionInput
+                                        textColor={quiz.style.button.textColor}
+                                        symbolColor={quiz.style.button.symbolColor}
                                         option={2}
                                         index={2}
-                                        color={quiz.style.button.template === 'monochrome'
+                                        colorValue={quiz.style.button.template === 'monochrome'
                                             ? quiz.style.button.color
                                             : '#e7b509'
                                         } symbol={quiz.style.button.symbol}
@@ -523,9 +563,11 @@ export default function ProfileEditor(props) {
                                         size='responsive'
                                     />
                                     <OptionInput
+                                        textColor={quiz.style.button.textColor}
+                                        symbolColor={quiz.style.button.symbolColor}
                                         option={3}
                                         index={3}
-                                        color={quiz.style.button.template === 'monochrome'
+                                        colorValue={quiz.style.button.template === 'monochrome'
                                             ? quiz.style.button.color
                                             : '#1260be'
                                         } symbol={quiz.style.button.symbol}
@@ -608,12 +650,23 @@ export default function ProfileEditor(props) {
                                             <div className={styles.slide}>
                                                 <h4>{module.title}</h4>
                                                 <div className={styles.slideBoard} style={{ backgroundColor: '#1c222c' }}>
+                                                    <div className={styles.miniQuestion}>
+                                                        <QuestionField
+                                                            index={1 + (i * 1)}
+                                                            value='Sua Pergunta Aqui'
+                                                            variant={quiz.style.question.variant}
+                                                            colorValue={quiz.style.question.color}
+                                                            disabled
+                                                        />
+                                                    </div>
                                                     <div className={styles.optionsContainerSlide}>
                                                         <div className={styles.optionsRowSlide}>
                                                             <OptionInput
+                                                                textColor={quiz.style.button.textColor}
+                                                                symbolColor={quiz.style.button.symbolColor}
                                                                 option={0}
                                                                 index={4 + (i * 4)}
-                                                                color={module.value === 'monochrome'
+                                                                colorValue={module.value === 'monochrome'
                                                                     ? quiz.style.button.color
                                                                     : undefined
                                                                 }
@@ -623,9 +676,11 @@ export default function ProfileEditor(props) {
                                                                 size='responsive'
                                                             />
                                                             <OptionInput
+                                                                textColor={quiz.style.button.textColor}
+                                                                symbolColor={quiz.style.button.symbolColor}
                                                                 option={1}
                                                                 index={5 + (i * 4)}
-                                                                color={module.value === 'monochrome'
+                                                                colorValue={module.value === 'monochrome'
                                                                     ? quiz.style.button.color
                                                                     : undefined
                                                                 }
@@ -637,9 +692,11 @@ export default function ProfileEditor(props) {
                                                         </div>
                                                         <div className={styles.optionsRowSlide}>
                                                             <OptionInput
+                                                                textColor={quiz.style.button.textColor}
+                                                                symbolColor={quiz.style.button.symbolColor}
                                                                 option={2}
                                                                 index={6 + (i * 4)}
-                                                                color={module.value === 'monochrome'
+                                                                colorValue={module.value === 'monochrome'
                                                                     ? quiz.style.button.color
                                                                     : undefined
                                                                 }
@@ -649,9 +706,11 @@ export default function ProfileEditor(props) {
                                                                 size='responsive'
                                                             />
                                                             <OptionInput
+                                                                textColor={quiz.style.button.textColor}
+                                                                symbolColor={quiz.style.button.symbolColor}
                                                                 option={3}
                                                                 index={7 + (i * 4)}
-                                                                color={module.value === 'monochrome'
+                                                                colorValue={module.value === 'monochrome'
                                                                     ? quiz.style.button.color
                                                                     : undefined
                                                                 }
@@ -711,7 +770,10 @@ export default function ProfileEditor(props) {
                     {step === 0 && quiz.results.length > 0 &&
                         <div className='flex start' style={{ paddingTop: '20px' }} >
                             <HexColorPicker
-                                id={styles.colorPicker}
+                                style={{
+                                    width: '150px',
+                                    height: '150px',
+                                }}
                                 onChange={handleProfileColor}
                                 color={quiz.results[currentSlide].color}
                             />
@@ -726,29 +788,6 @@ export default function ProfileEditor(props) {
                     }
                     {step === 1 && quiz.results.length > 0 &&
                         <div className='flex start' style={{ paddingTop: '20px' }} >
-                            {quiz.style.button.template === 'monochrome' &&
-                                <div className='flex center'>
-                                    <HexColorPicker
-                                        id={styles.colorPicker}
-                                        onChange={handleButtonColor}
-                                        color={quiz.style.button.color}
-                                    />
-                                    <TextField
-                                        value={quiz.style.button.color}
-                                        onChange={handleButtonColor}
-                                        variant='standard'
-                                        sx={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            width: '60%',
-                                            height: '60px'
-                                        }}
-                                        autoComplete='off'
-                                    />
-                                </div>
-                            }
                             <div className={styles.inputContainer}>
                                 <div className='flex row start size100' style={{ gap: '3%' }}>
                                     <LiveHelpRoundedIcon sx={{ color: '#1c222c' }} />
@@ -770,20 +809,14 @@ export default function ProfileEditor(props) {
                                             width: '100%',
                                         }}
                                     >
-                                        <MenuItem value={'contained'}>Contained</MenuItem>
-                                        <MenuItem value={'outlined'}>Outlined</MenuItem>
                                         <MenuItem value={'text'}>Text</MenuItem>
+                                        <MenuItem value={'outlined'}>Outlined</MenuItem>
+                                        <MenuItem value={'contained'}>Contained</MenuItem>
                                     </Select>
                                 </FormControl>
-                                <TextField
+                                <ColorInput
                                     onChange={handleQuestionColor}
-                                    variant='outlined'
-                                    label='Cor'
                                     value={quiz.style.question.color}
-                                    size='small'
-                                    sx={{
-                                        width: '100%',
-                                    }}
                                 />
                             </div>
                             <div className={styles.inputContainer}>
@@ -806,10 +839,16 @@ export default function ProfileEditor(props) {
                                             width: '100%',
                                         }}
                                     >
-                                        <MenuItem value={'contained'}>Contained</MenuItem>
                                         <MenuItem value={'outlined'}>Outlined</MenuItem>
+                                        <MenuItem value={'contained'}>Contained</MenuItem>
                                     </Select>
                                 </FormControl>
+                                {quiz.style.button.template === 'monochrome' &&
+                                    <ColorInput
+                                        onChange={handleButtonColor}
+                                        value={quiz.style.button.color}
+                                    />
+                                }
                             </div>
                             <div className={styles.inputContainer}>
                                 <div className='flex row start size100' style={{ gap: '3%' }}>
@@ -836,6 +875,41 @@ export default function ProfileEditor(props) {
                                         <MenuItem value={'polygons'}>Polígonos</MenuItem>
                                     </Select>
                                 </FormControl>
+                                <ColorInput
+                                    onChange={handleSymbolColor}
+                                    value={quiz.style.button.symbolColor}
+                                />
+                            </div>
+                            <div className={styles.inputContainer}>
+                                <div className='flex row start size100' style={{ gap: '3%' }}>
+                                    <TextFieldsRoundedIcon sx={{ color: '#1c222c' }} />
+                                    <h4 className={styles.inputLabel}>
+                                        Texto
+                                    </h4>
+                                </div>
+                                <FormControl sx={{ m: 1, width: '100%' }}>
+                                    <InputLabel>
+                                        Fonte
+                                    </InputLabel>
+                                    <Select
+                                        input={<OutlinedInput label="Fonte" />}
+                                        value={quiz.style.button.symbol}
+                                        onChange={handleButtonSymbolChange}
+                                        size='small'
+                                        sx={{
+                                            width: '100%',
+                                        }}
+                                    >
+                                        <MenuItem value={'none'}>Nenhum</MenuItem>
+                                        <MenuItem value={'letters'}>Letras</MenuItem>
+                                        <MenuItem value={'polygons'}>Polígonos</MenuItem>
+                                    </Select>
+                                </FormControl>
+                                <ColorInput
+                                    onChange={handleTextColor}
+                                    value={quiz.style.button.textColor}
+                                    upPosition
+                                />
                             </div>
                         </div>
                     }

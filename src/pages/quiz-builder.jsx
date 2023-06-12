@@ -16,13 +16,15 @@ const INICIAL_QUIZ = {
     style: {
         question: {
             color: '#009fda',
-            variant: 'contained'
+            variant: 'text'
         },
         button: {
             color: '#009fda',
-            symbol: 'letters',
             variant: 'contained',
             template: 'monochrome',
+            symbol: 'polygons',
+            symbolColor: '#1c222c',
+            textColor: '#1c222c'
         },
     },
     results: [
