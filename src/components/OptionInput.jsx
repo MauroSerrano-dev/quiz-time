@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react'
 import styles from '../styles/components/OptionInput.module.css'
 
+import { BsTriangleFill } from "react-icons/bs";
+import { BsCircleFill } from "react-icons/bs";
+import { FaSquare } from "react-icons/fa";
+
 const SIZES = new Map([
     [
         'responsive', {
@@ -15,37 +19,30 @@ const SIZES = new Map([
     ]
 ])
 
-const SYMBOLS = new Map([
-    [0, { letter: 'A' }],
-    [1, { letter: 'B' }],
-    [2, { letter: 'C' }],
-    [3, { letter: 'D' }],
-    [4, { letter: 'A' }],
-    [5, { letter: 'B' }],
-    [6, { letter: 'C' }],
-    [7, { letter: 'D' }],
-    [8, { letter: 'A' }],
-    [9, { letter: 'B' }],
-    [10, { letter: 'C' }],
-    [11, { letter: 'D' }],
+const OPTIONS = new Map([
+    [0, { letter: 'A', color: '#237e0b', polygon: 'triangle' }],
+    [1, { letter: 'B', color: '#d01937', polygon: 'circle' }],
+    [2, { letter: 'C', color: '#e7b509', polygon: 'square' }],
+    [3, { letter: 'D', color: '#1260be', polygon: 'x' }],
 ])
 
-const BUTTON_ANIMATION = 'all ease 200ms'
+const ANIMATION = 'all ease 400ms'
 
 export default function OptionInput(props) {
 
     const {
+        option,
         index,
         text,
         size = 'medium',
-        color,
+        color = OPTIONS.get(option).color,
         symbol,
         variant,
-        noSymbol
+        noSymbol,
     } = props
 
-    const [isHovered, setIsHovered] = useState(false);
-    const [buttonSize, setButtonSize] = useState();
+    const [isHovered, setIsHovered] = useState(false)
+    const [buttonSize, setButtonSize] = useState()
 
     useEffect(() => {
         setButtonSize({
@@ -69,24 +66,67 @@ export default function OptionInput(props) {
 
     const BUTTON_VARIANTS = new Map([
         ['outlined', {
-            outlineStyle: 'solid',
-            outlineWidth: '2px',
-            outlineColor: isHovered ? color : color.concat('c0'),
+            borderColor: isHovered ? color : color.concat('c0'),
             backgroundColor: isHovered ? color.concat('25') : color.concat('0a'),
         }],
         ['contained', {
+            borderColor: 'transparent',
             backgroundColor: isHovered ? color.concat('c0') : color,
             boxShadow: isHovered ? '0px 3px 25px -10px' : '0px 3px 20px -15px'
         }],
     ])
 
+    const SYMBOL_POLYGONS = new Map([
+        ['triangle', <BsTriangleFill
+            size='100%'
+            color={variant === 'contained' ? '#1c222c' : color}
+            style={{
+                position: 'absolute',
+                transition: ANIMATION,
+            }}
+        />],
+        ['circle', <BsCircleFill
+            size='100%'
+            color={variant === 'contained'
+                ? '#1c222c'
+                : symbol === 'letters'
+                    ? 'transparent'
+                    : color}
+            style={{
+                position: 'absolute',
+                transition: ANIMATION,
+            }}
+        />],
+        ['square', <FaSquare
+            size='100%'
+            color={variant === 'contained' ? '#1c222c' : color}
+            style={{
+                position: 'absolute',
+                transition: ANIMATION,
+            }} />],
+        ['x', <h1
+            className={styles.teste}
+            style={{
+                transition: ANIMATION,
+                color: variant === 'contained' ? '#1c222c' : color,
+                fontFamily: 'Verdana, Geneva, Tahoma, sans-serif',
+                fontSize: buttonSize
+                    ? `${buttonSize.height * 0.5}px`
+                    : '20px', fontWeight: 'bold'
+            }} >X</h1>],
+    ])
+
     const SYMBOL_VARIANTS = new Map([
         ['outlined', {
-            outlineStyle: 'solid',
-            outlineWidth: symbol === 'letters' ? '2px' : '0px',
-            outlineColor: isHovered ? color : color.concat('c0'),
+            outlineColor: symbol === 'polygons'
+                ? 'transparent'
+                : isHovered
+                    ? color
+                    : color.concat('c0'),
+            borderRadius: symbol === 'polygons' ? '0px' : '100%'
         }],
         ['contained', {
+            outlineColor: 'transparent',
             backgroundColor: '#1c222c',
         }],
     ])
@@ -126,31 +166,46 @@ export default function OptionInput(props) {
             style={{
                 width: size === 'responsive' ? '50%' : `${SIZES.get(size).width}px`,
                 height: size === 'responsive' ? '100%' : `${SIZES.get(size).height}px`,
-                transition: BUTTON_ANIMATION,
+                transition: ANIMATION,
+                borderStyle: 'solid',
+                borderWidth: buttonSize ? `${buttonSize.height * 0.026}px` : '3px',
                 ...BUTTON_VARIANTS.get(variant)
             }}
         >
             {buttonSize &&
                 <div className={styles.contentContainer}>
-                    <div className={styles.symbolContainer}>
+                    <div className={styles.symbolContainer}
+                        style={{
+                            paddingRight: symbol === 'none' ? '0px' : '5%',
+                        }}
+                    >
                         {!noSymbol &&
                             <div
                                 className={styles.symbol}
                                 style={{
-                                    width: symbol === 'letters' ? `${buttonSize.height * 0.4}px` : '0px',
-                                    height: symbol === 'letters' ? `${buttonSize.height * 0.4}px` : '0px',
-                                    transition: BUTTON_ANIMATION,
-                                    ...SYMBOL_VARIANTS.get(variant)
+                                    position: 'relative',
+                                    width: symbol === 'none' ? '0px' : `${buttonSize.height * 0.4}px`,
+                                    height: symbol === 'none' ? '0px' : `${buttonSize.height * 0.4}px`,
+                                    transition: ANIMATION,
+                                    outlineStyle: 'solid',
+                                    outlineWidth: symbol === 'none' ? '0px' : (buttonSize ? `${buttonSize.height * 0.026}px` : '3px'),
+                                    ...SYMBOL_VARIANTS.get(variant),
+                                    backgroundColor: 'transparent',
                                 }}
                             >
+                                {SYMBOL_POLYGONS.get(symbol === 'polygons'
+                                    ? OPTIONS.get(option).polygon
+                                    : 'circle'
+                                )}
                                 <h2
                                     style={{
                                         ...SYMBOL_TEXT_VARIANTS.get(variant),
-                                        transition: BUTTON_ANIMATION,
-                                        fontSize: symbol === 'letters' ? `${buttonSize.height * 0.3}px` : '0px'
+                                        transition: ANIMATION,
+                                        position: 'absolute',
+                                        fontSize: symbol === 'letters' ? `${buttonSize.height * 0.3}px` : '0px',
                                     }}
                                 >
-                                    {SYMBOLS.get(index).letter}
+                                    {OPTIONS.get(option).letter}
                                 </h2>
                             </div>
                         }
@@ -159,7 +214,8 @@ export default function OptionInput(props) {
                         <p
                             style={{
                                 ...TEXT_VARIANTS.get(variant),
-                                fontSize: `${buttonSize.height * 0.3}px`
+                                fontSize: `${buttonSize.height * 0.3}px`,
+                                transition: ANIMATION,
                             }}
                         >
                             {text}
@@ -167,6 +223,6 @@ export default function OptionInput(props) {
                     </div>
                 </div>
             }
-        </button>
+        </button >
     )
 }

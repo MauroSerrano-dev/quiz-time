@@ -4,7 +4,10 @@ import {
     TextField,
     IconButton,
     Select,
-    MenuItem
+    MenuItem,
+    InputLabel,
+    FormControl,
+    OutlinedInput
 } from '@mui/material'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import React from 'react';
@@ -22,16 +25,36 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import SettingsIcon from '@mui/icons-material/Settings'
 import GroupAddIcon from '@mui/icons-material/GroupAdd'
-import QuizIcon from '@mui/icons-material/Quiz';
-import AssessmentIcon from '@mui/icons-material/Assessment';
-import PaletteIcon from '@mui/icons-material/Palette';
-import OptionInput from './OptionInput';
-import { CustomTextField } from '../../utils/mui';
-import QuestionField from './QuestionField';
+import QuizIcon from '@mui/icons-material/Quiz'
+import AssessmentIcon from '@mui/icons-material/Assessment'
+import PaletteIcon from '@mui/icons-material/Palette'
+import OptionInput from './OptionInput'
+import { CustomTextField } from '../../utils/mui'
+import QuestionField from './QuestionField'
+import InterestsIcon from '@mui/icons-material/Interests'
+import PentagonIcon from '@mui/icons-material/Pentagon'
+import GamepadIcon from '@mui/icons-material/Gamepad'
+import LiveHelpIcon from '@mui/icons-material/LiveHelp'
+import LiveHelpRoundedIcon from '@mui/icons-material/LiveHelpRounded'
+import CategoryRoundedIcon from '@mui/icons-material/CategoryRounded'
+import GamepadRoundedIcon from '@mui/icons-material/GamepadRounded'
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+}
 
 const DESIGN_EDIT_OPTIONS = [
     { title: 'Monocromático', value: 'monochrome' },
     { title: 'Colorido', value: 'colorful' },
+    { title: 'Custom', value: 'custom' },
 ]
 
 export default function ProfileEditor(props) {
@@ -192,7 +215,24 @@ export default function ProfileEditor(props) {
                 ...prev.style,
                 button: {
                     ...prev.style.button,
-                    color: typeof event === 'string' ? event : event.target.value
+                    color: typeof event === 'string'
+                        ? event
+                        : (event.target.value.length > 7 ? prev.style.button.color : event.target.value)
+                }
+            }
+        }))
+    }
+
+    function handleQuestionColor(event) {
+        setQuiz(prev => ({
+            ...prev,
+            style: {
+                ...prev.style,
+                question: {
+                    ...prev.style.button,
+                    color: typeof event === 'string'
+                        ? event
+                        : (event.target.value.length > 7 ? prev.style.question.color : event.target.value)
                 }
             }
         }))
@@ -256,6 +296,19 @@ export default function ProfileEditor(props) {
                 button: {
                     ...prev.style.button,
                     template: index === 0 ? 'monochrome' : 'colorful'
+                }
+            }
+        }))
+    }
+
+    function handleQuestionVariantChange(event) {
+        setQuiz(prev => ({
+            ...prev,
+            style: {
+                ...prev.style,
+                question: {
+                    ...prev.style.question,
+                    variant: event.target.value
                 }
             }
         }))
@@ -406,7 +459,7 @@ export default function ProfileEditor(props) {
                         />
                     </div>
                     {step === 0 && quiz.results.length > 0 &&
-                        <div className='flex-start'>
+                        <div className='flex start'>
                             <FileInput
                                 quiz={quiz}
                                 setQuiz={setQuiz}
@@ -424,11 +477,16 @@ export default function ProfileEditor(props) {
                     {step === 1 &&
                         <div className={styles.middleOne}>
                             <QuestionField
-
+                                index={0}
+                                value='Sua Pergunta Aqui'
+                                variant={quiz.style.question.variant}
+                                color={quiz.style.question.color}
+                                disabled
                             />
                             <div className={styles.optionsContainer}>
                                 <div className={styles.optionsRow}>
                                     <OptionInput
+                                        option={0}
                                         index={0}
                                         color={quiz.style.button.template === 'monochrome'
                                             ? quiz.style.button.color
@@ -440,6 +498,7 @@ export default function ProfileEditor(props) {
                                         size='responsive'
                                     />
                                     <OptionInput
+                                        option={1}
                                         index={1}
                                         color={quiz.style.button.template === 'monochrome'
                                             ? quiz.style.button.color
@@ -453,6 +512,7 @@ export default function ProfileEditor(props) {
                                 </div>
                                 <div className={styles.optionsRow}>
                                     <OptionInput
+                                        option={2}
                                         index={2}
                                         color={quiz.style.button.template === 'monochrome'
                                             ? quiz.style.button.color
@@ -463,6 +523,7 @@ export default function ProfileEditor(props) {
                                         size='responsive'
                                     />
                                     <OptionInput
+                                        option={3}
                                         index={3}
                                         color={quiz.style.button.template === 'monochrome'
                                             ? quiz.style.button.color
@@ -550,10 +611,11 @@ export default function ProfileEditor(props) {
                                                     <div className={styles.optionsContainerSlide}>
                                                         <div className={styles.optionsRowSlide}>
                                                             <OptionInput
+                                                                option={0}
                                                                 index={4 + (i * 4)}
                                                                 color={module.value === 'monochrome'
                                                                     ? quiz.style.button.color
-                                                                    : '#237e0b'
+                                                                    : undefined
                                                                 }
                                                                 symbol={quiz.style.button.symbol}
                                                                 variant={quiz.style.button.variant}
@@ -561,10 +623,11 @@ export default function ProfileEditor(props) {
                                                                 size='responsive'
                                                             />
                                                             <OptionInput
+                                                                option={1}
                                                                 index={5 + (i * 4)}
                                                                 color={module.value === 'monochrome'
                                                                     ? quiz.style.button.color
-                                                                    : '#d01937'
+                                                                    : undefined
                                                                 }
                                                                 symbol={quiz.style.button.symbol}
                                                                 variant={quiz.style.button.variant}
@@ -574,21 +637,25 @@ export default function ProfileEditor(props) {
                                                         </div>
                                                         <div className={styles.optionsRowSlide}>
                                                             <OptionInput
+                                                                option={2}
                                                                 index={6 + (i * 4)}
                                                                 color={module.value === 'monochrome'
                                                                     ? quiz.style.button.color
-                                                                    : '#e7b509'
-                                                                } symbol={quiz.style.button.symbol}
+                                                                    : undefined
+                                                                }
+                                                                symbol={quiz.style.button.symbol}
                                                                 variant={quiz.style.button.variant}
                                                                 text='Opção 3'
                                                                 size='responsive'
                                                             />
                                                             <OptionInput
+                                                                option={3}
                                                                 index={7 + (i * 4)}
                                                                 color={module.value === 'monochrome'
                                                                     ? quiz.style.button.color
-                                                                    : '#1260be'
-                                                                } symbol={quiz.style.button.symbol}
+                                                                    : undefined
+                                                                }
+                                                                symbol={quiz.style.button.symbol}
                                                                 variant={quiz.style.button.variant}
                                                                 text='Opção 4'
                                                                 size='responsive'
@@ -642,7 +709,7 @@ export default function ProfileEditor(props) {
                     style={{ width: step === 4 ? '0px' : undefined }}
                 >
                     {step === 0 && quiz.results.length > 0 &&
-                        <div className='flex-start' style={{ paddingTop: '20px' }} >
+                        <div className='flex start' style={{ paddingTop: '20px' }} >
                             <HexColorPicker
                                 id={styles.colorPicker}
                                 onChange={handleProfileColor}
@@ -658,58 +725,117 @@ export default function ProfileEditor(props) {
                         </div>
                     }
                     {step === 1 && quiz.results.length > 0 &&
-                        <div className='flex-start' style={{ paddingTop: '20px' }} >
-                            <HexColorPicker
-                                id={styles.colorPicker}
-                                onChange={handleButtonColor}
-                                color={quiz.style.button.color}
-                            />
-                            <TextField
-                                value={quiz.style.button.color}
-                                onChange={handleButtonColor}
-                                variant='standard'
-                                sx={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    width: '60%',
-                                    height: '60px'
-                                }}
-                                autoComplete='off'
-                            />
+                        <div className='flex start' style={{ paddingTop: '20px' }} >
+                            {quiz.style.button.template === 'monochrome' &&
+                                <div className='flex center'>
+                                    <HexColorPicker
+                                        id={styles.colorPicker}
+                                        onChange={handleButtonColor}
+                                        color={quiz.style.button.color}
+                                    />
+                                    <TextField
+                                        value={quiz.style.button.color}
+                                        onChange={handleButtonColor}
+                                        variant='standard'
+                                        sx={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            width: '60%',
+                                            height: '60px'
+                                        }}
+                                        autoComplete='off'
+                                    />
+                                </div>
+                            }
                             <div className={styles.inputContainer}>
-                                <h4 className={styles.inputLabel}>
-                                    Estilo do Botão
-                                </h4>
-                                <Select
-                                    value={quiz.style.button.variant}
-                                    onChange={handleButtonVariantChange}
+                                <div className='flex row start size100' style={{ gap: '3%' }}>
+                                    <LiveHelpRoundedIcon sx={{ color: '#1c222c' }} />
+                                    <h4 className={styles.inputLabel}>
+                                        Pergunta
+                                    </h4>
+                                </div>
+                                <FormControl sx={{ m: 1, width: '100%' }}>
+                                    <InputLabel>
+                                        Tipo
+                                    </InputLabel>
+                                    <Select
+                                        input={<OutlinedInput label="Tipo" />}
+                                        value={quiz.style.question.variant}
+                                        onChange={handleQuestionVariantChange}
+                                        MenuProps={MenuProps}
+                                        size='small'
+                                        sx={{
+                                            width: '100%',
+                                        }}
+                                    >
+                                        <MenuItem value={'contained'}>Contained</MenuItem>
+                                        <MenuItem value={'outlined'}>Outlined</MenuItem>
+                                        <MenuItem value={'text'}>Text</MenuItem>
+                                    </Select>
+                                </FormControl>
+                                <TextField
+                                    onChange={handleQuestionColor}
+                                    variant='outlined'
+                                    label='Cor'
+                                    value={quiz.style.question.color}
+                                    size='small'
                                     sx={{
                                         width: '100%',
-                                        height: '35px'
                                     }}
-                                >
-                                    <MenuItem value={'contained'}>Contained</MenuItem>
-                                    <MenuItem value={'outlined'}>Outlined</MenuItem>
-                                </Select>
+                                />
                             </div>
                             <div className={styles.inputContainer}>
-                                <h4 className={styles.inputLabel}>
-                                    Símbolo
-                                </h4>
-                                <Select
-                                    value={quiz.style.button.symbol}
-                                    onChange={handleButtonSymbolChange}
-                                    sx={{
-                                        width: '100%',
-                                        height: '35px'
-                                    }}
-                                >
-                                    <MenuItem value={'none'}>Nenhum</MenuItem>
-                                    <MenuItem value={'letters'}>Letras</MenuItem>
-                                    <MenuItem value={'polygons'}>Polígonos</MenuItem>
-                                </Select>
+                                <div className='flex row start size100' style={{ gap: '3%' }}>
+                                    <GamepadRoundedIcon sx={{ color: '#1c222c' }} />
+                                    <h4 className={styles.inputLabel}>
+                                        Botões
+                                    </h4>
+                                </div>
+                                <FormControl sx={{ m: 1, width: '100%' }}>
+                                    <InputLabel>
+                                        Tipo
+                                    </InputLabel>
+                                    <Select
+                                        input={<OutlinedInput label="Tipo" />}
+                                        value={quiz.style.button.variant}
+                                        onChange={handleButtonVariantChange}
+                                        size='small'
+                                        sx={{
+                                            width: '100%',
+                                        }}
+                                    >
+                                        <MenuItem value={'contained'}>Contained</MenuItem>
+                                        <MenuItem value={'outlined'}>Outlined</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </div>
+                            <div className={styles.inputContainer}>
+                                <div className='flex row start size100' style={{ gap: '3%' }}>
+                                    <CategoryRoundedIcon sx={{ color: '#1c222c' }} />
+                                    <h4 className={styles.inputLabel}>
+                                        Símbolos
+                                    </h4>
+                                </div>
+                                <FormControl sx={{ m: 1, width: '100%' }}>
+                                    <InputLabel>
+                                        Tipo
+                                    </InputLabel>
+                                    <Select
+                                        input={<OutlinedInput label="Tipo" />}
+                                        value={quiz.style.button.symbol}
+                                        onChange={handleButtonSymbolChange}
+                                        size='small'
+                                        sx={{
+                                            width: '100%',
+                                        }}
+                                    >
+                                        <MenuItem value={'none'}>Nenhum</MenuItem>
+                                        <MenuItem value={'letters'}>Letras</MenuItem>
+                                        <MenuItem value={'polygons'}>Polígonos</MenuItem>
+                                    </Select>
+                                </FormControl>
                             </div>
                         </div>
                     }

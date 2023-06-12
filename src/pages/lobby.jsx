@@ -180,7 +180,7 @@ export default function Lobby(props) {
     }
 
     return (
-        <div className='flex-center size100'>
+        <div className='flex center size100'>
             {session === null
                 ? <NoSessionPage signIn={signIn} />
                 : <motion.div

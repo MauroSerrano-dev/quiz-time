@@ -14,11 +14,15 @@ const GAME_MODES = [
 const INICIAL_QUIZ = {
     name: 'My Quiz Name',
     style: {
+        question: {
+            color: '#009fda',
+            variant: 'contained'
+        },
         button: {
             color: '#009fda',
+            symbol: 'letters',
             variant: 'contained',
             template: 'monochrome',
-            symbol: 'letters'
         },
     },
     results: [
@@ -125,7 +129,7 @@ export default function QuizBuilder(props) {
                     transition={{ duration: 0.5, delay: 0.2, ease: [.62, -0.18, .32, 1.17] }}
                 >
                     {!quiz.mode
-                        ? <div className='flex-center'>
+                        ? <div className='flex center'>
                             <h1>Escolha um Quiz!</h1>
                             <div id={styles.optionsContainer}>
                                 {GAME_MODES.map((gMode, i) =>

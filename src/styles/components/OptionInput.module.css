@@ -4,7 +4,7 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    
+
     border-width: 0px;
 
     border-radius: 4px;
@@ -30,7 +30,6 @@
     width: auto;
     height: 100%;
     padding-left: 5%;
-    padding-right: 5%;
 
     transition: all ease 200ms;
 }
@@ -41,9 +40,8 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    
+
     height: 70%;
-    border-radius: 100%;
 }
 
 .textContainer {

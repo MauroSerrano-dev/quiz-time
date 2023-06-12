@@ -448,7 +448,7 @@ export default withRouter((props) => {
                                         animate={{ opacity: 1 }}
                                         transition={{ delay: TRANSITION_DURATION / 2000, duration: TRANSITION_DURATION / 1000, ease: [.62, -0.18, .32, 1.17] }}
                                     >
-                                        {layout.map((item, i) => <div id={styles.resultBlock} className='flex-center' key={i}>{item.value}</div>)}
+                                        {layout.map((item, i) => <div id={styles.resultBlock} className='flex center' key={i}>{item.value}</div>)}
                                     </motion.div>
                                 }
                             </div>

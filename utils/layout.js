@@ -52,7 +52,7 @@ function insertLayout(item, results, allResults, radarData) {
             name: 'ChartPie',
             value:
                 <Box className={styles.layoutItem} id={styles.itemPie}>
-                    <div id={styles.pieContainer} className='flex-center'>
+                    <div id={styles.pieContainer} className='flex center'>
                         <ChartPie data={allResults} totalPoints={allResults.reduce((acc, result) => acc + result.points, 0)} />
                     </div>
                 </Box>
@@ -60,14 +60,14 @@ function insertLayout(item, results, allResults, radarData) {
         case 'ChartRadar': return {
             name: 'ChartRadar',
             value:
-                <Box id={styles.itemRadar} className={`${styles.layoutItem} flex-center`}>
+                <Box id={styles.itemRadar} className={`${styles.layoutItem} flex center`}>
                     <ChartRadar data={radarData} max={25} />
                 </Box>
         }
         case 'Title': return {
             name: 'Title',
             value:
-                <Box id={styles.itemTitle} className={`${styles.layoutItem} flex-start`}>
+                <Box id={styles.itemTitle} className={`${styles.layoutItem} flex start`}>
                     <h2>{item.title}</h2>
                     {results.map((result, i) =>
                         <p key={i}>{result.texts.filter(text => text.ref === item.title)[0].value}</p>
