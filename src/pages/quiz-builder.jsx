@@ -44,7 +44,7 @@ const INICIAL_QUIZ = {
                 content: '',
                 name: '',
                 type: ''
-            }
+            },
         },
         {
             name: 'Perfil 2',
@@ -62,7 +62,7 @@ const INICIAL_QUIZ = {
                 content: '',
                 name: '',
                 type: ''
-            }
+            },
         },
     ],
     questions: [
@@ -74,7 +74,12 @@ const INICIAL_QUIZ = {
                 { content: '', action: {} },
                 { content: '', action: {} },
             ],
-            optionsRandom: false
+            optionsRandom: false,
+            img: {
+                content: '',
+                name: '',
+                type: ''
+            },
         },
     ]
 }

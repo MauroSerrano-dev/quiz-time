@@ -11,7 +11,13 @@ import CropIcon from '@mui/icons-material/Crop'
 import InfoIcon from '@mui/icons-material/Info'
 
 export default function FileInput(props) {
-    const { quiz, setQuiz, currentSlide } = props
+    const {
+        quiz,
+        setQuiz,
+        currentSlide,
+        img,
+        type,
+    } = props
 
     const [isDraggingOver, setIsDraggingOver] = useState(false)
 
@@ -58,17 +64,17 @@ export default function FileInput(props) {
                 img.onload = function () {
                     setQuiz(prev => ({
                         ...prev,
-                        results: prev.results.map((result, i) =>
+                        [type]: prev[type].map((item, i) =>
                             currentSlide === i
                                 ? {
-                                    ...result, img: {
-                                        ...result.img,
+                                    ...item, img: {
+                                        ...item.img,
                                         positionToFit: this.height > this.width || (this.width / this.height <= 500 / 300)
                                             ? 'vertical'
                                             : 'horizontal',
                                     }
                                 }
-                                : result)
+                                : item)
                     }))
                     URL.revokeObjectURL(url)
                 }
@@ -76,24 +82,24 @@ export default function FileInput(props) {
                 img.src = url
 
                 reader.onload = (e) => {
-                    console.log(e)
                     const fileContent = e.target.result
                     const fileName = file.name
                     const fileType = file.type
 
                     setQuiz(prev => ({
                         ...prev,
-                        results: prev.results.map((result, i) =>
+                        [type]: prev[type].map((item, i) =>
                             currentSlide === i
                                 ? {
-                                    ...result, img: {
-                                        ...result.img,
+                                    ...item,
+                                    img: {
+                                        ...item.img,
                                         content: fileContent,
                                         name: fileName,
                                         type: fileType,
                                     }
                                 }
-                                : result)
+                                : item)
                     }))
                 }
                 reader.readAsDataURL(file);
@@ -104,10 +110,10 @@ export default function FileInput(props) {
     function deleteProfileImg() {
         setQuiz(prev => ({
             ...prev,
-            results: prev.results.map((result, i) =>
+            [type]: prev[type].map((item, i) =>
                 currentSlide === i
-                    ? { ...result, img: { content: '', name: '', type: '', positionToFit: '' } }
-                    : result)
+                    ? { ...item, img: { content: '', name: '', type: '', positionToFit: '' } }
+                    : item)
         }))
     }
 
@@ -127,11 +133,11 @@ export default function FileInput(props) {
                         <h3>Solte a imagem aqui para carregá-la</h3>
                     </div>
                 }
-                {quiz.results[currentSlide].img.content !== ''
+                {img.content !== ''
                     ? <div className={styles.userImgContainer}>
                         <img
-                            style={quiz.results[currentSlide].img.positionToFit === 'vertical' ? { height: 'auto', width: '100%' } : { height: '100%', width: 'auto' }}
-                            src={quiz.results[currentSlide].img.content}
+                            style={img.positionToFit === 'vertical' ? { height: 'auto', width: '100%' } : { height: '100%', width: 'auto' }}
+                            src={img.content}
                         />
                     </div>
                     : <div className={styles.noImgContainer}>
@@ -154,7 +160,7 @@ export default function FileInput(props) {
                     </div>
                 }
             </div>
-            {quiz.results[currentSlide].img.content !== '' &&
+            {img.content !== '' &&
                 <div className={styles.userImgButtons}>
                     <IconButton color='neutral' aria-label="cropImg">
                         <CropIcon />

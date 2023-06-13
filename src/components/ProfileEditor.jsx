@@ -566,8 +566,8 @@ export default function ProfileEditor(props) {
                         <Stepper
                             currentStep={step}
                             handleChangeStep={handleChangeStep}
-                            stepSize={{ width: '50px', height: '50px' }}
-                            pathSize={{ width: '70px', height: '3px' }}
+                            stepSize={{ width: '45px', height: '45px' }}
+                            pathSize={{ width: '150px', height: '3px' }}
                             textColor={'white'}
                             stepStyle={{
                                 background: 'linear-gradient(165deg, rgb(0, 160, 220), rgb(49, 60, 78))',
@@ -598,11 +598,13 @@ export default function ProfileEditor(props) {
                         />
                     </div>
                     {step === 0 && quiz.results.length > 0 &&
-                        <div className='flex start'>
+                        <div className={styles.middleAll}>
                             <FileInput
+                                type='results'
                                 quiz={quiz}
                                 setQuiz={setQuiz}
                                 currentSlide={currentSlide}
+                                img={quiz.results[currentSlide].img}
                             />
                             <CustomTextField
                                 value={quiz.results[currentSlide].name}
@@ -614,7 +616,7 @@ export default function ProfileEditor(props) {
                         </div>
                     }
                     {step === 1 &&
-                        <div className={styles.middleOne}>
+                        <div className={`${styles.middleAll} ${styles.middleOne}`}>
                             <div style={{ width: '95%', height: '15%' }}>
                                 <QuestionField
                                     textColor={quiz.style.button.textColor}
@@ -693,8 +695,8 @@ export default function ProfileEditor(props) {
                         </div>
                     }
                     {step === 2 && quiz.questions.length > 0 &&
-                        <div className={styles.middleTwo}>
-                            <div style={{ width: '95%', height: '15%' }}>
+                        <div className={`${styles.middleAll} ${styles.middleTwo}`}>
+                            <div className={styles.questionsContainer}>
                                 <QuestionField
                                     textColor={quiz.style.button.textColor}
                                     borderRadius={quiz.style.question.borderRadius}
@@ -704,6 +706,15 @@ export default function ProfileEditor(props) {
                                     variant={quiz.style.question.variant}
                                     colorValue={quiz.style.question.color}
                                     onChange={handleQuestionChange}
+                                />
+                            </div>
+                            <div className={styles.fileInputContainer}>
+                                <FileInput
+                                    type='questions'
+                                    quiz={quiz}
+                                    setQuiz={setQuiz}
+                                    currentSlide={currentSlide}
+                                    img={quiz.questions[currentSlide].img}
                                 />
                             </div>
                             <div className={styles.optionsContainer}>
