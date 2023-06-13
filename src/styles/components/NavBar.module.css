@@ -190,7 +190,6 @@
 
     .nav_menu_list {
         flex-direction: column;
-        position: fixed;
         width: 150px;
         min-height: calc(100vh - 60px);
         height: 60px;
@@ -199,7 +198,9 @@
         row-gap: 24px;
         right: -288px;
         padding: 24px 16px;
-        top: 70px;
+        
+        position: fixed;
+        top: 60px;
     }
 
     #middle {

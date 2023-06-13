@@ -15,8 +15,8 @@ const INICIAL_QUIZ = {
     name: 'My Quiz Name',
     style: {
         question: {
-            color: '#009fda',
-            variant: 'text',
+            color: '#fdfdfd',
+            variant: 'outlined',
             borderRadius: 10,
         },
         button: {
@@ -27,6 +27,13 @@ const INICIAL_QUIZ = {
             symbolColor: '#1c222c',
             textColor: '#1c222c',
             borderRadius: 10,
+        },
+        background: {
+            color: '#1c222c',
+            type: 'gradient',
+            gradientColors: ['#1c222c', '#343f52'],
+            gradientPercentages: [0, 100],
+            angle: 165,
         },
     },
     results: [

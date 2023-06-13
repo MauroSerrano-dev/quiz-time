@@ -247,7 +247,7 @@
     justify-content: center;
     text-align: center;
     width: 95%;
-    height: 65%;
+    height: 55%;
     gap: 15px;
 }
 
@@ -317,7 +317,7 @@
     justify-content: center;
     text-align: center;
     width: 90%;
-    height: 50%;
+    height: 40%;
     gap: 5px;
     pointer-events: none;
 }

@@ -124,13 +124,13 @@ export default function OptionInput(props) {
         ],
         ['x',
             <h1
-                className={styles.teste}
                 style={{
                     color: variant === 'contained' ? symbolColor : color,
                     MozUserSelect: 'none',
                     WebkitUserSelect: 'none',
                     userSelect: 'none',
                     fontFamily: 'Verdana, Geneva, Tahoma, sans-serif',
+                    transition: 'color ease 200ms',
                 }} >
                 X
             </h1>
@@ -189,7 +189,7 @@ export default function OptionInput(props) {
                 height: size === 'responsive' ? '100%' : `${SIZES.get(size).height}px`,
                 transition: ANIMATION,
                 borderStyle: 'solid',
-                borderWidth: buttonSize ? `${buttonSize.height * 0.026}px` : '3px',
+                borderWidth: buttonSize ? `${buttonSize.height * 0.024}px` : '3px',
                 borderRadius: buttonSize ? `${buttonSize.height * borderRadius * 0.005}px` : '4px',
                 ...BUTTON_VARIANTS.get(variant)
             }}

@@ -1,7 +1,6 @@
 import styles from '../styles/components/ProfileEditor.module.css'
 import {
     Button,
-    TextField,
     IconButton,
     Select,
     MenuItem,
@@ -9,11 +8,9 @@ import {
     FormControl,
     OutlinedInput,
     Slider,
-    Typography
 } from '@mui/material'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-import React from 'react';
-import { HexColorPicker } from "react-colorful"
+import React, { useEffect } from 'react';
 import { motion } from "framer-motion"
 import { useState } from 'react'
 import { showErrorToast } from '../../utils/toasts'
@@ -34,15 +31,13 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd'
 import QuizIcon from '@mui/icons-material/Quiz'
 import AssessmentIcon from '@mui/icons-material/Assessment'
 import PaletteIcon from '@mui/icons-material/Palette'
-import InterestsIcon from '@mui/icons-material/Interests'
-import PentagonIcon from '@mui/icons-material/Pentagon'
-import GamepadIcon from '@mui/icons-material/Gamepad'
-import LiveHelpIcon from '@mui/icons-material/LiveHelp'
 import LiveHelpRoundedIcon from '@mui/icons-material/LiveHelpRounded'
 import CategoryRoundedIcon from '@mui/icons-material/CategoryRounded'
 import GamepadRoundedIcon from '@mui/icons-material/GamepadRounded'
 import TextFieldsRoundedIcon from '@mui/icons-material/TextFieldsRounded'
 import PersonIcon from '@mui/icons-material/Person'
+import PhotoSizeSelectActualRoundedIcon from '@mui/icons-material/PhotoSizeSelectActualRounded'
+import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded'
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -59,8 +54,16 @@ const MenuProps = {
 const DESIGN_EDIT_OPTIONS = [
     { title: 'Monocromático', value: 'monochrome' },
     { title: 'Colorido', value: 'colorful' },
-    { title: 'Custom', value: 'custom' },
+    { title: 'Pro', value: 'custom' },
 ]
+
+const INICIAL_GRADIENT_PERCENTAGES = new Map([
+    [2, [0, 100]],
+    [3, [0, 50, 100]],
+    [4, [0, 33, 67, 100]],
+    [5, [0, 25, 50, 75, 100]],
+    [6, [0, 20, 40, 60, 80, 100]],
+])
 
 export default function ProfileEditor(props) {
     const { quiz, setQuiz, INICIAL_QUIZ } = props
@@ -70,6 +73,25 @@ export default function ProfileEditor(props) {
     const [notInDragNDropState, setNotInDragNDropState] = useState(true)
     const [showModal, setShowModal] = useState(true)
     const [showModalOpacity, setShowModalOpacity] = useState(true)
+
+    const BACKGROUND_STYLES = new Map([
+        ['solid', {
+            backgroundColor: quiz.style.background.color
+        }
+        ],
+        ['gradient', {
+            background: `linear-gradient(${quiz.style.background.angle}deg,`
+                .concat(quiz.style.background.gradientColors.map((color, i) =>
+                    ' '.concat(color.concat(' '.concat(quiz.style.background.gradientPercentages[i])).concat('%'))
+                )).concat(')')
+        }],
+        ['radial', {
+            background: 'radial-gradient(circle,'
+                .concat(quiz.style.background.gradientColors.map((color, i) =>
+                    ' '.concat(color.concat(' '.concat(quiz.style.background.gradientPercentages[i])).concat('%'))
+                )).concat(')')
+        }],
+    ])
 
     function handleAddQuestion() {
         setQuiz(prev => ({
@@ -209,66 +231,51 @@ export default function ProfileEditor(props) {
             ...prev,
             results: prev.results.map((result, i) =>
                 currentSlide === i
-                    ? { ...result, color: typeof event === 'string' ? event : event.target.value }
+                    ? {
+                        ...result, color: typeof event === 'string'
+                            ? event
+                            : event.target.value
+                    }
                     : result)
         }))
     }
 
-    function handleButtonColor(event) {
+    function handleStyleColor(event, objName, fieldName) {
+        const newColor = typeof event === 'string'
+            ? event
+            : (event.target.value.length > 7
+                ? prev.style.background[fieldName]
+                : event.target.value)
+
         setQuiz(prev => ({
             ...prev,
             style: {
                 ...prev.style,
-                button: {
-                    ...prev.style.button,
-                    color: typeof event === 'string'
-                        ? event
-                        : (event.target.value.length > 7 ? prev.style.button.color : event.target.value)
+                [objName]: {
+                    ...prev.style[objName],
+                    [fieldName]: newColor
                 }
             }
         }))
     }
 
-    function handleQuestionColor(event) {
-        setQuiz(prev => ({
-            ...prev,
-            style: {
-                ...prev.style,
-                question: {
-                    ...prev.style.button,
-                    color: typeof event === 'string'
-                        ? event
-                        : (event.target.value.length > 7 ? prev.style.question.color : event.target.value[0] !== '#' ? `#${event.target.value}` : event.target.value)
-                }
-            }
-        }))
-    }
+    function handleStyleGradientColors(event, objName, fieldName, index) {
+        const newColor = typeof event === 'string'
+            ? event
+            : (event.target.value.length > 7
+                ? prev.style.background[fieldName]
+                : event.target.value)
 
-    function handleSymbolColor(event) {
         setQuiz(prev => ({
             ...prev,
             style: {
                 ...prev.style,
-                button: {
-                    ...prev.style.button,
-                    symbolColor: typeof event === 'string'
-                        ? event
-                        : (event.target.value.length > 7 ? prev.style.question.color : event.target.value)
-                }
-            }
-        }))
-    }
-
-    function handleTextColor(event) {
-        setQuiz(prev => ({
-            ...prev,
-            style: {
-                ...prev.style,
-                button: {
-                    ...prev.style.button,
-                    textColor: typeof event === 'string'
-                        ? event
-                        : (event.target.value.length > 7 ? prev.style.question.color : event.target.value)
+                [objName]: {
+                    ...prev.style[objName],
+                    [fieldName]: prev.style[objName][fieldName].slice(0, index)
+                        .concat(newColor)
+                        .concat(prev.style[objName][fieldName]
+                            .slice(index + 1, prev.style[objName][fieldName].length)),
                 }
             }
         }))
@@ -287,6 +294,32 @@ export default function ProfileEditor(props) {
                 button: {
                     ...prev.style.button,
                     borderRadius: event.target.value
+                }
+            }
+        }))
+    }
+
+    function handleBackgroundAngle(event) {
+        setQuiz(prev => ({
+            ...prev,
+            style: {
+                ...prev.style,
+                background: {
+                    ...prev.style.background,
+                    angle: event.target.value
+                }
+            }
+        }))
+    }
+
+    function handleBackgroundPercentage(event) {
+        setQuiz(prev => ({
+            ...prev,
+            style: {
+                ...prev.style,
+                background: {
+                    ...prev.style.background,
+                    gradientPercentages: event.target.value,
                 }
             }
         }))
@@ -376,12 +409,56 @@ export default function ProfileEditor(props) {
         }))
     }
 
+    function handleBackgroundTypeChange(event) {
+        setQuiz(prev => ({
+            ...prev,
+            style: {
+                ...prev.style,
+                background: {
+                    ...prev.style.background,
+                    type: event.target.value
+                }
+            }
+        }))
+    }
+
+    function addGradientColor() {
+        setQuiz(prev => ({
+            ...prev,
+            style: {
+                ...prev.style,
+                background: {
+                    ...prev.style.background,
+                    gradientColors: prev.style.background.gradientColors
+                        .concat(['#009fda']),
+                    gradientPercentages: INICIAL_GRADIENT_PERCENTAGES.get(prev.style.background.gradientPercentages.length + 1)
+                }
+            }
+        }))
+    }
+
+    function deleteGradientColor(index) {
+        setQuiz(prev => ({
+            ...prev,
+            style: {
+                ...prev.style,
+                background: {
+                    ...prev.style.background,
+                    gradientColors: prev.style.background.gradientColors
+                        .filter((color, i) => i !== index),
+                    gradientPercentages: INICIAL_GRADIENT_PERCENTAGES.get(prev.style.background.gradientPercentages.length - 1)
+                }
+            }
+        }))
+    }
+
     return (
         <motion.div
             id={styles.editorContainer}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.2, ease: [.62, -0.18, .32, 1.17] }}
+            style={BACKGROUND_STYLES.get(quiz.style.background.type)}
         >
             {showModal &&
                 <Modal
@@ -719,7 +796,7 @@ export default function ProfileEditor(props) {
                                                         {...provided.draggableProps}
                                                         {...provided.dragHandleProps}
                                                     >
-                                                        <div className={`${styles.buttonsContainer} ${currentSlide !== i ? styles.showOnHover : undefined}`}                                                    >
+                                                        <div className={`${styles.buttonsContainer} ${currentSlide !== i ? styles.showOnHover : undefined}`}>
                                                             <IconButton onClick={(e) => handleDuplicateProfile(e, i)} aria-label="copy" sx={{ scale: '0.7', margin: '-4px' }}>
                                                                 <ContentCopyIcon />
                                                             </IconButton>
@@ -756,7 +833,7 @@ export default function ProfileEditor(props) {
                                                 </div>
                                                 <div className={styles.slide}>
                                                     <h4>{module.title}</h4>
-                                                    <div className={styles.slideBoard} style={{ backgroundColor: '#1c222c' }}>
+                                                    <div className={styles.slideBoard} style={BACKGROUND_STYLES.get(quiz.style.background.type)}>
                                                         <div className={styles.miniQuestion}>
                                                             <QuestionField
                                                                 textColor={quiz.style.button.textColor}
@@ -859,7 +936,7 @@ export default function ProfileEditor(props) {
                                                         </div>
                                                         <div className={styles.slide}>
                                                             <h4>{i + 1}</h4>
-                                                            <div className={styles.slideBoard} style={{ backgroundColor: 'white' }}>
+                                                            <div className={styles.slideBoard} style={BACKGROUND_STYLES.get(quiz.style.background.type)}>
                                                                 <div style={{ width: '95%', height: '15%' }}>
                                                                     <QuestionField
                                                                         textColor={quiz.style.button.textColor}
@@ -933,13 +1010,14 @@ export default function ProfileEditor(props) {
                                             width: '100%',
                                         }}
                                     >
-                                        <MenuItem value={'text'}>Text</MenuItem>
-                                        <MenuItem value={'outlined'}>Outlined</MenuItem>
-                                        <MenuItem value={'contained'}>Contained</MenuItem>
+                                        <MenuItem value={'text'}>Texto</MenuItem>
+                                        <MenuItem value={'shadow'}>Sombra</MenuItem>
+                                        <MenuItem value={'outlined'}>Borda</MenuItem>
+                                        <MenuItem value={'contained'}>Preenchido</MenuItem>
                                     </Select>
                                 </FormControl>
                                 <ColorInput
-                                    onChange={handleQuestionColor}
+                                    onChange={(e) => handleStyleColor(e, 'question', 'color')}
                                     value={quiz.style.question.color}
                                 />
                                 <div className='size100 flex'>
@@ -982,13 +1060,13 @@ export default function ProfileEditor(props) {
                                             width: '100%',
                                         }}
                                     >
-                                        <MenuItem value={'outlined'}>Outlined</MenuItem>
-                                        <MenuItem value={'contained'}>Contained</MenuItem>
+                                        <MenuItem value={'outlined'}>Borda</MenuItem>
+                                        <MenuItem value={'contained'}>Preenchido</MenuItem>
                                     </Select>
                                 </FormControl>
                                 {quiz.style.button.template === 'monochrome' &&
                                     <ColorInput
-                                        onChange={handleButtonColor}
+                                        onChange={(e) => handleStyleColor(e, 'button', 'color')}
                                         value={quiz.style.button.color}
                                     />
                                 }
@@ -1039,11 +1117,111 @@ export default function ProfileEditor(props) {
                                 </FormControl>
                                 {quiz.style.button.variant === 'contained' &&
                                     <ColorInput
-                                        onChange={handleSymbolColor}
+                                        onChange={(e) => handleStyleColor(e, 'button', 'symbolColor')}
                                         value={quiz.style.button.symbolColor}
-                                        upPosition
                                     />
                                 }
+                            </div>
+                            <div className='flex center size100'>
+                                <div
+                                    className={styles.divider}
+                                    style={{
+                                        backgroundColor: 'black',
+                                        opacity: 0.5,
+
+                                    }}
+                                >
+                                </div>
+                                <div className={styles.inputContainer}>
+                                    <div className='flex row start size100' style={{ gap: '3%' }}>
+                                        <PhotoSizeSelectActualRoundedIcon sx={{ color: '#1c222c' }} />
+                                        <h4 className={styles.inputLabel}>
+                                            Fundo
+                                        </h4>
+                                    </div>
+                                    <FormControl sx={{ m: 1, width: '100%' }}>
+                                        <InputLabel>
+                                            Tipo
+                                        </InputLabel>
+                                        <Select
+                                            input={<OutlinedInput label="Tipo" />}
+                                            value={quiz.style.background.type}
+                                            onChange={handleBackgroundTypeChange}
+                                            size='small'
+                                            sx={{
+                                                width: '100%',
+                                            }}
+                                        >
+                                            <MenuItem value={'solid'}>Sólido</MenuItem>
+                                            <MenuItem value={'gradient'}>Degradê Linear</MenuItem>
+                                            <MenuItem value={'radial'}>Degradê Radial</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                    {quiz.style.background.type === 'solid' &&
+                                        <ColorInput
+                                            onChange={(e) => handleStyleColor(e, 'background', 'color')}
+                                            value={quiz.style.background.color}
+                                            upPosition
+                                        />
+                                    }
+                                    {(quiz.style.background.type === 'gradient' || quiz.style.background.type === 'radial') &&
+                                        <div className='flex center' style={{ gap: '15px' }}>
+                                            {quiz.style.background.gradientColors.map((color, i) =>
+                                                <div
+                                                    className='flex row size100'
+                                                    key={i}
+                                                >
+                                                    <ColorInput
+                                                        onChange={(e) => handleStyleGradientColors(e, 'background', 'gradientColors', i)}
+                                                        value={color}
+                                                        customLabel={`Cor ${i + 1}`}
+                                                        upPosition
+                                                    />
+                                                    {i > 1 &&
+                                                        <div style={{ backgroundColor: 'transparent', width: 'auto' }}>
+                                                            <IconButton onClick={() => deleteGradientColor(i)} sx={{ scale: '0.7', margin: '-4px' }}>
+                                                                <DeleteForeverIcon />
+                                                            </IconButton>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            )}
+                                            {quiz.style.background.gradientColors.length < 6 &&
+                                                <Button
+                                                    onClick={addGradientColor}
+                                                    variant='contained'
+                                                    size='small'
+                                                >
+                                                    Adicionar Cor
+                                                </Button>
+                                            }
+                                            <div className='size100 flex'>
+                                                <p className='size100 flex align-start' style={{ color: '#6c6e82', fontSize: '13px' }}>
+                                                    Porcentagem
+                                                </p>
+                                                <Slider
+                                                    value={quiz.style.background.gradientPercentages}
+                                                    valueLabelDisplay="auto"
+                                                    onChange={handleBackgroundPercentage}
+                                                    track={false}
+                                                />
+                                            </div>
+                                            {quiz.style.background.type === 'gradient' &&
+                                                <div className='size100 flex'>
+                                                    <p className='size100 flex align-start' style={{ color: '#6c6e82', fontSize: '13px' }}>
+                                                        Ângulo
+                                                    </p>
+                                                    <Slider
+                                                        value={quiz.style.background.angle}
+                                                        max={360}
+                                                        valueLabelDisplay="auto"
+                                                        onChange={handleBackgroundAngle}
+                                                    />
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                </div>
                             </div>
                             {(quiz.style.button.variant === 'contained' || quiz.style.question.variant === 'contained') &&
                                 <div className='flex center size100'>
@@ -1052,7 +1230,6 @@ export default function ProfileEditor(props) {
                                         style={{
                                             backgroundColor: 'black',
                                             opacity: 0.5,
-
                                         }}
                                     >
                                     </div>
@@ -1064,7 +1241,7 @@ export default function ProfileEditor(props) {
                                             </h4>
                                         </div>
                                         <ColorInput
-                                            onChange={handleTextColor}
+                                            onChange={(e) => handleStyleColor(e, 'button', 'textColor')}
                                             value={quiz.style.button.textColor}
                                             upPosition
                                         />
@@ -1075,6 +1252,6 @@ export default function ProfileEditor(props) {
                     }
                 </div>
             </div>
-        </motion.div>
+        </motion.div >
     )
 }

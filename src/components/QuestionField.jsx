@@ -20,6 +20,7 @@ export default function QuestionField(props) {
     const [containerSize, setContainerSize] = useState()
     const [color, setColor] = useState(colorValue)
 
+
     useEffect(() => {
         if (colorValue.length === 5)
             setColor(colorValue.slice(0, 4))
@@ -27,8 +28,13 @@ export default function QuestionField(props) {
             setColor(colorValue)
     }, [colorValue])
 
-    const CONTAINER_VARIANTS = new Map([
+    const INPUT_VARIANTS = new Map([
         ['text', {
+            color: color,
+            borderColor: 'transparent',
+            backgroundColor: 'transparent',
+        }],
+        ['shadow', {
             color: color,
             borderColor: 'transparent',
             backgroundColor: color.concat('0a'),
@@ -45,10 +51,6 @@ export default function QuestionField(props) {
             borderColor: 'transparent',
         }],
     ])
-
-    useEffect(() => {
-        console.log(containerSize)
-    }, [containerSize])
 
     useEffect(() => {
         setContainerSize({
@@ -71,24 +73,28 @@ export default function QuestionField(props) {
     }, [])
 
     return (
-        <input
-            className={styles.container}
-            style={{
-                transition: ANIMATION,
-                borderStyle: 'solid',
-                borderWidth: containerSize ? `${containerSize.height * 0.026}px` : '0px',
-                fontWeight: 'bold',
-                fontSize: containerSize ? `${containerSize.height * 0.6}px` : '0px',
-                borderRadius: containerSize ? `${containerSize.height * borderRadius * 0.005}px` : '4px',
-                ...CONTAINER_VARIANTS.get(variant),
-            }}
-            disabled={disabled}
-            value={value}
-            type='text'
-            autoComplete='off'
-            placeholder={placeholder}
-            onChange={onChange}
-            spellCheck={false}
-        />
+        <div className={styles.container}>
+            {containerSize &&
+                <input
+                    className={styles.input}
+                    style={{
+                        transition: ANIMATION,
+                        borderStyle: 'solid',
+                        borderWidth: containerSize ? `${containerSize.height * 0.026}px` : '0px',
+                        fontWeight: 'bold',
+                        fontSize: containerSize ? `${containerSize.height * 0.6}px` : '0px',
+                        borderRadius: containerSize ? `${containerSize.height * borderRadius * 0.005}px` : '4px',
+                        ...INPUT_VARIANTS.get(variant),
+                    }}
+                    disabled={disabled}
+                    value={value}
+                    type='text'
+                    autoComplete='off'
+                    placeholder={placeholder}
+                    onChange={onChange}
+                    spellCheck={false}
+                />
+            }
+        </div>
     )
 }

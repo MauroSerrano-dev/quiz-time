@@ -8,7 +8,8 @@ export default function ColorInput(props) {
     const {
         onChange,
         value,
-        upPosition
+        upPosition,
+        customLabel = 'Cor'
     } = props
 
     const [isFocused, setIsFocused] = useState(false);
@@ -31,7 +32,7 @@ export default function ColorInput(props) {
             <TextField
                 onChange={onChange}
                 variant='outlined'
-                label='Cor'
+                label={customLabel}
                 value={value}
                 size='small'
                 sx={{
