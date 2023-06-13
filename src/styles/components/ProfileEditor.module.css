@@ -240,13 +240,13 @@
 
 .questionsContainer {
     width: 95%;
-    height: 15%;
+    height: 13%;
     /* outline: green solid 2px; */
 }
 
 .fileInputContainer {
     width: 95%;
-    height: 40%;
+    height: 38%;
     /* outline: red solid 2px; */
 }
 
@@ -257,7 +257,7 @@
     justify-content: center;
     text-align: center;
     width: 95%;
-    height: 45%;
+    height: 40%;
     gap: 15px;
     /* outline: blue solid 2px; */
 }
@@ -307,7 +307,10 @@
 
 .middleOne {}
 
-.middleTwo {}
+.middleTwo {
+    overflow-y: auto;
+    justify-content: flex-start;
+}
 
 .optionsContainerSlide {
     position: absolute;
