@@ -7,7 +7,9 @@ import {
     MenuItem,
     InputLabel,
     FormControl,
-    OutlinedInput
+    OutlinedInput,
+    Slider,
+    Typography
 } from '@mui/material'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import React from 'react';
@@ -275,6 +277,32 @@ export default function ProfileEditor(props) {
         return regex.test(string)
     }
 
+    function handleButtonBorder(event) {
+        setQuiz(prev => ({
+            ...prev,
+            style: {
+                ...prev.style,
+                button: {
+                    ...prev.style.button,
+                    borderRadius: event.target.value
+                }
+            }
+        }))
+    }
+
+    function handleQuestionBorder(event) {
+        setQuiz(prev => ({
+            ...prev,
+            style: {
+                ...prev.style,
+                question: {
+                    ...prev.style.question,
+                    borderRadius: event.target.value
+                }
+            }
+        }))
+    }
+
     function closeModal() {
         setShowModalOpacity(false)
         setTimeout(() => {
@@ -510,6 +538,7 @@ export default function ProfileEditor(props) {
                         <div className={styles.middleOne}>
                             <div style={{ width: '95%', height: '15%' }}>
                                 <QuestionField
+                                    borderRadius={quiz.style.question.borderRadius}
                                     index={0}
                                     value='Sua Pergunta Aqui'
                                     variant={quiz.style.question.variant}
@@ -520,6 +549,7 @@ export default function ProfileEditor(props) {
                             <div className={styles.optionsContainer}>
                                 <div className={styles.optionsRow}>
                                     <OptionInput
+                                        borderRadius={quiz.style.button.borderRadius}
                                         textColor={quiz.style.button.textColor}
                                         symbolColor={quiz.style.button.symbolColor}
                                         option={0}
@@ -534,6 +564,7 @@ export default function ProfileEditor(props) {
                                         size='responsive'
                                     />
                                     <OptionInput
+                                        borderRadius={quiz.style.button.borderRadius}
                                         textColor={quiz.style.button.textColor}
                                         symbolColor={quiz.style.button.symbolColor}
                                         option={1}
@@ -550,6 +581,7 @@ export default function ProfileEditor(props) {
                                 </div>
                                 <div className={styles.optionsRow}>
                                     <OptionInput
+                                        borderRadius={quiz.style.button.borderRadius}
                                         textColor={quiz.style.button.textColor}
                                         symbolColor={quiz.style.button.symbolColor}
                                         option={2}
@@ -563,6 +595,7 @@ export default function ProfileEditor(props) {
                                         size='responsive'
                                     />
                                     <OptionInput
+                                        borderRadius={quiz.style.button.borderRadius}
                                         textColor={quiz.style.button.textColor}
                                         symbolColor={quiz.style.button.symbolColor}
                                         option={3}
@@ -652,6 +685,7 @@ export default function ProfileEditor(props) {
                                                 <div className={styles.slideBoard} style={{ backgroundColor: '#1c222c' }}>
                                                     <div className={styles.miniQuestion}>
                                                         <QuestionField
+                                                            borderRadius={quiz.style.question.borderRadius}
                                                             index={1 + (i * 1)}
                                                             value='Sua Pergunta Aqui'
                                                             variant={quiz.style.question.variant}
@@ -662,6 +696,7 @@ export default function ProfileEditor(props) {
                                                     <div className={styles.optionsContainerSlide}>
                                                         <div className={styles.optionsRowSlide}>
                                                             <OptionInput
+                                                                borderRadius={quiz.style.button.borderRadius}
                                                                 textColor={quiz.style.button.textColor}
                                                                 symbolColor={quiz.style.button.symbolColor}
                                                                 option={0}
@@ -676,6 +711,7 @@ export default function ProfileEditor(props) {
                                                                 size='responsive'
                                                             />
                                                             <OptionInput
+                                                                borderRadius={quiz.style.button.borderRadius}
                                                                 textColor={quiz.style.button.textColor}
                                                                 symbolColor={quiz.style.button.symbolColor}
                                                                 option={1}
@@ -692,6 +728,7 @@ export default function ProfileEditor(props) {
                                                         </div>
                                                         <div className={styles.optionsRowSlide}>
                                                             <OptionInput
+                                                                borderRadius={quiz.style.button.borderRadius}
                                                                 textColor={quiz.style.button.textColor}
                                                                 symbolColor={quiz.style.button.symbolColor}
                                                                 option={2}
@@ -706,6 +743,7 @@ export default function ProfileEditor(props) {
                                                                 size='responsive'
                                                             />
                                                             <OptionInput
+                                                                borderRadius={quiz.style.button.borderRadius}
                                                                 textColor={quiz.style.button.textColor}
                                                                 symbolColor={quiz.style.button.symbolColor}
                                                                 option={3}
@@ -769,25 +807,16 @@ export default function ProfileEditor(props) {
                 >
                     {step === 0 && quiz.results.length > 0 &&
                         <div className='flex start' style={{ paddingTop: '20px' }} >
-                            <HexColorPicker
-                                style={{
-                                    width: '150px',
-                                    height: '150px',
-                                }}
-                                onChange={handleProfileColor}
-                                color={quiz.results[currentSlide].color}
-                            />
-                            <TextField
-                                value={quiz.results[currentSlide].color}
-                                onChange={handleProfileColor}
-                                variant='standard'
-                                sx={{ width: '60%', height: '200px' }}
-                                autoComplete='off'
-                            />
+                            <div style={{ width: '80%' }}>
+                                <ColorInput
+                                    onChange={handleProfileColor}
+                                    value={quiz.results[currentSlide].color}
+                                />
+                            </div>
                         </div>
                     }
                     {step === 1 && quiz.results.length > 0 &&
-                        <div className='flex start' style={{ paddingTop: '20px' }} >
+                        <div className='flex start'>
                             <div className={styles.inputContainer}>
                                 <div className='flex row start size100' style={{ gap: '3%' }}>
                                     <LiveHelpRoundedIcon sx={{ color: '#1c222c' }} />
@@ -818,6 +847,25 @@ export default function ProfileEditor(props) {
                                     onChange={handleQuestionColor}
                                     value={quiz.style.question.color}
                                 />
+                                <div className='size100 flex'>
+                                    <p className='size100 flex align-start' style={{ color: '#6c6e82', fontSize: '13px' }}>
+                                        Borda
+                                    </p>
+                                    <Slider
+                                        value={quiz.style.question.borderRadius}
+                                        valueLabelDisplay="auto"
+                                        onChange={handleQuestionBorder}
+                                    />
+                                </div>
+                            </div>
+                            <div
+                                className={styles.divider}
+                                style={{
+                                    backgroundColor: 'black',
+                                    opacity: 0.5,
+
+                                }}
+                            >
                             </div>
                             <div className={styles.inputContainer}>
                                 <div className='flex row start size100' style={{ gap: '3%' }}>
@@ -849,6 +897,25 @@ export default function ProfileEditor(props) {
                                         value={quiz.style.button.color}
                                     />
                                 }
+                                <div className='size100 flex'>
+                                    <p className='size100 flex align-start' style={{ color: '#6c6e82', fontSize: '13px' }}>
+                                        Borda
+                                    </p>
+                                    <Slider
+                                        value={quiz.style.button.borderRadius}
+                                        valueLabelDisplay="auto"
+                                        onChange={handleButtonBorder}
+                                    />
+                                </div>
+                            </div>
+                            <div
+                                className={styles.divider}
+                                style={{
+                                    backgroundColor: 'black',
+                                    opacity: 0.5,
+
+                                }}
+                            >
                             </div>
                             <div className={styles.inputContainer}>
                                 <div className='flex row start size100' style={{ gap: '3%' }}>
@@ -872,13 +939,25 @@ export default function ProfileEditor(props) {
                                     >
                                         <MenuItem value={'none'}>Nenhum</MenuItem>
                                         <MenuItem value={'letters'}>Letras</MenuItem>
-                                        <MenuItem value={'polygons'}>Polígonos</MenuItem>
+                                        <MenuItem value={'polygons'}>Formas</MenuItem>
                                     </Select>
                                 </FormControl>
-                                <ColorInput
-                                    onChange={handleSymbolColor}
-                                    value={quiz.style.button.symbolColor}
-                                />
+                                {quiz.style.button.variant === 'contained' &&
+                                    <ColorInput
+                                        onChange={handleSymbolColor}
+                                        value={quiz.style.button.symbolColor}
+                                        upPosition
+                                    />
+                                }
+                            </div>
+                            <div
+                                className={styles.divider}
+                                style={{
+                                    backgroundColor: 'black',
+                                    opacity: 0.5,
+
+                                }}
+                            >
                             </div>
                             <div className={styles.inputContainer}>
                                 <div className='flex row start size100' style={{ gap: '3%' }}>
@@ -887,30 +966,13 @@ export default function ProfileEditor(props) {
                                         Texto
                                     </h4>
                                 </div>
-                                <FormControl sx={{ m: 1, width: '100%' }}>
-                                    <InputLabel>
-                                        Fonte
-                                    </InputLabel>
-                                    <Select
-                                        input={<OutlinedInput label="Fonte" />}
-                                        value={quiz.style.button.symbol}
-                                        onChange={handleButtonSymbolChange}
-                                        size='small'
-                                        sx={{
-                                            width: '100%',
-                                        }}
-                                    >
-                                        <MenuItem value={'none'}>Nenhum</MenuItem>
-                                        <MenuItem value={'letters'}>Letras</MenuItem>
-                                        <MenuItem value={'polygons'}>Polígonos</MenuItem>
-                                    </Select>
-                                </FormControl>
                                 <ColorInput
                                     onChange={handleTextColor}
                                     value={quiz.style.button.textColor}
                                     upPosition
                                 />
                             </div>
+
                         </div>
                     }
                 </div>

@@ -11,6 +11,7 @@ export default function QuestionField(props) {
         index,
         value,
         disabled,
+        borderRadius,
     } = props
     const [containerSize, setContainerSize] = useState()
     const [color, setColor] = useState(colorValue)
@@ -74,6 +75,7 @@ export default function QuestionField(props) {
                 borderWidth: containerSize ? `${containerSize.height * 0.026}px` : '0px',
                 fontWeight: 'bold',
                 fontSize: containerSize ? `${containerSize.height * 0.6}px` : '0px',
+                borderRadius: containerSize ? `${containerSize.height * borderRadius * 0.005}px` : '4px',
                 ...CONTAINER_VARIANTS.get(variant)
             }}
             disabled={disabled}

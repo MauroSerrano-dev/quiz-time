@@ -1,6 +1,6 @@
 import { TextField } from '@mui/material'
 import styles from '../styles/components/ColorInput.module.css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { HexColorPicker } from 'react-colorful'
 import { motion } from "framer-motion"
 
@@ -11,21 +11,22 @@ export default function ColorInput(props) {
         upPosition
     } = props
 
-    const [isHovered, setIsHovered] = useState(false)
+    const [isFocused, setIsFocused] = useState(false);
 
-    function handleMouseEnter() {
-        setIsHovered(true)
+
+    function handleFocus() {
+        setIsFocused(true);
     }
 
-    function handleMouseLeave() {
-        setIsHovered(false)
+    function handleBlur() {
+        setIsFocused(false);
     }
 
     return (
         <div
             className={styles.container}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
         >
             <TextField
                 onChange={onChange}
@@ -45,7 +46,7 @@ export default function ColorInput(props) {
                 }}
             >
             </div>
-            {isHovered &&
+            {isFocused &&
                 <motion.div
                     className={styles.colorPickerContainer}
                     style={{ bottom: upPosition ? '39px' : '-170px' }}

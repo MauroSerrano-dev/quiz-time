@@ -16,7 +16,8 @@ const INICIAL_QUIZ = {
     style: {
         question: {
             color: '#009fda',
-            variant: 'text'
+            variant: 'text',
+            borderRadius: 10,
         },
         button: {
             color: '#009fda',
@@ -24,7 +25,8 @@ const INICIAL_QUIZ = {
             template: 'monochrome',
             symbol: 'polygons',
             symbolColor: '#1c222c',
-            textColor: '#1c222c'
+            textColor: '#1c222c',
+            borderRadius: 10,
         },
     },
     results: [

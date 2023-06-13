@@ -27,7 +27,7 @@ const OPTIONS = new Map([
     [3, { letter: 'D', color: '#1260be', polygon: 'x' }],
 ])
 
-const ANIMATION = 'all ease 400ms'
+const ANIMATION = 'all ease 200ms'
 
 export default function OptionInput(props) {
 
@@ -42,6 +42,7 @@ export default function OptionInput(props) {
         noSymbol,
         symbolColor,
         textColor,
+        borderRadius,
     } = props
 
     const [isHovered, setIsHovered] = useState(false)
@@ -126,8 +127,8 @@ export default function OptionInput(props) {
                 className={styles.teste}
                 style={{
                     color: variant === 'contained' ? symbolColor : color,
-                    mozUserSelect: 'none',
-                    webkitUserSelect: 'none',
+                    MozUserSelect: 'none',
+                    WebkitUserSelect: 'none',
                     userSelect: 'none',
                     fontFamily: 'Verdana, Geneva, Tahoma, sans-serif',
                 }} >
@@ -189,6 +190,7 @@ export default function OptionInput(props) {
                 transition: ANIMATION,
                 borderStyle: 'solid',
                 borderWidth: buttonSize ? `${buttonSize.height * 0.026}px` : '3px',
+                borderRadius: buttonSize ? `${buttonSize.height * borderRadius * 0.005}px` : '4px',
                 ...BUTTON_VARIANTS.get(variant)
             }}
         >
