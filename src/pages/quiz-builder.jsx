@@ -60,7 +60,7 @@ const INICIAL_QUIZ = {
     ],
     questions: [
         {
-            content: 'Escreva Sua Pergunta Aqui',
+            content: '',
             options: [
                 { content: '', action: {} },
                 { content: '', action: {} },

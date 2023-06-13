@@ -294,6 +294,19 @@
     padding-bottom: 5%;
 }
 
+.middleTwo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+
+    width: 100%;
+    height: 100%;
+    padding-top: 5%;
+    padding-bottom: 5%;
+}
+
 .optionsContainerSlide {
     position: absolute;
     bottom: 5%;

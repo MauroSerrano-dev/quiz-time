@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import styles from '../styles/components/QuestionField.module.css'
+import $ from 'jquery'
 
 const ANIMATION = 'all ease 200ms'
 
@@ -12,6 +13,9 @@ export default function QuestionField(props) {
         value,
         disabled,
         borderRadius,
+        placeholder,
+        onChange,
+        textColor,
     } = props
     const [containerSize, setContainerSize] = useState()
     const [color, setColor] = useState(colorValue)
@@ -35,7 +39,7 @@ export default function QuestionField(props) {
             backgroundColor: color.concat('0a'),
         }],
         ['contained', {
-            color: '#1c222c',
+            color: textColor,
             backgroundColor: color,
             boxShadow: '0px 3px 20px -15px',
             borderColor: 'transparent',
@@ -76,12 +80,15 @@ export default function QuestionField(props) {
                 fontWeight: 'bold',
                 fontSize: containerSize ? `${containerSize.height * 0.6}px` : '0px',
                 borderRadius: containerSize ? `${containerSize.height * borderRadius * 0.005}px` : '4px',
-                ...CONTAINER_VARIANTS.get(variant)
+                ...CONTAINER_VARIANTS.get(variant),
             }}
             disabled={disabled}
             value={value}
             type='text'
             autoComplete='off'
+            placeholder={placeholder}
+            onChange={onChange}
+            spellCheck={false}
         />
     )
 }
