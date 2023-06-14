@@ -80,6 +80,7 @@ const INICIAL_QUIZ = {
                 name: '',
                 type: ''
             },
+            haveExtraOptions: false,
         },
     ]
 }

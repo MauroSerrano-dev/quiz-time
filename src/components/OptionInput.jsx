@@ -5,6 +5,10 @@ import { BsTriangleFill } from "react-icons/bs";
 import { BsCircleFill } from "react-icons/bs";
 import { FaSquare } from "react-icons/fa";
 import { motion } from "framer-motion"
+import PentagonRoundedIcon from '@mui/icons-material/PentagonRounded';
+import HexagonRoundedIcon from '@mui/icons-material/HexagonRounded';
+import SquareRoundedIcon from '@mui/icons-material/SquareRounded';
+import CircleRoundedIcon from '@mui/icons-material/CircleRounded';
 
 const SIZES = new Map([
     [
@@ -21,10 +25,12 @@ const SIZES = new Map([
 ])
 
 const OPTIONS = new Map([
-    [0, { letter: 'A', color: '#237e0b', polygon: 'triangle' }],
-    [1, { letter: 'B', color: '#d01937', polygon: 'circle' }],
+    [0, { letter: 'A', color: '#26890c', polygon: 'triangle' }],
+    [1, { letter: 'B', color: '#e21b3c', polygon: 'circle' }],
     [2, { letter: 'C', color: '#e7b509', polygon: 'square' }],
-    [3, { letter: 'D', color: '#1260be', polygon: 'x' }],
+    [3, { letter: 'D', color: '#1368ce', polygon: 'x' }],
+    [4, { letter: 'E', color: '#3dd5c5', polygon: 'pentagon' }],
+    [5, { letter: 'F', color: '#f26e00', polygon: 'hexagon' }],
 ])
 
 const ANIMATION = 'all ease 200ms'
@@ -43,11 +49,20 @@ export default function OptionInput(props) {
         symbolColor,
         textColor,
         borderRadius,
+        attSizeRef,
     } = props
 
     const [isHovered, setIsHovered] = useState(false)
     const [buttonSize, setButtonSize] = useState()
     const [color, setColor] = useState(colorValue)
+
+    useEffect(() => {
+        console.log('setAttSizeRef', attSizeRef)
+        setButtonSize({
+            width: document.getElementsByClassName(styles.button)[index].offsetWidth,
+            height: document.getElementsByClassName(styles.button)[index].offsetHeight,
+        })
+    }, [attSizeRef])
 
     useEffect(() => {
         if (colorValue.length === 5)
@@ -100,27 +115,31 @@ export default function OptionInput(props) {
             />
         ],
         ['circle',
-            <BsCircleFill
-                size='100%'
-                color={variant === 'contained'
-                    ? symbolColor
-                    : symbol === 'letters'
-                        ? 'transparent'
-                        : color}
+            <CircleRoundedIcon
                 style={{
                     position: 'absolute',
                     transition: ANIMATION,
+                    width: '120%',
+                    height: '120%',
+                    color: variant === 'contained'
+                        ? symbolColor
+                        : symbol === 'letters'
+                            ? 'transparent'
+                            : color
                 }}
             />
+
         ],
         ['square',
-            <FaSquare
-                size='100%'
-                color={variant === 'contained' ? symbolColor : color}
+            <SquareRoundedIcon
                 style={{
                     position: 'absolute',
                     transition: ANIMATION,
-                }} />
+                    width: '120%',
+                    height: '120%',
+                    color: variant === 'contained' ? symbolColor : color
+                }}
+            />
         ],
         ['x',
             <h1
@@ -131,9 +150,32 @@ export default function OptionInput(props) {
                     userSelect: 'none',
                     fontFamily: 'Verdana, Geneva, Tahoma, sans-serif',
                     transition: 'color ease 200ms',
-                }} >
+                }}
+            >
                 X
             </h1>
+        ],
+        ['pentagon',
+            <PentagonRoundedIcon
+                style={{
+                    position: 'absolute',
+                    transition: ANIMATION,
+                    width: '120%',
+                    height: '120%',
+                    color: variant === 'contained' ? symbolColor : color
+                }}
+            />
+        ],
+        ['hexagon',
+            <HexagonRoundedIcon
+                style={{
+                    position: 'absolute',
+                    transition: ANIMATION,
+                    width: '120%',
+                    height: '120%',
+                    color: variant === 'contained' ? symbolColor : color
+                }}
+            />
         ],
     ])
 

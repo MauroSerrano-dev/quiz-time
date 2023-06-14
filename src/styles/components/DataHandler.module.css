@@ -1,6 +1,6 @@
 #componentContainer {
-    margin-top: 70px;
-    height: calc(100vh - 70px);
+    margin-top: 9vh;
+    height: calc(100vh - 9vh);
     overflow-y: auto;
     overflow-x: hidden;
     transition: margin-top 650ms ease-in-out;
@@ -9,7 +9,7 @@
 /* Mobile, Tablet and Smaller Desktop*/
 @media (max-width: 1120px) {
     #componentContainer {
-        margin-top: 60px;
-        height: calc(100vh - 60px);
+        margin-top: 9vh;
+        height: calc(100vh - 9vh);
     }
 }

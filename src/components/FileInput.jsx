@@ -1,25 +1,47 @@
 
 import styles from '../styles/components/FileInput.module.css'
 import { showErrorToast } from '../../utils/toasts'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { IconButton } from '@mui/material'
 
 // ICONS
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import AddIcon from '@mui/icons-material/Add'
 import CropIcon from '@mui/icons-material/Crop'
-import InfoIcon from '@mui/icons-material/Info'
 
 export default function FileInput(props) {
     const {
-        quiz,
         setQuiz,
         currentSlide,
         img,
         type,
+        index,
+        width,
+        height
     } = props
 
     const [isDraggingOver, setIsDraggingOver] = useState(false)
+    const [containerSize, setContainerSize] = useState()
+
+    useEffect(() => {
+        setContainerSize({
+            width: document.getElementsByClassName(styles.container)[index].offsetWidth,
+            height: document.getElementsByClassName(styles.container)[index].offsetHeight,
+        })
+
+        function handleResize() {
+            setContainerSize({
+                width: document.getElementsByClassName(styles.container)[index].offsetWidth,
+                height: document.getElementsByClassName(styles.container)[index].offsetHeight,
+            })
+        }
+
+        window.addEventListener('resize', handleResize)
+
+        return () => {
+            window.removeEventListener('resize', handleResize)
+        }
+    }, [])
 
     function handleDragEnter(event) {
         event.preventDefault();
@@ -69,7 +91,7 @@ export default function FileInput(props) {
                                 ? {
                                     ...item, img: {
                                         ...item.img,
-                                        positionToFit: this.height > this.width || (this.width / this.height <= 500 / 300)
+                                        positionToFit: this.height > this.width || (this.width / this.height <= containerSize.width / containerSize.height)
                                             ? 'vertical'
                                             : 'horizontal',
                                     }
@@ -118,59 +140,113 @@ export default function FileInput(props) {
     }
 
     return (
-        <div className={styles.container}>
-            <div
-                className={styles.imgContainer}
-                onDragEnter={handleDragEnter}
-            >
-                {isDraggingOver &&
+        <div className={styles.container}
+            style={{
+                width: width ? width : '100%',
+                height: height ? height : '100%',
+            }}
+        >
+            {containerSize &&
+                <div className='flex start size100'>
                     <div
-                        className={styles.dragContainer}
-                        onDragLeave={handleDragLeave}
-                        onDragOver={handleDragOver}
-                        onDrop={handleDrop}
+                        className={styles.imgContainer}
+                        onDragEnter={handleDragEnter}
                     >
-                        <h3>Solte a imagem aqui para carregá-la</h3>
+                        {isDraggingOver &&
+                            <div
+                                className={styles.dragContainer}
+                                onDragLeave={handleDragLeave}
+                                onDragOver={handleDragOver}
+                                onDrop={handleDrop}
+                            >
+                                <h3>Solte a imagem aqui para carregá-la</h3>
+                            </div>
+                        }
+                        {img.content !== ''
+                            ? <div className={styles.userImgContainer}>
+                                <img
+                                    style={img.positionToFit === 'vertical' ? { height: 'auto', width: '100%' } : { height: '100%', width: 'auto' }}
+                                    src={img.content}
+                                />
+                            </div>
+                            : <div className={styles.noImgContainer}>
+                                <div
+                                    className={styles.addButton}
+                                    style={{
+                                        width: `${containerSize.width * 0.11}px`,
+                                        height: `${containerSize.width * 0.11}px`
+                                    }}
+                                >
+                                    <AddIcon
+                                        style={{
+                                            width: `${containerSize.width * 0.08}px`,
+                                            height: `${containerSize.width * 0.08}px`
+                                        }}
+                                    />
+                                    <input
+                                        type='file'
+                                        className={styles.uploadImgInside}
+                                        onChange={handleUploadImgProfile}
+                                        title=""
+                                    />
+                                </div>
+                                <p style={{ fontSize: `${containerSize.width * 0.04}px` }} className={styles.dragText}>Ou arraste uma imagem para enviar</p>
+                                <input
+                                    type='file'
+                                    className={styles.uploadImg}
+                                    onChange={handleUploadImgProfile}
+                                    title=""
+                                />
+                            </div>
+                        }
                     </div>
-                }
-                {img.content !== ''
-                    ? <div className={styles.userImgContainer}>
-                        <img
-                            style={img.positionToFit === 'vertical' ? { height: 'auto', width: '100%' } : { height: '100%', width: 'auto' }}
-                            src={img.content}
-                        />
-                    </div>
-                    : <div className={styles.noImgContainer}>
-                        <div className={styles.addButton}>
-                            <AddIcon />
-                            <input
-                                type='file'
-                                className={styles.uploadImgInside}
-                                onChange={handleUploadImgProfile}
-                                title=""
-                            />
+                    {img.content !== '' &&
+                        <div
+                            className={styles.userImgButtons}
+                            style={{
+                                gap: `${containerSize.width * 0.03}px`,
+                                bottom: `${containerSize.height * 0.03}px`
+                            }}
+                        >
+                            <IconButton
+                                className={styles.buttons}
+                                color='neutral'
+                                size='small'
+                                style={{
+                                    backgroundColor: '#00000080',
+                                    width: `${containerSize.width * 0.11}px`,
+                                    height: `${containerSize.width * 0.11}px`,
+                                    transition: 'all ease 200ms'
+                                }}
+                            >
+                                <CropIcon
+                                    style={{
+                                        width: `${containerSize.width * 0.08}px`,
+                                        height: `${containerSize.width * 0.08}px`,
+                                    }}
+                                />
+                            </IconButton>
+                            <IconButton
+                                className={styles.buttons}
+                                color='neutral' 
+                                onClick={deleteProfileImg}
+                                size='small'
+                                style={{
+                                    backgroundColor: '#00000080',
+                                    width: `${containerSize.width * 0.11}px`,
+                                    height: `${containerSize.width * 0.11}px`,
+                                    transition: 'all ease 200ms'
+                                }}
+                            >
+                                <DeleteForeverIcon
+                                    style={{
+                                        width: `${containerSize.width * 0.09}px`,
+                                        height: `${containerSize.width * 0.09}px`
+                                    }}
+                                />
+                            </IconButton>
                         </div>
-                        <p className={styles.dragText}>Ou arraste uma imagem para enviar</p>
-                        <input
-                            type='file'
-                            className={styles.uploadImg}
-                            onChange={handleUploadImgProfile}
-                            title=""
-                        />
-                    </div>
-                }
-            </div>
-            {img.content !== '' &&
-                <div className={styles.userImgButtons}>
-                    <IconButton color='neutral' aria-label="cropImg">
-                        <CropIcon />
-                    </IconButton>
-                    <IconButton color='neutral' aria-label="infoImg">
-                        <InfoIcon />
-                    </IconButton>
-                    <IconButton color='neutral' onClick={deleteProfileImg} aria-label="deleteImg">
-                        <DeleteForeverIcon />
-                    </IconButton>
+                    }
                 </div>
             }
         </div>

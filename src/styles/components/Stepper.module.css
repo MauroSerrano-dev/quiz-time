@@ -4,7 +4,7 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    transition: all 500ms ease,
+    transition: all 500ms ease;
 }
 
 .incompleteContainer {
@@ -15,7 +15,7 @@
     justify-content: center;
     width: fit-content;
     height: fit-content;
-    transition: all 500ms ease,
+    transition: all 500ms ease;
 }
 
 .completeContainer {
@@ -27,7 +27,7 @@
     width: fit-content;
     height: fit-content;
     overflow: hidden;
-    transition: all 500ms ease,
+    transition: all 500ms ease;
 }
 
 .stepPath {
@@ -38,12 +38,12 @@
     justify-content: center;
     width: auto;
     height: auto;
-    transition: all 500ms ease,
+    transition: all 500ms ease;
 }
 
 .path {
     position: relative;
     display: flex;
     background-color: #616161;
-    transition: all 500ms ease,
+    transition: all 500ms ease;
 }

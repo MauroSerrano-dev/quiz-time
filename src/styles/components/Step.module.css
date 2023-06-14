@@ -17,5 +17,5 @@
     bottom: -22px;
     width: 160px;
     font-size: 11px;
-    transition: all 500ms ease,
+    transition: all 500ms ease;
 }

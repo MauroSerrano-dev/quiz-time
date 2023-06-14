@@ -16,9 +16,12 @@ export default function QuestionField(props) {
         placeholder,
         onChange,
         textColor,
+        editQuestionMode,
     } = props
+
     const [containerSize, setContainerSize] = useState()
     const [color, setColor] = useState(colorValue)
+    const [isFocused, setIsFocused] = useState(false);
 
 
     useEffect(() => {
@@ -30,17 +33,17 @@ export default function QuestionField(props) {
 
     const INPUT_VARIANTS = new Map([
         ['text', {
-            color: color,
+            color: value === '' && !isFocused ? color.concat('90') : color,
             borderColor: 'transparent',
             backgroundColor: 'transparent',
         }],
         ['shadow', {
-            color: color,
+            color: value === '' && !isFocused ? color.concat('90') : color,
             borderColor: 'transparent',
             backgroundColor: color.concat('0a'),
         }],
         ['outlined', {
-            color: color,
+            color: value === '' && !isFocused ? color.concat('90') : color,
             borderColor: color.concat('c0'),
             backgroundColor: color.concat('0a'),
         }],
@@ -72,13 +75,23 @@ export default function QuestionField(props) {
         }
     }, [])
 
+    function handleFocus() {
+        setIsFocused(true);
+    }
+
+    function handleBlur() {
+        setIsFocused(false);
+    }
+
     return (
         <div className={styles.container}>
             {containerSize &&
                 <input
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
                     className={styles.input}
                     style={{
-                        transition: ANIMATION,
+                        transition: editQuestionMode ? 'all ease 0s' : ANIMATION,
                         borderStyle: 'solid',
                         borderWidth: containerSize ? `${containerSize.height * 0.026}px` : '0px',
                         fontWeight: 'bold',
@@ -87,10 +100,9 @@ export default function QuestionField(props) {
                         ...INPUT_VARIANTS.get(variant),
                     }}
                     disabled={disabled}
-                    value={value}
+                    value={value === '' && !isFocused ? placeholder : value}
                     type='text'
                     autoComplete='off'
-                    placeholder={placeholder}
                     onChange={onChange}
                     spellCheck={false}
                 />

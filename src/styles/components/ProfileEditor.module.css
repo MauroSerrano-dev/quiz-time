@@ -13,9 +13,11 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     width: 100%;
     height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #slidesContainer {
@@ -135,26 +137,6 @@
     transition: width 300ms ease;
 }
 
-#middleContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    height: 100%;
-    width: calc(100% - 440px);
-    transition: width 300ms ease;
-}
-
-#editorHead {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 12%;
-}
-
 #rightContainer {
     position: absolute;
     right: 0px;
@@ -241,13 +223,35 @@
 .questionsContainer {
     width: 95%;
     height: 13%;
-    /* outline: green solid 2px; */
 }
 
 .fileInputContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    width: 18%;
+    height: 20%;
+    scale: 1;
+    transition: all ease-out 200ms;
+    z-index: 5;
+}
+
+.fileInputContainer:hover {
+    scale: 2.2;
+}
+
+.editorOptionsContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
     width: 95%;
-    height: 38%;
-    /* outline: red solid 2px; */
+    height: 50%;
+    gap: 15px;
 }
 
 .optionsContainer {
@@ -256,10 +260,15 @@
     align-items: center;
     justify-content: center;
     text-align: center;
+
     width: 95%;
-    height: 40%;
+    height: 50%;
     gap: 15px;
-    /* outline: blue solid 2px; */
+}
+
+.addExtraOptionsButton {
+    width: 28%;
+    height: 7%;
 }
 
 .optionsRow {
@@ -271,6 +280,10 @@
     gap: 15px;
     width: 100%;
     height: 50%;
+}
+
+.rowExtraOptions {
+    height: 33.33333333333333%;
 }
 
 .inputContainer {
@@ -292,24 +305,45 @@
     width: 100%;
 }
 
+#editorHead {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    height: 12%;
+    padding-top: 1%;
+}
+
+#middleContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100%;
+    width: calc(100% - 440px);
+    transition: all 300ms ease;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 .middleAll {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
     text-align: center;
-
+    
     width: 100%;
     height: 88%;
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 1rem;
 }
 
 .middleOne {}
 
 .middleTwo {
-    overflow-y: auto;
-    justify-content: flex-start;
 }
 
 .optionsContainerSlide {

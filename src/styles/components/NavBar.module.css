@@ -2,7 +2,7 @@
     position: absolute;
     display: flex;
     top: 0px;
-    height: 70px;
+    height: 9vh;
     width: 100%;
     background-color: var(--body-background-color);
     transition: all 650ms ease-in-out;
@@ -170,7 +170,7 @@
 /* Mobile, Tablet and Smaller Desktop*/
 @media (max-width: 1120px) {
     #container {
-        height: 60px;
+        height: 9vh;
     }
 
     #nav_menu_bar {
