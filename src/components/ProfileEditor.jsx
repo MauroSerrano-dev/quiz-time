@@ -393,7 +393,7 @@ export default function ProfileEditor(props) {
                 ...prev.style,
                 button: {
                     ...prev.style.button,
-                    template: index === 0 ? 'monochrome' : 'colorful'
+                    template: DESIGN_EDIT_OPTIONS[index].value
                 }
             }
         }))
@@ -647,8 +647,16 @@ export default function ProfileEditor(props) {
                                 />
                             </div>
                             <div className={styles.optionsContainer}>
-                                <div className={styles.optionsRow}>
+                                <div
+                                    className={`
+                                    ${styles.optionsRow} 
+                                    ${quiz.style.button.template === 'custom'
+                                            ? styles.rowExtraOptions
+                                            : undefined}`
+                                    }
+                                >
                                     <OptionInput
+                                        editMode
                                         className={styles.optionInput}
                                         borderRadius={quiz.style.button.borderRadius}
                                         textColor={quiz.style.button.textColor}
@@ -663,8 +671,10 @@ export default function ProfileEditor(props) {
                                         variant={quiz.style.button.variant}
                                         text='Opção 1'
                                         size='responsive'
+                                        attSizeRef={attSizeRef}
                                     />
                                     <OptionInput
+                                        editMode
                                         className={styles.optionInput}
                                         borderRadius={quiz.style.button.borderRadius}
                                         textColor={quiz.style.button.textColor}
@@ -679,10 +689,19 @@ export default function ProfileEditor(props) {
                                         variant={quiz.style.button.variant}
                                         text='Opção 2'
                                         size='responsive'
+                                        attSizeRef={attSizeRef}
                                     />
                                 </div>
-                                <div className={styles.optionsRow}>
+                                <div
+                                    className={`
+                                    ${styles.optionsRow} 
+                                    ${quiz.style.button.template === 'custom'
+                                            ? styles.rowExtraOptions
+                                            : undefined}`
+                                    }
+                                >
                                     <OptionInput
+                                        editMode
                                         className={styles.optionInput}
                                         borderRadius={quiz.style.button.borderRadius}
                                         textColor={quiz.style.button.textColor}
@@ -696,8 +715,10 @@ export default function ProfileEditor(props) {
                                         variant={quiz.style.button.variant}
                                         text='Opção 3'
                                         size='responsive'
+                                        attSizeRef={attSizeRef}
                                     />
                                     <OptionInput
+                                        editMode
                                         className={styles.optionInput}
                                         borderRadius={quiz.style.button.borderRadius}
                                         textColor={quiz.style.button.textColor}
@@ -711,13 +732,64 @@ export default function ProfileEditor(props) {
                                         variant={quiz.style.button.variant}
                                         text='Opção 4'
                                         size='responsive'
+                                        attSizeRef={attSizeRef}
                                     />
                                 </div>
+                                {quiz.style.button.template === 'custom' &&
+                                    <div
+                                        className={`
+                                        ${styles.optionsRow} 
+                                        ${quiz.style.button.template === 'custom'
+                                                ? styles.rowExtraOptions
+                                                : undefined}`
+                                        }
+                                    >
+                                        <OptionInput
+                                            editMode
+                                            className={styles.optionInput}
+                                            borderRadius={quiz.style.button.borderRadius}
+                                            textColor={quiz.style.button.textColor}
+                                            symbolColor={quiz.style.button.symbolColor}
+                                            option={4}
+                                            index={4}
+                                            colorValue={module.value === 'monochrome'
+                                                ? quiz.style.button.color
+                                                : undefined
+                                            }
+                                            symbol={quiz.style.button.symbol}
+                                            variant={quiz.style.button.variant}
+                                            text='Opção 5'
+                                            size='responsive'
+                                            attSizeRef={attSizeRef}
+                                        />
+                                        <OptionInput
+                                            editMode
+                                            className={styles.optionInput}
+                                            borderRadius={quiz.style.button.borderRadius}
+                                            textColor={quiz.style.button.textColor}
+                                            symbolColor={quiz.style.button.symbolColor}
+                                            option={5}
+                                            index={5}
+                                            colorValue={module.value === 'monochrome'
+                                                ? quiz.style.button.color
+                                                : undefined
+                                            }
+                                            symbol={quiz.style.button.symbol}
+                                            variant={quiz.style.button.variant}
+                                            text='Opção 6'
+                                            size='responsive'
+                                            attSizeRef={attSizeRef}
+                                        />
+                                    </div>
+                                }
                             </div>
                         </div>
                     }
                     {step === 2 && quiz.questions.length > 0 &&
-                        <div className={`${styles.middleAll} ${styles.middleTwo}`}>
+                        <div
+                            className={styles.middleAll}
+                            id={styles.middleTwo}
+                        >
                             <div className={styles.questionsContainer}>
                                 <QuestionField
                                     editQuestionMode
@@ -742,7 +814,13 @@ export default function ProfileEditor(props) {
                                 />
                             </div>
                             <div className={styles.editorOptionsContainer}>
-                                <div className={`${styles.optionsRow} ${quiz.questions[currentSlide.haveExtraOptions ? styles.rowExtraOptions : undefined]}`}>
+                                <div className={`
+                                ${styles.optionsRow} 
+                                ${quiz.questions[currentSlide].haveExtraOptions
+                                        ? styles.rowExtraOptions
+                                        : undefined}`
+                                }
+                                >
                                     <OptionInput
                                         className={styles.optionInput}
                                         borderRadius={quiz.style.button.borderRadius}
@@ -778,7 +856,13 @@ export default function ProfileEditor(props) {
                                         attSizeRef={attSizeRef}
                                     />
                                 </div>
-                                <div className={`${styles.optionsRow} ${quiz.questions[currentSlide.haveExtraOptions ? styles.rowExtraOptions : undefined]}`}>
+                                <div className={`
+                                ${styles.optionsRow} 
+                                ${quiz.questions[currentSlide].haveExtraOptions
+                                        ? styles.rowExtraOptions
+                                        : undefined}`
+                                }
+                                >
                                     <OptionInput
                                         className={styles.optionInput}
                                         borderRadius={quiz.style.button.borderRadius}
@@ -813,7 +897,13 @@ export default function ProfileEditor(props) {
                                     />
                                 </div>
                                 {quiz.questions[currentSlide].haveExtraOptions &&
-                                    <div className={`${styles.optionsRow} ${quiz.questions[currentSlide.haveExtraOptions ? styles.rowExtraOptions : undefined]}`}>
+                                    <div className={`
+                                    ${styles.optionsRow} 
+                                    ${quiz.questions[currentSlide].haveExtraOptions
+                                            ? styles.rowExtraOptions
+                                            : undefined}`
+                                    }
+                                    >
                                         <OptionInput
                                             className={styles.optionInput}
                                             borderRadius={quiz.style.button.borderRadius}
@@ -936,14 +1026,22 @@ export default function ProfileEditor(props) {
                                                             />
                                                         </div>
                                                         <div className={styles.optionsContainerSlide}>
-                                                            <div className={styles.optionsRowSlide}>
-                                                                <OptionInput
+                                                            <div
+                                                                className={`
+                                                                    ${styles.optionsRow} 
+                                                                    ${styles.optionsRowSlide}
+                                                                    ${module.value === 'custom'
+                                                                        ? styles.rowExtraOptions
+                                                                        : undefined}`
+                                                                }
+                                                            >                                                                <OptionInput
+                                                                    editMode
                                                                     className={styles.optionInput}
                                                                     borderRadius={quiz.style.button.borderRadius}
                                                                     textColor={quiz.style.button.textColor}
                                                                     symbolColor={quiz.style.button.symbolColor}
                                                                     option={0}
-                                                                    index={4 + (i * 4)}
+                                                                    index={6}
                                                                     colorValue={module.value === 'monochrome'
                                                                         ? quiz.style.button.color
                                                                         : undefined
@@ -954,12 +1052,13 @@ export default function ProfileEditor(props) {
                                                                     size='responsive'
                                                                 />
                                                                 <OptionInput
+                                                                    editMode
                                                                     className={styles.optionInput}
                                                                     borderRadius={quiz.style.button.borderRadius}
                                                                     textColor={quiz.style.button.textColor}
                                                                     symbolColor={quiz.style.button.symbolColor}
                                                                     option={1}
-                                                                    index={5 + (i * 4)}
+                                                                    index={6}
                                                                     colorValue={module.value === 'monochrome'
                                                                         ? quiz.style.button.color
                                                                         : undefined
@@ -970,14 +1069,22 @@ export default function ProfileEditor(props) {
                                                                     size='responsive'
                                                                 />
                                                             </div>
-                                                            <div className={styles.optionsRowSlide}>
-                                                                <OptionInput
+                                                            <div
+                                                                className={`
+                                                                    ${styles.optionsRow} 
+                                                                    ${styles.optionsRowSlide}
+                                                                    ${module.value === 'custom'
+                                                                        ? styles.rowExtraOptions
+                                                                        : undefined}`
+                                                                }
+                                                            >                                                                <OptionInput
+                                                                    editMode
                                                                     className={styles.optionInput}
                                                                     borderRadius={quiz.style.button.borderRadius}
                                                                     textColor={quiz.style.button.textColor}
                                                                     symbolColor={quiz.style.button.symbolColor}
                                                                     option={2}
-                                                                    index={6 + (i * 4)}
+                                                                    index={6}
                                                                     colorValue={module.value === 'monochrome'
                                                                         ? quiz.style.button.color
                                                                         : undefined
@@ -988,12 +1095,13 @@ export default function ProfileEditor(props) {
                                                                     size='responsive'
                                                                 />
                                                                 <OptionInput
+                                                                    editMode
                                                                     className={styles.optionInput}
                                                                     borderRadius={quiz.style.button.borderRadius}
                                                                     textColor={quiz.style.button.textColor}
                                                                     symbolColor={quiz.style.button.symbolColor}
                                                                     option={3}
-                                                                    index={7 + (i * 4)}
+                                                                    index={6}
                                                                     colorValue={module.value === 'monochrome'
                                                                         ? quiz.style.button.color
                                                                         : undefined
@@ -1004,6 +1112,52 @@ export default function ProfileEditor(props) {
                                                                     size='responsive'
                                                                 />
                                                             </div>
+                                                            {module.value === 'custom' &&
+                                                                <div
+                                                                    className={`
+                                                                    ${styles.optionsRow} 
+                                                                    ${styles.optionsRowSlide}
+                                                                    ${module.value === 'custom'
+                                                                            ? styles.rowExtraOptions
+                                                                            : undefined}`
+                                                                    }
+                                                                >
+                                                                    <OptionInput
+                                                                        editMode
+                                                                        className={styles.optionInput}
+                                                                        borderRadius={quiz.style.button.borderRadius}
+                                                                        textColor={quiz.style.button.textColor}
+                                                                        symbolColor={quiz.style.button.symbolColor}
+                                                                        option={4}
+                                                                        index={6}
+                                                                        colorValue={module.value === 'monochrome'
+                                                                            ? quiz.style.button.color
+                                                                            : undefined
+                                                                        }
+                                                                        symbol={quiz.style.button.symbol}
+                                                                        variant={quiz.style.button.variant}
+                                                                        text='Opção 3'
+                                                                        size='responsive'
+                                                                    />
+                                                                    <OptionInput
+                                                                        editMode
+                                                                        className={styles.optionInput}
+                                                                        borderRadius={quiz.style.button.borderRadius}
+                                                                        textColor={quiz.style.button.textColor}
+                                                                        symbolColor={quiz.style.button.symbolColor}
+                                                                        option={5}
+                                                                        index={6}
+                                                                        colorValue={module.value === 'monochrome'
+                                                                            ? quiz.style.button.color
+                                                                            : undefined
+                                                                        }
+                                                                        symbol={quiz.style.button.symbol}
+                                                                        variant={quiz.style.button.variant}
+                                                                        text='Opção 4'
+                                                                        size='responsive'
+                                                                    />
+                                                                </div>
+                                                            }
                                                         </div>
                                                     </div>
                                                 </div>

@@ -34,6 +34,7 @@ const OPTIONS = new Map([
 ])
 
 const ANIMATION = 'all ease 200ms'
+const FAST_ANIMATION = 'all ease 0ms'
 
 export default function OptionInput(props) {
 
@@ -50,6 +51,7 @@ export default function OptionInput(props) {
         textColor,
         borderRadius,
         attSizeRef,
+        editMode,
     } = props
 
     const [isHovered, setIsHovered] = useState(false)
@@ -57,7 +59,6 @@ export default function OptionInput(props) {
     const [color, setColor] = useState(colorValue)
 
     useEffect(() => {
-        console.log('setAttSizeRef', attSizeRef)
         setButtonSize({
             width: document.getElementsByClassName(styles.button)[index].offsetWidth,
             height: document.getElementsByClassName(styles.button)[index].offsetHeight,
@@ -110,7 +111,7 @@ export default function OptionInput(props) {
                 color={variant === 'contained' ? symbolColor : color}
                 style={{
                     position: 'absolute',
-                    transition: ANIMATION,
+                    transition: editMode ? ANIMATION : FAST_ANIMATION,
                 }}
             />
         ],
@@ -118,7 +119,7 @@ export default function OptionInput(props) {
             <CircleRoundedIcon
                 style={{
                     position: 'absolute',
-                    transition: ANIMATION,
+                    transition: editMode ? ANIMATION : FAST_ANIMATION,
                     width: '120%',
                     height: '120%',
                     color: variant === 'contained'
@@ -134,7 +135,7 @@ export default function OptionInput(props) {
             <SquareRoundedIcon
                 style={{
                     position: 'absolute',
-                    transition: ANIMATION,
+                    transition: editMode ? ANIMATION : FAST_ANIMATION,
                     width: '120%',
                     height: '120%',
                     color: variant === 'contained' ? symbolColor : color
@@ -159,7 +160,7 @@ export default function OptionInput(props) {
             <PentagonRoundedIcon
                 style={{
                     position: 'absolute',
-                    transition: ANIMATION,
+                    transition: editMode ? ANIMATION : FAST_ANIMATION,
                     width: '120%',
                     height: '120%',
                     color: variant === 'contained' ? symbolColor : color
@@ -170,7 +171,7 @@ export default function OptionInput(props) {
             <HexagonRoundedIcon
                 style={{
                     position: 'absolute',
-                    transition: ANIMATION,
+                    transition: editMode ? ANIMATION : FAST_ANIMATION,
                     width: '120%',
                     height: '120%',
                     color: variant === 'contained' ? symbolColor : color
@@ -250,7 +251,7 @@ export default function OptionInput(props) {
                                     position: 'relative',
                                     width: symbol === 'none' ? '0px' : `${buttonSize.height * 0.4}px`,
                                     height: symbol === 'none' ? '0px' : `${buttonSize.height * 0.4}px`,
-                                    transition: ANIMATION,
+                                    transition: editMode ? ANIMATION : FAST_ANIMATION,
                                     outlineStyle: 'solid',
                                     outlineWidth: symbol === 'none' ? '0px' : (buttonSize ? `${buttonSize.height * 0.026}px` : '3px'),
                                     ...SYMBOL_VARIANTS.get(variant),
@@ -269,7 +270,7 @@ export default function OptionInput(props) {
                                 <h2
                                     style={{
                                         ...SYMBOL_TEXT_VARIANTS.get(variant),
-                                        transition: ANIMATION,
+                                        transition: editMode ? ANIMATION : FAST_ANIMATION,
                                         position: 'absolute',
                                         fontSize: symbol === 'letters' ? `${buttonSize.height * 0.3}px` : '0px',
                                     }}
@@ -284,7 +285,7 @@ export default function OptionInput(props) {
                             style={{
                                 ...TEXT_VARIANTS.get(variant),
                                 fontSize: `${buttonSize.height * 0.3}px`,
-                                transition: ANIMATION,
+                                transition: editMode ? ANIMATION : FAST_ANIMATION,
                             }}
                         >
                             {text}
