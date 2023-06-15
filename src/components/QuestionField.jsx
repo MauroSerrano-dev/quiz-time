@@ -2,14 +2,13 @@ import { useEffect, useState } from 'react';
 import styles from '../styles/components/QuestionField.module.css'
 import $ from 'jquery'
 
-const ANIMATION = 'all ease 200ms'
+const FAST_ANIMATION = 'all ease 0ms'
 
 export default function QuestionField(props) {
 
     const {
         variant,
         colorValue,
-        index,
         value,
         disabled,
         borderRadius,
@@ -17,11 +16,16 @@ export default function QuestionField(props) {
         onChange,
         textColor,
         editQuestionMode,
+        slideMode,
     } = props
 
-    const [containerSize, setContainerSize] = useState()
+    const [containerSize, setContainerSize] = useState({
+        width: $(`.${styles.container}`).width(),
+        height: $(`.${styles.container}`).height()
+    })
     const [color, setColor] = useState(colorValue)
     const [isFocused, setIsFocused] = useState(false);
+    const [animation, setAnimation] = useState('all ease 0ms')
 
 
     useEffect(() => {
@@ -56,15 +60,21 @@ export default function QuestionField(props) {
     ])
 
     useEffect(() => {
-        setContainerSize({
-            width: document.getElementsByClassName(styles.container)[index].offsetWidth,
-            height: document.getElementsByClassName(styles.container)[index].offsetHeight,
-        })
+        setTimeout(() => {
+            setContainerSize({
+                width: $(`.${slideMode ? styles.containerSlide : styles.container}`).width(),
+                height: $(`.${slideMode ? styles.containerSlide : styles.container}`).height()
+            })
+        }, 1)
+
+        setTimeout(() => {
+            setAnimation('all ease 200msms')
+        }, 200)
 
         function handleResize() {
             setContainerSize({
-                width: document.getElementsByClassName(styles.container)[index].offsetWidth,
-                height: document.getElementsByClassName(styles.container)[index].offsetHeight,
+                width: $(`.${slideMode ? styles.containerSlide : styles.container}`).width(),
+                height: $(`.${slideMode ? styles.containerSlide : styles.container}`).height()
             })
         }
 
@@ -84,29 +94,33 @@ export default function QuestionField(props) {
     }
 
     return (
-        <div className={styles.container}>
-            {containerSize &&
-                <input
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
-                    className={styles.input}
-                    style={{
-                        transition: editQuestionMode ? 'all ease 0s' : ANIMATION,
-                        borderStyle: 'solid',
-                        borderWidth: containerSize ? `${containerSize.height * 0.026}px` : '0px',
-                        fontWeight: 'bold',
-                        fontSize: containerSize ? `${containerSize.height * 0.6}px` : '0px',
-                        borderRadius: containerSize ? `${containerSize.height * borderRadius * 0.005}px` : '4px',
-                        ...INPUT_VARIANTS.get(variant),
-                    }}
-                    disabled={disabled}
-                    value={value === '' && !isFocused ? placeholder : value}
-                    type='text'
-                    autoComplete='off'
-                    onChange={onChange}
-                    spellCheck={false}
-                />
+        <div
+            className={`${slideMode
+                ? styles.containerSlide
+                : styles.container
+                }`
             }
+        >
+            <input
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                className={styles.input}
+                style={{
+                    transition: editQuestionMode ? FAST_ANIMATION : animation,
+                    borderStyle: 'solid',
+                    borderWidth: containerSize ? `${containerSize.height * 0.026}px` : '0px',
+                    fontWeight: 'bold',
+                    fontSize: containerSize ? `${containerSize.height * 0.6}px` : '0px',
+                    borderRadius: containerSize ? `${containerSize.height * borderRadius * 0.005}px` : '4px',
+                    ...INPUT_VARIANTS.get(variant),
+                }}
+                disabled={disabled}
+                value={value === '' && !isFocused ? placeholder : value}
+                type='text'
+                autoComplete='off'
+                onChange={onChange}
+                spellCheck={false}
+            />
         </div>
     )
 }

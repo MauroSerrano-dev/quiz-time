@@ -231,7 +231,7 @@
     align-items: center;
     justify-content: center;
     
-    width: 18%;
+    width: 220px;
     height: 20%;
     scale: 1;
     transition: all ease-out 200ms;
@@ -343,7 +343,14 @@
     padding-bottom: 1rem;
 }
 
-.middleOne {}
+#middleZero {
+    justify-content: center;
+    gap: 1.5rem;
+    padding-bottom: 7%;
+}
+
+#middleOne {
+}
 
 #middleTwo {
 }

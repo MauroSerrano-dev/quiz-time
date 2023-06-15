@@ -22,6 +22,7 @@ import ColorInput from './ColorInput';
 import OptionInput from './OptionInput'
 import { CustomTextField } from '../../utils/mui'
 import QuestionField from './QuestionField'
+import $ from 'jquery'
 
 // ICONS
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
@@ -74,6 +75,32 @@ export default function ProfileEditor(props) {
     const [showModal, setShowModal] = useState(true)
     const [showModalOpacity, setShowModalOpacity] = useState(true)
     const [attSizeRef, setAttSizeRef] = useState(false)
+    const [middleAllSize, setMiddleAllSize] = useState({
+        width: $(`.${styles.middleAll}`).width(),
+        height: $(`.${styles.middleAll}`).height()
+    })
+
+    useEffect(() => {
+        setTimeout(() => {
+            setMiddleAllSize({
+                width: $(`.${styles.middleAll}`).width(),
+                height: $(`.${styles.middleAll}`).height()
+            })
+        }, 1)
+
+        function handleResize() {
+            setMiddleAllSize({
+                width: $(`.${styles.middleAll}`).width(),
+                height: $(`.${styles.middleAll}`).height()
+            })
+        }
+
+        window.addEventListener('resize', handleResize)
+
+        return () => {
+            window.removeEventListener('resize', handleResize)
+        }
+    }, [])
 
     const BACKGROUND_STYLES = new Map([
         ['solid', {
@@ -352,7 +379,7 @@ export default function ProfileEditor(props) {
         if (newStep === 1)
             setCurrentSlide(quiz.style.button.template === 'monochrome'
                 ? 0
-                : 1
+                : (quiz.style.button.template === 'colorful' ? 1 : 2)
             )
         else
             setCurrentSlide(0)
@@ -465,6 +492,25 @@ export default function ProfileEditor(props) {
             )
         }))
         setAttSizeRef(prev => !prev)
+    }
+
+    function handleOptionTextChange(event, optionIndex) {
+        console.log(event.target.value)
+        setQuiz(prev => ({
+            ...prev,
+            questions: prev.questions.map((question, i) =>
+                currentSlide === i
+                    ? {
+                        ...question,
+                        options: prev.questions[i].options.map((option, j) =>
+                            j === optionIndex
+                                ? { ...option, content: event.target.value }
+                                : option
+                        )
+                    }
+                    : question
+            )
+        }))
     }
 
     return (
@@ -611,8 +657,9 @@ export default function ProfileEditor(props) {
                         />
                     </div>
                     {step === 0 && quiz.results.length > 0 &&
-                        <div className={styles.middleAll}
-                            style={{ height: step === 2 ? '77.5%' : '85%' }}
+                        <div
+                            className={styles.middleAll}
+                            id={styles.middleZero}
                         >
                             <FileInput
                                 index={0}
@@ -634,8 +681,11 @@ export default function ProfileEditor(props) {
                         </div>
                     }
                     {step === 1 &&
-                        <div className={`${styles.middleAll} ${styles.middleOne}`}>
-                            <div style={{ width: '95%', height: '15%' }}>
+                        <div
+                            className={styles.middleAll}
+                            id={styles.middleOne}
+                        >
+                            <div className={styles.questionsContainer}>
                                 <QuestionField
                                     textColor={quiz.style.button.textColor}
                                     borderRadius={quiz.style.question.borderRadius}
@@ -797,7 +847,13 @@ export default function ProfileEditor(props) {
                                     onChange={handleQuestionChange}
                                 />
                             </div>
-                            <div className={styles.fileInputContainer}>
+                            <div
+                                className={styles.fileInputContainer}
+                                style={{
+                                    width: `${middleAllSize.height * 0.4}px`,
+                                    height: `${middleAllSize.height * 0.24}px`,
+                                }}
+                            >
                                 <FileInput
                                     index={0}
                                     type='questions'
@@ -816,6 +872,7 @@ export default function ProfileEditor(props) {
                                 }
                                 >
                                     <OptionInput
+                                        onChange={(e) => handleOptionTextChange(e, 0)}
                                         className={styles.optionInput}
                                         borderRadius={quiz.style.button.borderRadius}
                                         textColor={quiz.style.button.textColor}
@@ -827,11 +884,12 @@ export default function ProfileEditor(props) {
                                         }
                                         symbol={quiz.style.button.symbol}
                                         variant={quiz.style.button.variant}
-                                        text='Opção 1'
+                                        text={quiz.questions[currentSlide].options[0].content}
                                         size='responsive'
                                         attSizeRef={attSizeRef}
                                     />
                                     <OptionInput
+                                        onChange={(e) => handleOptionTextChange(e, 1)}
                                         className={styles.optionInput}
                                         borderRadius={quiz.style.button.borderRadius}
                                         textColor={quiz.style.button.textColor}
@@ -843,7 +901,7 @@ export default function ProfileEditor(props) {
                                         }
                                         symbol={quiz.style.button.symbol}
                                         variant={quiz.style.button.variant}
-                                        text='Opção 2'
+                                        text={quiz.questions[currentSlide].options[1].content}
                                         size='responsive'
                                         attSizeRef={attSizeRef}
                                     />
@@ -856,6 +914,7 @@ export default function ProfileEditor(props) {
                                 }
                                 >
                                     <OptionInput
+                                        onChange={(e) => handleOptionTextChange(e, 2)}
                                         className={styles.optionInput}
                                         borderRadius={quiz.style.button.borderRadius}
                                         textColor={quiz.style.button.textColor}
@@ -866,11 +925,12 @@ export default function ProfileEditor(props) {
                                             : undefined
                                         } symbol={quiz.style.button.symbol}
                                         variant={quiz.style.button.variant}
-                                        text='Opção 3'
+                                        text={quiz.questions[currentSlide].options[2].content}
                                         size='responsive'
                                         attSizeRef={attSizeRef}
                                     />
                                     <OptionInput
+                                        onChange={(e) => handleOptionTextChange(e, 3)}
                                         className={styles.optionInput}
                                         borderRadius={quiz.style.button.borderRadius}
                                         textColor={quiz.style.button.textColor}
@@ -881,7 +941,7 @@ export default function ProfileEditor(props) {
                                             : undefined
                                         } symbol={quiz.style.button.symbol}
                                         variant={quiz.style.button.variant}
-                                        text='Opção 4'
+                                        text={quiz.questions[currentSlide].options[3].content}
                                         size='responsive'
                                         attSizeRef={attSizeRef}
                                     />
@@ -895,6 +955,7 @@ export default function ProfileEditor(props) {
                                     }
                                     >
                                         <OptionInput
+                                            onChange={(e) => handleOptionTextChange(e, 4)}
                                             className={styles.optionInput}
                                             borderRadius={quiz.style.button.borderRadius}
                                             textColor={quiz.style.button.textColor}
@@ -905,11 +966,12 @@ export default function ProfileEditor(props) {
                                                 : undefined
                                             } symbol={quiz.style.button.symbol}
                                             variant={quiz.style.button.variant}
-                                            text='Opção 5'
+                                            text={quiz.questions[currentSlide].options[4].content}
                                             size='responsive'
                                             attSizeRef={attSizeRef}
                                         />
                                         <OptionInput
+                                            onChange={(e) => handleOptionTextChange(e, 5)}
                                             className={styles.optionInput}
                                             borderRadius={quiz.style.button.borderRadius}
                                             textColor={quiz.style.button.textColor}
@@ -920,7 +982,7 @@ export default function ProfileEditor(props) {
                                                 : undefined
                                             } symbol={quiz.style.button.symbol}
                                             variant={quiz.style.button.variant}
-                                            text='Opção 6'
+                                            text={quiz.questions[currentSlide].options[5].content}
                                             size='responsive'
                                             attSizeRef={attSizeRef}
                                         />
@@ -1004,6 +1066,7 @@ export default function ProfileEditor(props) {
                                                     <div className={styles.slideBoard} style={BACKGROUND_STYLES.get(quiz.style.background.type)}>
                                                         <div className={styles.miniQuestion}>
                                                             <QuestionField
+                                                                slideMode
                                                                 index={1 + (i * 1)}
                                                                 textColor={quiz.style.button.textColor}
                                                                 borderRadius={quiz.style.question.borderRadius}
@@ -1184,8 +1247,9 @@ export default function ProfileEditor(props) {
                                                         <div className={styles.slide}>
                                                             <h4>{i + 1}</h4>
                                                             <div className={styles.slideBoard} style={BACKGROUND_STYLES.get(quiz.style.background.type)}>
-                                                                <div style={{ width: '95%', height: '15%' }}>
+                                                                <div className={styles.miniQuestion}>
                                                                     <QuestionField
+                                                                        slideMode
                                                                         editQuestionMode
                                                                         placeholder=''
                                                                         textColor={quiz.style.button.textColor}
@@ -1196,6 +1260,151 @@ export default function ProfileEditor(props) {
                                                                         colorValue={quiz.style.question.color}
                                                                         disabled
                                                                     />
+                                                                </div>
+                                                                <div className={styles.optionsContainerSlide}>
+                                                                    <div
+                                                                        className={`
+                                                                    ${styles.optionsRow} 
+                                                                    ${styles.optionsRowSlide}
+                                                                    ${question.haveExtraOptions
+                                                                                ? styles.rowExtraOptions
+                                                                                : undefined
+                                                                            }`
+                                                                        }
+                                                                    >
+                                                                        <OptionInput
+                                                                            slideMode
+                                                                            className={styles.optionInput}
+                                                                            borderRadius={quiz.style.button.borderRadius}
+                                                                            textColor={quiz.style.button.textColor}
+                                                                            symbolColor={quiz.style.button.symbolColor}
+                                                                            option={0}
+                                                                            colorValue={quiz.style.button.template === 'monochrome'
+                                                                                ? quiz.style.button.color
+                                                                                : undefined
+                                                                            }
+                                                                            symbol={quiz.style.button.symbol}
+                                                                            variant={quiz.style.button.variant}
+                                                                            text={question.options[0].content}
+                                                                            size='responsive'
+                                                                            sixOptions={question.haveExtraOptions}
+                                                                            attSizeRef={attSizeRef}
+                                                                        />
+                                                                        <OptionInput
+                                                                            slideMode
+                                                                            className={styles.optionInput}
+                                                                            borderRadius={quiz.style.button.borderRadius}
+                                                                            textColor={quiz.style.button.textColor}
+                                                                            symbolColor={quiz.style.button.symbolColor}
+                                                                            option={1}
+                                                                            colorValue={quiz.style.button.template === 'monochrome'
+                                                                                ? quiz.style.button.color
+                                                                                : undefined
+                                                                            }
+                                                                            symbol={quiz.style.button.symbol}
+                                                                            variant={quiz.style.button.variant}
+                                                                            text={question.options[1].content}
+                                                                            size='responsive'
+                                                                            sixOptions={question.haveExtraOptions}
+                                                                            attSizeRef={attSizeRef}
+                                                                        />
+                                                                    </div>
+                                                                    <div
+                                                                        className={`
+                                                                    ${styles.optionsRow} 
+                                                                    ${styles.optionsRowSlide}
+                                                                    ${question.haveExtraOptions
+                                                                                ? styles.rowExtraOptions
+                                                                                : undefined
+                                                                            }`
+                                                                        }
+                                                                    >
+                                                                        <OptionInput
+                                                                            slideMode
+                                                                            className={styles.optionInput}
+                                                                            borderRadius={quiz.style.button.borderRadius}
+                                                                            textColor={quiz.style.button.textColor}
+                                                                            symbolColor={quiz.style.button.symbolColor}
+                                                                            option={2}
+                                                                            colorValue={quiz.style.button.template === 'monochrome'
+                                                                                ? quiz.style.button.color
+                                                                                : undefined
+                                                                            }
+                                                                            symbol={quiz.style.button.symbol}
+                                                                            variant={quiz.style.button.variant}
+                                                                            text={question.options[2].content}
+                                                                            size='responsive'
+                                                                            sixOptions={question.haveExtraOptions}
+                                                                            attSizeRef={attSizeRef}
+                                                                        />
+                                                                        <OptionInput
+                                                                            slideMode
+                                                                            className={styles.optionInput}
+                                                                            borderRadius={quiz.style.button.borderRadius}
+                                                                            textColor={quiz.style.button.textColor}
+                                                                            symbolColor={quiz.style.button.symbolColor}
+                                                                            option={3}
+                                                                            colorValue={quiz.style.button.template === 'monochrome'
+                                                                                ? quiz.style.button.color
+                                                                                : undefined
+                                                                            }
+                                                                            symbol={quiz.style.button.symbol}
+                                                                            variant={quiz.style.button.variant}
+                                                                            text={question.options[3].content}
+                                                                            size='responsive'
+                                                                            sixOptions={question.haveExtraOptions}
+                                                                            attSizeRef={attSizeRef}
+                                                                        />
+                                                                    </div>
+                                                                    {question.haveExtraOptions &&
+                                                                        <div
+                                                                            className={`
+                                                                    ${styles.optionsRow} 
+                                                                    ${styles.optionsRowSlide}
+                                                                    ${question.haveExtraOptions
+                                                                                    ? styles.rowExtraOptions
+                                                                                    : undefined
+                                                                                }`
+                                                                            }
+                                                                        >
+                                                                            <OptionInput
+                                                                                slideMode
+                                                                                className={styles.optionInput}
+                                                                                borderRadius={quiz.style.button.borderRadius}
+                                                                                textColor={quiz.style.button.textColor}
+                                                                                symbolColor={quiz.style.button.symbolColor}
+                                                                                option={4}
+                                                                                colorValue={quiz.style.button.template === 'monochrome'
+                                                                                    ? quiz.style.button.color
+                                                                                    : undefined
+                                                                                }
+                                                                                symbol={quiz.style.button.symbol}
+                                                                                variant={quiz.style.button.variant}
+                                                                                text={question.options[4].content}
+                                                                                size='responsive'
+                                                                                sixOptions={question.haveExtraOptions}
+                                                                                attSizeRef={attSizeRef}
+                                                                            />
+                                                                            <OptionInput
+                                                                                slideMode
+                                                                                className={styles.optionInput}
+                                                                                borderRadius={quiz.style.button.borderRadius}
+                                                                                textColor={quiz.style.button.textColor}
+                                                                                symbolColor={quiz.style.button.symbolColor}
+                                                                                option={5}
+                                                                                colorValue={quiz.style.button.template === 'monochrome'
+                                                                                    ? quiz.style.button.color
+                                                                                    : undefined
+                                                                                }
+                                                                                symbol={quiz.style.button.symbol}
+                                                                                variant={quiz.style.button.variant}
+                                                                                text={question.options[5].content}
+                                                                                size='responsive'
+                                                                                sixOptions={question.haveExtraOptions}
+                                                                                attSizeRef={attSizeRef}
+                                                                            />
+                                                                        </div>
+                                                                    }
                                                                 </div>
                                                             </div>
                                                         </div>

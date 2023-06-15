@@ -73,6 +73,8 @@ const INICIAL_QUIZ = {
                 { content: '', action: {} },
                 { content: '', action: {} },
                 { content: '', action: {} },
+                { content: '', action: {} },
+                { content: '', action: {} },
             ],
             optionsRandom: false,
             img: {

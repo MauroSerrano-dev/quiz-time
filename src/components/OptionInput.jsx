@@ -50,20 +50,21 @@ export default function OptionInput(props) {
         editMode,
         slideMode,
         sixOptions,
+        onChange,
     } = props
 
     const [isHovered, setIsHovered] = useState(false)
     const [color, setColor] = useState(colorValue)
-    const [animation, setAnimation] = useState('all ease 0ms')
+    const [animation, setAnimation] = useState(FAST_ANIMATION)
     const [buttonSize, setButtonSize] = useState({
-        width: $(`.${slideMode ? (sixOptions ? styles.isSlideSixOptions : styles.isSlide) : styles.middleSlide}`).width(),
-        height: $(`.${slideMode ? (sixOptions ? styles.isSlideSixOptions : styles.isSlide) : styles.middleSlide}`).height()
+        width: $(`.${slideMode ? (sixOptions ? styles.buttonSlideSix : styles.buttonSlideFour) : styles.button}`).width(),
+        height: $(`.${slideMode ? (sixOptions ? styles.buttonSlideSix : styles.buttonSlideFour) : styles.button}`).height()
     })
 
     useEffect(() => {
         setButtonSize({
-            width: $(`.${slideMode ? (sixOptions ? styles.isSlideSixOptions : styles.isSlide) : styles.middleSlide}`).width(),
-            height: $(`.${slideMode ? (sixOptions ? styles.isSlideSixOptions : styles.isSlide) : styles.middleSlide}`).height()
+            width: $(`.${slideMode ? (sixOptions ? styles.buttonSlideSix : styles.buttonSlideFour) : styles.button}`).width(),
+            height: $(`.${slideMode ? (sixOptions ? styles.buttonSlideSix : styles.buttonSlideFour) : styles.button}`).height()
         })
     }, [attSizeRef])
 
@@ -75,22 +76,21 @@ export default function OptionInput(props) {
     }, [colorValue])
 
     useEffect(() => {
-
         setTimeout(() => {
             setButtonSize({
-                width: $(`.${slideMode ? (sixOptions ? styles.isSlideSixOptions : styles.isSlide) : styles.middleSlide}`).width(),
-                height: $(`.${slideMode ? (sixOptions ? styles.isSlideSixOptions : styles.isSlide) : styles.middleSlide}`).height()
+                width: $(`.${slideMode ? (sixOptions ? styles.buttonSlideSix : styles.buttonSlideFour) : styles.button}`).width(),
+                height: $(`.${slideMode ? (sixOptions ? styles.buttonSlideSix : styles.buttonSlideFour) : styles.button}`).height()
             })
         }, 1)
 
         setTimeout(() => {
             setAnimation('all ease 200ms')
         }, 200)
-        
+
         function handleResize() {
             setButtonSize({
-                width: $(`.${slideMode ? (sixOptions ? styles.isSlideSixOptions : styles.isSlide) : styles.middleSlide}`).width(),
-                height: $(`.${slideMode ? (sixOptions ? styles.isSlideSixOptions : styles.isSlide) : styles.middleSlide}`).height()
+                width: $(`.${slideMode ? (sixOptions ? styles.buttonSlideSix : styles.isSlide) : styles.button}`).width(),
+                height: $(`.${slideMode ? (sixOptions ? styles.buttonSlideSix : styles.isSlide) : styles.button}`).height()
             })
         }
 
@@ -159,7 +159,7 @@ export default function OptionInput(props) {
                     WebkitUserSelect: 'none',
                     userSelect: 'none',
                     fontFamily: 'Verdana, Geneva, Tahoma, sans-serif',
-                    transition: 'color ease 200ms',
+                    transition: editMode ? animation : FAST_ANIMATION,
                 }}
             >
                 X
@@ -219,7 +219,6 @@ export default function OptionInput(props) {
         }],
         ['contained', {
             color: textColor,
-            fontSize: `${SIZES.get(size) * 50}px`
         }],
     ])
 
@@ -234,10 +233,11 @@ export default function OptionInput(props) {
     return (
         <button
             className={`
-            ${styles.button}
             ${slideMode
-                    ? (sixOptions ? styles.isSlideSixOptions : styles.isSlide)
-                    : styles.middleSlide
+                    ? (sixOptions
+                        ? styles.buttonSlideSix
+                        : styles.buttonSlideFour)
+                    : styles.button
                 }
             `}
             onMouseEnter={handleMouseEnter}
@@ -292,16 +292,28 @@ export default function OptionInput(props) {
                 }
             </div>
             <div className={styles.textContainer}>
-                <p
-                    style={{
-                        ...TEXT_VARIANTS.get(variant),
-                        fontSize: `${buttonSize.height * 0.3}px`,
-                        transition: editMode ? animation : FAST_ANIMATION,
-                    }}
-                >
-                    {text}
-                </p>
+                {onChange === undefined
+                    ? <p
+                        style={{
+                            ...TEXT_VARIANTS.get(variant),
+                            fontSize: `${buttonSize.height * 0.3}px`,
+                            transition: editMode ? animation : FAST_ANIMATION,
+                        }}
+                    >
+                        {text}
+                    </p>
+                    : <input
+                        className={styles.input}
+                        style={{
+                            ...TEXT_VARIANTS.get(variant),
+                            fontSize: `${buttonSize.height * 0.3}px`,
+                            transition: editMode ? animation : FAST_ANIMATION,
+                        }}
+                        onChange={onChange}
+                        value={text}
+                    />
+                }
             </div>
-        </button >
+        </button>
     )
 }

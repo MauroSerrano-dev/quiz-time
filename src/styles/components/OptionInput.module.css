@@ -1,4 +1,6 @@
-.button {
+.button,
+.buttonSlideSix,
+.buttonSlideFour {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -40,14 +42,22 @@
     justify-content: flex-start;
     text-align: center;
     width: 80%;
+    height: 100%;
     padding-right: 5%;
 }
 
-/* Não apagar, está sendo usado no js para o jquery */
-.isSlide{}
+.input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: start;
 
-/* Não apagar, está sendo usado no js para o jquery */
-.middleSlide{}
+    border: none;
+    outline: none;
 
-/* Não apagar, está sendo usado no js para o jquery */
-.isSlideSixOptions{}
+    height: 100%;
+    width: 100%;
+
+    background-color: transparent;
+}
