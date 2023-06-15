@@ -51,11 +51,13 @@ export default function OptionInput(props) {
         slideMode,
         sixOptions,
         onChange,
+        placeholder
     } = props
 
     const [isHovered, setIsHovered] = useState(false)
     const [color, setColor] = useState(colorValue)
     const [animation, setAnimation] = useState(FAST_ANIMATION)
+    const [isFocused, setIsFocused] = useState(false);
     const [buttonSize, setButtonSize] = useState({
         width: $(`.${slideMode ? (sixOptions ? styles.buttonSlideSix : styles.buttonSlideFour) : styles.button}`).width(),
         height: $(`.${slideMode ? (sixOptions ? styles.buttonSlideSix : styles.buttonSlideFour) : styles.button}`).height()
@@ -89,15 +91,15 @@ export default function OptionInput(props) {
 
         function handleResize() {
             setButtonSize({
-                width: $(`.${slideMode ? (sixOptions ? styles.buttonSlideSix : styles.isSlide) : styles.button}`).width(),
-                height: $(`.${slideMode ? (sixOptions ? styles.buttonSlideSix : styles.isSlide) : styles.button}`).height()
+                width: $(`.${slideMode ? (sixOptions ? styles.buttonSlideSix : styles.buttonSlideFour) : styles.button}`).width(),
+                height: $(`.${slideMode ? (sixOptions ? styles.buttonSlideSix : styles.buttonSlideFour) : styles.button}`).height()
             })
         }
 
-        window.addEventListener('resize', handleResize)
+        $(window).on('resize', handleResize)
 
         return () => {
-            window.removeEventListener('resize', handleResize)
+            $(window).off('resize', handleResize)
         }
     }, [])
 
@@ -159,7 +161,7 @@ export default function OptionInput(props) {
                     WebkitUserSelect: 'none',
                     userSelect: 'none',
                     fontFamily: 'Verdana, Geneva, Tahoma, sans-serif',
-                    transition: editMode ? animation : FAST_ANIMATION,
+                    transition: editMode ? 'color'.concat(animation.slice(3)) : FAST_ANIMATION,
                 }}
             >
                 X
@@ -215,10 +217,10 @@ export default function OptionInput(props) {
 
     const TEXT_VARIANTS = new Map([
         ['outlined', {
-            color: color,
+            color: text === '' && !isFocused && placeholder ? color.concat('90') : color,
         }],
         ['contained', {
-            color: textColor,
+            color: text === '' && !isFocused && placeholder ? textColor.concat('90') : textColor,
         }],
     ])
 
@@ -228,6 +230,14 @@ export default function OptionInput(props) {
 
     function handleMouseLeave() {
         setIsHovered(false)
+    }
+
+    function handleFocus() {
+        setIsFocused(true)
+    }
+
+    function handleBlur() {
+        setIsFocused(false)
     }
 
     return (
@@ -303,6 +313,8 @@ export default function OptionInput(props) {
                         {text}
                     </p>
                     : <input
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
                         className={styles.input}
                         style={{
                             ...TEXT_VARIANTS.get(variant),
@@ -310,7 +322,9 @@ export default function OptionInput(props) {
                             transition: editMode ? animation : FAST_ANIMATION,
                         }}
                         onChange={onChange}
-                        value={text}
+                        value={text === '' && !isFocused && placeholder ? placeholder : text}
+                        autoComplete='off'
+                        spellCheck={false}
                     />
                 }
             </div>

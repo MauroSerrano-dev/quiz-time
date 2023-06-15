@@ -37,22 +37,22 @@ export default function QuestionField(props) {
 
     const INPUT_VARIANTS = new Map([
         ['text', {
-            color: value === '' && !isFocused ? color.concat('90') : color,
+            color: value === '' && !isFocused && placeholder ? color.concat('90') : color,
             borderColor: 'transparent',
             backgroundColor: 'transparent',
         }],
         ['shadow', {
-            color: value === '' && !isFocused ? color.concat('90') : color,
+            color: value === '' && !isFocused && placeholder ? color.concat('90') : color,
             borderColor: 'transparent',
             backgroundColor: color.concat('0a'),
         }],
         ['outlined', {
-            color: value === '' && !isFocused ? color.concat('90') : color,
+            color: value === '' && !isFocused && placeholder ? color.concat('90') : color,
             borderColor: color.concat('c0'),
             backgroundColor: color.concat('0a'),
         }],
         ['contained', {
-            color: textColor,
+            color: value === '' && !isFocused && placeholder ? textColor.concat('90') : textColor,
             backgroundColor: color,
             boxShadow: '0px 3px 20px -15px',
             borderColor: 'transparent',
@@ -78,19 +78,19 @@ export default function QuestionField(props) {
             })
         }
 
-        window.addEventListener('resize', handleResize)
+        $(window).on('resize', handleResize)
 
         return () => {
-            window.removeEventListener('resize', handleResize)
+            $(window).off('resize', handleResize)
         }
     }, [])
 
     function handleFocus() {
-        setIsFocused(true);
+        setIsFocused(true)
     }
 
     function handleBlur() {
-        setIsFocused(false);
+        setIsFocused(false)
     }
 
     return (
@@ -115,10 +115,10 @@ export default function QuestionField(props) {
                     ...INPUT_VARIANTS.get(variant),
                 }}
                 disabled={disabled}
-                value={value === '' && !isFocused ? placeholder : value}
+                value={value === '' && !isFocused && placeholder ? placeholder : value}
                 type='text'
-                autoComplete='off'
                 onChange={onChange}
+                autoComplete='off'
                 spellCheck={false}
             />
         </div>

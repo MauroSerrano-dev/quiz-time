@@ -204,7 +204,7 @@ export default function FileInput(props) {
                         <div
                             className={styles.userImgButtons}
                             style={{
-                                gap: `${containerSize.width * 0.03}px`,
+                                gap: `${containerSize.width * 0.02}px`,
                                 bottom: `${containerSize.height * 0.03}px`
                             }}
                         >
@@ -214,15 +214,15 @@ export default function FileInput(props) {
                                 size='small'
                                 style={{
                                     backgroundColor: '#00000080',
-                                    width: `${containerSize.width * 0.11}px`,
-                                    height: `${containerSize.width * 0.11}px`,
+                                    width: `${containerSize.width * 0.085}px`,
+                                    height: `${containerSize.width * 0.085}px`,
                                     transition: 'all ease 200ms'
                                 }}
                             >
                                 <CropIcon
                                     style={{
-                                        width: `${containerSize.width * 0.08}px`,
-                                        height: `${containerSize.width * 0.08}px`,
+                                        width: `${containerSize.width * 0.065}px`,
+                                        height: `${containerSize.width * 0.065}px`,
                                     }}
                                 />
                             </IconButton>
@@ -233,15 +233,15 @@ export default function FileInput(props) {
                                 size='small'
                                 style={{
                                     backgroundColor: '#00000080',
-                                    width: `${containerSize.width * 0.11}px`,
-                                    height: `${containerSize.width * 0.11}px`,
+                                    width: `${containerSize.width * 0.085}px`,
+                                    height: `${containerSize.width * 0.085}px`,
                                     transition: 'all ease 200ms'
                                 }}
                             >
                                 <DeleteForeverIcon
                                     style={{
-                                        width: `${containerSize.width * 0.09}px`,
-                                        height: `${containerSize.width * 0.09}px`
+                                        width: `${containerSize.width * 0.075}px`,
+                                        height: `${containerSize.width * 0.075}px`
                                     }}
                                 />
                             </IconButton>

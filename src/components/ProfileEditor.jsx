@@ -145,6 +145,8 @@ export default function ProfileEditor(props) {
                 .concat(prev.questions[index])
                 .concat(prev.questions.slice(index + 1, prev.questions.length))
         }))
+        if (index < currentSlide)
+            setCurrentSlide(prev => prev + 1)
     }
 
     function handleDragEndProfiles(res) {
@@ -229,6 +231,8 @@ export default function ProfileEditor(props) {
                 .concat(prev.results.slice(index + 1, prev.results.length))
 
         }))
+        if (index < currentSlide)
+            setCurrentSlide(prev => prev + 1)
     }
 
     function changeCurrentSlide(index) {
@@ -872,6 +876,7 @@ export default function ProfileEditor(props) {
                                 }
                                 >
                                     <OptionInput
+                                        placeholder='Adicione a Opção 1'
                                         onChange={(e) => handleOptionTextChange(e, 0)}
                                         className={styles.optionInput}
                                         borderRadius={quiz.style.button.borderRadius}
@@ -889,6 +894,7 @@ export default function ProfileEditor(props) {
                                         attSizeRef={attSizeRef}
                                     />
                                     <OptionInput
+                                        placeholder='Adicione a Opção 2'
                                         onChange={(e) => handleOptionTextChange(e, 1)}
                                         className={styles.optionInput}
                                         borderRadius={quiz.style.button.borderRadius}
@@ -914,6 +920,7 @@ export default function ProfileEditor(props) {
                                 }
                                 >
                                     <OptionInput
+                                        placeholder='Adicione a Opção 3 (Opcional)'
                                         onChange={(e) => handleOptionTextChange(e, 2)}
                                         className={styles.optionInput}
                                         borderRadius={quiz.style.button.borderRadius}
@@ -930,6 +937,7 @@ export default function ProfileEditor(props) {
                                         attSizeRef={attSizeRef}
                                     />
                                     <OptionInput
+                                        placeholder='Adicione a Opção 4 (Opcional)'
                                         onChange={(e) => handleOptionTextChange(e, 3)}
                                         className={styles.optionInput}
                                         borderRadius={quiz.style.button.borderRadius}
@@ -955,6 +963,7 @@ export default function ProfileEditor(props) {
                                     }
                                     >
                                         <OptionInput
+                                            placeholder='Adicione a Opção 5 (Opcional)'
                                             onChange={(e) => handleOptionTextChange(e, 4)}
                                             className={styles.optionInput}
                                             borderRadius={quiz.style.button.borderRadius}
@@ -971,6 +980,7 @@ export default function ProfileEditor(props) {
                                             attSizeRef={attSizeRef}
                                         />
                                         <OptionInput
+                                            placeholder='Adicione a Opção 6 (Opcional)'
                                             onChange={(e) => handleOptionTextChange(e, 5)}
                                             className={styles.optionInput}
                                             borderRadius={quiz.style.button.borderRadius}
@@ -1027,12 +1037,16 @@ export default function ProfileEditor(props) {
                                                         {...provided.dragHandleProps}
                                                     >
                                                         <div className={`${styles.buttonsContainer} ${currentSlide !== i ? styles.showOnHover : undefined}`}>
-                                                            <IconButton onClick={(e) => handleDuplicateProfile(e, i)} aria-label="copy" sx={{ scale: '0.7', margin: '-4px' }}>
-                                                                <ContentCopyIcon />
-                                                            </IconButton>
-                                                            <IconButton onClick={(e) => handleDeleteProfile(e, i)} aria-label="delete" sx={{ scale: '0.7', margin: '-4px' }}>
-                                                                <DeleteForeverIcon sx={{ scale: '1.2' }} />
-                                                            </IconButton>
+                                                            {step === 0 &&
+                                                                <div className='flex end size100'>
+                                                                    <IconButton onClick={(e) => handleDuplicateProfile(e, i)} aria-label="copy" sx={{ scale: '0.7', margin: '-4px' }}>
+                                                                        <ContentCopyIcon />
+                                                                    </IconButton>
+                                                                    <IconButton onClick={(e) => handleDeleteProfile(e, i)} aria-label="delete" sx={{ scale: '0.7', margin: '-4px' }}>
+                                                                        <DeleteForeverIcon sx={{ scale: '1.2' }} />
+                                                                    </IconButton>
+                                                                </div>
+                                                            }
                                                         </div>
                                                         <div className={styles.slide}>
                                                             <h4>{i + 1}</h4>
@@ -1101,7 +1115,7 @@ export default function ProfileEditor(props) {
                                                                     }
                                                                     symbol={quiz.style.button.symbol}
                                                                     variant={quiz.style.button.variant}
-                                                                    text='Opção 1'
+                                                                    text=''
                                                                     size='responsive'
                                                                     sixOptions={module.value === 'custom'}
                                                                 />
@@ -1119,7 +1133,7 @@ export default function ProfileEditor(props) {
                                                                     }
                                                                     symbol={quiz.style.button.symbol}
                                                                     variant={quiz.style.button.variant}
-                                                                    text='Opção 2'
+                                                                    text=''
                                                                     size='responsive'
                                                                     sixOptions={module.value === 'custom'}
                                                                 />
@@ -1148,7 +1162,7 @@ export default function ProfileEditor(props) {
                                                                     }
                                                                     symbol={quiz.style.button.symbol}
                                                                     variant={quiz.style.button.variant}
-                                                                    text='Opção 3'
+                                                                    text=''
                                                                     size='responsive'
                                                                     sixOptions={module.value === 'custom'}
                                                                 />
@@ -1166,7 +1180,7 @@ export default function ProfileEditor(props) {
                                                                     }
                                                                     symbol={quiz.style.button.symbol}
                                                                     variant={quiz.style.button.variant}
-                                                                    text='Opção 4'
+                                                                    text=''
                                                                     size='responsive'
                                                                     sixOptions={module.value === 'custom'}
                                                                 />
@@ -1196,7 +1210,7 @@ export default function ProfileEditor(props) {
                                                                         }
                                                                         symbol={quiz.style.button.symbol}
                                                                         variant={quiz.style.button.variant}
-                                                                        text='Opção 3'
+                                                                        text=''
                                                                         size='responsive'
                                                                         sixOptions={module.value === 'custom'}
                                                                     />
@@ -1214,7 +1228,7 @@ export default function ProfileEditor(props) {
                                                                         }
                                                                         symbol={quiz.style.button.symbol}
                                                                         variant={quiz.style.button.variant}
-                                                                        text='Opção 4'
+                                                                        text=''
                                                                         size='responsive'
                                                                         sixOptions={module.value === 'custom'}
                                                                     />
@@ -1251,7 +1265,6 @@ export default function ProfileEditor(props) {
                                                                     <QuestionField
                                                                         slideMode
                                                                         editQuestionMode
-                                                                        placeholder=''
                                                                         textColor={quiz.style.button.textColor}
                                                                         value={question.content}
                                                                         borderRadius={quiz.style.question.borderRadius}
@@ -1285,7 +1298,7 @@ export default function ProfileEditor(props) {
                                                                             }
                                                                             symbol={quiz.style.button.symbol}
                                                                             variant={quiz.style.button.variant}
-                                                                            text={question.options[0].content}
+                                                                            text={''}
                                                                             size='responsive'
                                                                             sixOptions={question.haveExtraOptions}
                                                                             attSizeRef={attSizeRef}
@@ -1303,7 +1316,7 @@ export default function ProfileEditor(props) {
                                                                             }
                                                                             symbol={quiz.style.button.symbol}
                                                                             variant={quiz.style.button.variant}
-                                                                            text={question.options[1].content}
+                                                                            text={''}
                                                                             size='responsive'
                                                                             sixOptions={question.haveExtraOptions}
                                                                             attSizeRef={attSizeRef}
@@ -1332,7 +1345,7 @@ export default function ProfileEditor(props) {
                                                                             }
                                                                             symbol={quiz.style.button.symbol}
                                                                             variant={quiz.style.button.variant}
-                                                                            text={question.options[2].content}
+                                                                            text={''}
                                                                             size='responsive'
                                                                             sixOptions={question.haveExtraOptions}
                                                                             attSizeRef={attSizeRef}
@@ -1350,7 +1363,7 @@ export default function ProfileEditor(props) {
                                                                             }
                                                                             symbol={quiz.style.button.symbol}
                                                                             variant={quiz.style.button.variant}
-                                                                            text={question.options[3].content}
+                                                                            text={''}
                                                                             size='responsive'
                                                                             sixOptions={question.haveExtraOptions}
                                                                             attSizeRef={attSizeRef}
@@ -1380,7 +1393,7 @@ export default function ProfileEditor(props) {
                                                                                 }
                                                                                 symbol={quiz.style.button.symbol}
                                                                                 variant={quiz.style.button.variant}
-                                                                                text={question.options[4].content}
+                                                                                text={''}
                                                                                 size='responsive'
                                                                                 sixOptions={question.haveExtraOptions}
                                                                                 attSizeRef={attSizeRef}
@@ -1398,7 +1411,7 @@ export default function ProfileEditor(props) {
                                                                                 }
                                                                                 symbol={quiz.style.button.symbol}
                                                                                 variant={quiz.style.button.variant}
-                                                                                text={question.options[5].content}
+                                                                                text={''}
                                                                                 size='responsive'
                                                                                 sixOptions={question.haveExtraOptions}
                                                                                 attSizeRef={attSizeRef}
@@ -1470,7 +1483,7 @@ export default function ProfileEditor(props) {
                                     >
                                         <MenuItem value={'text'}>Texto</MenuItem>
                                         <MenuItem value={'shadow'}>Sombra</MenuItem>
-                                        <MenuItem value={'outlined'}>Borda</MenuItem>
+                                        <MenuItem value={'outlined'}>Contorno</MenuItem>
                                         <MenuItem value={'contained'}>Preenchido</MenuItem>
                                     </Select>
                                 </FormControl>
@@ -1518,7 +1531,7 @@ export default function ProfileEditor(props) {
                                             width: '100%',
                                         }}
                                     >
-                                        <MenuItem value={'outlined'}>Borda</MenuItem>
+                                        <MenuItem value={'outlined'}>Contorno</MenuItem>
                                         <MenuItem value={'contained'}>Preenchido</MenuItem>
                                     </Select>
                                 </FormControl>
