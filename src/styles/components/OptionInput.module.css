@@ -10,16 +10,6 @@
     background-color: transparent;
 }
 
-.contentContainer {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    text-align: center;
-    width: 100%;
-    height: 100%;
-}
-
 .symbolContainer {
     display: flex;
     flex-direction: row;
@@ -52,3 +42,12 @@
     width: 80%;
     padding-right: 5%;
 }
+
+/* Não apagar, está sendo usado no js para o jquery */
+.isSlide{}
+
+/* Não apagar, está sendo usado no js para o jquery */
+.middleSlide{}
+
+/* Não apagar, está sendo usado no js para o jquery */
+.isSlideSixOptions{}

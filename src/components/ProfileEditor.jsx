@@ -662,7 +662,6 @@ export default function ProfileEditor(props) {
                                         textColor={quiz.style.button.textColor}
                                         symbolColor={quiz.style.button.symbolColor}
                                         option={0}
-                                        index={0}
                                         colorValue={quiz.style.button.template === 'monochrome'
                                             ? quiz.style.button.color
                                             : undefined
@@ -680,7 +679,6 @@ export default function ProfileEditor(props) {
                                         textColor={quiz.style.button.textColor}
                                         symbolColor={quiz.style.button.symbolColor}
                                         option={1}
-                                        index={1}
                                         colorValue={quiz.style.button.template === 'monochrome'
                                             ? quiz.style.button.color
                                             : undefined
@@ -707,7 +705,6 @@ export default function ProfileEditor(props) {
                                         textColor={quiz.style.button.textColor}
                                         symbolColor={quiz.style.button.symbolColor}
                                         option={2}
-                                        index={2}
                                         colorValue={quiz.style.button.template === 'monochrome'
                                             ? quiz.style.button.color
                                             : undefined
@@ -724,7 +721,6 @@ export default function ProfileEditor(props) {
                                         textColor={quiz.style.button.textColor}
                                         symbolColor={quiz.style.button.symbolColor}
                                         option={3}
-                                        index={3}
                                         colorValue={quiz.style.button.template === 'monochrome'
                                             ? quiz.style.button.color
                                             : undefined
@@ -751,7 +747,6 @@ export default function ProfileEditor(props) {
                                             textColor={quiz.style.button.textColor}
                                             symbolColor={quiz.style.button.symbolColor}
                                             option={4}
-                                            index={4}
                                             colorValue={module.value === 'monochrome'
                                                 ? quiz.style.button.color
                                                 : undefined
@@ -769,7 +764,6 @@ export default function ProfileEditor(props) {
                                             textColor={quiz.style.button.textColor}
                                             symbolColor={quiz.style.button.symbolColor}
                                             option={5}
-                                            index={5}
                                             colorValue={module.value === 'monochrome'
                                                 ? quiz.style.button.color
                                                 : undefined
@@ -827,7 +821,6 @@ export default function ProfileEditor(props) {
                                         textColor={quiz.style.button.textColor}
                                         symbolColor={quiz.style.button.symbolColor}
                                         option={0}
-                                        index={0}
                                         colorValue={quiz.style.button.template === 'monochrome'
                                             ? quiz.style.button.color
                                             : undefined
@@ -844,7 +837,6 @@ export default function ProfileEditor(props) {
                                         textColor={quiz.style.button.textColor}
                                         symbolColor={quiz.style.button.symbolColor}
                                         option={1}
-                                        index={1}
                                         colorValue={quiz.style.button.template === 'monochrome'
                                             ? quiz.style.button.color
                                             : undefined
@@ -869,7 +861,6 @@ export default function ProfileEditor(props) {
                                         textColor={quiz.style.button.textColor}
                                         symbolColor={quiz.style.button.symbolColor}
                                         option={2}
-                                        index={2}
                                         colorValue={quiz.style.button.template === 'monochrome'
                                             ? quiz.style.button.color
                                             : undefined
@@ -885,7 +876,6 @@ export default function ProfileEditor(props) {
                                         textColor={quiz.style.button.textColor}
                                         symbolColor={quiz.style.button.symbolColor}
                                         option={3}
-                                        index={3}
                                         colorValue={quiz.style.button.template === 'monochrome'
                                             ? quiz.style.button.color
                                             : undefined
@@ -910,7 +900,6 @@ export default function ProfileEditor(props) {
                                             textColor={quiz.style.button.textColor}
                                             symbolColor={quiz.style.button.symbolColor}
                                             option={4}
-                                            index={4}
                                             colorValue={quiz.style.button.template === 'monochrome'
                                                 ? quiz.style.button.color
                                                 : undefined
@@ -926,7 +915,6 @@ export default function ProfileEditor(props) {
                                             textColor={quiz.style.button.textColor}
                                             symbolColor={quiz.style.button.symbolColor}
                                             option={5}
-                                            index={5}
                                             colorValue={quiz.style.button.template === 'monochrome'
                                                 ? quiz.style.button.color
                                                 : undefined
@@ -1016,9 +1004,9 @@ export default function ProfileEditor(props) {
                                                     <div className={styles.slideBoard} style={BACKGROUND_STYLES.get(quiz.style.background.type)}>
                                                         <div className={styles.miniQuestion}>
                                                             <QuestionField
+                                                                index={1 + (i * 1)}
                                                                 textColor={quiz.style.button.textColor}
                                                                 borderRadius={quiz.style.question.borderRadius}
-                                                                index={1 + (i * 1)}
                                                                 value='Sua Pergunta Aqui'
                                                                 variant={quiz.style.question.variant}
                                                                 colorValue={quiz.style.question.color}
@@ -1032,16 +1020,18 @@ export default function ProfileEditor(props) {
                                                                     ${styles.optionsRowSlide}
                                                                     ${module.value === 'custom'
                                                                         ? styles.rowExtraOptions
-                                                                        : undefined}`
+                                                                        : undefined
+                                                                    }`
                                                                 }
-                                                            >                                                                <OptionInput
+                                                            >
+                                                                <OptionInput
+                                                                    slideMode
                                                                     editMode
                                                                     className={styles.optionInput}
                                                                     borderRadius={quiz.style.button.borderRadius}
                                                                     textColor={quiz.style.button.textColor}
                                                                     symbolColor={quiz.style.button.symbolColor}
                                                                     option={0}
-                                                                    index={6}
                                                                     colorValue={module.value === 'monochrome'
                                                                         ? quiz.style.button.color
                                                                         : undefined
@@ -1050,15 +1040,16 @@ export default function ProfileEditor(props) {
                                                                     variant={quiz.style.button.variant}
                                                                     text='Opção 1'
                                                                     size='responsive'
+                                                                    sixOptions={module.value === 'custom'}
                                                                 />
                                                                 <OptionInput
+                                                                    slideMode
                                                                     editMode
                                                                     className={styles.optionInput}
                                                                     borderRadius={quiz.style.button.borderRadius}
                                                                     textColor={quiz.style.button.textColor}
                                                                     symbolColor={quiz.style.button.symbolColor}
                                                                     option={1}
-                                                                    index={6}
                                                                     colorValue={module.value === 'monochrome'
                                                                         ? quiz.style.button.color
                                                                         : undefined
@@ -1067,6 +1058,7 @@ export default function ProfileEditor(props) {
                                                                     variant={quiz.style.button.variant}
                                                                     text='Opção 2'
                                                                     size='responsive'
+                                                                    sixOptions={module.value === 'custom'}
                                                                 />
                                                             </div>
                                                             <div
@@ -1075,16 +1067,18 @@ export default function ProfileEditor(props) {
                                                                     ${styles.optionsRowSlide}
                                                                     ${module.value === 'custom'
                                                                         ? styles.rowExtraOptions
-                                                                        : undefined}`
+                                                                        : undefined
+                                                                    }`
                                                                 }
-                                                            >                                                                <OptionInput
+                                                            >
+                                                                <OptionInput
+                                                                    slideMode
                                                                     editMode
                                                                     className={styles.optionInput}
                                                                     borderRadius={quiz.style.button.borderRadius}
                                                                     textColor={quiz.style.button.textColor}
                                                                     symbolColor={quiz.style.button.symbolColor}
                                                                     option={2}
-                                                                    index={6}
                                                                     colorValue={module.value === 'monochrome'
                                                                         ? quiz.style.button.color
                                                                         : undefined
@@ -1093,15 +1087,16 @@ export default function ProfileEditor(props) {
                                                                     variant={quiz.style.button.variant}
                                                                     text='Opção 3'
                                                                     size='responsive'
+                                                                    sixOptions={module.value === 'custom'}
                                                                 />
                                                                 <OptionInput
+                                                                    slideMode
                                                                     editMode
                                                                     className={styles.optionInput}
                                                                     borderRadius={quiz.style.button.borderRadius}
                                                                     textColor={quiz.style.button.textColor}
                                                                     symbolColor={quiz.style.button.symbolColor}
                                                                     option={3}
-                                                                    index={6}
                                                                     colorValue={module.value === 'monochrome'
                                                                         ? quiz.style.button.color
                                                                         : undefined
@@ -1110,6 +1105,7 @@ export default function ProfileEditor(props) {
                                                                     variant={quiz.style.button.variant}
                                                                     text='Opção 4'
                                                                     size='responsive'
+                                                                    sixOptions={module.value === 'custom'}
                                                                 />
                                                             </div>
                                                             {module.value === 'custom' &&
@@ -1119,17 +1115,18 @@ export default function ProfileEditor(props) {
                                                                     ${styles.optionsRowSlide}
                                                                     ${module.value === 'custom'
                                                                             ? styles.rowExtraOptions
-                                                                            : undefined}`
+                                                                            : undefined
+                                                                        }`
                                                                     }
                                                                 >
                                                                     <OptionInput
+                                                                        slideMode
                                                                         editMode
                                                                         className={styles.optionInput}
                                                                         borderRadius={quiz.style.button.borderRadius}
                                                                         textColor={quiz.style.button.textColor}
                                                                         symbolColor={quiz.style.button.symbolColor}
                                                                         option={4}
-                                                                        index={6}
                                                                         colorValue={module.value === 'monochrome'
                                                                             ? quiz.style.button.color
                                                                             : undefined
@@ -1138,15 +1135,16 @@ export default function ProfileEditor(props) {
                                                                         variant={quiz.style.button.variant}
                                                                         text='Opção 3'
                                                                         size='responsive'
+                                                                        sixOptions={module.value === 'custom'}
                                                                     />
                                                                     <OptionInput
+                                                                        slideMode
                                                                         editMode
                                                                         className={styles.optionInput}
                                                                         borderRadius={quiz.style.button.borderRadius}
                                                                         textColor={quiz.style.button.textColor}
                                                                         symbolColor={quiz.style.button.symbolColor}
                                                                         option={5}
-                                                                        index={6}
                                                                         colorValue={module.value === 'monochrome'
                                                                             ? quiz.style.button.color
                                                                             : undefined
@@ -1155,6 +1153,7 @@ export default function ProfileEditor(props) {
                                                                         variant={quiz.style.button.variant}
                                                                         text='Opção 4'
                                                                         size='responsive'
+                                                                        sixOptions={module.value === 'custom'}
                                                                     />
                                                                 </div>
                                                             }

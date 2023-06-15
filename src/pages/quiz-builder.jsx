@@ -30,7 +30,7 @@ const INICIAL_QUIZ = {
         },
         background: {
             color: '#1c222c',
-            type: 'gradient',
+            type: 'solid',
             gradientColors: ['#1c222c', '#343f52'],
             gradientPercentages: [0, 100],
             angle: 165,

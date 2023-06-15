@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react'
 import styles from '../styles/components/OptionInput.module.css'
+import $ from 'jquery'
 
 import { BsTriangleFill } from "react-icons/bs";
-import { BsCircleFill } from "react-icons/bs";
-import { FaSquare } from "react-icons/fa";
-import { motion } from "framer-motion"
 import PentagonRoundedIcon from '@mui/icons-material/PentagonRounded';
 import HexagonRoundedIcon from '@mui/icons-material/HexagonRounded';
 import SquareRoundedIcon from '@mui/icons-material/SquareRounded';
@@ -33,14 +31,12 @@ const OPTIONS = new Map([
     [5, { letter: 'F', color: '#f26e00', polygon: 'hexagon' }],
 ])
 
-const ANIMATION = 'all ease 200ms'
 const FAST_ANIMATION = 'all ease 0ms'
 
 export default function OptionInput(props) {
 
     const {
         option,
-        index,
         text,
         size = 'medium',
         colorValue = OPTIONS.get(option).color,
@@ -52,16 +48,22 @@ export default function OptionInput(props) {
         borderRadius,
         attSizeRef,
         editMode,
+        slideMode,
+        sixOptions,
     } = props
 
     const [isHovered, setIsHovered] = useState(false)
-    const [buttonSize, setButtonSize] = useState()
     const [color, setColor] = useState(colorValue)
+    const [animation, setAnimation] = useState('all ease 0ms')
+    const [buttonSize, setButtonSize] = useState({
+        width: $(`.${slideMode ? (sixOptions ? styles.isSlideSixOptions : styles.isSlide) : styles.middleSlide}`).width(),
+        height: $(`.${slideMode ? (sixOptions ? styles.isSlideSixOptions : styles.isSlide) : styles.middleSlide}`).height()
+    })
 
     useEffect(() => {
         setButtonSize({
-            width: document.getElementsByClassName(styles.button)[index].offsetWidth,
-            height: document.getElementsByClassName(styles.button)[index].offsetHeight,
+            width: $(`.${slideMode ? (sixOptions ? styles.isSlideSixOptions : styles.isSlide) : styles.middleSlide}`).width(),
+            height: $(`.${slideMode ? (sixOptions ? styles.isSlideSixOptions : styles.isSlide) : styles.middleSlide}`).height()
         })
     }, [attSizeRef])
 
@@ -73,15 +75,22 @@ export default function OptionInput(props) {
     }, [colorValue])
 
     useEffect(() => {
-        setButtonSize({
-            width: document.getElementsByClassName(styles.button)[index].offsetWidth,
-            height: document.getElementsByClassName(styles.button)[index].offsetHeight,
-        })
 
+        setTimeout(() => {
+            setButtonSize({
+                width: $(`.${slideMode ? (sixOptions ? styles.isSlideSixOptions : styles.isSlide) : styles.middleSlide}`).width(),
+                height: $(`.${slideMode ? (sixOptions ? styles.isSlideSixOptions : styles.isSlide) : styles.middleSlide}`).height()
+            })
+        }, 1)
+
+        setTimeout(() => {
+            setAnimation('all ease 200ms')
+        }, 200)
+        
         function handleResize() {
             setButtonSize({
-                width: document.getElementsByClassName(styles.button)[index].offsetWidth,
-                height: document.getElementsByClassName(styles.button)[index].offsetHeight,
+                width: $(`.${slideMode ? (sixOptions ? styles.isSlideSixOptions : styles.isSlide) : styles.middleSlide}`).width(),
+                height: $(`.${slideMode ? (sixOptions ? styles.isSlideSixOptions : styles.isSlide) : styles.middleSlide}`).height()
             })
         }
 
@@ -111,7 +120,7 @@ export default function OptionInput(props) {
                 color={variant === 'contained' ? symbolColor : color}
                 style={{
                     position: 'absolute',
-                    transition: editMode ? ANIMATION : FAST_ANIMATION,
+                    transition: editMode ? animation : FAST_ANIMATION,
                 }}
             />
         ],
@@ -119,7 +128,7 @@ export default function OptionInput(props) {
             <CircleRoundedIcon
                 style={{
                     position: 'absolute',
-                    transition: editMode ? ANIMATION : FAST_ANIMATION,
+                    transition: editMode ? animation : FAST_ANIMATION,
                     width: '120%',
                     height: '120%',
                     color: variant === 'contained'
@@ -135,7 +144,7 @@ export default function OptionInput(props) {
             <SquareRoundedIcon
                 style={{
                     position: 'absolute',
-                    transition: editMode ? ANIMATION : FAST_ANIMATION,
+                    transition: editMode ? animation : FAST_ANIMATION,
                     width: '120%',
                     height: '120%',
                     color: variant === 'contained' ? symbolColor : color
@@ -160,7 +169,7 @@ export default function OptionInput(props) {
             <PentagonRoundedIcon
                 style={{
                     position: 'absolute',
-                    transition: editMode ? ANIMATION : FAST_ANIMATION,
+                    transition: editMode ? animation : FAST_ANIMATION,
                     width: '120%',
                     height: '120%',
                     color: variant === 'contained' ? symbolColor : color
@@ -171,7 +180,7 @@ export default function OptionInput(props) {
             <HexagonRoundedIcon
                 style={{
                     position: 'absolute',
-                    transition: editMode ? ANIMATION : FAST_ANIMATION,
+                    transition: editMode ? animation : FAST_ANIMATION,
                     width: '120%',
                     height: '120%',
                     color: variant === 'contained' ? symbolColor : color
@@ -224,75 +233,75 @@ export default function OptionInput(props) {
 
     return (
         <button
-            className={styles.button}
+            className={`
+            ${styles.button}
+            ${slideMode
+                    ? (sixOptions ? styles.isSlideSixOptions : styles.isSlide)
+                    : styles.middleSlide
+                }
+            `}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             style={{
                 width: size === 'responsive' ? '50%' : `${SIZES.get(size).width}px`,
                 height: size === 'responsive' ? '100%' : `${SIZES.get(size).height}px`,
-                transition: ANIMATION,
+                transition: animation,
                 borderStyle: 'solid',
-                borderWidth: buttonSize ? `${buttonSize.height * 0.024}px` : '3px',
-                borderRadius: buttonSize ? `${buttonSize.height * borderRadius * 0.005}px` : '4px',
+                borderWidth: `${buttonSize.height * 0.024}px`,
+                borderRadius: `${buttonSize.height * borderRadius * 0.005}px`,
                 ...BUTTON_VARIANTS.get(variant)
             }}
         >
-            {buttonSize &&
-                <div className={styles.contentContainer}>
-                    <div className={styles.symbolContainer}
+            <div className={styles.symbolContainer}
+                style={{
+                    paddingRight: symbol === 'none' ? '0px' : '5%',
+                }}
+            >
+                {!noSymbol &&
+                    <div
+                        className={styles.symbol}
                         style={{
-                            paddingRight: symbol === 'none' ? '0px' : '5%',
+                            position: 'relative',
+                            width: symbol === 'none' ? '0px' : `${buttonSize.height * 0.4}px`,
+                            height: symbol === 'none' ? '0px' : `${buttonSize.height * 0.4}px`,
+                            transition: editMode ? animation : FAST_ANIMATION,
+                            outlineStyle: 'solid',
+                            outlineWidth: symbol === 'none' ? '0px' : (`${buttonSize.height * 0.026}px`),
+                            ...SYMBOL_VARIANTS.get(variant),
+                            backgroundColor: 'transparent',
+                            fontSize: symbol === 'none'
+                                ? '0px'
+                                : `${buttonSize.height * 0.27}px`
                         }}
                     >
-                        {!noSymbol &&
-                            <div
-                                className={styles.symbol}
-                                style={{
-                                    position: 'relative',
-                                    width: symbol === 'none' ? '0px' : `${buttonSize.height * 0.4}px`,
-                                    height: symbol === 'none' ? '0px' : `${buttonSize.height * 0.4}px`,
-                                    transition: editMode ? ANIMATION : FAST_ANIMATION,
-                                    outlineStyle: 'solid',
-                                    outlineWidth: symbol === 'none' ? '0px' : (buttonSize ? `${buttonSize.height * 0.026}px` : '3px'),
-                                    ...SYMBOL_VARIANTS.get(variant),
-                                    backgroundColor: 'transparent',
-                                    fontSize: symbol === 'none'
-                                        ? '0px'
-                                        : buttonSize
-                                            ? `${buttonSize.height * 0.27}px`
-                                            : '20px',
-                                }}
-                            >
-                                {SYMBOL_POLYGONS.get(symbol === 'polygons'
-                                    ? OPTIONS.get(option).polygon
-                                    : 'circle'
-                                )}
-                                <h2
-                                    style={{
-                                        ...SYMBOL_TEXT_VARIANTS.get(variant),
-                                        transition: editMode ? ANIMATION : FAST_ANIMATION,
-                                        position: 'absolute',
-                                        fontSize: symbol === 'letters' ? `${buttonSize.height * 0.3}px` : '0px',
-                                    }}
-                                >
-                                    {OPTIONS.get(option).letter}
-                                </h2>
-                            </div>
-                        }
-                    </div>
-                    <div className={styles.textContainer}>
-                        <p
+                        {SYMBOL_POLYGONS.get(symbol === 'polygons'
+                            ? OPTIONS.get(option).polygon
+                            : 'circle'
+                        )}
+                        <h2
                             style={{
-                                ...TEXT_VARIANTS.get(variant),
-                                fontSize: `${buttonSize.height * 0.3}px`,
-                                transition: editMode ? ANIMATION : FAST_ANIMATION,
+                                ...SYMBOL_TEXT_VARIANTS.get(variant),
+                                transition: editMode ? animation : FAST_ANIMATION,
+                                position: 'absolute',
+                                fontSize: symbol === 'letters' ? `${buttonSize.height * 0.3}px` : '0px',
                             }}
                         >
-                            {text}
-                        </p>
+                            {OPTIONS.get(option).letter}
+                        </h2>
                     </div>
-                </div>
-            }
+                }
+            </div>
+            <div className={styles.textContainer}>
+                <p
+                    style={{
+                        ...TEXT_VARIANTS.get(variant),
+                        fontSize: `${buttonSize.height * 0.3}px`,
+                        transition: editMode ? animation : FAST_ANIMATION,
+                    }}
+                >
+                    {text}
+                </p>
+            </div>
         </button >
     )
 }
