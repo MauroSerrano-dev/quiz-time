@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styles from '../styles/components/OptionInput.module.css'
 import $ from 'jquery'
 
@@ -301,7 +301,9 @@ export default function OptionInput(props) {
                     </div>
                 }
             </div>
-            <div className={styles.textContainer}>
+            <div
+                className={styles.textContainer}
+            >
                 {onChange === undefined
                     ? <p
                         style={{
@@ -318,8 +320,9 @@ export default function OptionInput(props) {
                         className={styles.input}
                         style={{
                             ...TEXT_VARIANTS.get(variant),
-                            fontSize: `${buttonSize.height * 0.3}px`,
+                            fontSize: `${buttonSize.width * 0.05}px`,
                             transition: editMode ? animation : FAST_ANIMATION,
+                            backgroundColor: 'blue',
                         }}
                         onChange={onChange}
                         value={text === '' && !isFocused && placeholder ? placeholder : text}

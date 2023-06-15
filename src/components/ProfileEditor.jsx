@@ -499,7 +499,6 @@ export default function ProfileEditor(props) {
     }
 
     function handleOptionTextChange(event, optionIndex) {
-        console.log(event.target.value)
         setQuiz(prev => ({
             ...prev,
             questions: prev.questions.map((question, i) =>

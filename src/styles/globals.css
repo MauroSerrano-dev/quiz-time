@@ -108,7 +108,7 @@ label {
   color: var(--text-color);
 }
 
-input::placeholder {
+textarea, input::placeholder {
   font-family: 'montserrat';
 }
 

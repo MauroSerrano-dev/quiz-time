@@ -57,7 +57,6 @@ export default function FileInput(props) {
     }
 
     function handleDrop(event) {
-        console.log(event)
         event.preventDefault();
         setIsDraggingOver(false);
         const files = event.dataTransfer.files;
@@ -66,7 +65,6 @@ export default function FileInput(props) {
     }
 
     function handleUploadImgProfile(event) {
-        console.log(event)
         if (event.target.files.length > 0) {
             const file = event.target.files[0];
 
