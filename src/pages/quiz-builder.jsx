@@ -11,6 +11,33 @@ const GAME_MODES = [
     { name: "Who's Most Likely To" },
 ]
 
+const INICIAL_IMG = {
+    content: '',
+    name: '',
+    type: ''
+}
+
+const INICIAL_OPTION = {
+    content: '',
+    action: {},
+    img: INICIAL_IMG,
+}
+
+const INICIAL_QUESTION = {
+    content: '',
+    options: [
+        INICIAL_OPTION,
+        INICIAL_OPTION,
+        INICIAL_OPTION,
+        INICIAL_OPTION,
+        INICIAL_OPTION,
+        INICIAL_OPTION,
+    ],
+    img: INICIAL_IMG,
+    optionsRandom: false,
+    haveExtraOptions: false,
+}
+
 const INICIAL_QUIZ = {
     name: 'My Quiz Name',
     style: {
@@ -66,24 +93,7 @@ const INICIAL_QUIZ = {
         },
     ],
     questions: [
-        {
-            content: '',
-            options: [
-                { content: '', action: {} },
-                { content: '', action: {} },
-                { content: '', action: {} },
-                { content: '', action: {} },
-                { content: '', action: {} },
-                { content: '', action: {} },
-            ],
-            optionsRandom: false,
-            img: {
-                content: '',
-                name: '',
-                type: ''
-            },
-            haveExtraOptions: false,
-        },
+        INICIAL_QUESTION,
     ]
 }
 

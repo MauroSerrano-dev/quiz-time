@@ -38,7 +38,9 @@ import GamepadRoundedIcon from '@mui/icons-material/GamepadRounded'
 import TextFieldsRoundedIcon from '@mui/icons-material/TextFieldsRounded'
 import PersonIcon from '@mui/icons-material/Person'
 import PhotoSizeSelectActualRoundedIcon from '@mui/icons-material/PhotoSizeSelectActualRounded'
-import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded'
+import ContactSupportRoundedIcon from '@mui/icons-material/ContactSupportRounded';
+import EmojiEventsRoundedIcon from '@mui/icons-material/EmojiEventsRounded'
+import TimerRoundedIcon from '@mui/icons-material/TimerRounded'
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -145,7 +147,7 @@ export default function ProfileEditor(props) {
                 .concat(prev.questions[index])
                 .concat(prev.questions.slice(index + 1, prev.questions.length))
         }))
-        if (index < currentSlide)
+        if (index <= currentSlide)
             setCurrentSlide(prev => prev + 1)
     }
 
@@ -231,7 +233,7 @@ export default function ProfileEditor(props) {
                 .concat(prev.results.slice(index + 1, prev.results.length))
 
         }))
-        if (index < currentSlide)
+        if (index <= currentSlide)
             setCurrentSlide(prev => prev + 1)
     }
 
@@ -486,12 +488,32 @@ export default function ProfileEditor(props) {
         }))
     }
 
-    function handleChangeExtraOptions() {
+    function addExtraOptions(index) {
         setQuiz(prev => ({
             ...prev,
             questions: prev.questions.map((question, i) =>
-                currentSlide === i
-                    ? { ...question, haveExtraOptions: !prev.questions[currentSlide].haveExtraOptions }
+                i === index
+                    ? { ...question, haveExtraOptions: true }
+                    : question
+            )
+        }))
+        setAttSizeRef(prev => !prev)
+    }
+
+    function removeExtraOptions(index) {
+        setQuiz(prev => ({
+            ...prev,
+            questions: prev.questions.map((question, i) =>
+                i === index
+                    ? {
+                        ...question,
+                        haveExtraOptions: false,
+                        options: question.options.map((option, j) =>
+                            j === 4 || j === 5 ?
+                                INICIAL_QUIZ.questions[0].options[0]
+                                : option
+                        )
+                    }
                     : question
             )
         }))
@@ -876,7 +898,6 @@ export default function ProfileEditor(props) {
                                 >
                                     <OptionInput
                                         inputMode
-                                        currentSlide={currentSlide}
                                         placeholder='Adicione a Opção 1'
                                         onChange={(e) => handleOptionTextChange(e, 0)}
                                         className={styles.optionInput}
@@ -896,7 +917,6 @@ export default function ProfileEditor(props) {
                                     />
                                     <OptionInput
                                         inputMode
-                                        currentSlide={currentSlide}
                                         placeholder='Adicione a Opção 2'
                                         onChange={(e) => handleOptionTextChange(e, 1)}
                                         className={styles.optionInput}
@@ -924,7 +944,6 @@ export default function ProfileEditor(props) {
                                 >
                                     <OptionInput
                                         inputMode
-                                        currentSlide={currentSlide}
                                         placeholder='Adicione a Opção 3 (Opcional)'
                                         onChange={(e) => handleOptionTextChange(e, 2)}
                                         className={styles.optionInput}
@@ -943,7 +962,6 @@ export default function ProfileEditor(props) {
                                     />
                                     <OptionInput
                                         inputMode
-                                        currentSlide={currentSlide}
                                         placeholder='Adicione a Opção 4 (Opcional)'
                                         onChange={(e) => handleOptionTextChange(e, 3)}
                                         className={styles.optionInput}
@@ -971,7 +989,6 @@ export default function ProfileEditor(props) {
                                     >
                                         <OptionInput
                                             inputMode
-                                            currentSlide={currentSlide}
                                             placeholder='Adicione a Opção 5 (Opcional)'
                                             onChange={(e) => handleOptionTextChange(e, 4)}
                                             className={styles.optionInput}
@@ -990,7 +1007,6 @@ export default function ProfileEditor(props) {
                                         />
                                         <OptionInput
                                             inputMode
-                                            currentSlide={currentSlide}
                                             placeholder='Adicione a Opção 6 (Opcional)'
                                             onChange={(e) => handleOptionTextChange(e, 5)}
                                             className={styles.optionInput}
@@ -1013,7 +1029,11 @@ export default function ProfileEditor(props) {
                             <Button
                                 variant='contained'
                                 className={styles.addExtraOptionsButton}
-                                onClick={handleChangeExtraOptions}
+                                onClick={
+                                    quiz.questions[currentSlide].haveExtraOptions
+                                        ? () => removeExtraOptions(currentSlide)
+                                        : () => addExtraOptions(currentSlide)
+                                }
                             >
                                 {
                                     quiz.questions[currentSlide].haveExtraOptions
@@ -1027,7 +1047,7 @@ export default function ProfileEditor(props) {
                 <DragDropContext onDragEnd={step === 0 || step === 3 ? handleDragEndProfiles : handleDragEndQuestions}>
                     <div
                         id={styles.leftContainer}
-                        style={{ width: step === 4 ? '0px' : undefined }}
+                        style={{ left: step === 4 ? '-220px' : '0px' }}
                     >
                         <Droppable droppableId="slides">
                             {(provided, snapshot) => (
@@ -1091,7 +1111,6 @@ export default function ProfileEditor(props) {
                                                     <div className={styles.slideBoard} style={BACKGROUND_STYLES.get(quiz.style.background.type)}>
                                                         <div className={styles.miniQuestion}>
                                                             <QuestionField
-                                                                slideMode
                                                                 index={1 + (i * 1)}
                                                                 textColor={quiz.style.button.textColor}
                                                                 borderRadius={quiz.style.question.borderRadius}
@@ -1113,7 +1132,6 @@ export default function ProfileEditor(props) {
                                                                 }
                                                             >
                                                                 <OptionInput
-                                                                    slideMode
                                                                     editMode
                                                                     className={styles.optionInput}
                                                                     borderRadius={quiz.style.button.borderRadius}
@@ -1128,10 +1146,8 @@ export default function ProfileEditor(props) {
                                                                     variant={quiz.style.button.variant}
                                                                     text=''
                                                                     size='responsive'
-                                                                    sixOptions={module.value === 'custom'}
                                                                 />
                                                                 <OptionInput
-                                                                    slideMode
                                                                     editMode
                                                                     className={styles.optionInput}
                                                                     borderRadius={quiz.style.button.borderRadius}
@@ -1146,7 +1162,6 @@ export default function ProfileEditor(props) {
                                                                     variant={quiz.style.button.variant}
                                                                     text=''
                                                                     size='responsive'
-                                                                    sixOptions={module.value === 'custom'}
                                                                 />
                                                             </div>
                                                             <div
@@ -1160,7 +1175,6 @@ export default function ProfileEditor(props) {
                                                                 }
                                                             >
                                                                 <OptionInput
-                                                                    slideMode
                                                                     editMode
                                                                     className={styles.optionInput}
                                                                     borderRadius={quiz.style.button.borderRadius}
@@ -1175,10 +1189,8 @@ export default function ProfileEditor(props) {
                                                                     variant={quiz.style.button.variant}
                                                                     text=''
                                                                     size='responsive'
-                                                                    sixOptions={module.value === 'custom'}
                                                                 />
                                                                 <OptionInput
-                                                                    slideMode
                                                                     editMode
                                                                     className={styles.optionInput}
                                                                     borderRadius={quiz.style.button.borderRadius}
@@ -1193,7 +1205,6 @@ export default function ProfileEditor(props) {
                                                                     variant={quiz.style.button.variant}
                                                                     text=''
                                                                     size='responsive'
-                                                                    sixOptions={module.value === 'custom'}
                                                                 />
                                                             </div>
                                                             {module.value === 'custom' &&
@@ -1208,7 +1219,6 @@ export default function ProfileEditor(props) {
                                                                     }
                                                                 >
                                                                     <OptionInput
-                                                                        slideMode
                                                                         editMode
                                                                         className={styles.optionInput}
                                                                         borderRadius={quiz.style.button.borderRadius}
@@ -1223,10 +1233,8 @@ export default function ProfileEditor(props) {
                                                                         variant={quiz.style.button.variant}
                                                                         text=''
                                                                         size='responsive'
-                                                                        sixOptions={module.value === 'custom'}
                                                                     />
                                                                     <OptionInput
-                                                                        slideMode
                                                                         editMode
                                                                         className={styles.optionInput}
                                                                         borderRadius={quiz.style.button.borderRadius}
@@ -1241,7 +1249,6 @@ export default function ProfileEditor(props) {
                                                                         variant={quiz.style.button.variant}
                                                                         text=''
                                                                         size='responsive'
-                                                                        sixOptions={module.value === 'custom'}
                                                                     />
                                                                 </div>
                                                             }
@@ -1250,7 +1257,7 @@ export default function ProfileEditor(props) {
                                                 </div>
                                             </div>
                                         )}
-                                    {(step === 2) &&
+                                    {step === 2 &&
                                         quiz.questions.map((question, i) =>
                                             <Draggable key={i} draggableId={`slide-${i}`} index={i}>
                                                 {(provided, snapshot) => (
@@ -1274,7 +1281,6 @@ export default function ProfileEditor(props) {
                                                             <div className={styles.slideBoard} style={BACKGROUND_STYLES.get(quiz.style.background.type)}>
                                                                 <div className={styles.miniQuestion}>
                                                                     <QuestionField
-                                                                        slideMode
                                                                         editQuestionMode
                                                                         textColor={quiz.style.button.textColor}
                                                                         value={question.content}
@@ -1297,7 +1303,6 @@ export default function ProfileEditor(props) {
                                                                         }
                                                                     >
                                                                         <OptionInput
-                                                                            slideMode
                                                                             className={styles.optionInput}
                                                                             borderRadius={quiz.style.button.borderRadius}
                                                                             textColor={quiz.style.button.textColor}
@@ -1311,11 +1316,9 @@ export default function ProfileEditor(props) {
                                                                             variant={quiz.style.button.variant}
                                                                             text={''}
                                                                             size='responsive'
-                                                                            sixOptions={question.haveExtraOptions}
                                                                             attSizeRef={attSizeRef}
                                                                         />
                                                                         <OptionInput
-                                                                            slideMode
                                                                             className={styles.optionInput}
                                                                             borderRadius={quiz.style.button.borderRadius}
                                                                             textColor={quiz.style.button.textColor}
@@ -1329,7 +1332,6 @@ export default function ProfileEditor(props) {
                                                                             variant={quiz.style.button.variant}
                                                                             text={''}
                                                                             size='responsive'
-                                                                            sixOptions={question.haveExtraOptions}
                                                                             attSizeRef={attSizeRef}
                                                                         />
                                                                     </div>
@@ -1344,7 +1346,6 @@ export default function ProfileEditor(props) {
                                                                         }
                                                                     >
                                                                         <OptionInput
-                                                                            slideMode
                                                                             className={styles.optionInput}
                                                                             borderRadius={quiz.style.button.borderRadius}
                                                                             textColor={quiz.style.button.textColor}
@@ -1358,11 +1359,9 @@ export default function ProfileEditor(props) {
                                                                             variant={quiz.style.button.variant}
                                                                             text={''}
                                                                             size='responsive'
-                                                                            sixOptions={question.haveExtraOptions}
                                                                             attSizeRef={attSizeRef}
                                                                         />
                                                                         <OptionInput
-                                                                            slideMode
                                                                             className={styles.optionInput}
                                                                             borderRadius={quiz.style.button.borderRadius}
                                                                             textColor={quiz.style.button.textColor}
@@ -1376,7 +1375,6 @@ export default function ProfileEditor(props) {
                                                                             variant={quiz.style.button.variant}
                                                                             text={''}
                                                                             size='responsive'
-                                                                            sixOptions={question.haveExtraOptions}
                                                                             attSizeRef={attSizeRef}
                                                                         />
                                                                     </div>
@@ -1392,7 +1390,6 @@ export default function ProfileEditor(props) {
                                                                             }
                                                                         >
                                                                             <OptionInput
-                                                                                slideMode
                                                                                 className={styles.optionInput}
                                                                                 borderRadius={quiz.style.button.borderRadius}
                                                                                 textColor={quiz.style.button.textColor}
@@ -1406,11 +1403,9 @@ export default function ProfileEditor(props) {
                                                                                 variant={quiz.style.button.variant}
                                                                                 text={''}
                                                                                 size='responsive'
-                                                                                sixOptions={question.haveExtraOptions}
                                                                                 attSizeRef={attSizeRef}
                                                                             />
                                                                             <OptionInput
-                                                                                slideMode
                                                                                 className={styles.optionInput}
                                                                                 borderRadius={quiz.style.button.borderRadius}
                                                                                 textColor={quiz.style.button.textColor}
@@ -1424,7 +1419,6 @@ export default function ProfileEditor(props) {
                                                                                 variant={quiz.style.button.variant}
                                                                                 text={''}
                                                                                 size='responsive'
-                                                                                sixOptions={question.haveExtraOptions}
                                                                                 attSizeRef={attSizeRef}
                                                                             />
                                                                         </div>
@@ -1451,7 +1445,7 @@ export default function ProfileEditor(props) {
 
                 <div
                     id={styles.rightContainer}
-                    style={{ width: step === 4 ? '0px' : undefined }}
+                    style={{ right: step === 4 ? '-220px' : '0px' }}
                 >
                     {step === 0 && quiz.results.length > 0 &&
                         <div className='flex start' style={{ paddingTop: '15px' }} >
@@ -1730,6 +1724,96 @@ export default function ProfileEditor(props) {
                                     </div>
                                 </div>
                             }
+                        </div>
+                    }
+                    {step === 2 && quiz.questions.length > 0 &&
+                        <div className='flex start' style={{ paddingTop: '15px' }}>
+                            <div className={styles.inputContainer}>
+                                <div className='flex row start size100' style={{ gap: '3%' }}>
+                                    <ContactSupportRoundedIcon sx={{ color: '#1c222c' }} />
+                                    <h4 className={styles.inputLabel}>
+                                        Tipo da Pergunta
+                                    </h4>
+                                </div>
+                                <FormControl sx={{ m: 1, width: '100%' }}>
+                                    <Select
+                                        input={<OutlinedInput />}
+                                        value={quiz.style.question.variant}
+                                        onChange={handleQuestionVariantChange}
+                                        MenuProps={MenuProps}
+                                        size='small'
+                                        sx={{
+                                            width: '100%',
+                                        }}
+                                    >
+                                        <MenuItem value={'text'}>Texto</MenuItem>
+                                        <MenuItem value={'shadow'}>Sombra</MenuItem>
+                                        <MenuItem value={'outlined'}>Contorno</MenuItem>
+                                        <MenuItem value={'contained'}>Preenchido</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </div>
+                            <div
+                                className={styles.divider}
+                                style={{
+                                    backgroundColor: 'black',
+                                    opacity: 0.5,
+                                }}
+                            >
+                            </div>
+                            <div className={styles.inputContainer}>
+                                <div className='flex row start size100' style={{ gap: '3%' }}>
+                                    <EmojiEventsRoundedIcon sx={{ color: '#1c222c' }} />
+                                    <h4 className={styles.inputLabel}>
+                                        Pontos
+                                    </h4>
+                                </div>
+                                <FormControl sx={{ m: 1, width: '100%' }}>
+                                    <Select
+                                        input={<OutlinedInput />}
+                                        value={quiz.style.button.variant}
+                                        onChange={handleButtonVariantChange}
+                                        size='small'
+                                        sx={{
+                                            width: '100%',
+                                        }}
+                                    >
+                                        <MenuItem value={'outlined'}>Contorno</MenuItem>
+                                        <MenuItem value={'contained'}>Preenchido</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </div>
+                            <div
+                                className={styles.divider}
+                                style={{
+                                    backgroundColor: 'black',
+                                    opacity: 0.5,
+                                }}
+                            >
+                            </div>
+                            <div className={styles.inputContainer}>
+                                <div className='flex row start size100' style={{ gap: '3%' }}>
+                                    <TimerRoundedIcon sx={{ color: '#1c222c' }} />
+                                    <h4 className={styles.inputLabel}>
+                                        Timer
+                                    </h4>
+                                </div>
+                                <FormControl sx={{ m: 1, width: '100%' }}>
+                                    <Select
+                                        input={<OutlinedInput />}
+                                        value={quiz.style.button.symbol}
+                                        onChange={handleButtonSymbolChange}
+                                        size='small'
+                                        sx={{
+                                            width: '100%',
+                                        }}
+                                    >
+                                        <MenuItem value={'none'}>Nenhum</MenuItem>
+                                        <MenuItem value={'letters'}>Letras</MenuItem>
+                                        <MenuItem value={'polygons'}>Formas</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </div>
                         </div>
                     }
                 </div>

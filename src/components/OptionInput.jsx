@@ -50,57 +50,43 @@ export default function OptionInput(props) {
         borderRadius,
         attSizeRef,
         editMode,
-        slideMode,
-        sixOptions,
         onChange,
         placeholder,
-        currentSlide,
         inputMode,
     } = props
+
+    const containerRef = useRef(null)
+    const inputTextRef = useRef(null)
 
     const [isHovered, setIsHovered] = useState(false)
     const [color, setColor] = useState(colorValue)
     const [animation, setAnimation] = useState(FAST_ANIMATION)
     const [isFocused, setIsFocused] = useState(false)
-    const [selectText, setSelectText] = useState('')
-    const [buttonSize, setButtonSize] = useState({
-        width: $(`.${slideMode ? (sixOptions ? styles.buttonSlideSix : styles.buttonSlideFour) : styles.button}`).width(),
-        height: $(`.${slideMode ? (sixOptions ? styles.buttonSlideSix : styles.buttonSlideFour) : styles.button}`).height()
-    })
-
-    const inputTextRef = useRef(null)
+    const [buttonSize, setButtonSize] = useState({ width: 0, height: 0 })
 
     useEffect(() => {
         setButtonSize({
-            width: $(`.${slideMode ? (sixOptions ? styles.buttonSlideSix : styles.buttonSlideFour) : styles.button}`).width(),
-            height: $(`.${slideMode ? (sixOptions ? styles.buttonSlideSix : styles.buttonSlideFour) : styles.button}`).height()
+            width: containerRef.current.offsetWidth,
+            height: containerRef.current.offsetHeight
         })
+        if (inputMode) {
+            const divElement = inputTextRef.current
+            divElement.innerText = text === '' && placeholder ? placeholder : text
+            removeFocusFromAllElements()
+        }
     }, [attSizeRef])
 
-    useEffect(() => {
-        if (colorValue.length === 5)
-            setColor(colorValue.slice(0, 4))
-        else
-            setColor(colorValue)
-    }, [colorValue])
 
     useEffect(() => {
-
-        setTimeout(() => {
-            setButtonSize({
-                width: $(`.${slideMode ? (sixOptions ? styles.buttonSlideSix : styles.buttonSlideFour) : styles.button}`).width(),
-                height: $(`.${slideMode ? (sixOptions ? styles.buttonSlideSix : styles.buttonSlideFour) : styles.button}`).height()
-            })
-        }, 1)
 
         setTimeout(() => {
             setAnimation('all ease 200ms')
-        }, 200)
+        }, 50)
 
         function handleResize() {
             setButtonSize({
-                width: $(`.${slideMode ? (sixOptions ? styles.buttonSlideSix : styles.buttonSlideFour) : styles.button}`).width(),
-                height: $(`.${slideMode ? (sixOptions ? styles.buttonSlideSix : styles.buttonSlideFour) : styles.button}`).height()
+                width: containerRef.current.offsetWidth,
+                height: containerRef.current.offsetHeight
             })
         }
 
@@ -110,6 +96,29 @@ export default function OptionInput(props) {
             $(window).off('resize', handleResize)
         }
     }, [])
+
+    /* useEffect(() => {
+        function handleClickOutside(event) {
+            console.log(event.target.className)
+            if (inputMode && event.target.className !== styles.textInput) {
+                console.log('blur')
+                inputTextRef.current.blur()
+            }
+        }
+
+        document.addEventListener('mousedown', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        }
+    }, []) */
+
+    useEffect(() => {
+        if (colorValue.length === 5)
+            setColor(colorValue.slice(0, 4))
+        else
+            setColor(colorValue)
+    }, [colorValue])
 
     const BUTTON_VARIANTS = new Map([
         ['outlined', {
@@ -241,11 +250,17 @@ export default function OptionInput(props) {
         setIsHovered(false)
     }
 
-    function handleFocus() {
+    function handleFocus(e) {
+        if (inputMode) {
+            inputTextRef.current.innerText = text
+        }
         setIsFocused(true)
     }
 
     function handleBlur() {
+        if (inputMode) {
+            inputTextRef.current.innerText = text === '' && placeholder ? placeholder : text
+        }
         setIsFocused(false)
     }
 
@@ -268,14 +283,6 @@ export default function OptionInput(props) {
         onChange(e.target.innerText);
     }
 
-    useEffect(() => {
-        if (inputMode) {
-            const divElement = inputTextRef.current
-            divElement.innerText = text
-            removeFocusFromAllElements();
-        }
-    }, [currentSlide])
-
     function removeFocusFromAllElements() {
         const focusedElement = document.activeElement
         if (focusedElement) {
@@ -285,14 +292,9 @@ export default function OptionInput(props) {
 
     return (
         <button
-            className={`
-            ${slideMode
-                    ? (sixOptions
-                        ? styles.buttonSlideSix
-                        : styles.buttonSlideFour)
-                    : styles.button
-                }
-            `}
+            tabIndex={inputMode ? '-1' : '0'}
+            ref={containerRef}
+            className={styles.button}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             style={{
@@ -364,13 +366,13 @@ export default function OptionInput(props) {
                         onFocus={handleFocus}
                         onBlur={handleBlur}
                         style={{
+                            ...TEXT_VARIANTS.get(variant),
                             fontSize: `${buttonSize.height * 0.19}px`,
-                            paddingTop: text === ''
+                            paddingTop: text === '' && isFocused
                                 ? `${(buttonSize.height / 2) - (buttonSize.height * 0.19 / 2) - (buttonSize.height * 0.024 / 2)}px`
                                 : '0px',
                             transition: editMode ? animation : FAST_ANIMATION,
                         }}
-                        value={text === '' && !isFocused && placeholder ? placeholder : text}
                         onInput={handleInput}
                         spellCheck={false}
                     >

@@ -182,6 +182,7 @@ export default function FileInput(props) {
                                         }}
                                     />
                                     <input
+                                        tabIndex='-1'
                                         type='file'
                                         className={styles.uploadImgInside}
                                         onChange={handleUploadImgProfile}
@@ -226,7 +227,7 @@ export default function FileInput(props) {
                             </IconButton>
                             <IconButton
                                 className={styles.buttons}
-                                color='neutral' 
+                                color='neutral'
                                 onClick={deleteProfileImg}
                                 size='small'
                                 style={{

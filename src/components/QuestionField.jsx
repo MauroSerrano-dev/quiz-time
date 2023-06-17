@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from '../styles/components/QuestionField.module.css'
 import $ from 'jquery'
 
@@ -16,8 +16,9 @@ export default function QuestionField(props) {
         onChange,
         textColor,
         editQuestionMode,
-        slideMode,
     } = props
+
+    const containerRef = useRef(null)
 
     const [containerSize, setContainerSize] = useState({
         width: $(`.${styles.container}`).width(),
@@ -60,21 +61,20 @@ export default function QuestionField(props) {
     ])
 
     useEffect(() => {
-        setTimeout(() => {
-            setContainerSize({
-                width: $(`.${slideMode ? styles.containerSlide : styles.container}`).width(),
-                height: $(`.${slideMode ? styles.containerSlide : styles.container}`).height()
-            })
-        }, 1)
+
+        setContainerSize({
+            width: containerRef.current.offsetWidth,
+            height: containerRef.current.offsetHeight
+        })
 
         setTimeout(() => {
-            setAnimation('all ease 200msms')
-        }, 200)
+            setAnimation('all ease 200ms')
+        }, 50)
 
         function handleResize() {
             setContainerSize({
-                width: $(`.${slideMode ? styles.containerSlide : styles.container}`).width(),
-                height: $(`.${slideMode ? styles.containerSlide : styles.container}`).height()
+                width: containerRef.current.offsetWidth,
+                height: containerRef.current.offsetHeight
             })
         }
 
@@ -95,11 +95,8 @@ export default function QuestionField(props) {
 
     return (
         <div
-            className={`${slideMode
-                ? styles.containerSlide
-                : styles.container
-                }`
-            }
+            className={styles.container}
+            ref={containerRef}
         >
             <input
                 onFocus={handleFocus}
