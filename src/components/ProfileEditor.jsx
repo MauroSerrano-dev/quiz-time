@@ -498,7 +498,7 @@ export default function ProfileEditor(props) {
         setAttSizeRef(prev => !prev)
     }
 
-    function handleOptionTextChange(event, optionIndex) {
+    function handleOptionTextChange(textValue, optionIndex) {
         setQuiz(prev => ({
             ...prev,
             questions: prev.questions.map((question, i) =>
@@ -507,7 +507,7 @@ export default function ProfileEditor(props) {
                         ...question,
                         options: prev.questions[i].options.map((option, j) =>
                             j === optionIndex
-                                ? { ...option, content: event.target.value }
+                                ? { ...option, content: textValue }
                                 : option
                         )
                     }
@@ -875,6 +875,8 @@ export default function ProfileEditor(props) {
                                 }
                                 >
                                     <OptionInput
+                                        inputMode
+                                        currentSlide={currentSlide}
                                         placeholder='Adicione a Opção 1'
                                         onChange={(e) => handleOptionTextChange(e, 0)}
                                         className={styles.optionInput}
@@ -893,6 +895,8 @@ export default function ProfileEditor(props) {
                                         attSizeRef={attSizeRef}
                                     />
                                     <OptionInput
+                                        inputMode
+                                        currentSlide={currentSlide}
                                         placeholder='Adicione a Opção 2'
                                         onChange={(e) => handleOptionTextChange(e, 1)}
                                         className={styles.optionInput}
@@ -919,6 +923,8 @@ export default function ProfileEditor(props) {
                                 }
                                 >
                                     <OptionInput
+                                        inputMode
+                                        currentSlide={currentSlide}
                                         placeholder='Adicione a Opção 3 (Opcional)'
                                         onChange={(e) => handleOptionTextChange(e, 2)}
                                         className={styles.optionInput}
@@ -936,6 +942,8 @@ export default function ProfileEditor(props) {
                                         attSizeRef={attSizeRef}
                                     />
                                     <OptionInput
+                                        inputMode
+                                        currentSlide={currentSlide}
                                         placeholder='Adicione a Opção 4 (Opcional)'
                                         onChange={(e) => handleOptionTextChange(e, 3)}
                                         className={styles.optionInput}
@@ -962,6 +970,8 @@ export default function ProfileEditor(props) {
                                     }
                                     >
                                         <OptionInput
+                                            inputMode
+                                            currentSlide={currentSlide}
                                             placeholder='Adicione a Opção 5 (Opcional)'
                                             onChange={(e) => handleOptionTextChange(e, 4)}
                                             className={styles.optionInput}
@@ -979,6 +989,8 @@ export default function ProfileEditor(props) {
                                             attSizeRef={attSizeRef}
                                         />
                                         <OptionInput
+                                            inputMode
+                                            currentSlide={currentSlide}
                                             placeholder='Adicione a Opção 6 (Opcional)'
                                             onChange={(e) => handleOptionTextChange(e, 5)}
                                             className={styles.optionInput}

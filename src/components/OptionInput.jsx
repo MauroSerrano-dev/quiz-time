@@ -8,6 +8,8 @@ import HexagonRoundedIcon from '@mui/icons-material/HexagonRounded';
 import SquareRoundedIcon from '@mui/icons-material/SquareRounded';
 import CircleRoundedIcon from '@mui/icons-material/CircleRounded';
 
+const TEXT_LIMIT = 70
+
 const SIZES = new Map([
     [
         'responsive', {
@@ -51,17 +53,22 @@ export default function OptionInput(props) {
         slideMode,
         sixOptions,
         onChange,
-        placeholder
+        placeholder,
+        currentSlide,
+        inputMode,
     } = props
 
     const [isHovered, setIsHovered] = useState(false)
     const [color, setColor] = useState(colorValue)
     const [animation, setAnimation] = useState(FAST_ANIMATION)
-    const [isFocused, setIsFocused] = useState(false);
+    const [isFocused, setIsFocused] = useState(false)
+    const [selectText, setSelectText] = useState('')
     const [buttonSize, setButtonSize] = useState({
         width: $(`.${slideMode ? (sixOptions ? styles.buttonSlideSix : styles.buttonSlideFour) : styles.button}`).width(),
         height: $(`.${slideMode ? (sixOptions ? styles.buttonSlideSix : styles.buttonSlideFour) : styles.button}`).height()
     })
+
+    const inputTextRef = useRef(null)
 
     useEffect(() => {
         setButtonSize({
@@ -78,6 +85,7 @@ export default function OptionInput(props) {
     }, [colorValue])
 
     useEffect(() => {
+
         setTimeout(() => {
             setButtonSize({
                 width: $(`.${slideMode ? (sixOptions ? styles.buttonSlideSix : styles.buttonSlideFour) : styles.button}`).width(),
@@ -161,6 +169,7 @@ export default function OptionInput(props) {
                     WebkitUserSelect: 'none',
                     userSelect: 'none',
                     fontFamily: 'Verdana, Geneva, Tahoma, sans-serif',
+                    fontSize: `${buttonSize.height * 0.45}px`,
                     transition: editMode ? 'color'.concat(animation.slice(3)) : FAST_ANIMATION,
                 }}
             >
@@ -240,6 +249,40 @@ export default function OptionInput(props) {
         setIsFocused(false)
     }
 
+    function handleInput(e) {
+        const inputValue = e.target.innerText
+
+        const divElement = inputTextRef.current
+        if (inputValue.length > TEXT_LIMIT) {
+            e.target.innerText = text.length === TEXT_LIMIT
+                ? text
+                : e.target.innerText.slice(0, TEXT_LIMIT)
+            const range = document.createRange()
+            const selection = window.getSelection()
+            range.selectNodeContents(divElement)
+            range.collapse(false)
+            selection.removeAllRanges()
+            selection.addRange(range)
+        }
+
+        onChange(e.target.innerText);
+    }
+
+    useEffect(() => {
+        if (inputMode) {
+            const divElement = inputTextRef.current
+            divElement.innerText = text
+            removeFocusFromAllElements();
+        }
+    }, [currentSlide])
+
+    function removeFocusFromAllElements() {
+        const focusedElement = document.activeElement
+        if (focusedElement) {
+            focusedElement.blur()
+        }
+    }
+
     return (
         <button
             className={`
@@ -304,7 +347,7 @@ export default function OptionInput(props) {
             <div
                 className={styles.textContainer}
             >
-                {onChange === undefined
+                {!inputMode
                     ? <p
                         style={{
                             ...TEXT_VARIANTS.get(variant),
@@ -314,21 +357,24 @@ export default function OptionInput(props) {
                     >
                         {text}
                     </p>
-                    : <input
+                    : <div
+                        className={styles.textInput}
+                        ref={inputTextRef}
+                        contentEditable
                         onFocus={handleFocus}
                         onBlur={handleBlur}
-                        className={styles.input}
                         style={{
-                            ...TEXT_VARIANTS.get(variant),
-                            fontSize: `${buttonSize.width * 0.05}px`,
+                            fontSize: `${buttonSize.height * 0.19}px`,
+                            paddingTop: text === ''
+                                ? `${(buttonSize.height / 2) - (buttonSize.height * 0.19 / 2) - (buttonSize.height * 0.024 / 2)}px`
+                                : '0px',
                             transition: editMode ? animation : FAST_ANIMATION,
-                            backgroundColor: 'blue',
                         }}
-                        onChange={onChange}
                         value={text === '' && !isFocused && placeholder ? placeholder : text}
-                        autoComplete='off'
+                        onInput={handleInput}
                         spellCheck={false}
-                    />
+                    >
+                    </div>
                 }
             </div>
         </button>
