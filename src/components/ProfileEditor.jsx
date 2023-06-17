@@ -41,6 +41,7 @@ import PhotoSizeSelectActualRoundedIcon from '@mui/icons-material/PhotoSizeSelec
 import ContactSupportRoundedIcon from '@mui/icons-material/ContactSupportRounded';
 import EmojiEventsRoundedIcon from '@mui/icons-material/EmojiEventsRounded'
 import TimerRoundedIcon from '@mui/icons-material/TimerRounded'
+import InputSection from './InputSection';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -1566,38 +1567,38 @@ export default function ProfileEditor(props) {
                                 }}
                             >
                             </div>
-                            <div className={styles.inputContainer}>
-                                <div className='flex row start size100' style={{ gap: '3%' }}>
-                                    <CategoryRoundedIcon sx={{ color: '#1c222c' }} />
-                                    <h4 className={styles.inputLabel}>
-                                        Símbolos
-                                    </h4>
-                                </div>
-                                <FormControl sx={{ m: 1, width: '100%' }}>
-                                    <InputLabel>
-                                        Tipo
-                                    </InputLabel>
-                                    <Select
-                                        input={<OutlinedInput label="Tipo" />}
-                                        value={quiz.style.button.symbol}
-                                        onChange={handleButtonSymbolChange}
-                                        size='small'
-                                        sx={{
-                                            width: '100%',
-                                        }}
-                                    >
-                                        <MenuItem value={'none'}>Nenhum</MenuItem>
-                                        <MenuItem value={'letters'}>Letras</MenuItem>
-                                        <MenuItem value={'polygons'}>Formas</MenuItem>
-                                    </Select>
-                                </FormControl>
-                                {quiz.style.button.variant === 'contained' &&
-                                    <ColorInput
-                                        onChange={(e) => handleStyleColor(e, 'button', 'symbolColor')}
-                                        value={quiz.style.button.symbolColor}
-                                    />
+                            <InputSection
+                                title='Símbolos'
+                                icon={<CategoryRoundedIcon sx={{ color: '#1c222c' }} />}
+                                body={
+                                    <div className='flex'>
+                                        <FormControl sx={{ m: 1, width: '100%' }}>
+                                            <InputLabel>
+                                                Tipo
+                                            </InputLabel>
+                                            <Select
+                                                input={<OutlinedInput label="Tipo" />}
+                                                value={quiz.style.button.symbol}
+                                                onChange={handleButtonSymbolChange}
+                                                size='small'
+                                                sx={{
+                                                    width: '100%',
+                                                }}
+                                            >
+                                                <MenuItem value={'none'}>Nenhum</MenuItem>
+                                                <MenuItem value={'letters'}>Letras</MenuItem>
+                                                <MenuItem value={'polygons'}>Formas</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                        {quiz.style.button.variant === 'contained' &&
+                                            <ColorInput
+                                                onChange={(e) => handleStyleColor(e, 'button', 'symbolColor')}
+                                                value={quiz.style.button.symbolColor}
+                                            />
+                                        }
+                                    </div>
                                 }
-                            </div>
+                            />
                             <div className='flex center size100'>
                                 <div
                                     className={styles.divider}

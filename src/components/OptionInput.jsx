@@ -3,6 +3,7 @@ import styles from '../styles/components/OptionInput.module.css'
 import $ from 'jquery'
 
 import { BsTriangleFill } from "react-icons/bs";
+import { IoClose } from "react-icons/io5";
 import PentagonRoundedIcon from '@mui/icons-material/PentagonRounded';
 import HexagonRoundedIcon from '@mui/icons-material/HexagonRounded';
 import SquareRoundedIcon from '@mui/icons-material/SquareRounded';
@@ -69,6 +70,7 @@ export default function OptionInput(props) {
             width: containerRef.current.offsetWidth,
             height: containerRef.current.offsetHeight
         })
+
         if (inputMode) {
             const divElement = inputTextRef.current
             divElement.innerText = text === '' && placeholder ? placeholder : text
@@ -171,19 +173,17 @@ export default function OptionInput(props) {
             />
         ],
         ['x',
-            <h1
+            <IoClose
+                size='100%'
+                color={variant === 'contained' ? symbolColor : color}
                 style={{
-                    color: variant === 'contained' ? symbolColor : color,
-                    MozUserSelect: 'none',
-                    WebkitUserSelect: 'none',
-                    userSelect: 'none',
-                    fontFamily: 'Verdana, Geneva, Tahoma, sans-serif',
-                    fontSize: `${buttonSize.height * 0.45}px`,
-                    transition: editMode ? 'color'.concat(animation.slice(3)) : FAST_ANIMATION,
+                    position: 'absolute',
+                    transition: editMode ? animation : FAST_ANIMATION,
+                    strokeWidth: '35px',
+                    width: '145%',
+                    height: '145%',
                 }}
-            >
-                X
-            </h1>
+            />
         ],
         ['pentagon',
             <PentagonRoundedIcon
@@ -298,18 +298,28 @@ export default function OptionInput(props) {
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             style={{
-                width: size === 'responsive' ? '50%' : `${SIZES.get(size).width}px`,
-                height: size === 'responsive' ? '100%' : `${SIZES.get(size).height}px`,
+                width: size === 'responsive'
+                    ? '50%'
+                    : `${SIZES.get(size).width}px`,
+                height: size === 'responsive'
+                    ? '100%'
+                    : `${SIZES.get(size).height}px`,
                 transition: animation,
                 borderStyle: 'solid',
                 borderWidth: `${buttonSize.height * 0.024}px`,
                 borderRadius: `${buttonSize.height * borderRadius * 0.005}px`,
-                ...BUTTON_VARIANTS.get(variant)
+                ...BUTTON_VARIANTS.get(variant),
             }}
         >
             <div className={styles.symbolContainer}
                 style={{
-                    paddingRight: symbol === 'none' ? '0px' : '5%',
+                    transition: editMode ? animation : FAST_ANIMATION,
+                    width: symbol === 'none'
+                        ? '0px'
+                        : `${buttonSize.height * 0.38}px`,
+                    height: symbol === 'none'
+                        ? '0px'
+                        : '100%',
                 }}
             >
                 {!noSymbol &&
@@ -317,11 +327,13 @@ export default function OptionInput(props) {
                         className={styles.symbol}
                         style={{
                             position: 'relative',
-                            width: symbol === 'none' ? '0px' : `${buttonSize.height * 0.4}px`,
-                            height: symbol === 'none' ? '0px' : `${buttonSize.height * 0.4}px`,
+                            width: `${buttonSize.height * 0.38}px`,
+                            height: `${buttonSize.height * 0.38}px`,
                             transition: editMode ? animation : FAST_ANIMATION,
                             outlineStyle: 'solid',
-                            outlineWidth: symbol === 'none' ? '0px' : (`${buttonSize.height * 0.026}px`),
+                            outlineWidth: symbol === 'none'
+                                ? '0px'
+                                : `${buttonSize.height * 0.026}px`,
                             ...SYMBOL_VARIANTS.get(variant),
                             backgroundColor: 'transparent',
                             fontSize: symbol === 'none'
@@ -338,7 +350,9 @@ export default function OptionInput(props) {
                                 ...SYMBOL_TEXT_VARIANTS.get(variant),
                                 transition: editMode ? animation : FAST_ANIMATION,
                                 position: 'absolute',
-                                fontSize: symbol === 'letters' ? `${buttonSize.height * 0.3}px` : '0px',
+                                fontSize: symbol === 'letters'
+                                    ? `${buttonSize.height * 0.3}px`
+                                    : '0px',
                             }}
                         >
                             {OPTIONS.get(option).letter}
@@ -348,13 +362,21 @@ export default function OptionInput(props) {
             </div>
             <div
                 className={styles.textContainer}
+                style={{
+                    transition: editMode ? animation : FAST_ANIMATION,
+                    width: `calc(88% - ${symbol === 'none'
+                        ? 0
+                        : buttonSize.height * 0.38}px)`
+                }}
             >
                 {!inputMode
                     ? <p
                         style={{
                             ...TEXT_VARIANTS.get(variant),
                             fontSize: `${buttonSize.height * 0.3}px`,
-                            transition: editMode ? animation : FAST_ANIMATION,
+                            transition: editMode
+                                ? animation
+                                : FAST_ANIMATION,
                         }}
                     >
                         {text}
@@ -368,10 +390,12 @@ export default function OptionInput(props) {
                         style={{
                             ...TEXT_VARIANTS.get(variant),
                             fontSize: `${buttonSize.height * 0.19}px`,
+                            backgroundColor: text === '' && !isFocused && placeholder ? '#ffffff45' : 'transparent',
+                            borderRadius: `${buttonSize.height * 0.04}px`,
+                            transition: editMode ? animation : FAST_ANIMATION,
                             paddingTop: text === '' && isFocused
                                 ? `${(buttonSize.height / 2) - (buttonSize.height * 0.19 / 2) - (buttonSize.height * 0.024 / 2)}px`
                                 : '0px',
-                            transition: editMode ? animation : FAST_ANIMATION,
                         }}
                         onInput={handleInput}
                         spellCheck={false}
