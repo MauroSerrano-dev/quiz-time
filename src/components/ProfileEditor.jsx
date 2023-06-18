@@ -51,7 +51,6 @@ const MenuProps = {
     PaperProps: {
         style: {
             maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
         },
     },
 }
@@ -70,8 +69,17 @@ const INICIAL_GRADIENT_PERCENTAGES = new Map([
     [6, [0, 20, 40, 60, 80, 100]],
 ])
 
+const QUESTIONS_TYPES = new Map([
+    ['standard', 'Padrão']
+])
+
 export default function ProfileEditor(props) {
-    const { quiz, setQuiz, INICIAL_QUIZ } = props
+    const {
+        quiz,
+        setQuiz,
+        INICIAL_QUIZ,
+        INICIAL_IMG,
+    } = props
 
     const [step, setStep] = useState(0)
     const [currentSlide, setCurrentSlide] = useState(0)
@@ -231,7 +239,7 @@ export default function ProfileEditor(props) {
         setQuiz((prev, i) => ({
             ...prev,
             results: prev.results.slice(0, index + 1)
-                .concat({...prev.results[index], name: prev.results[index].name.concat(' (cópia)')})
+                .concat({ ...prev.results[index], name: prev.results[index].name.concat(' (cópia)') })
                 .concat(prev.results.slice(index + 1, prev.results.length))
 
         }))
@@ -557,7 +565,6 @@ export default function ProfileEditor(props) {
     }
 
     function handleChangeQuestionField(value, field) {
-        console.log(value, field)
         setQuiz(prev => ({
             ...prev,
             questions: prev.questions.map((question, i) =>
@@ -728,6 +735,7 @@ export default function ProfileEditor(props) {
                                 img={quiz.results[currentSlide].img}
                                 width='500px'
                                 height='300px'
+                                INICIAL_IMG={INICIAL_IMG}
                             />
                             <CustomTextField
                                 value={quiz.results[currentSlide].name}
@@ -919,6 +927,7 @@ export default function ProfileEditor(props) {
                                     setQuiz={setQuiz}
                                     currentSlide={currentSlide}
                                     img={quiz.questions[currentSlide].img}
+                                    INICIAL_IMG={INICIAL_IMG}
                                 />
                             </div>
                             <div className={styles.editorOptionsContainer}>
@@ -1113,7 +1122,7 @@ export default function ProfileEditor(props) {
                                                             }
                                                         </div>
                                                         <div className={styles.slide}>
-                                                            <h4>{i + 1}</h4>
+                                                            <h5>{i + 1}</h5>
                                                             <div className={styles.slideBoard} style={{ backgroundColor: result.color }}>
                                                                 <div className={`${styles.slideImgContainer} ${result.img.content === '' ? styles.slideImgPlaceholder : undefined}`}>
                                                                     <img
@@ -1140,7 +1149,7 @@ export default function ProfileEditor(props) {
                                                 <div className={`${styles.buttonsContainer} ${currentSlide !== i ? styles.showOnHover : undefined}`}>
                                                 </div>
                                                 <div className={styles.slide}>
-                                                    <h4>{module.title}</h4>
+                                                    <h5>{module.title}</h5>
                                                     <div className={styles.slideBoard} style={BACKGROUND_STYLES.get(quiz.style.background.type)}>
                                                         <div className={styles.miniQuestion}>
                                                             <QuestionField
@@ -1310,7 +1319,7 @@ export default function ProfileEditor(props) {
                                                             </IconButton>
                                                         </div>
                                                         <div className={styles.slide}>
-                                                            <h4>{i + 1}</h4>
+                                                            <h5>{i + 1} {QUESTIONS_TYPES.get(question.type)}</h5>
                                                             <div className={styles.slideBoard} style={BACKGROUND_STYLES.get(quiz.style.background.type)}>
                                                                 <div className={styles.miniQuestion}>
                                                                     <QuestionField
@@ -1510,10 +1519,10 @@ export default function ProfileEditor(props) {
                                         Tipo
                                     </InputLabel>
                                     <Select
+                                        MenuProps={MenuProps}
                                         input={<OutlinedInput label="Tipo" />}
                                         value={quiz.style.question.variant}
                                         onChange={handleQuestionVariantChange}
-                                        MenuProps={MenuProps}
                                         size='small'
                                         sx={{
                                             width: '100%',
@@ -1561,6 +1570,7 @@ export default function ProfileEditor(props) {
                                         Tipo
                                     </InputLabel>
                                     <Select
+                                        MenuProps={MenuProps}
                                         input={<OutlinedInput label="Tipo" />}
                                         value={quiz.style.button.variant}
                                         onChange={handleButtonVariantChange}
@@ -1603,12 +1613,13 @@ export default function ProfileEditor(props) {
                                 title='Símbolos'
                                 icon={<CategoryRoundedIcon sx={{ color: '#1c222c' }} />}
                                 body={
-                                    <div className='flex'>
+                                    <div className='flex size100'>
                                         <FormControl sx={{ m: 1, width: '100%' }}>
                                             <InputLabel>
                                                 Tipo
                                             </InputLabel>
                                             <Select
+                                                MenuProps={MenuProps}
                                                 input={<OutlinedInput label="Tipo" />}
                                                 value={quiz.style.button.symbol}
                                                 onChange={handleButtonSymbolChange}
@@ -1622,7 +1633,7 @@ export default function ProfileEditor(props) {
                                                 <MenuItem value={'polygons'}>Formas</MenuItem>
                                             </Select>
                                         </FormControl>
-                                        {quiz.style.button.variant === 'contained' &&
+                                        {quiz.style.button.symbol === 'none' || quiz.style.button.variant === 'contained' &&
                                             <ColorInput
                                                 onChange={(e) => handleStyleColor(e, 'button', 'symbolColor')}
                                                 value={quiz.style.button.symbolColor}
@@ -1653,6 +1664,7 @@ export default function ProfileEditor(props) {
                                             Tipo
                                         </InputLabel>
                                         <Select
+                                            MenuProps={MenuProps}
                                             input={<OutlinedInput label="Tipo" />}
                                             value={quiz.style.background.type}
                                             onChange={handleBackgroundTypeChange}
@@ -1770,19 +1782,16 @@ export default function ProfileEditor(props) {
                                 </div>
                                 <FormControl sx={{ m: 1, width: '100%' }}>
                                     <Select
-                                        input={<OutlinedInput />}
-                                        value={quiz.style.question.variant}
-                                        onChange={handleQuestionVariantChange}
                                         MenuProps={MenuProps}
+                                        input={<OutlinedInput />}
+                                        value={quiz.questions[currentSlide].type}
+                                        onChange={(e) => handleChangeQuestionField(e.target.value, 'type')}
                                         size='small'
                                         sx={{
                                             width: '100%',
                                         }}
                                     >
-                                        <MenuItem value={'text'}>Texto</MenuItem>
-                                        <MenuItem value={'shadow'}>Sombra</MenuItem>
-                                        <MenuItem value={'outlined'}>Contorno</MenuItem>
-                                        <MenuItem value={'contained'}>Preenchido</MenuItem>
+                                        <MenuItem value={'standard'}>Padrão</MenuItem>
                                     </Select>
                                 </FormControl>
                             </div>
@@ -1803,6 +1812,7 @@ export default function ProfileEditor(props) {
                                 </div>
                                 <FormControl sx={{ m: 1, width: '100%' }}>
                                     <Select
+                                        MenuProps={MenuProps}
                                         input={<OutlinedInput />}
                                         value={quiz.style.button.variant}
                                         onChange={handleButtonVariantChange}
@@ -1831,6 +1841,7 @@ export default function ProfileEditor(props) {
                                         Timer
                                     </h4>
                                     <Switch
+                                        defaultChecked={quiz.questions[currentSlide].haveTimer}
                                         onChange={handleSwitchTimer}
                                         sx={{
                                             marginLeft: '-3%',
@@ -1852,6 +1863,7 @@ export default function ProfileEditor(props) {
                                             Minutos
                                         </InputLabel>
                                         <Select
+                                            MenuProps={MenuProps}
                                             input={<OutlinedInput label="Minutos" />}
                                             value={quiz.questions[currentSlide].timerMinutes}
                                             onChange={(e) => handleChangeQuestionField(e.target.value, 'timerMinutes')}
@@ -1865,7 +1877,6 @@ export default function ProfileEditor(props) {
                                             <MenuItem value={2}>02</MenuItem>
                                             <MenuItem value={3}>03</MenuItem>
                                             <MenuItem value={4}>04</MenuItem>
-                                            <MenuItem value={5}>05</MenuItem>
                                         </Select>
                                     </FormControl>
                                     :
@@ -1874,6 +1885,7 @@ export default function ProfileEditor(props) {
                                             Segundos
                                         </InputLabel>
                                         <Select
+                                            MenuProps={MenuProps}
                                             input={<OutlinedInput label="Segundos" />}
                                             value={quiz.questions[currentSlide].timerSeconds}
                                             onChange={(e) => handleChangeQuestionField(e.target.value, 'timerSeconds')}

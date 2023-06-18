@@ -36,6 +36,8 @@ const OPTIONS = new Map([
 
 const FAST_ANIMATION = 'all ease 0ms'
 
+const BORDER_WIDTH = 0.024
+
 export default function OptionInput(props) {
 
     const {
@@ -306,7 +308,7 @@ export default function OptionInput(props) {
                     : `${SIZES.get(size).height}px`,
                 transition: animation,
                 borderStyle: 'solid',
-                borderWidth: `${buttonSize.height * 0.024}px`,
+                borderWidth: `${buttonSize.height * BORDER_WIDTH}px`,
                 borderRadius: `${buttonSize.height * borderRadius * 0.005}px`,
                 ...BUTTON_VARIANTS.get(variant),
             }}
@@ -327,13 +329,17 @@ export default function OptionInput(props) {
                         className={styles.symbol}
                         style={{
                             position: 'relative',
-                            width: `${buttonSize.height * 0.38}px`,
-                            height: `${buttonSize.height * 0.38}px`,
+                            width: symbol === 'none'
+                                ? '0px'
+                                : `${buttonSize.height * 0.38}px`,
+                            height: symbol === 'none'
+                                ? '0px'
+                                : `${buttonSize.height * 0.38}px`,
                             transition: editMode ? animation : FAST_ANIMATION,
                             outlineStyle: 'solid',
                             outlineWidth: symbol === 'none'
                                 ? '0px'
-                                : `${buttonSize.height * 0.026}px`,
+                                : `${buttonSize.height * BORDER_WIDTH}px`,
                             ...SYMBOL_VARIANTS.get(variant),
                             backgroundColor: 'transparent',
                             fontSize: symbol === 'none'
@@ -390,8 +396,6 @@ export default function OptionInput(props) {
                         style={{
                             ...TEXT_VARIANTS.get(variant),
                             fontSize: `${buttonSize.height * 0.19}px`,
-                            backgroundColor: text === '' && !isFocused && placeholder ? '#ffffff45' : 'transparent',
-                            borderRadius: `${buttonSize.height * 0.04}px`,
                             transition: editMode ? animation : FAST_ANIMATION,
                             paddingTop: text === '' && isFocused
                                 ? `${(buttonSize.height / 2) - (buttonSize.height * 0.19 / 2) - (buttonSize.height * 0.024 / 2)}px`

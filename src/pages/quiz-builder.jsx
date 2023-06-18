@@ -24,6 +24,7 @@ const INICIAL_OPTION = {
 }
 
 const INICIAL_QUESTION = {
+    type: 'standard',
     content: '',
     options: [
         INICIAL_OPTION,
@@ -43,6 +44,7 @@ const INICIAL_QUESTION = {
 
 const INICIAL_QUIZ = {
     name: 'My Quiz Name',
+    category: '',
     style: {
         question: {
             color: '#fdfdfd',
@@ -180,6 +182,7 @@ export default function QuizBuilder(props) {
                             quiz={quiz}
                             setQuiz={setQuiz}
                             INICIAL_QUIZ={INICIAL_QUIZ}
+                            INICIAL_IMG={INICIAL_IMG}
                         />
                     }
                 </motion.div>

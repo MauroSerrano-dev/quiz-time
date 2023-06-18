@@ -17,7 +17,8 @@ export default function FileInput(props) {
         type,
         index,
         width,
-        height
+        height,
+        INICIAL_IMG
     } = props
 
     const [isDraggingOver, setIsDraggingOver] = useState(false)
@@ -132,7 +133,7 @@ export default function FileInput(props) {
             ...prev,
             [type]: prev[type].map((item, i) =>
                 currentSlide === i
-                    ? { ...item, img: { content: '', name: '', type: '', positionToFit: '' } }
+                    ? { ...item, img: INICIAL_IMG }
                     : item)
         }))
     }
