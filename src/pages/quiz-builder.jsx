@@ -36,6 +36,9 @@ const INICIAL_QUESTION = {
     img: INICIAL_IMG,
     optionsRandom: false,
     haveExtraOptions: false,
+    haveTimer: false,
+    timerSeconds: 30,
+    timerMinutes: 1,
 }
 
 const INICIAL_QUIZ = {

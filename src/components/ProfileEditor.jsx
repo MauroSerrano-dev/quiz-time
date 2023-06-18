@@ -8,6 +8,7 @@ import {
     FormControl,
     OutlinedInput,
     Slider,
+    Switch,
 } from '@mui/material'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import React, { useEffect } from 'react';
@@ -230,7 +231,7 @@ export default function ProfileEditor(props) {
         setQuiz((prev, i) => ({
             ...prev,
             results: prev.results.slice(0, index + 1)
-                .concat(prev.results[index])
+                .concat({...prev.results[index], name: prev.results[index].name.concat(' (cópia)')})
                 .concat(prev.results.slice(index + 1, prev.results.length))
 
         }))
@@ -533,6 +534,37 @@ export default function ProfileEditor(props) {
                                 ? { ...option, content: textValue }
                                 : option
                         )
+                    }
+                    : question
+            )
+        }))
+    }
+
+    function handleSwitchTimer(event) {
+        setQuiz(prev => ({
+            ...prev,
+            questions: prev.questions.map((question, i) =>
+                currentSlide === i
+                    ? {
+                        ...question,
+                        haveTimer: event.target.checked,
+                        timerMinutes: 1,
+                        timerSeconds: 30,
+                    }
+                    : question
+            )
+        }))
+    }
+
+    function handleChangeQuestionField(value, field) {
+        console.log(value, field)
+        setQuiz(prev => ({
+            ...prev,
+            questions: prev.questions.map((question, i) =>
+                currentSlide === i
+                    ? {
+                        ...question,
+                        [field]: value,
                     }
                     : question
             )
@@ -1798,21 +1830,72 @@ export default function ProfileEditor(props) {
                                     <h4 className={styles.inputLabel}>
                                         Timer
                                     </h4>
-                                </div>
-                                <FormControl sx={{ m: 1, width: '100%' }}>
-                                    <Select
-                                        input={<OutlinedInput />}
-                                        value={quiz.style.button.symbol}
-                                        onChange={handleButtonSymbolChange}
-                                        size='small'
+                                    <Switch
+                                        onChange={handleSwitchTimer}
                                         sx={{
-                                            width: '100%',
+                                            marginLeft: '-3%',
                                         }}
-                                    >
-                                        <MenuItem value={'none'}>Nenhum</MenuItem>
-                                        <MenuItem value={'letters'}>Letras</MenuItem>
-                                        <MenuItem value={'polygons'}>Formas</MenuItem>
-                                    </Select>
+                                    />
+                                </div>
+                                <FormControl sx={{
+                                    m: 1,
+                                    width: '100%',
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    right: quiz.questions[currentSlide].haveTimer ? '0%' : '-150%',
+                                    transition: 'all ease 300ms'
+                                }}>
+                                    <FormControl sx={{ width: '49%' }}>
+                                        <InputLabel>
+                                            Minutos
+                                        </InputLabel>
+                                        <Select
+                                            input={<OutlinedInput label="Minutos" />}
+                                            value={quiz.questions[currentSlide].timerMinutes}
+                                            onChange={(e) => handleChangeQuestionField(e.target.value, 'timerMinutes')}
+                                            size='small'
+                                            sx={{
+                                                width: '100%',
+                                            }}
+                                        >
+                                            <MenuItem value={0}>00</MenuItem>
+                                            <MenuItem value={1}>01</MenuItem>
+                                            <MenuItem value={2}>02</MenuItem>
+                                            <MenuItem value={3}>03</MenuItem>
+                                            <MenuItem value={4}>04</MenuItem>
+                                            <MenuItem value={5}>05</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                    :
+                                    <FormControl sx={{ width: '49%' }}>
+                                        <InputLabel>
+                                            Segundos
+                                        </InputLabel>
+                                        <Select
+                                            input={<OutlinedInput label="Segundos" />}
+                                            value={quiz.questions[currentSlide].timerSeconds}
+                                            onChange={(e) => handleChangeQuestionField(e.target.value, 'timerSeconds')}
+                                            size='small'
+                                            sx={{
+                                                width: '100%',
+                                            }}
+                                        >
+                                            <MenuItem value={0}>00</MenuItem>
+                                            <MenuItem value={5}>05</MenuItem>
+                                            <MenuItem value={10}>10</MenuItem>
+                                            <MenuItem value={15}>15</MenuItem>
+                                            <MenuItem value={20}>20</MenuItem>
+                                            <MenuItem value={25}>25</MenuItem>
+                                            <MenuItem value={30}>30</MenuItem>
+                                            <MenuItem value={35}>35</MenuItem>
+                                            <MenuItem value={40}>40</MenuItem>
+                                            <MenuItem value={45}>45</MenuItem>
+                                            <MenuItem value={50}>50</MenuItem>
+                                            <MenuItem value={55}>55</MenuItem>
+                                        </Select>
+                                    </FormControl>
                                 </FormControl>
                             </div>
                         </div>

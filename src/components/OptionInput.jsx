@@ -179,7 +179,7 @@ export default function OptionInput(props) {
                 style={{
                     position: 'absolute',
                     transition: editMode ? animation : FAST_ANIMATION,
-                    strokeWidth: '35px',
+                    strokeWidth: '45px',
                     width: '145%',
                     height: '145%',
                 }}
