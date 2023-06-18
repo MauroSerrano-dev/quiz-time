@@ -7,6 +7,7 @@ import { Button, Box, Grid, TextField } from '@mui/material';
 import { getLayout } from '../../utils/layout'
 import { showErrorToast } from '../../utils/toasts'
 import NoSessionPage from '@/components/NoSessionPage'
+import OptionInput from '@/components/OptionInput'
 
 let socket
 
@@ -400,36 +401,23 @@ export default withRouter((props) => {
                                         >
                                             {quiz.questions[room.control ? room.currentQuestion : getPlayer().currentQuestion].options.map((option, i) =>
                                                 <motion.div key={`Option: ${i}`} variants={item}>
-                                                    <Button
-                                                        variant={optionSelected === i ? 'contained' : 'outlined'}
-                                                        key={`Option: ${i}`}
-                                                        className={styles.option}
-                                                        onClick={() => room.control ? answerControl(i) : answer(i)}
-                                                        sx={{
-                                                            ...{
-                                                                pointerEvents: disableOptions ? 'none' : 'auto',
-                                                                width: '350px',
-                                                                height: '50px',
-                                                            },
-                                                            ...(isMobile
-                                                                ? {
-                                                                    '&:hover': {
-                                                                        border: '1px solid rgba(0, 159, 218, 0.5)',
-                                                                        backgroundColor: optionSelected === i ? '' : 'transparent',
-                                                                    }
-                                                                }
-                                                                : {}
-                                                            )
-                                                        }}
-                                                    >
-                                                        <motion.p
-                                                            initial={{ opacity: 0, color: 'var(--text-white)' }}
-                                                            animate={questionTransition ? { opacity: 0 } : { opacity: 1 }}
-                                                            transition={{ duration: TRANSITION_DURATION / 1000, ease: [.62, -0.18, .32, 1.17] }}
-                                                        >
-                                                            {option.content}
-                                                        </motion.p>
-                                                    </Button>
+                                                    <div className='flex' style={{ width: '800px', height: '100px' }} >
+                                                        <OptionInput
+                                                            onClick={() => room.control ? answerControl(i) : answer(i)}
+                                                            borderRadius={quiz.style.button.borderRadius}
+                                                            textColor={quiz.style.button.textColor}
+                                                            symbolColor={quiz.style.button.symbolColor}
+                                                            option={i}
+                                                            colorValue={quiz.style.button.template === 'monochrome'
+                                                                ? quiz.style.button.color
+                                                                : undefined
+                                                            }
+                                                            symbol={quiz.style.button.symbol}
+                                                            variant={quiz.style.button.variant}
+                                                            text={option.content}
+                                                            size='responsive'
+                                                        />
+                                                    </div>
                                                 </motion.div>
                                             )}
                                         </motion.div>
@@ -456,6 +444,6 @@ export default withRouter((props) => {
                     </main>
                 </motion.div>
             }
-        </div>
+        </div >
     )
 })

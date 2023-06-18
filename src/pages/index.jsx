@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import styles from '../styles/index.module.css'
 import { motion } from "framer-motion"
+import Image from 'next/image';
 
 export default function Index(props) {
   const { session } = props
@@ -18,7 +19,9 @@ export default function Index(props) {
         <div id={styles.sectionsContainer}>
           <div className={styles.section} id={styles.one}>
             <div id={styles.crowdContainer}>
-              <img src='/crowd.jpg' id={styles.crowdImg} />
+              <div id={styles.crowdImg}>
+                <Image fill src='/crowd.jpg' alt='Crowd Presentation' />
+              </div>
               <img src='/tela.jpg' id={styles.telaImg} />
             </div>
           </div>

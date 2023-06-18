@@ -48,7 +48,7 @@ function MyApp(props) {
     <div>
       <Head>
         <title>Quiz Time</title>
-        <meta name="description" content="Quiz Buider App" />
+        <meta name="description" content="Quiz Time: Create captivating quizzes and deliver interactive presentations. Engage your audience with dynamic content and foster active participation. Perfect for educators, trainers, and presenters. Start creating interactive quizzes now!" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="referrer" content="no-referrer" />
         <link rel="icon" href="/quiz-time-logo.png" />

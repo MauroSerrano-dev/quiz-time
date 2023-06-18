@@ -15,6 +15,30 @@ const radarOrder = [subResult1, result3, subResult3, result2, subResult2, result
 
 const quiz = {
     _id: '123',
+    category: '',
+    style: {
+        question: {
+            color: '#fdfdfd',
+            variant: 'outlined',
+            borderRadius: 10,
+        },
+        button: {
+            color: '#009fda',
+            variant: 'contained',
+            template: 'monochrome',
+            symbol: 'polygons',
+            symbolColor: '#1c222c',
+            textColor: '#1c222c',
+            borderRadius: 10,
+        },
+        background: {
+            color: '#1c222c',
+            type: 'solid',
+            gradientColors: ['#1c222c', '#343f52'],
+            gradientPercentages: [0, 100],
+            angle: 165,
+        },
+    },
     name: 'Perfil Comportamental',
     mode: 'profile',
     questionsRandom: false,
@@ -272,10 +296,10 @@ const quiz = {
         },
     ],
     results: [
-        { name: result1, texts: [{ ref: 'Preferência Cerebral', value: 'Fazer rápido' }], img: {content: 'shark.jpg', name: 'shark', type: 'jpg'}, color: '#ABDEE6' },
-        { name: result2, texts: [{ ref: 'Preferência Cerebral', value: 'Fazer junto' }], img: {content: 'cat.jpg', name: 'cat', type: 'jpg'}, color: '#FFD8BE' },
-        { name: result3, texts: [{ ref: 'Preferência Cerebral', value: 'Fazer diferente' }], img: {content: 'eagle.jpg', name: 'eagle', type: 'jpg'}, color: '#FFF7D2' },
-        { name: result4, texts: [{ ref: 'Preferência Cerebral', value: 'Fazer certo' }], img: {content: 'wolf.jpg', name: 'wolf', type: 'jpg'}, color: '#CBAACB' },
+        { name: result1, texts: [{ ref: 'Preferência Cerebral', value: 'Fazer rápido' }], img: { content: 'shark.jpg', name: 'shark', type: 'jpg' }, color: '#ABDEE6' },
+        { name: result2, texts: [{ ref: 'Preferência Cerebral', value: 'Fazer junto' }], img: { content: 'cat.jpg', name: 'cat', type: 'jpg' }, color: '#FFD8BE' },
+        { name: result3, texts: [{ ref: 'Preferência Cerebral', value: 'Fazer diferente' }], img: { content: 'eagle.jpg', name: 'eagle', type: 'jpg' }, color: '#FFF7D2' },
+        { name: result4, texts: [{ ref: 'Preferência Cerebral', value: 'Fazer certo' }], img: { content: 'wolf.jpg', name: 'wolf', type: 'jpg' }, color: '#CBAACB' },
     ],
     resultLayout: [],
     subResults: [

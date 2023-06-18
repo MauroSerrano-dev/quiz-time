@@ -56,6 +56,7 @@ export default function OptionInput(props) {
         onChange,
         placeholder,
         inputMode,
+        onClick,
     } = props
 
     const containerRef = useRef(null)
@@ -299,6 +300,7 @@ export default function OptionInput(props) {
             className={styles.button}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
+            onClick={onClick ? onClick : undefined}
             style={{
                 width: size === 'responsive'
                     ? '50%'
