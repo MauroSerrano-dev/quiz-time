@@ -1534,7 +1534,7 @@ export default function ProfileEditor(props) {
                         }}
                     >
                         {stepDelay === 0 && quiz.results.length > 0 &&
-                            <div className='flex start' style={{ paddingTop: '15px' }} >
+                            <div className='flex start'>
                                 <div className={styles.inputContainer}>
                                     <div className='flex row start size100' style={{ gap: '3%' }}>
                                         <PersonIcon sx={{ color: '#1c222c' }} />
@@ -1550,7 +1550,7 @@ export default function ProfileEditor(props) {
                             </div>
                         }
                         {stepDelay === 1 && quiz.results.length > 0 &&
-                            <div className='flex start' style={{ paddingTop: '15px' }}>
+                            <div className='flex start'>
                                 <div className={styles.inputContainer}>
                                     <div className='flex row start size100' style={{ gap: '3%' }}>
                                         <LiveHelpRoundedIcon sx={{ color: '#1c222c' }} />
@@ -1558,7 +1558,7 @@ export default function ProfileEditor(props) {
                                             Pergunta
                                         </h4>
                                     </div>
-                                    <FormControl sx={{ m: 1, width: '100%' }}>
+                                    <FormControl sx={{ width: '100%' }}>
                                         <InputLabel size='small'>
                                             Tipo
                                         </InputLabel>
@@ -1609,7 +1609,7 @@ export default function ProfileEditor(props) {
                                             Botões
                                         </h4>
                                     </div>
-                                    <FormControl sx={{ m: 1, width: '100%' }}>
+                                    <FormControl sx={{ width: '100%' }}>
                                         <InputLabel size='small'>
                                             Tipo
                                         </InputLabel>
@@ -1658,7 +1658,7 @@ export default function ProfileEditor(props) {
                                     icon={<CategoryRoundedIcon sx={{ color: '#1c222c' }} />}
                                     body={
                                         <div className='flex size100'>
-                                            <FormControl sx={{ m: 1, width: '100%' }}>
+                                            <FormControl sx={{ width: '100%' }}>
                                                 <InputLabel size='small'>
                                                     Tipo
                                                 </InputLabel>
@@ -1743,7 +1743,7 @@ export default function ProfileEditor(props) {
                                                 Fundo
                                             </h4>
                                         </div>
-                                        <FormControl sx={{ m: 1, width: '100%' }}>
+                                        <FormControl sx={{ width: '100%' }}>
                                             <InputLabel size='small'>
                                                 Tipo
                                             </InputLabel>
@@ -1856,7 +1856,7 @@ export default function ProfileEditor(props) {
                             </div>
                         }
                         {stepDelay === 2 && quiz.questions.length > 0 &&
-                            <div className='flex size100 start' style={{ paddingTop: '15px' }}>
+                            <div className='flex size100 start'>
                                 <div className={styles.inputContainer}>
                                     <div className='flex row start size100' style={{ gap: '3%' }}>
                                         <ContactSupportRoundedIcon sx={{ color: '#1c222c' }} />
@@ -1864,7 +1864,7 @@ export default function ProfileEditor(props) {
                                             Tipo da Pergunta
                                         </h4>
                                     </div>
-                                    <FormControl sx={{ m: 1, width: '100%' }}>
+                                    <FormControl sx={{ width: '100%' }}>
                                         <Select
                                             MenuProps={MenuProps}
                                             input={<OutlinedInput />}
@@ -2018,13 +2018,13 @@ export default function ProfileEditor(props) {
                                 >
                                 </div>
                                 <div className={styles.inputContainer}>
-                                    <div className='flex row start size100' style={{ gap: '4%', marginBottom: '9px' }}>
+                                    <div className='flex row start size100' style={{ gap: '4%' }}>
                                         <BsTriangleFill size={20} style={{ color: '#1c222c', scale: 2 }} />
                                         <h4 className={styles.inputLabel}>
                                             Pontos (Opção 1)
                                         </h4>
                                     </div>
-                                    <FormControl sx={{ width: '100%', marginBottom: '5px' }}>
+                                    <FormControl sx={{ width: '100%' }}>
                                         <InputLabel size='small'>
                                             Perfil
                                         </InputLabel>

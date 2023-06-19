@@ -110,14 +110,12 @@
     width: 50%;
     font-size: 13px;
     line-height: 17px;
-    margin-top: 10px;
 }
 
 #addQuestionButton {
     width: 50%;
     font-size: 13px;
     line-height: 17px;
-    margin-top: 10px;
 }
 
 #leftContainer {
@@ -149,6 +147,7 @@
     transition: right 300ms ease;
     overflow-y: auto;
     overflow-x: hidden;
+    padding-top: 2rem;
 }
 
 .slideImgContainer {
@@ -299,9 +298,7 @@
     align-items: center;
     justify-content: flex-start;
     width: 80%;
-    gap: 7px;
-    padding-bottom: 15px;
-    padding-top: 15px;
+    padding-bottom: 1rem;
 }
 
 .inputLabel {
