@@ -51,7 +51,7 @@
     justify-content: flex-end;
     height: 100%;
     width: 17%;
-    padding-bottom: 15px;
+    padding-bottom: 8%;
 }
 
 .showOnHover {
@@ -292,6 +292,7 @@
 }
 
 .inputContainer {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -391,6 +392,10 @@
 
 .slideBoard:hover {
     outline-color: rgb(104, 104, 104);
+}
+
+.menuItemColorful:hover {
+    opacity: 0.85;
 }
 
 /* Mobile and Small Window */

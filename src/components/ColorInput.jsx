@@ -9,7 +9,10 @@ export default function ColorInput(props) {
         onChange,
         value,
         upPosition,
-        customLabel = 'Cor'
+        customLabel = 'Cor',
+        initial,
+        animate,
+        transition
     } = props
 
     const [isFocused, setIsFocused] = useState(false);
@@ -24,10 +27,13 @@ export default function ColorInput(props) {
     }
 
     return (
-        <div
+        <motion.div
             className={styles.container}
             onFocus={handleFocus}
             onBlur={handleBlur}
+            initial={initial}
+            animate={animate}
+            transition={transition}
         >
             <TextField
                 onChange={onChange}
@@ -66,6 +72,6 @@ export default function ColorInput(props) {
                     />
                 </motion.div>
             }
-        </div>
+        </motion.div>
     )
 }

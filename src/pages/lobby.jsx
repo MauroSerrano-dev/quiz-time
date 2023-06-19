@@ -161,11 +161,11 @@ export default function Lobby(props) {
             showInfoToast("A senha deve conter ao menos 3 caracteres.", 5000)
             return
         }
-        setDisableCreateNewRoom(true)
         if (await getRoom(newRoom.code)) {
             showErrorToast("Sala já existente, por favor escolha outro nome.", 5000)
             return
         }
+        setDisableCreateNewRoom(true)
         const options = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

@@ -19,12 +19,15 @@ const INICIAL_IMG = {
 
 const INICIAL_OPTION = {
     content: '',
-    action: {},
+    actions: [
+        { profile: '', points: '' }
+    ],
     img: INICIAL_IMG,
 }
 
 const INICIAL_QUESTION = {
     type: 'standard',
+    id: '',
     content: '',
     options: [
         INICIAL_OPTION,
@@ -44,6 +47,7 @@ const INICIAL_QUESTION = {
 
 const INICIAL_QUIZ = {
     name: 'My Quiz Name',
+    id: '',
     category: '',
     style: {
         question: {
@@ -71,6 +75,7 @@ const INICIAL_QUIZ = {
     results: [
         {
             name: 'Perfil 1',
+            id: 'profile-0',
             color: '#ffccb6',
             img: {
                 content: '',
@@ -80,6 +85,7 @@ const INICIAL_QUIZ = {
         },
         {
             name: 'Perfil 2',
+            id: 'profile-1',
             color: '#abdee6',
             img: {
                 content: '',
@@ -89,6 +95,7 @@ const INICIAL_QUIZ = {
         },
         {
             name: 'Perfil 3',
+            id: 'profile-2',
             color: '#cce2cb',
             img: {
                 content: '',

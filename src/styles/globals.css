@@ -158,6 +158,14 @@ section {
   width: 100%;
 }
 
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
 /* .blob {
   height: 350px;
   aspect-ratio: 1;
