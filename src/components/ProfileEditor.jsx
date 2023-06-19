@@ -88,6 +88,7 @@ export default function ProfileEditor(props) {
     } = props
 
     const [step, setStep] = useState(0)
+    const [stepDelay, setStepDelay] = useState(0)
     const [currentSlide, setCurrentSlide] = useState(0)
     const [notInDragNDropState, setNotInDragNDropState] = useState(true)
     const [showModal, setShowModal] = useState(true)
@@ -406,14 +407,17 @@ export default function ProfileEditor(props) {
     }
 
     function handleChangeStep(newStep) {
-        if (newStep === 1)
-            setCurrentSlide(quiz.style.button.template === 'monochrome'
-                ? 0
-                : (quiz.style.button.template === 'colorful' ? 1 : 2)
-            )
-        else
-            setCurrentSlide(0)
         setStep(newStep)
+        setTimeout(() => {
+            if (newStep === 1)
+                setCurrentSlide(quiz.style.button.template === 'monochrome'
+                    ? 0
+                    : (quiz.style.button.template === 'colorful' ? 1 : 2)
+                )
+            else
+                setCurrentSlide(0)
+            setStepDelay(newStep)
+        }, 300)
     }
 
     function handleButtonVariantChange(event) {
@@ -760,7 +764,7 @@ export default function ProfileEditor(props) {
                             ]}
                         />
                     </div>
-                    {step === 0 && quiz.results.length > 0 &&
+                    {stepDelay === 0 && quiz.results.length > 0 &&
                         <div
                             className={styles.middleAll}
                             id={styles.middleZero}
@@ -785,7 +789,7 @@ export default function ProfileEditor(props) {
                             />
                         </div>
                     }
-                    {step === 1 &&
+                    {stepDelay === 1 &&
                         <div
                             className={styles.middleAll}
                             id={styles.middleOne}
@@ -930,7 +934,7 @@ export default function ProfileEditor(props) {
                             </div>
                         </div>
                     }
-                    {step === 2 && quiz.questions.length > 0 &&
+                    {stepDelay === 2 && quiz.questions.length > 0 &&
                         <div
                             className={styles.middleAll}
                             id={styles.middleTwo}
@@ -1119,19 +1123,29 @@ export default function ProfileEditor(props) {
                         </div>
                     }
                 </div>
-                <DragDropContext onDragEnd={step === 0 || step === 3 ? handleDragEndProfiles : handleDragEndQuestions}>
+                <DragDropContext onDragEnd={stepDelay === 0 || stepDelay === 3 ? handleDragEndProfiles : handleDragEndQuestions}>
                     <div
                         id={styles.leftContainer}
-                        style={{ left: step === 4 ? '-220px' : '0px' }}
+                        style={{
+                            left: stepDelay === 4
+                                ? '-220px'
+                                : '0px',
+                        }}
                     >
                         <Droppable droppableId="slides">
                             {(provided, snapshot) => (
                                 <div
                                     id={styles.slidesContainer}
+                                    style={{
+                                        transition: 'all 300ms ease',
+                                        left: step !== stepDelay
+                                            ? '-130%'
+                                            : '0px',
+                                    }}
                                     {...provided.droppableProps}
                                     ref={provided.innerRef}
                                 >
-                                    {(step === 0 || step === 3) &&
+                                    {(stepDelay === 0 || stepDelay === 3) &&
                                         quiz.results.map((result, i) =>
                                             <Draggable key={i} draggableId={`slide-${i}`} index={i}>
                                                 {(provided, snapshot) => (
@@ -1143,7 +1157,7 @@ export default function ProfileEditor(props) {
                                                         {...provided.dragHandleProps}
                                                     >
                                                         <div className={`${styles.buttonsContainer} ${currentSlide !== i ? styles.showOnHover : undefined}`}>
-                                                            {step === 0 &&
+                                                            {stepDelay === 0 &&
                                                                 <div className='flex end size100'>
                                                                     <IconButton onClick={(e) => handleDuplicateProfile(e, i)} aria-label="copy" sx={{ scale: '0.7', margin: '-4px' }}>
                                                                         <ContentCopyIcon />
@@ -1172,7 +1186,7 @@ export default function ProfileEditor(props) {
                                                 )}
                                             </Draggable>
                                         )}
-                                    {step === 1 &&
+                                    {stepDelay === 1 &&
                                         DESIGN_EDIT_OPTIONS.map((module, i) =>
                                             <div
                                                 className={`${styles.slideContainer} ${currentSlide === i ? styles.currentSlide : undefined} ${notInDragNDropState ? styles.notInDragNDrop : undefined}`}
@@ -1326,7 +1340,7 @@ export default function ProfileEditor(props) {
                                                 </div>
                                             </div>
                                         )}
-                                    {step === 2 &&
+                                    {stepDelay === 2 &&
                                         quiz.questions.map((question, i) =>
                                             <Draggable key={i} draggableId={`slide-${i}`} index={i}>
                                                 {(provided, snapshot) => (
@@ -1494,10 +1508,10 @@ export default function ProfileEditor(props) {
                                             </Draggable>
                                         )}
                                     {provided.placeholder}
-                                    {step === 0 &&
+                                    {stepDelay === 0 &&
                                         <Button id={styles.addProfileButton} onClick={handleAddProfile} variant='contained' >Adicionar Perfil</Button>
                                     }
-                                    {step === 2 &&
+                                    {stepDelay === 2 &&
                                         <Button id={styles.addQuestionButton} onClick={handleAddQuestion} variant='contained' >Adicionar Pergunta</Button>
                                     }
                                 </div>
@@ -1508,202 +1522,77 @@ export default function ProfileEditor(props) {
 
                 <div
                     id={styles.rightContainer}
-                    style={{ right: step === 4 ? '-220px' : '0px' }}
+                    style={{ right: stepDelay === 4 ? '-220px' : '0px' }}
                 >
-                    {step === 0 && quiz.results.length > 0 &&
-                        <div className='flex start' style={{ paddingTop: '15px' }} >
-                            <div className={styles.inputContainer}>
-                                <div className='flex row start size100' style={{ gap: '3%' }}>
-                                    <PersonIcon sx={{ color: '#1c222c' }} />
-                                    <h4 className={styles.inputLabel}>
-                                        Perfil
-                                    </h4>
-                                </div>
-                                <ColorInput
-                                    onChange={handleProfileColor}
-                                    value={quiz.results[currentSlide].color}
-                                />
-                            </div>
-                        </div>
-                    }
-                    {step === 1 && quiz.results.length > 0 &&
-                        <div className='flex start' style={{ paddingTop: '15px' }}>
-                            <div className={styles.inputContainer}>
-                                <div className='flex row start size100' style={{ gap: '3%' }}>
-                                    <LiveHelpRoundedIcon sx={{ color: '#1c222c' }} />
-                                    <h4 className={styles.inputLabel}>
-                                        Pergunta
-                                    </h4>
-                                </div>
-                                <FormControl sx={{ m: 1, width: '100%' }}>
-                                    <InputLabel size='small'>
-                                        Tipo
-                                    </InputLabel>
-                                    <Select
-                                        MenuProps={MenuProps}
-                                        input={<OutlinedInput label="Tipo" />}
-                                        value={quiz.style.question.variant}
-                                        onChange={handleQuestionVariantChange}
-                                        size='small'
-                                        sx={{
-                                            width: '100%',
-                                        }}
-                                    >
-                                        <MenuItem value={'text'}>Texto</MenuItem>
-                                        <MenuItem value={'shadow'}>Sombra</MenuItem>
-                                        <MenuItem value={'outlined'}>Contorno</MenuItem>
-                                        <MenuItem value={'contained'}>Preenchido</MenuItem>
-                                    </Select>
-                                </FormControl>
-                                <ColorInput
-                                    onChange={(e) => handleStyleColor(e, 'question', 'color')}
-                                    value={quiz.style.question.color}
-                                />
-                                <div className='size100 flex'>
-                                    <p className='size100 flex align-start' style={{ color: '#6c6e82', fontSize: '13px' }}>
-                                        Borda
-                                    </p>
-                                    <Slider
-                                        value={quiz.style.question.borderRadius}
-                                        valueLabelDisplay="auto"
-                                        onChange={handleQuestionBorder}
-                                    />
-                                </div>
-                            </div>
-                            <div
-                                className={styles.divider}
-                                style={{
-                                    backgroundColor: 'black',
-                                    opacity: 0.5,
-
-                                }}
-                            >
-                            </div>
-                            <div className={styles.inputContainer}>
-                                <div className='flex row start size100' style={{ gap: '3%' }}>
-                                    <GamepadRoundedIcon sx={{ color: '#1c222c' }} />
-                                    <h4 className={styles.inputLabel}>
-                                        Botões
-                                    </h4>
-                                </div>
-                                <FormControl sx={{ m: 1, width: '100%' }}>
-                                    <InputLabel size='small'>
-                                        Tipo
-                                    </InputLabel>
-                                    <Select
-                                        MenuProps={MenuProps}
-                                        input={<OutlinedInput label="Tipo" />}
-                                        value={quiz.style.button.variant}
-                                        onChange={handleButtonVariantChange}
-                                        size='small'
-                                        sx={{
-                                            width: '100%',
-                                        }}
-                                    >
-                                        <MenuItem value={'outlined'}>Contorno</MenuItem>
-                                        <MenuItem value={'contained'}>Preenchido</MenuItem>
-                                    </Select>
-                                </FormControl>
-                                {quiz.style.button.template === 'monochrome' &&
+                    <div
+                        className='flex relative start size100'
+                        style={{
+                            transition: 'all 300ms ease',
+                            right: step !== stepDelay
+                                ? '-130%'
+                                : '0px',
+                        }}
+                    >
+                        {stepDelay === 0 && quiz.results.length > 0 &&
+                            <div className='flex start' style={{ paddingTop: '15px' }} >
+                                <div className={styles.inputContainer}>
+                                    <div className='flex row start size100' style={{ gap: '3%' }}>
+                                        <PersonIcon sx={{ color: '#1c222c' }} />
+                                        <h4 className={styles.inputLabel}>
+                                            Perfil
+                                        </h4>
+                                    </div>
                                     <ColorInput
-                                        onChange={(e) => handleStyleColor(e, 'button', 'color')}
-                                        value={quiz.style.button.color}
-                                    />
-                                }
-                                <div className='size100 flex'>
-                                    <p className='size100 flex align-start' style={{ color: '#6c6e82', fontSize: '13px' }}>
-                                        Borda
-                                    </p>
-                                    <Slider
-                                        value={quiz.style.button.borderRadius}
-                                        valueLabelDisplay="auto"
-                                        onChange={handleButtonBorder}
+                                        onChange={handleProfileColor}
+                                        value={quiz.results[currentSlide].color}
                                     />
                                 </div>
                             </div>
-                            <div
-                                className={styles.divider}
-                                style={{
-                                    backgroundColor: 'black',
-                                    opacity: 0.5,
-
-                                }}
-                            >
-                            </div>
-                            <InputSection
-                                title='Símbolos'
-                                icon={<CategoryRoundedIcon sx={{ color: '#1c222c' }} />}
-                                body={
-                                    <div className='flex size100'>
-                                        <FormControl sx={{ m: 1, width: '100%' }}>
-                                            <InputLabel size='small'>
-                                                Tipo
-                                            </InputLabel>
-                                            <Select
-                                                MenuProps={MenuProps}
-                                                input={<OutlinedInput label="Tipo" />}
-                                                value={quiz.style.button.symbol}
-                                                onChange={handleButtonSymbolChange}
-                                                size='small'
-                                                sx={{
-                                                    width: '100%',
-                                                }}
-                                            >
-                                                <MenuItem value={'none'}>Nenhum</MenuItem>
-                                                <MenuItem value={'letters'}>Letras</MenuItem>
-                                                <MenuItem value={'polygons'}>Formas</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                        <motion.div
-                                            className='flex relative size100'
-                                            initial={{
-                                                marginBottom: quiz.style.button.symbol === 'none' || quiz.style.button.variant === 'outlined'
-                                                    ? '-48px'
-                                                    : '0.00001px'
-                                            }}
-                                            animate={{
-                                                marginBottom: quiz.style.button.symbol === 'none' || quiz.style.button.variant === 'outlined'
-                                                    ? '-48px'
-                                                    : '0.00001px'
-                                            }}
-                                            transition={{
-                                                delay: quiz.style.button.symbol === 'none'
-                                                    || quiz.style.button.variant === 'outlined'
-                                                    ? 0.15
-                                                    : 0,
-                                                duration: 0.3,
-                                                ease: 'easeOut'
+                        }
+                        {stepDelay === 1 && quiz.results.length > 0 &&
+                            <div className='flex start' style={{ paddingTop: '15px' }}>
+                                <div className={styles.inputContainer}>
+                                    <div className='flex row start size100' style={{ gap: '3%' }}>
+                                        <LiveHelpRoundedIcon sx={{ color: '#1c222c' }} />
+                                        <h4 className={styles.inputLabel}>
+                                            Pergunta
+                                        </h4>
+                                    </div>
+                                    <FormControl sx={{ m: 1, width: '100%' }}>
+                                        <InputLabel size='small'>
+                                            Tipo
+                                        </InputLabel>
+                                        <Select
+                                            MenuProps={MenuProps}
+                                            input={<OutlinedInput label="Tipo" />}
+                                            value={quiz.style.question.variant}
+                                            onChange={handleQuestionVariantChange}
+                                            size='small'
+                                            sx={{
+                                                width: '100%',
                                             }}
                                         >
-                                            <ColorInput
-                                                onChange={(e) => handleStyleColor(e, 'button', 'symbolColor')}
-                                                value={quiz.style.button.symbolColor}
-                                                initial={{
-                                                    right: quiz.style.button.symbol === 'none'
-                                                        || quiz.style.button.variant === 'outlined'
-                                                        ? '-150%'
-                                                        : '0%',
-                                                }}
-                                                animate={{
-                                                    right: quiz.style.button.symbol === 'none'
-                                                        || quiz.style.button.variant === 'outlined'
-                                                        ? '-150%'
-                                                        : '0%',
-                                                }}
-                                                transition={{
-                                                    delay: quiz.style.button.symbol === 'none'
-                                                        || quiz.style.button.variant === 'outlined'
-                                                        ? 0
-                                                        : 0.15,
-                                                    duration: 0.3,
-                                                    ease: 'easeOut'
-                                                }}
-                                            />
-                                        </motion.div>
+                                            <MenuItem value={'text'}>Texto</MenuItem>
+                                            <MenuItem value={'shadow'}>Sombra</MenuItem>
+                                            <MenuItem value={'outlined'}>Contorno</MenuItem>
+                                            <MenuItem value={'contained'}>Preenchido</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                    <ColorInput
+                                        onChange={(e) => handleStyleColor(e, 'question', 'color')}
+                                        value={quiz.style.question.color}
+                                    />
+                                    <div className='size100 flex'>
+                                        <p className='size100 flex align-start' style={{ color: '#6c6e82', fontSize: '13px' }}>
+                                            Borda
+                                        </p>
+                                        <Slider
+                                            value={quiz.style.question.borderRadius}
+                                            valueLabelDisplay="auto"
+                                            onChange={handleQuestionBorder}
+                                        />
                                     </div>
-                                }
-                            />
-                            <div className='flex center size100'>
+                                </div>
                                 <div
                                     className={styles.divider}
                                     style={{
@@ -1715,9 +1604,9 @@ export default function ProfileEditor(props) {
                                 </div>
                                 <div className={styles.inputContainer}>
                                     <div className='flex row start size100' style={{ gap: '3%' }}>
-                                        <PhotoSizeSelectActualRoundedIcon sx={{ color: '#1c222c' }} />
+                                        <GamepadRoundedIcon sx={{ color: '#1c222c' }} />
                                         <h4 className={styles.inputLabel}>
-                                            Fundo
+                                            Botões
                                         </h4>
                                     </div>
                                     <FormControl sx={{ m: 1, width: '100%' }}>
@@ -1727,388 +1616,529 @@ export default function ProfileEditor(props) {
                                         <Select
                                             MenuProps={MenuProps}
                                             input={<OutlinedInput label="Tipo" />}
-                                            value={quiz.style.background.type}
-                                            onChange={handleBackgroundTypeChange}
+                                            value={quiz.style.button.variant}
+                                            onChange={handleButtonVariantChange}
                                             size='small'
                                             sx={{
                                                 width: '100%',
                                             }}
                                         >
-                                            <MenuItem value={'solid'}>Sólido</MenuItem>
-                                            <MenuItem value={'gradient'}>Degradê Linear</MenuItem>
-                                            <MenuItem value={'radial'}>Degradê Radial</MenuItem>
+                                            <MenuItem value={'outlined'}>Contorno</MenuItem>
+                                            <MenuItem value={'contained'}>Preenchido</MenuItem>
                                         </Select>
                                     </FormControl>
-                                    {quiz.style.background.type === 'solid' &&
+                                    {quiz.style.button.template === 'monochrome' &&
                                         <ColorInput
-                                            onChange={(e) => handleStyleColor(e, 'background', 'color')}
-                                            value={quiz.style.background.color}
-                                            upPosition
+                                            onChange={(e) => handleStyleColor(e, 'button', 'color')}
+                                            value={quiz.style.button.color}
                                         />
                                     }
-                                    {(quiz.style.background.type === 'gradient' || quiz.style.background.type === 'radial') &&
-                                        <div className='flex center' style={{ gap: '15px' }}>
-                                            {quiz.style.background.gradientColors.map((color, i) =>
-                                                <div
-                                                    className='flex row size100'
-                                                    key={i}
-                                                >
-                                                    <ColorInput
-                                                        onChange={(e) => handleStyleGradientColors(e, 'background', 'gradientColors', i)}
-                                                        value={color}
-                                                        customLabel={`Cor ${i + 1}`}
-                                                        upPosition
-                                                    />
-                                                    {i > 1 &&
-                                                        <div style={{ backgroundColor: 'transparent', width: 'auto' }}>
-                                                            <IconButton onClick={() => deleteGradientColor(i)} sx={{ scale: '0.7', margin: '-4px' }}>
-                                                                <DeleteForeverIcon />
-                                                            </IconButton>
-                                                        </div>
-                                                    }
-                                                </div>
-                                            )}
-                                            {quiz.style.background.gradientColors.length < 6 &&
-                                                <Button
-                                                    onClick={addGradientColor}
-                                                    variant='contained'
+                                    <div className='size100 flex'>
+                                        <p className='size100 flex align-start' style={{ color: '#6c6e82', fontSize: '13px' }}>
+                                            Borda
+                                        </p>
+                                        <Slider
+                                            value={quiz.style.button.borderRadius}
+                                            valueLabelDisplay="auto"
+                                            onChange={handleButtonBorder}
+                                        />
+                                    </div>
+                                </div>
+                                <div
+                                    className={styles.divider}
+                                    style={{
+                                        backgroundColor: 'black',
+                                        opacity: 0.5,
+
+                                    }}
+                                >
+                                </div>
+                                <InputSection
+                                    title='Símbolos'
+                                    icon={<CategoryRoundedIcon sx={{ color: '#1c222c' }} />}
+                                    body={
+                                        <div className='flex size100'>
+                                            <FormControl sx={{ m: 1, width: '100%' }}>
+                                                <InputLabel size='small'>
+                                                    Tipo
+                                                </InputLabel>
+                                                <Select
+                                                    MenuProps={MenuProps}
+                                                    input={<OutlinedInput label="Tipo" />}
+                                                    value={quiz.style.button.symbol}
+                                                    onChange={handleButtonSymbolChange}
                                                     size='small'
+                                                    sx={{
+                                                        width: '100%',
+                                                    }}
                                                 >
-                                                    Adicionar Cor
-                                                </Button>
-                                            }
-                                            <div className='size100 flex'>
-                                                <p className='size100 flex align-start' style={{ color: '#6c6e82', fontSize: '13px' }}>
-                                                    Porcentagem
-                                                </p>
-                                                <Slider
-                                                    value={quiz.style.background.gradientPercentages}
-                                                    valueLabelDisplay="auto"
-                                                    onChange={handleBackgroundPercentage}
-                                                    track={false}
+                                                    <MenuItem value={'none'}>Nenhum</MenuItem>
+                                                    <MenuItem value={'letters'}>Letras</MenuItem>
+                                                    <MenuItem value={'polygons'}>Formas</MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                            <motion.div
+                                                className='flex relative size100'
+                                                initial={{
+                                                    marginBottom: quiz.style.button.symbol === 'none' || quiz.style.button.variant === 'outlined'
+                                                        ? '-48px'
+                                                        : '0.00001px'
+                                                }}
+                                                animate={{
+                                                    marginBottom: quiz.style.button.symbol === 'none' || quiz.style.button.variant === 'outlined'
+                                                        ? '-48px'
+                                                        : '0.00001px'
+                                                }}
+                                                transition={{
+                                                    delay: quiz.style.button.symbol === 'none'
+                                                        || quiz.style.button.variant === 'outlined'
+                                                        ? 0.15
+                                                        : 0,
+                                                    duration: 0.3,
+                                                    ease: 'easeOut'
+                                                }}
+                                            >
+                                                <ColorInput
+                                                    onChange={(e) => handleStyleColor(e, 'button', 'symbolColor')}
+                                                    value={quiz.style.button.symbolColor}
+                                                    initial={{
+                                                        right: quiz.style.button.symbol === 'none'
+                                                            || quiz.style.button.variant === 'outlined'
+                                                            ? '-150%'
+                                                            : '0%',
+                                                    }}
+                                                    animate={{
+                                                        right: quiz.style.button.symbol === 'none'
+                                                            || quiz.style.button.variant === 'outlined'
+                                                            ? '-150%'
+                                                            : '0%',
+                                                    }}
+                                                    transition={{
+                                                        delay: quiz.style.button.symbol === 'none'
+                                                            || quiz.style.button.variant === 'outlined'
+                                                            ? 0
+                                                            : 0.15,
+                                                        duration: 0.3,
+                                                        ease: 'easeOut'
+                                                    }}
                                                 />
-                                            </div>
-                                            {quiz.style.background.type === 'gradient' &&
-                                                <div className='size100 flex'>
-                                                    <p className='size100 flex align-start' style={{ color: '#6c6e82', fontSize: '13px' }}>
-                                                        Ângulo
-                                                    </p>
-                                                    <Slider
-                                                        value={quiz.style.background.angle}
-                                                        max={360}
-                                                        valueLabelDisplay="auto"
-                                                        onChange={handleBackgroundAngle}
-                                                    />
-                                                </div>
-                                            }
+                                            </motion.div>
                                         </div>
                                     }
-                                </div>
-                            </div>
-                            {(quiz.style.button.variant === 'contained' || quiz.style.question.variant === 'contained') &&
+                                />
                                 <div className='flex center size100'>
                                     <div
                                         className={styles.divider}
                                         style={{
                                             backgroundColor: 'black',
                                             opacity: 0.5,
+
                                         }}
                                     >
                                     </div>
                                     <div className={styles.inputContainer}>
                                         <div className='flex row start size100' style={{ gap: '3%' }}>
-                                            <TextFieldsRoundedIcon sx={{ color: '#1c222c' }} />
+                                            <PhotoSizeSelectActualRoundedIcon sx={{ color: '#1c222c' }} />
                                             <h4 className={styles.inputLabel}>
-                                                Texto
+                                                Fundo
                                             </h4>
                                         </div>
-                                        <ColorInput
-                                            onChange={(e) => handleStyleColor(e, 'button', 'textColor')}
-                                            value={quiz.style.button.textColor}
-                                            upPosition
-                                        />
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    }
-                    {step === 2 && quiz.questions.length > 0 &&
-                        <div className='flex start' style={{ paddingTop: '15px' }}>
-                            <div className={styles.inputContainer}>
-                                <div className='flex row start size100' style={{ gap: '3%' }}>
-                                    <ContactSupportRoundedIcon sx={{ color: '#1c222c' }} />
-                                    <h4 className={styles.inputLabel}>
-                                        Tipo da Pergunta
-                                    </h4>
-                                </div>
-                                <FormControl sx={{ m: 1, width: '100%' }}>
-                                    <Select
-                                        MenuProps={MenuProps}
-                                        input={<OutlinedInput />}
-                                        value={quiz.questions[currentSlide].type}
-                                        onChange={e => handleChangeQuestionField(e.target.value, 'type')}
-                                        size='small'
-                                        sx={{
-                                            width: '100%',
-                                        }}
-                                    >
-                                        <MenuItem value={'standard'}>Padrão</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </div>
-                            <div
-                                className={styles.divider}
-                                style={{
-                                    backgroundColor: 'black',
-                                    opacity: 0.5,
-                                }}
-                            >
-                            </div>
-                            <div className={styles.inputContainer}>
-                                <div className='flex row start size100'
-                                    style={{
-                                        gap: '3%',
-                                    }}>
-                                    <TimerRoundedIcon sx={{ color: '#1c222c' }} />
-                                    <h4 className={styles.inputLabel}>
-                                        Timer
-                                    </h4>
-                                    <Switch
-                                        checked={quiz.questions[currentSlide].haveTimer}
-                                        onChange={handleSwitchTimer}
-                                        sx={{
-                                            marginLeft: '-3%',
-                                            marginBottom: '-3px',
-                                        }}
-                                    />
-                                </div>
-                                <motion.div
-                                    className='flex relative size100'
-                                    initial={{
-                                        marginBottom: quiz.questions[currentSlide].haveTimer
-                                            ? '0.00001px'
-                                            : '-62px',
-                                    }}
-                                    animate={{
-                                        marginBottom: quiz.questions[currentSlide].haveTimer
-                                            ? '0.00001px'
-                                            : '-62px',
-                                    }}
-                                    transition={{
-                                        delay: quiz.questions[currentSlide].haveTimer
-                                            ? 0
-                                            : 0.15,
-                                        duration: 0.3,
-                                        ease: 'easeOut'
-                                    }}
-                                >
-                                    <motion.div
-                                        className='flex relative size100'
-                                        initial={{
-                                            right: quiz.questions[currentSlide].haveTimer
-                                                ? '0%'
-                                                : '-150%',
-                                        }}
-                                        animate={{
-                                            right: quiz.questions[currentSlide].haveTimer
-                                                ? '0%'
-                                                : '-150%',
-                                        }}
-                                        transition={{
-                                            delay: quiz.questions[currentSlide].haveTimer
-                                                ? 0.15
-                                                : 0,
-                                            duration: 0.3,
-                                            ease: 'easeOut'
-                                        }}
-                                    >
-                                        <FormControl sx={{
-                                            m: 1,
-                                            width: '100%',
-                                            display: 'flex',
-                                            flexDirection: 'row',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                        }}>
-                                            <FormControl sx={{ width: '48.5%' }}>
-                                                <InputLabel size='small'>
-                                                    Minutos
-                                                </InputLabel>
-                                                <Select
-                                                    MenuProps={MenuProps}
-                                                    input={<OutlinedInput label="Minutos" />}
-                                                    value={quiz.questions[currentSlide].timerMinutes}
-                                                    onChange={e => handleChangeQuestionField(e.target.value, 'timerMinutes')}
-                                                    size='small'
-                                                    sx={{
-                                                        width: '100%',
-                                                    }}
-                                                >
-                                                    <MenuItem value={0}>00</MenuItem>
-                                                    <MenuItem value={1}>01</MenuItem>
-                                                    <MenuItem value={2}>02</MenuItem>
-                                                    <MenuItem value={3}>03</MenuItem>
-                                                    <MenuItem value={4}>04</MenuItem>
-                                                </Select>
-                                            </FormControl>
-                                            <p style={{ width: '3%' }}>
-                                                :
-                                            </p>
-                                            <FormControl sx={{ width: '48.5%' }}>
-                                                <InputLabel size='small'>
-                                                    Segundos
-                                                </InputLabel>
-                                                <Select
-                                                    MenuProps={MenuProps}
-                                                    input={<OutlinedInput label="Segundos" />}
-                                                    value={quiz.questions[currentSlide].timerSeconds}
-                                                    onChange={e => handleChangeQuestionField(e.target.value, 'timerSeconds')}
-                                                    size='small'
-                                                    sx={{
-                                                        width: '100%',
-                                                    }}
-                                                >
-                                                    <MenuItem value={0}>00</MenuItem>
-                                                    <MenuItem value={5}>05</MenuItem>
-                                                    <MenuItem value={10}>10</MenuItem>
-                                                    <MenuItem value={15}>15</MenuItem>
-                                                    <MenuItem value={20}>20</MenuItem>
-                                                    <MenuItem value={25}>25</MenuItem>
-                                                    <MenuItem value={30}>30</MenuItem>
-                                                    <MenuItem value={35}>35</MenuItem>
-                                                    <MenuItem value={40}>40</MenuItem>
-                                                    <MenuItem value={45}>45</MenuItem>
-                                                    <MenuItem value={50}>50</MenuItem>
-                                                    <MenuItem value={55}>55</MenuItem>
-                                                </Select>
-                                            </FormControl>
-                                        </FormControl>
-                                    </motion.div>
-                                </motion.div>
-                            </div>
-                            <div
-                                className={styles.divider}
-                                style={{
-                                    backgroundColor: 'black',
-                                    opacity: 0.5,
-                                }}
-                            >
-                            </div>
-                            <div className={styles.inputContainer}>
-                                <div className='flex row start size100' style={{ gap: '4%', marginBottom: '9px' }}>
-                                    <BsTriangleFill size={20} style={{ color: '#1c222c', scale: 2 }} />
-                                    <h4 className={styles.inputLabel}>
-                                        Pontos (Opção 1)
-                                    </h4>
-                                </div>
-                                <FormControl sx={{ width: '100%', marginBottom: '5px' }}>
-                                    <InputLabel size='small'>
-                                        Perfil
-                                    </InputLabel>
-                                    <Select
-                                        MenuProps={MenuProps}
-                                        input={<OutlinedInput label="Perfil" />}
-                                        placeholder='Escolha um Perfil'
-                                        value={quiz.questions[currentSlide].options[0].actions[0].profile}
-                                        onChange={e => handleChangeOptionActionField(e.target.value, 'profile', 0, 0)}
-                                        size='small'
-                                        sx={{
-                                            width: '100%',
-                                        }}
-                                    >
-                                        {quiz.results.map((result, i) =>
-                                            <MenuItem
-                                                className={styles.menuItemColorful}
-                                                style={{ backgroundColor: result.color }}
-                                                key={i} value={result.id}
-                                            >
-                                                {result.name}
-                                            </MenuItem>
-                                        )}
-                                    </Select>
-                                </FormControl>
-                                <motion.div
-                                    className='flex relative size100'
-                                    initial={{
-                                        marginBottom: quiz.questions[currentSlide].options[0].actions[0].profile !== ''
-                                            ? '0.00001px'
-                                            : '-62px',
-                                    }}
-                                    animate={{
-                                        marginBottom: quiz.questions[currentSlide].options[0].actions[0].profile !== ''
-                                            ? '0.00001px'
-                                            : '-62px',
-                                    }}
-                                    transition={{
-                                        delay: quiz.questions[currentSlide].options[0].actions[0].profile !== ''
-                                            ? 0
-                                            : 0.15,
-                                        duration: 0.3,
-                                        ease: 'easeOut'
-                                    }}
-                                >
-                                    <motion.div
-                                        className='flex relative size100'
-                                        initial={{
-                                            right: quiz.questions[currentSlide].options[0].actions[0].profile !== ''
-                                                ? '0%'
-                                                : '-150%',
-                                        }}
-                                        animate={{
-                                            right: quiz.questions[currentSlide].options[0].actions[0].profile !== ''
-                                                ? '0%'
-                                                : '-150%',
-                                        }}
-                                        transition={{
-                                            delay: quiz.questions[currentSlide].options[0].actions[0].profile !== ''
-                                                ? 0.15
-                                                : 0,
-                                            duration: 0.3,
-                                            ease: 'easeOut'
-                                        }}
-                                    >
-                                        <FormControl sx={{
-                                            width: '100%',
-                                            display: 'flex',
-                                            flexDirection: 'row',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                        }}>
+                                        <FormControl sx={{ m: 1, width: '100%' }}>
                                             <InputLabel size='small'>
-                                                Pontos
+                                                Tipo
                                             </InputLabel>
                                             <Select
                                                 MenuProps={MenuProps}
-                                                input={<OutlinedInput label="Pontos" />}
-                                                value={quiz.questions[currentSlide].options[0].actions[0].points}
-                                                onChange={e => handleChangeOptionActionField(e.target.value, 'points', 0, 0)}
+                                                input={<OutlinedInput label="Tipo" />}
+                                                value={quiz.style.background.type}
+                                                onChange={handleBackgroundTypeChange}
                                                 size='small'
                                                 sx={{
                                                     width: '100%',
                                                 }}
                                             >
-                                                <MenuItem value={1}>1 Ponto</MenuItem>
-                                                <MenuItem value={2}>2 Pontos</MenuItem>
-                                                <MenuItem value={3}>3 Pontos</MenuItem>
-                                                <MenuItem value={0}>Nenhum Ponto</MenuItem>
+                                                <MenuItem value={'solid'}>Sólido</MenuItem>
+                                                <MenuItem value={'gradient'}>Degradê Linear</MenuItem>
+                                                <MenuItem value={'radial'}>Degradê Radial</MenuItem>
                                             </Select>
                                         </FormControl>
+                                        {quiz.style.background.type === 'solid' &&
+                                            <ColorInput
+                                                onChange={(e) => handleStyleColor(e, 'background', 'color')}
+                                                value={quiz.style.background.color}
+                                                upPosition
+                                            />
+                                        }
+                                        {(quiz.style.background.type === 'gradient' || quiz.style.background.type === 'radial') &&
+                                            <div className='flex center' style={{ gap: '15px' }}>
+                                                {quiz.style.background.gradientColors.map((color, i) =>
+                                                    <div
+                                                        className='flex row size100'
+                                                        key={i}
+                                                    >
+                                                        <ColorInput
+                                                            onChange={(e) => handleStyleGradientColors(e, 'background', 'gradientColors', i)}
+                                                            value={color}
+                                                            customLabel={`Cor ${i + 1}`}
+                                                            upPosition
+                                                        />
+                                                        {i > 1 &&
+                                                            <div style={{ backgroundColor: 'transparent', width: 'auto' }}>
+                                                                <IconButton onClick={() => deleteGradientColor(i)} sx={{ scale: '0.7', margin: '-4px' }}>
+                                                                    <DeleteForeverIcon />
+                                                                </IconButton>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                )}
+                                                {quiz.style.background.gradientColors.length < 6 &&
+                                                    <Button
+                                                        onClick={addGradientColor}
+                                                        variant='contained'
+                                                        size='small'
+                                                    >
+                                                        Adicionar Cor
+                                                    </Button>
+                                                }
+                                                <div className='size100 flex'>
+                                                    <p className='size100 flex align-start' style={{ color: '#6c6e82', fontSize: '13px' }}>
+                                                        Porcentagem
+                                                    </p>
+                                                    <Slider
+                                                        value={quiz.style.background.gradientPercentages}
+                                                        valueLabelDisplay="auto"
+                                                        onChange={handleBackgroundPercentage}
+                                                        track={false}
+                                                    />
+                                                </div>
+                                                {quiz.style.background.type === 'gradient' &&
+                                                    <div className='size100 flex'>
+                                                        <p className='size100 flex align-start' style={{ color: '#6c6e82', fontSize: '13px' }}>
+                                                            Ângulo
+                                                        </p>
+                                                        <Slider
+                                                            value={quiz.style.background.angle}
+                                                            max={360}
+                                                            valueLabelDisplay="auto"
+                                                            onChange={handleBackgroundAngle}
+                                                        />
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                                {(quiz.style.button.variant === 'contained' || quiz.style.question.variant === 'contained') &&
+                                    <div className='flex center size100'>
+                                        <div
+                                            className={styles.divider}
+                                            style={{
+                                                backgroundColor: 'black',
+                                                opacity: 0.5,
+                                            }}
+                                        >
+                                        </div>
+                                        <div className={styles.inputContainer}>
+                                            <div className='flex row start size100' style={{ gap: '3%' }}>
+                                                <TextFieldsRoundedIcon sx={{ color: '#1c222c' }} />
+                                                <h4 className={styles.inputLabel}>
+                                                    Texto
+                                                </h4>
+                                            </div>
+                                            <ColorInput
+                                                onChange={(e) => handleStyleColor(e, 'button', 'textColor')}
+                                                value={quiz.style.button.textColor}
+                                                upPosition
+                                            />
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        {stepDelay === 2 && quiz.questions.length > 0 &&
+                            <div className='flex size100 start' style={{ paddingTop: '15px' }}>
+                                <div className={styles.inputContainer}>
+                                    <div className='flex row start size100' style={{ gap: '3%' }}>
+                                        <ContactSupportRoundedIcon sx={{ color: '#1c222c' }} />
+                                        <h4 className={styles.inputLabel}>
+                                            Tipo da Pergunta
+                                        </h4>
+                                    </div>
+                                    <FormControl sx={{ m: 1, width: '100%' }}>
+                                        <Select
+                                            MenuProps={MenuProps}
+                                            input={<OutlinedInput />}
+                                            value={quiz.questions[currentSlide].type}
+                                            onChange={e => handleChangeQuestionField(e.target.value, 'type')}
+                                            size='small'
+                                            sx={{
+                                                width: '100%',
+                                            }}
+                                        >
+                                            <MenuItem value={'standard'}>Padrão</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </div>
+                                <div
+                                    className={styles.divider}
+                                    style={{
+                                        backgroundColor: 'black',
+                                        opacity: 0.5,
+                                    }}
+                                >
+                                </div>
+                                <div className={styles.inputContainer}>
+                                    <div className='flex row start size100'
+                                        style={{
+                                            gap: '3%',
+                                        }}>
+                                        <TimerRoundedIcon sx={{ color: '#1c222c' }} />
+                                        <h4 className={styles.inputLabel}>
+                                            Timer
+                                        </h4>
+                                        <Switch
+                                            checked={quiz.questions[currentSlide].haveTimer}
+                                            onChange={handleSwitchTimer}
+                                            sx={{
+                                                marginLeft: '-3%',
+                                                marginBottom: '-3px',
+                                            }}
+                                        />
+                                    </div>
+                                    <motion.div
+                                        className='flex relative size100'
+                                        initial={{
+                                            marginBottom: quiz.questions[currentSlide].haveTimer
+                                                ? '0.00001px'
+                                                : '-62px',
+                                        }}
+                                        animate={{
+                                            marginBottom: quiz.questions[currentSlide].haveTimer
+                                                ? '0.00001px'
+                                                : '-62px',
+                                        }}
+                                        transition={{
+                                            delay: quiz.questions[currentSlide].haveTimer
+                                                ? 0
+                                                : 0.15,
+                                            duration: 0.3,
+                                            ease: 'easeOut'
+                                        }}
+                                    >
+                                        <motion.div
+                                            className='flex relative size100'
+                                            initial={{
+                                                right: quiz.questions[currentSlide].haveTimer
+                                                    ? '0%'
+                                                    : '-150%',
+                                            }}
+                                            animate={{
+                                                right: quiz.questions[currentSlide].haveTimer
+                                                    ? '0%'
+                                                    : '-150%',
+                                            }}
+                                            transition={{
+                                                delay: quiz.questions[currentSlide].haveTimer
+                                                    ? 0.15
+                                                    : 0,
+                                                duration: 0.3,
+                                                ease: 'easeOut'
+                                            }}
+                                        >
+                                            <FormControl sx={{
+                                                m: 1,
+                                                width: '100%',
+                                                display: 'flex',
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                            }}>
+                                                <FormControl sx={{ width: '48.5%' }}>
+                                                    <InputLabel size='small'>
+                                                        Minutos
+                                                    </InputLabel>
+                                                    <Select
+                                                        MenuProps={MenuProps}
+                                                        input={<OutlinedInput label="Minutos" />}
+                                                        value={quiz.questions[currentSlide].timerMinutes}
+                                                        onChange={e => handleChangeQuestionField(e.target.value, 'timerMinutes')}
+                                                        size='small'
+                                                        sx={{
+                                                            width: '100%',
+                                                        }}
+                                                    >
+                                                        <MenuItem value={0}>00</MenuItem>
+                                                        <MenuItem value={1}>01</MenuItem>
+                                                        <MenuItem value={2}>02</MenuItem>
+                                                        <MenuItem value={3}>03</MenuItem>
+                                                        <MenuItem value={4}>04</MenuItem>
+                                                    </Select>
+                                                </FormControl>
+                                                <p style={{ width: '3%' }}>
+                                                    :
+                                                </p>
+                                                <FormControl sx={{ width: '48.5%' }}>
+                                                    <InputLabel size='small'>
+                                                        Segundos
+                                                    </InputLabel>
+                                                    <Select
+                                                        MenuProps={MenuProps}
+                                                        input={<OutlinedInput label="Segundos" />}
+                                                        value={quiz.questions[currentSlide].timerSeconds}
+                                                        onChange={e => handleChangeQuestionField(e.target.value, 'timerSeconds')}
+                                                        size='small'
+                                                        sx={{
+                                                            width: '100%',
+                                                        }}
+                                                    >
+                                                        <MenuItem value={0}>00</MenuItem>
+                                                        <MenuItem value={5}>05</MenuItem>
+                                                        <MenuItem value={10}>10</MenuItem>
+                                                        <MenuItem value={15}>15</MenuItem>
+                                                        <MenuItem value={20}>20</MenuItem>
+                                                        <MenuItem value={25}>25</MenuItem>
+                                                        <MenuItem value={30}>30</MenuItem>
+                                                        <MenuItem value={35}>35</MenuItem>
+                                                        <MenuItem value={40}>40</MenuItem>
+                                                        <MenuItem value={45}>45</MenuItem>
+                                                        <MenuItem value={50}>50</MenuItem>
+                                                        <MenuItem value={55}>55</MenuItem>
+                                                    </Select>
+                                                </FormControl>
+                                            </FormControl>
+                                        </motion.div>
                                     </motion.div>
-                                </motion.div>
-                                <Button size='small' variant='contained'>
-                                    Adicionar Perfil
-                                </Button>
+                                </div>
+                                <div
+                                    className={styles.divider}
+                                    style={{
+                                        backgroundColor: 'black',
+                                        opacity: 0.5,
+                                    }}
+                                >
+                                </div>
+                                <div className={styles.inputContainer}>
+                                    <div className='flex row start size100' style={{ gap: '4%', marginBottom: '9px' }}>
+                                        <BsTriangleFill size={20} style={{ color: '#1c222c', scale: 2 }} />
+                                        <h4 className={styles.inputLabel}>
+                                            Pontos (Opção 1)
+                                        </h4>
+                                    </div>
+                                    <FormControl sx={{ width: '100%', marginBottom: '5px' }}>
+                                        <InputLabel size='small'>
+                                            Perfil
+                                        </InputLabel>
+                                        <Select
+                                            MenuProps={MenuProps}
+                                            input={<OutlinedInput label="Perfil" />}
+                                            placeholder='Escolha um Perfil'
+                                            value={quiz.questions[currentSlide].options[0].actions[0].profile}
+                                            onChange={e => handleChangeOptionActionField(e.target.value, 'profile', 0, 0)}
+                                            size='small'
+                                            sx={{
+                                                width: '100%',
+                                            }}
+                                        >
+                                            {quiz.results.map((result, i) =>
+                                                <MenuItem
+                                                    className={styles.menuItemColorful}
+                                                    style={{
+                                                        backgroundColor: result.color.concat('b0')
+                                                    }}
+                                                    key={i} value={result.id}
+                                                >
+                                                    {result.name}
+                                                </MenuItem>
+                                            )}
+                                            <MenuItem
+                                                value={'none'}
+                                            >
+                                                Nenhum
+                                            </MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                    <motion.div
+                                        className='flex relative size100'
+                                        initial={{
+                                            marginBottom: quiz.questions[currentSlide].options[0].actions[0].profile !== 'none'
+                                                ? '0.00001px'
+                                                : '-62px',
+                                        }}
+                                        animate={{
+                                            marginBottom: quiz.questions[currentSlide].options[0].actions[0].profile !== 'none'
+                                                ? '0.00001px'
+                                                : '-62px',
+                                        }}
+                                        transition={{
+                                            delay: quiz.questions[currentSlide].options[0].actions[0].profile !== 'none'
+                                                ? 0
+                                                : 0.15,
+                                            duration: 0.3,
+                                            ease: 'easeOut'
+                                        }}
+                                    >
+                                        <motion.div
+                                            className='flex relative size100'
+                                            initial={{
+                                                right: quiz.questions[currentSlide].options[0].actions[0].profile !== 'none'
+                                                    ? '0%'
+                                                    : '-150%',
+                                            }}
+                                            animate={{
+                                                right: quiz.questions[currentSlide].options[0].actions[0].profile !== 'none'
+                                                    ? '0%'
+                                                    : '-150%',
+                                            }}
+                                            transition={{
+                                                delay: quiz.questions[currentSlide].options[0].actions[0].profile !== 'none'
+                                                    ? 0.15
+                                                    : 0,
+                                                duration: 0.3,
+                                                ease: 'easeOut'
+                                            }}
+                                        >
+                                            <FormControl sx={{
+                                                width: '100%',
+                                                display: 'flex',
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                            }}>
+                                                <InputLabel size='small'>
+                                                    Pontos
+                                                </InputLabel>
+                                                <Select
+                                                    MenuProps={MenuProps}
+                                                    input={<OutlinedInput label="Pontos" />}
+                                                    value={quiz.questions[currentSlide].options[0].actions[0].points}
+                                                    onChange={e => handleChangeOptionActionField(e.target.value, 'points', 0, 0)}
+                                                    size='small'
+                                                    sx={{
+                                                        width: '100%',
+                                                    }}
+                                                >
+                                                    <MenuItem value={1}>1 Ponto</MenuItem>
+                                                    <MenuItem value={2}>2 Pontos</MenuItem>
+                                                    <MenuItem value={3}>3 Pontos</MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                        </motion.div>
+                                    </motion.div>
+                                    <Button size='small' variant='contained'>
+                                        Adicionar Perfil
+                                    </Button>
+                                </div>
+                                <div
+                                    className={styles.divider}
+                                    style={{
+                                        backgroundColor: 'black',
+                                        opacity: 0.5,
+                                    }}
+                                >
+                                </div>
                             </div>
-                            <div
-                                className={styles.divider}
-                                style={{
-                                    backgroundColor: 'black',
-                                    opacity: 0.5,
-                                }}
-                            >
-                            </div>
-                        </div>
-                    }
+                        }
+                    </div>
                 </div>
             </div>
         </motion.div >

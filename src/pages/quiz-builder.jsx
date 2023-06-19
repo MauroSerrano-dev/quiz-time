@@ -20,7 +20,7 @@ const INICIAL_IMG = {
 const INICIAL_OPTION = {
     content: '',
     actions: [
-        { profile: '', points: '' }
+        { profile: 'none', points: '' }
     ],
     img: INICIAL_IMG,
 }

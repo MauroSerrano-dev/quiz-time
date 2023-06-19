@@ -74,11 +74,9 @@ export default function OptionInput(props) {
             height: containerRef.current.offsetHeight
         })
 
-        if (inputMode) {
-            const divElement = inputTextRef.current
-            divElement.innerText = text === '' && placeholder ? placeholder : text
-            removeFocusFromAllElements()
-        }
+        const divElement = inputTextRef.current
+        divElement.innerText = text === '' && placeholder ? placeholder : text
+        removeFocusFromAllElements()
     }, [attSizeRef])
 
 
@@ -127,13 +125,22 @@ export default function OptionInput(props) {
 
     const BUTTON_VARIANTS = new Map([
         ['outlined', {
-            borderColor: isHovered ? color : color.concat('c0'),
+            borderColor: color,
             backgroundColor: isHovered ? color.concat('25') : color.concat('0a'),
         }],
         ['contained', {
             borderColor: 'transparent',
             backgroundColor: isHovered ? color.concat('c0') : color,
             boxShadow: isHovered ? '0px 3px 25px -10px' : '0px 3px 20px -15px'
+        }],
+    ])
+
+    const COUNTER_VARIANTS = new Map([
+        ['outlined', {
+            color: color,
+        }],
+        ['contained', {
+            color: symbolColor,
         }],
     ])
 
@@ -168,20 +175,29 @@ export default function OptionInput(props) {
             <SquareRoundedIcon
                 style={{
                     position: 'absolute',
-                    transition: editMode ? animation : FAST_ANIMATION,
+                    transition: editMode
+                        ? animation
+                        : FAST_ANIMATION,
                     width: '120%',
                     height: '120%',
-                    color: variant === 'contained' ? symbolColor : color
+                    color: variant === 'contained'
+                        ? symbolColor
+                        : color
                 }}
             />
         ],
         ['x',
             <IoClose
                 size='100%'
-                color={variant === 'contained' ? symbolColor : color}
+                color={variant === 'contained'
+                    ? symbolColor
+                    : color
+                }
                 style={{
                     position: 'absolute',
-                    transition: editMode ? animation : FAST_ANIMATION,
+                    transition: editMode
+                        ? animation
+                        : FAST_ANIMATION,
                     strokeWidth: '45px',
                     width: '145%',
                     height: '145%',
@@ -192,10 +208,14 @@ export default function OptionInput(props) {
             <PentagonRoundedIcon
                 style={{
                     position: 'absolute',
-                    transition: editMode ? animation : FAST_ANIMATION,
+                    transition: editMode
+                        ? animation
+                        : FAST_ANIMATION,
                     width: '120%',
                     height: '120%',
-                    color: variant === 'contained' ? symbolColor : color
+                    color: variant === 'contained'
+                        ? symbolColor
+                        : color
                 }}
             />
         ],
@@ -203,10 +223,14 @@ export default function OptionInput(props) {
             <HexagonRoundedIcon
                 style={{
                     position: 'absolute',
-                    transition: editMode ? animation : FAST_ANIMATION,
+                    transition: editMode
+                        ? animation
+                        : FAST_ANIMATION,
                     width: '120%',
                     height: '120%',
-                    color: variant === 'contained' ? symbolColor : color
+                    color: variant === 'contained'
+                        ? symbolColor
+                        : color
                 }}
             />
         ],
@@ -219,7 +243,9 @@ export default function OptionInput(props) {
                 : isHovered
                     ? color
                     : color.concat('c0'),
-            borderRadius: symbol === 'polygons' ? '0px' : '100%'
+            borderRadius: symbol === 'polygons'
+                ? '0px'
+                : '100%'
         }],
         ['contained', {
             outlineColor: 'transparent',
@@ -232,16 +258,22 @@ export default function OptionInput(props) {
             color: color,
         }],
         ['contained', {
-            color: isHovered ? color.concat('c0') : color,
+            color: isHovered
+                ? color.concat('c0')
+                : color,
         }],
     ])
 
     const TEXT_VARIANTS = new Map([
         ['outlined', {
-            color: text === '' && !isFocused && placeholder ? color.concat('90') : color,
+            color: text === '' && !isFocused && placeholder
+                ? color.concat('90')
+                : color,
         }],
         ['contained', {
-            color: text === '' && !isFocused && placeholder ? textColor.concat('90') : textColor,
+            color: text === '' && !isFocused && placeholder
+                ? textColor.concat('90')
+                : textColor,
         }],
     ])
 
@@ -377,38 +409,39 @@ export default function OptionInput(props) {
                         : buttonSize.height * 0.38}px)`
                 }}
             >
-                {!inputMode
-                    ? <p
-                        style={{
-                            ...TEXT_VARIANTS.get(variant),
-                            fontSize: `${buttonSize.height * 0.3}px`,
-                            transition: editMode
-                                ? animation
-                                : FAST_ANIMATION,
-                        }}
-                    >
-                        {text}
-                    </p>
-                    : <div
-                        className={styles.textInput}
-                        ref={inputTextRef}
-                        contentEditable
-                        onFocus={handleFocus}
-                        onBlur={handleBlur}
-                        style={{
-                            ...TEXT_VARIANTS.get(variant),
-                            fontSize: `${buttonSize.height * 0.19}px`,
-                            transition: editMode ? animation : FAST_ANIMATION,
-                            paddingTop: text === '' && isFocused
-                                ? `${(buttonSize.height / 2) - (buttonSize.height * 0.19 / 2) - (buttonSize.height * 0.024 / 2)}px`
-                                : '0px',
-                        }}
-                        onInput={handleInput}
-                        spellCheck={false}
-                    >
-                    </div>
-                }
+                <div
+                    className={styles.textInput}
+                    ref={inputTextRef}
+                    contentEditable={inputMode}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
+                    style={{
+                        ...TEXT_VARIANTS.get(variant),
+                        fontSize: `${buttonSize.height * 0.19}px`,
+                        transition: editMode ? animation : FAST_ANIMATION,
+                        cursor: inputMode ? 'text' : 'pointer',
+                        paddingTop: text === '' && isFocused
+                            ? `${(buttonSize.height / 2) - (buttonSize.height * 0.19 / 2) - (buttonSize.height * 0.024 / 2)}px`
+                            : '0px',
+                    }}
+                    onInput={handleInput}
+                    spellCheck={false}
+                >
+                </div>
             </div>
+            {inputMode && isFocused &&
+                <h4
+                    className={styles.characterCounter}
+                    style={{
+                        ...COUNTER_VARIANTS.get(variant),
+                        right: `${buttonSize.height * 0.1}px`,
+                        top: `${buttonSize.height * 0.1}px`,
+                        fontSize: `${buttonSize.height * 0.13}px`,
+                    }}
+                >
+                    {text.length - TEXT_LIMIT}
+                </h4>
+            }
         </button>
     )
 }

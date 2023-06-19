@@ -63,7 +63,9 @@
     border: none;
     outline: none;
 
-    cursor: text;
-
     overflow: hidden;
+}
+
+.characterCounter {
+    position: absolute;
 }
