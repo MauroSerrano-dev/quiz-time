@@ -55,7 +55,7 @@ function MyApp(props) {
         {/* Meta tags Open Graph */}
         <meta property="og:title" content="Quiz Time" />
         <meta property="og:description" content="Create captivating quizzes and deliver interactive presentations. Engage your audience with dynamic content and foster active participation. Perfect for educators, trainers, and presenters. Start creating interactive quizzes now!" />
-        <meta property="og:image" content="/logos/logo.png" />
+        <meta property="og:image" content="logos/logo.png" />
         <meta property="og:url" content="https://quiztimeapp.com" />
 
         <link rel="icon" href="logos/QT-logo.png" />
