@@ -51,7 +51,7 @@ function MyApp(props) {
         <meta name="description" content="Quiz Time: Create captivating quizzes and deliver interactive presentations. Engage your audience with dynamic content and foster active participation. Perfect for educators, trainers, and presenters. Start creating interactive quizzes now!" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="referrer" content="no-referrer" />
-        <link rel="icon" href="logo.png" />
+        <link rel="icon" href="logos/QT-logo.png" />
         <Script src="https://js.stripe.com/v3/" async></Script>
       </Head>
       <ThemeProvider theme={mainTheme}>
