@@ -155,8 +155,13 @@
     transition: all 200ms ease-in-out;
 }
 
-#logo {
-    height: 100%;
+.logo {
+    fill: rgb(0, 208, 255);
+    transition: all 300ms ease;
+}
+
+.logo:hover {
+    background-color: rgba(0, 208, 255, 0.1);
 }
 
 #loginButton {
