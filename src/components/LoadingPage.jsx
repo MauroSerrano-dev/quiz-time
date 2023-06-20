@@ -2,6 +2,7 @@
 import styles from '../styles/components/LoadingPage.module.css'
 import { CircularProgress } from '@mui/material'
 import { useEffect, useState } from 'react'
+import Logo from './Logo'
 
 export default function LoadingPage() {
     const [showCircle, setShowCircle] = useState(false)
@@ -12,7 +13,7 @@ export default function LoadingPage() {
 
     return (
         <div id={styles.loadingContainer}>
-            <img id={styles.logo} src='/quiz-time-logo.png' />
+            <Logo width='50%' />
             {showCircle && <CircularProgress />}
         </div>
     )

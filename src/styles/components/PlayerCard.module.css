@@ -10,7 +10,7 @@
     padding: 0.5rem;
 
     border-radius: 0.5rem;
-    border: solid var(--logo-color) 1px;
+    border: solid var(--primary) 1px;
     background-color: var(--body-background-color);
     overflow: hidden;
     gap: 0.5rem;

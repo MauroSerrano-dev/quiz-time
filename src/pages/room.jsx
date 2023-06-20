@@ -96,7 +96,21 @@ export default withRouter((props) => {
                                                 id={styles.disableContainer}
                                             >
                                                 <div id={styles.qrContainer}>
-                                                    <div id={styles.qrCode}><QRCode value={`quiztime.pt/quiz?code=${code}`} size={200} ecLevel='H' qrStyle='dots' logoImage='quiz-time-logo.png' logoWidth={200 * 0.6} logoOpacity={0.5} eyeColor={{ outer: '#00a0dc', inner: '#005270' }} eyeRadius={5} /></div>
+                                                    <div id={styles.qrCode}>
+                                                        <QRCode
+                                                            value={`${process.env.NEXT_PUBLIC_SITE_DOMAIN}/quiz?code=${code}`}
+                                                            size={200}
+                                                            ecLevel='H'
+                                                            qrStyle='dots'
+                                                            logoImage='logo-white-blue.png'
+                                                            logoWidth={200 * 0.9}
+                                                            logoOpacity={0.5}
+                                                            eyeColor={{
+                                                                outer: '#00a0dc',
+                                                                inner: '#005270'
+                                                            }}
+                                                            eyeRadius={5} />
+                                                    </div>
                                                     <h2>Scan Me!</h2>
                                                     <div className={styles.frame}></div>
                                                     <div className={styles.frame} id={styles.border}></div>
