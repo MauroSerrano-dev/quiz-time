@@ -13,6 +13,7 @@ import NoSessionPage from '@/components/NoSessionPage';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import { CustomTextField } from '../../utils/mui';
+import Logo from '@/components/Logo';
 
 const INICIAL_ROOM = {
     name: '',
@@ -187,27 +188,31 @@ export default function Lobby(props) {
                     id={styles.container}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ duration: 0.5, delay: 0.2, ease: [.62, -0.18, .32, 1.17] }}>
-                    <CustomTextField
-                        value={searchCode}
-                        onChange={handleCodeChange}
-                        onKeyDown={handleSubmitCode}
-                        label="Nome da Sala"
-                        variant='outlined'
-                        autoComplete='off'
-                        sx={{
-                            width: '40%',
-                            minWidth: '250px'
-                        }}
-                    />
-                    <Button
-                        id={styles.joinButton}
-                        variant="outlined"
-                        onClick={handleSubmitCode}
-                        sx={{ width: '40%', minWidth: '250px' }}
-                    >
-                        Entrar
-                    </Button>
+                    transition={{ duration: 0.5, delay: 0.2, ease: [.62, -0.18, .32, 1.17] }}
+                >
+                    <Logo width='50%' />
+                    <div className='flex fillWidth' style={{ gap: '0.5rem' }}>
+                        <CustomTextField
+                            value={searchCode}
+                            onChange={handleCodeChange}
+                            onKeyDown={handleSubmitCode}
+                            label="Nome da Sala"
+                            variant='outlined'
+                            autoComplete='off'
+                            sx={{
+                                width: '40%',
+                                minWidth: '250px'
+                            }}
+                        />
+                        <Button
+                            id={styles.joinButton}
+                            variant="outlined"
+                            onClick={handleSubmitCode}
+                            sx={{ width: '40%', minWidth: '250px' }}
+                        >
+                            Entrar
+                        </Button>
+                    </div>
                     <Fab
                         id={styles.floatButton}
                         onClick={openModal}
