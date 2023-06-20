@@ -49,7 +49,7 @@ export default function QuestionField(props) {
         }],
         ['outlined', {
             color: value === '' && !isFocused && placeholder ? color.concat('90') : color,
-            borderColor: color.concat('c0'),
+            borderColor: color,
             backgroundColor: color.concat('0a'),
         }],
         ['contained', {

@@ -439,7 +439,7 @@ export default function OptionInput(props) {
                         fontSize: `${buttonSize.height * 0.13}px`,
                     }}
                 >
-                    {text.length - TEXT_LIMIT}
+                    {TEXT_LIMIT - text.length}
                 </h4>
             }
         </button>

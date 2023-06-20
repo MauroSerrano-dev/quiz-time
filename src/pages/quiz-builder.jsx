@@ -11,6 +11,11 @@ const GAME_MODES = [
     { name: "Who's Most Likely To" },
 ]
 
+const INICIAL_ACTION = {
+    profile: '',
+    points: 1
+}
+
 const INICIAL_IMG = {
     content: '',
     name: '',
@@ -20,7 +25,7 @@ const INICIAL_IMG = {
 const INICIAL_OPTION = {
     content: '',
     actions: [
-        { profile: 'none', points: '' }
+        INICIAL_ACTION
     ],
     img: INICIAL_IMG,
 }
@@ -51,23 +56,23 @@ const INICIAL_QUIZ = {
     category: '',
     style: {
         question: {
-            color: '#fdfdfd',
+            color: '#FDFDFD',
             variant: 'outlined',
             borderRadius: 10,
         },
         button: {
-            color: '#009fda',
+            color: '#009FDA',
             variant: 'contained',
             template: 'monochrome',
             symbol: 'polygons',
-            symbolColor: '#1c222c',
-            textColor: '#1c222c',
+            symbolColor: '#1C222C',
+            textColor: '#1C222C',
             borderRadius: 10,
         },
         background: {
-            color: '#1c222c',
+            color: '#1C222C',
             type: 'solid',
-            gradientColors: ['#1c222c', '#343f52'],
+            gradientColors: ['#1C222C', '#343F52'],
             gradientPercentages: [0, 100],
             angle: 165,
         },
@@ -76,7 +81,7 @@ const INICIAL_QUIZ = {
         {
             name: 'Perfil 1',
             id: 'profile-0',
-            color: '#ffccb6',
+            color: '#FFCCB6',
             img: {
                 content: '',
                 name: '',
@@ -86,7 +91,7 @@ const INICIAL_QUIZ = {
         {
             name: 'Perfil 2',
             id: 'profile-1',
-            color: '#abdee6',
+            color: '#ABDEE6',
             img: {
                 content: '',
                 name: '',
@@ -96,7 +101,7 @@ const INICIAL_QUIZ = {
         {
             name: 'Perfil 3',
             id: 'profile-2',
-            color: '#cce2cb',
+            color: '#CCE2CB',
             img: {
                 content: '',
                 name: '',
@@ -189,6 +194,9 @@ export default function QuizBuilder(props) {
                             quiz={quiz}
                             setQuiz={setQuiz}
                             INICIAL_QUIZ={INICIAL_QUIZ}
+                            INICIAL_QUESTION={INICIAL_QUESTION}
+                            INICIAL_OPTION={INICIAL_OPTION}
+                            INICIAL_ACTION={INICIAL_ACTION}
                             INICIAL_IMG={INICIAL_IMG}
                         />
                     }

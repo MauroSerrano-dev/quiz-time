@@ -24,7 +24,6 @@ import OptionInput from './OptionInput'
 import { CustomTextField } from '../../utils/mui'
 import QuestionField from './QuestionField'
 import $ from 'jquery'
-import InputSection from './InputSection'
 
 // ICONS
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
@@ -50,8 +49,21 @@ import HexagonRoundedIcon from '@mui/icons-material/HexagonRounded'
 import SquareRoundedIcon from '@mui/icons-material/SquareRounded'
 import CircleRoundedIcon from '@mui/icons-material/CircleRounded'
 
+const ANIMATION_FIELDS = [.59, 0, .03, 1.23]
+const ANIMATION_COLUMNS_DURATION = 300
+const ANIMATION_COLUMNS = `all ${ANIMATION_COLUMNS_DURATION}ms cubic-bezier(.59, 0, .03, 1.23)`
+
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
+
+const ICONS_POLYGONS = [
+    <BsTriangleFill size={20} style={{ color: '#1c222c', scale: 2 }} />,
+    <CircleRoundedIcon style={{ color: '#1c222c' }} />,
+    <SquareRoundedIcon style={{ color: '#1c222c' }} />,
+    <IoClose color='#1c222c' size={25} style={{ strokeWidth: '45px', marginRight: '-0.1rem' }} />,
+    <PentagonRoundedIcon style={{ color: '#1c222c' }} />,
+    <HexagonRoundedIcon style={{ color: '#1c222c' }} />,
+]
 
 const MenuProps = {
     PaperProps: {
@@ -64,7 +76,7 @@ const MenuProps = {
 const DESIGN_EDIT_OPTIONS = [
     { title: 'Monocromático', value: 'monochrome' },
     { title: 'Colorido', value: 'colorful' },
-    { title: 'Pro', value: 'custom' },
+    { title: 'Custom', value: 'custom' },
 ]
 
 const INICIAL_GRADIENT_PERCENTAGES = new Map([
@@ -84,6 +96,9 @@ export default function ProfileEditor(props) {
         quiz,
         setQuiz,
         INICIAL_QUIZ,
+        INICIAL_QUESTION,
+        INICIAL_OPTION,
+        INICIAL_ACTION,
         INICIAL_IMG,
     } = props
 
@@ -143,7 +158,7 @@ export default function ProfileEditor(props) {
     function handleAddQuestion() {
         setQuiz(prev => ({
             ...prev,
-            questions: [...prev.questions, INICIAL_QUIZ.questions[0]]
+            questions: [...prev.questions, INICIAL_QUESTION]
         }))
         changeCurrentSlide(quiz.questions.length)
     }
@@ -225,16 +240,16 @@ export default function ProfileEditor(props) {
 
     function handleAddProfile() {
         if (quiz.results.length >= 16)
-            showErrorToast("Número máximo de 16 perfis atingido.", 3000)
+            showErrorToast("Número máximo de 16 perfis.", 3000)
         else {
             setQuiz(prev => ({
                 ...prev,
                 results: [
                     ...prev.results,
                     {
-                        name: '',
+                        name: 'Novo Perfil',
                         id: getNewProfileId(),
-                        color: '#ffffff',
+                        color: '#009FDA',
                         img: { content: '', name: '', type: '', positionToFit: '' }
                     }]
             }))
@@ -242,24 +257,42 @@ export default function ProfileEditor(props) {
         }
     }
 
-    function handleDeleteProfile(event, index) {
+    function handleDeleteProfile(event, resultId) {
         event.stopPropagation()
         if (currentSlide === quiz.results.length - 1)
             setCurrentSlide(quiz.results.length - 2)
-        setQuiz(prev => ({ ...prev, results: prev.results.filter((result, i) => index !== i) }))
+        setQuiz(prev => ({
+            ...prev,
+            questions: prev.questions.map(question => ({
+                ...question,
+                options: question.options.map(option =>
+                (
+                    {
+                        ...option,
+                        actions: option.actions.filter(action =>
+                            action.profile !== resultId)
+                    }
+                ))
+            })),
+            results: prev.results.filter(result => result.id !== resultId)
+        }))
     }
 
     function handleDuplicateProfile(event, index) {
         event.stopPropagation()
-        setQuiz((prev, i) => ({
-            ...prev,
-            results: prev.results.slice(0, index + 1)
-                .concat({ ...prev.results[index], name: prev.results[index].name.concat(' (cópia)') })
-                .concat(prev.results.slice(index + 1, prev.results.length))
+        if (quiz.results.length >= 16)
+            showErrorToast("Número máximo de 16 perfis.", 3000)
+        else {
+            setQuiz((prev, i) => ({
+                ...prev,
+                results: prev.results.slice(0, index + 1)
+                    .concat({ ...prev.results[index], id: getNewProfileId() })
+                    .concat(prev.results.slice(index + 1, prev.results.length))
 
-        }))
-        if (index <= currentSlide)
-            setCurrentSlide(prev => prev + 1)
+            }))
+            if (index <= currentSlide)
+                setCurrentSlide(prev => prev + 1)
+        }
     }
 
     function changeCurrentSlide(index) {
@@ -302,11 +335,16 @@ export default function ProfileEditor(props) {
     }
 
     function handleStyleColor(event, objName, fieldName) {
+        console.log(event, objName, fieldName)
         const newColor = typeof event === 'string'
-            ? event
-            : (event.target.value.length > 7
-                ? prev.style.background[fieldName]
-                : event.target.value)
+            ? event.toUpperCase()
+            : event.target.value[0] === '#'
+                ? event.target.value.length > 7
+                    ? quiz.style[objName][fieldName]
+                    : event.target.value.toUpperCase()
+                : event.target.value.length > 6
+                    ? quiz.style[objName][fieldName]
+                    : `#${event.target.value.toUpperCase()}`
 
         setQuiz(prev => ({
             ...prev,
@@ -417,7 +455,7 @@ export default function ProfileEditor(props) {
             else
                 setCurrentSlide(0)
             setStepDelay(newStep)
-        }, 300)
+        }, ANIMATION_COLUMNS_DURATION)
     }
 
     function handleButtonVariantChange(event) {
@@ -537,8 +575,8 @@ export default function ProfileEditor(props) {
                         ...question,
                         haveExtraOptions: false,
                         options: question.options.map((option, j) =>
-                            j === 4 || j === 5 ?
-                                INICIAL_QUIZ.questions[0].options[0]
+                            j === 4 || j === 5
+                                ? INICIAL_OPTION
                                 : option
                         )
                     }
@@ -596,22 +634,90 @@ export default function ProfileEditor(props) {
         }))
     }
 
-    function handleChangeOptionActionField(value, field, optionIndex, actionIndex) {
+    function handleChangeOptionActionField(value, field, questionIndex, optionIndex, actionIndex) {
         setQuiz(prev => ({
             ...prev,
             questions: prev.questions.map((question, i) =>
-                currentSlide === i
+                questionIndex === i
                     ? {
                         ...question,
                         options: question.options.map((option, j) => j === optionIndex
                             ? {
-                                ...option, actions: option.actions.map((action, k) => k === actionIndex
+                                ...option,
+                                actions: option.actions.map((action, k) => k === actionIndex
                                     ? {
                                         ...action,
                                         [field]: value,
                                     }
                                     : action
                                 )
+                            }
+                            : option
+                        )
+                    }
+                    : question
+            )
+        }))
+    }
+
+    function handleChangeOptionActionProfile(value, questionIndex, optionIndex, actionIndex) {
+        setQuiz(prev => ({
+            ...prev,
+            questions: prev.questions.map((question, i) =>
+                questionIndex === i
+                    ? {
+                        ...question,
+                        options: question.options.map((option, j) => j === optionIndex
+                            ? {
+                                ...option,
+                                actions: option.actions.map((action, k) => k === actionIndex
+                                    ? {
+                                        ...action,
+                                        profile: value,
+                                        points: value === 'none' ? 1 : action.points
+                                    }
+                                    : action
+                                )
+                            }
+                            : option
+                        )
+                    }
+                    : question
+            )
+        }))
+    }
+
+    function addAction(questionIndex, optionIndex) {
+        setQuiz(prev => ({
+            ...prev,
+            questions: prev.questions.map((question, i) =>
+                questionIndex === i
+                    ? {
+                        ...question,
+                        options: question.options.map((option, j) => j === optionIndex
+                            ? {
+                                ...option,
+                                actions: [...option.actions, INICIAL_ACTION]
+                            }
+                            : option
+                        )
+                    }
+                    : question
+            )
+        }))
+    }
+
+    function handleDeleteAction(questionIndex, optionIndex, actionIndex) {
+        setQuiz(prev => ({
+            ...prev,
+            questions: prev.questions.map((question, i) =>
+                questionIndex === i
+                    ? {
+                        ...question,
+                        options: question.options.map((option, j) => j === optionIndex
+                            ? {
+                                ...option,
+                                actions: option.actions.filter((action, k) => k !== actionIndex)
                             }
                             : option
                         )
@@ -1128,7 +1234,7 @@ export default function ProfileEditor(props) {
                         id={styles.leftContainer}
                         style={{
                             left: stepDelay === 4
-                                ? '-220px'
+                                ? '-320px'
                                 : '0px',
                         }}
                     >
@@ -1137,7 +1243,7 @@ export default function ProfileEditor(props) {
                                 <div
                                     id={styles.slidesContainer}
                                     style={{
-                                        transition: 'all 300ms ease',
+                                        transition: ANIMATION_COLUMNS,
                                         left: step !== stepDelay
                                             ? '-130%'
                                             : '0px',
@@ -1159,10 +1265,10 @@ export default function ProfileEditor(props) {
                                                         <div className={`${styles.buttonsContainer} ${currentSlide !== i ? styles.showOnHover : undefined}`}>
                                                             {stepDelay === 0 &&
                                                                 <div className='flex end size100'>
-                                                                    <IconButton onClick={(e) => handleDuplicateProfile(e, i)} aria-label="copy" sx={{ scale: '0.7', margin: '-4px' }}>
+                                                                    <IconButton onClick={(e) => handleDuplicateProfile(e, i)} sx={{ scale: '0.7', margin: '-4px' }}>
                                                                         <ContentCopyIcon />
                                                                     </IconButton>
-                                                                    <IconButton onClick={(e) => handleDeleteProfile(e, i)} aria-label="delete" sx={{ scale: '0.7', margin: '-4px' }}>
+                                                                    <IconButton onClick={(e) => handleDeleteProfile(e, result.id)} sx={{ scale: '0.7', margin: '-4px' }}>
                                                                         <DeleteForeverIcon sx={{ scale: '1.2' }} />
                                                                     </IconButton>
                                                                 </div>
@@ -1509,10 +1615,22 @@ export default function ProfileEditor(props) {
                                         )}
                                     {provided.placeholder}
                                     {stepDelay === 0 &&
-                                        <Button id={styles.addProfileButton} onClick={handleAddProfile} variant='contained' >Adicionar Perfil</Button>
+                                        <Button
+                                            id={styles.addProfileButton}
+                                            onClick={handleAddProfile}
+                                            variant='contained'
+                                        >
+                                            Adicionar Perfil
+                                        </Button>
                                     }
                                     {stepDelay === 2 &&
-                                        <Button id={styles.addQuestionButton} onClick={handleAddQuestion} variant='contained' >Adicionar Pergunta</Button>
+                                        <Button
+                                            id={styles.addQuestionButton}
+                                            onClick={handleAddQuestion}
+                                            variant='contained'
+                                        >
+                                            Adicionar Pergunta
+                                        </Button>
                                     }
                                 </div>
                             )}
@@ -1522,12 +1640,12 @@ export default function ProfileEditor(props) {
 
                 <div
                     id={styles.rightContainer}
-                    style={{ right: stepDelay === 4 ? '-220px' : '0px' }}
+                    style={{ right: stepDelay === 4 ? '-320px' : '0px' }}
                 >
                     <div
                         className='flex relative start size100'
                         style={{
-                            transition: 'all 300ms ease',
+                            transition: ANIMATION_COLUMNS,
                             right: step !== stepDelay
                                 ? '-130%'
                                 : '0px',
@@ -1536,7 +1654,7 @@ export default function ProfileEditor(props) {
                         {stepDelay === 0 && quiz.results.length > 0 &&
                             <div className='flex start'>
                                 <div className={styles.inputContainer}>
-                                    <div className='flex row start size100' style={{ gap: '3%' }}>
+                                    <div className={styles.inputTitle}>
                                         <PersonIcon sx={{ color: '#1c222c' }} />
                                         <h4 className={styles.inputLabel}>
                                             Perfil
@@ -1552,7 +1670,7 @@ export default function ProfileEditor(props) {
                         {stepDelay === 1 && quiz.results.length > 0 &&
                             <div className='flex start'>
                                 <div className={styles.inputContainer}>
-                                    <div className='flex row start size100' style={{ gap: '3%' }}>
+                                    <div className={styles.inputTitle}>
                                         <LiveHelpRoundedIcon sx={{ color: '#1c222c' }} />
                                         <h4 className={styles.inputLabel}>
                                             Pergunta
@@ -1587,23 +1705,19 @@ export default function ProfileEditor(props) {
                                             Borda
                                         </p>
                                         <Slider
+                                            sx={{
+                                                marginBottom: '-0.3rem'
+                                            }}
                                             value={quiz.style.question.borderRadius}
                                             valueLabelDisplay="auto"
                                             onChange={handleQuestionBorder}
                                         />
                                     </div>
                                 </div>
-                                <div
-                                    className={styles.divider}
-                                    style={{
-                                        backgroundColor: 'black',
-                                        opacity: 0.5,
-
-                                    }}
-                                >
+                                <div className={styles.divider}>
                                 </div>
                                 <div className={styles.inputContainer}>
-                                    <div className='flex row start size100' style={{ gap: '3%' }}>
+                                    <div className={styles.inputTitle}>
                                         <GamepadRoundedIcon sx={{ color: '#1c222c' }} />
                                         <h4 className={styles.inputLabel}>
                                             Botões
@@ -1638,106 +1752,95 @@ export default function ProfileEditor(props) {
                                             Borda
                                         </p>
                                         <Slider
+                                            sx={{
+                                                marginBottom: '-0.3rem'
+                                            }}
                                             value={quiz.style.button.borderRadius}
                                             valueLabelDisplay="auto"
                                             onChange={handleButtonBorder}
                                         />
                                     </div>
                                 </div>
-                                <div
-                                    className={styles.divider}
-                                    style={{
-                                        backgroundColor: 'black',
-                                        opacity: 0.5,
-
-                                    }}
-                                >
+                                <div className={styles.divider}>
                                 </div>
-                                <InputSection
-                                    title='Símbolos'
-                                    icon={<CategoryRoundedIcon sx={{ color: '#1c222c' }} />}
-                                    body={
-                                        <div className='flex size100'>
-                                            <FormControl sx={{ width: '100%' }}>
-                                                <InputLabel size='small'>
-                                                    Tipo
-                                                </InputLabel>
-                                                <Select
-                                                    MenuProps={MenuProps}
-                                                    input={<OutlinedInput label="Tipo" />}
-                                                    value={quiz.style.button.symbol}
-                                                    onChange={handleButtonSymbolChange}
-                                                    size='small'
-                                                    sx={{
-                                                        width: '100%',
-                                                    }}
-                                                >
-                                                    <MenuItem value={'none'}>Nenhum</MenuItem>
-                                                    <MenuItem value={'letters'}>Letras</MenuItem>
-                                                    <MenuItem value={'polygons'}>Formas</MenuItem>
-                                                </Select>
-                                            </FormControl>
-                                            <motion.div
-                                                className='flex relative size100'
-                                                initial={{
-                                                    marginBottom: quiz.style.button.symbol === 'none' || quiz.style.button.variant === 'outlined'
-                                                        ? '-48px'
-                                                        : '0.00001px'
-                                                }}
-                                                animate={{
-                                                    marginBottom: quiz.style.button.symbol === 'none' || quiz.style.button.variant === 'outlined'
-                                                        ? '-48px'
-                                                        : '0.00001px'
-                                                }}
-                                                transition={{
-                                                    delay: quiz.style.button.symbol === 'none'
-                                                        || quiz.style.button.variant === 'outlined'
-                                                        ? 0.15
-                                                        : 0,
-                                                    duration: 0.3,
-                                                    ease: 'easeOut'
-                                                }}
-                                            >
-                                                <ColorInput
-                                                    onChange={(e) => handleStyleColor(e, 'button', 'symbolColor')}
-                                                    value={quiz.style.button.symbolColor}
-                                                    initial={{
-                                                        right: quiz.style.button.symbol === 'none'
-                                                            || quiz.style.button.variant === 'outlined'
-                                                            ? '-150%'
-                                                            : '0%',
-                                                    }}
-                                                    animate={{
-                                                        right: quiz.style.button.symbol === 'none'
-                                                            || quiz.style.button.variant === 'outlined'
-                                                            ? '-150%'
-                                                            : '0%',
-                                                    }}
-                                                    transition={{
-                                                        delay: quiz.style.button.symbol === 'none'
-                                                            || quiz.style.button.variant === 'outlined'
-                                                            ? 0
-                                                            : 0.15,
-                                                        duration: 0.3,
-                                                        ease: 'easeOut'
-                                                    }}
-                                                />
-                                            </motion.div>
-                                        </div>
-                                    }
-                                />
-                                <div className='flex center size100'>
-                                    <div
-                                        className={styles.divider}
-                                        style={{
-                                            backgroundColor: 'black',
-                                            opacity: 0.5,
-
+                                <div className={styles.inputContainer}>
+                                    <div className={styles.inputTitle}>
+                                        <CategoryRoundedIcon sx={{ color: '#1c222c' }} />
+                                        <h4 className={styles.inputLabel}>
+                                            Símbolos
+                                        </h4>
+                                    </div>
+                                    <FormControl sx={{ width: '100%' }}>
+                                        <InputLabel size='small'>
+                                            Tipo
+                                        </InputLabel>
+                                        <Select
+                                            MenuProps={MenuProps}
+                                            input={<OutlinedInput label="Tipo" />}
+                                            value={quiz.style.button.symbol}
+                                            onChange={handleButtonSymbolChange}
+                                            size='small'
+                                            sx={{
+                                                width: '100%',
+                                            }}
+                                        >
+                                            <MenuItem value={'none'}>Nenhum</MenuItem>
+                                            <MenuItem value={'letters'}>Letras</MenuItem>
+                                            <MenuItem value={'polygons'}>Formas</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                    <motion.div
+                                        className='flex relative size100'
+                                        initial={{
+                                            marginBottom: quiz.style.button.symbol === 'none' || quiz.style.button.variant === 'outlined'
+                                                ? '-48px'
+                                                : '0.00001px'
+                                        }}
+                                        animate={{
+                                            marginBottom: quiz.style.button.symbol === 'none' || quiz.style.button.variant === 'outlined'
+                                                ? '-48px'
+                                                : '0.00001px'
+                                        }}
+                                        transition={{
+                                            delay: quiz.style.button.symbol === 'none'
+                                                || quiz.style.button.variant === 'outlined'
+                                                ? 0.15
+                                                : 0,
+                                            duration: 0.3,
+                                            ease: ANIMATION_FIELDS
                                         }}
                                     >
+                                        <ColorInput
+                                            onChange={(e) => handleStyleColor(e, 'button', 'symbolColor')}
+                                            value={quiz.style.button.symbolColor}
+                                            initial={{
+                                                right: quiz.style.button.symbol === 'none'
+                                                    || quiz.style.button.variant === 'outlined'
+                                                    ? '-150%'
+                                                    : '0%',
+                                            }}
+                                            animate={{
+                                                right: quiz.style.button.symbol === 'none'
+                                                    || quiz.style.button.variant === 'outlined'
+                                                    ? '-150%'
+                                                    : '0%',
+                                            }}
+                                            transition={{
+                                                delay: quiz.style.button.symbol === 'none'
+                                                    || quiz.style.button.variant === 'outlined'
+                                                    ? 0
+                                                    : 0.15,
+                                                duration: 0.3,
+                                                ease: ANIMATION_FIELDS
+                                            }}
+                                        />
+                                    </motion.div>
+                                </div>
+                                <div className='flex center'>
+                                    <div className={styles.divider}>
                                     </div>
                                     <div className={styles.inputContainer}>
-                                        <div className='flex row start size100' style={{ gap: '3%' }}>
+                                        <div className={styles.inputTitle}>
                                             <PhotoSizeSelectActualRoundedIcon sx={{ color: '#1c222c' }} />
                                             <h4 className={styles.inputLabel}>
                                                 Fundo
@@ -1829,17 +1932,11 @@ export default function ProfileEditor(props) {
                                     </div>
                                 </div>
                                 {(quiz.style.button.variant === 'contained' || quiz.style.question.variant === 'contained') &&
-                                    <div className='flex center size100'>
-                                        <div
-                                            className={styles.divider}
-                                            style={{
-                                                backgroundColor: 'black',
-                                                opacity: 0.5,
-                                            }}
-                                        >
+                                    <div className='flex center'>
+                                        <div className={styles.divider}>
                                         </div>
                                         <div className={styles.inputContainer}>
-                                            <div className='flex row start size100' style={{ gap: '3%' }}>
+                                            <div className={styles.inputTitle}>
                                                 <TextFieldsRoundedIcon sx={{ color: '#1c222c' }} />
                                                 <h4 className={styles.inputLabel}>
                                                     Texto
@@ -1858,7 +1955,7 @@ export default function ProfileEditor(props) {
                         {stepDelay === 2 && quiz.questions.length > 0 &&
                             <div className='flex size100 start'>
                                 <div className={styles.inputContainer}>
-                                    <div className='flex row start size100' style={{ gap: '3%' }}>
+                                    <div className={styles.inputTitle}>
                                         <ContactSupportRoundedIcon sx={{ color: '#1c222c' }} />
                                         <h4 className={styles.inputLabel}>
                                             Tipo da Pergunta
@@ -1878,20 +1975,15 @@ export default function ProfileEditor(props) {
                                             <MenuItem value={'standard'}>Padrão</MenuItem>
                                         </Select>
                                     </FormControl>
-                                </div>
-                                <div
-                                    className={styles.divider}
-                                    style={{
-                                        backgroundColor: 'black',
-                                        opacity: 0.5,
-                                    }}
-                                >
+                                    <div className={styles.divider} style={{ width: '110%', marginBottom: '-0.2rem', marginTop: '0.5rem' }}>
+                                    </div>
                                 </div>
                                 <div className={styles.inputContainer}>
                                     <div className='flex row start size100'
                                         style={{
                                             gap: '3%',
-                                        }}>
+                                        }}
+                                    >
                                         <TimerRoundedIcon sx={{ color: '#1c222c' }} />
                                         <h4 className={styles.inputLabel}>
                                             Timer
@@ -1906,7 +1998,7 @@ export default function ProfileEditor(props) {
                                         />
                                     </div>
                                     <motion.div
-                                        className='flex relative size100'
+                                        className='flex relative fillWidth'
                                         initial={{
                                             marginBottom: quiz.questions[currentSlide].haveTimer
                                                 ? '0.00001px'
@@ -1922,7 +2014,7 @@ export default function ProfileEditor(props) {
                                                 ? 0
                                                 : 0.15,
                                             duration: 0.3,
-                                            ease: 'easeOut'
+                                            ease: ANIMATION_FIELDS
                                         }}
                                     >
                                         <motion.div
@@ -1942,7 +2034,7 @@ export default function ProfileEditor(props) {
                                                     ? 0.15
                                                     : 0,
                                                 duration: 0.3,
-                                                ease: 'easeOut'
+                                                ease: ANIMATION_FIELDS
                                             }}
                                         >
                                             <FormControl sx={{
@@ -2009,133 +2101,147 @@ export default function ProfileEditor(props) {
                                         </motion.div>
                                     </motion.div>
                                 </div>
-                                <div
-                                    className={styles.divider}
-                                    style={{
-                                        backgroundColor: 'black',
-                                        opacity: 0.5,
-                                    }}
-                                >
-                                </div>
-                                <div className={styles.inputContainer}>
-                                    <div className='flex row start size100' style={{ gap: '4%' }}>
-                                        <BsTriangleFill size={20} style={{ color: '#1c222c', scale: 2 }} />
-                                        <h4 className={styles.inputLabel}>
-                                            Pontos (Opção 1)
-                                        </h4>
-                                    </div>
-                                    <FormControl sx={{ width: '100%' }}>
-                                        <InputLabel size='small'>
-                                            Perfil
-                                        </InputLabel>
-                                        <Select
-                                            MenuProps={MenuProps}
-                                            input={<OutlinedInput label="Perfil" />}
-                                            placeholder='Escolha um Perfil'
-                                            value={quiz.questions[currentSlide].options[0].actions[0].profile}
-                                            onChange={e => handleChangeOptionActionField(e.target.value, 'profile', 0, 0)}
-                                            size='small'
-                                            sx={{
-                                                width: '100%',
-                                            }}
+                                {quiz.questions[currentSlide].options.map((option, i) =>
+                                    i < 4 || quiz.questions[currentSlide].haveExtraOptions
+                                        ? <div
+                                            key={i}
+                                            className={styles.inputContainer}
                                         >
-                                            {quiz.results.map((result, i) =>
-                                                <MenuItem
-                                                    className={styles.menuItemColorful}
-                                                    style={{
-                                                        backgroundColor: result.color.concat('b0')
-                                                    }}
-                                                    key={i} value={result.id}
+                                            <div className={styles.divider} style={{ width: '110%' }}>
+                                            </div>
+                                            <div className={styles.inputTitle} style={{ gap: '4%' }}>
+                                                {ICONS_POLYGONS[i]}
+                                                <h4 className={styles.inputLabel}>
+                                                    {`Pontos (Opção ${i + 1})`}
+                                                </h4>
+                                            </div>
+                                            {option.actions.map((action, j) =>
+                                                <div
+                                                    className={styles.actionsContainer}
+                                                    key={j}
                                                 >
-                                                    {result.name}
-                                                </MenuItem>
+                                                    <div className='flex row start alignStart fillWidth'>
+                                                        <FormControl sx={{ width: '80%' }}>
+                                                            <InputLabel size='small'>
+                                                                Perfil
+                                                            </InputLabel>
+                                                            <Select
+                                                                MenuProps={MenuProps}
+                                                                input={<OutlinedInput label="Perfil" />}
+                                                                placeholder='Escolha um Perfil'
+                                                                value={action.profile}
+                                                                onChange={e => handleChangeOptionActionProfile(e.target.value, currentSlide, i, j)}
+                                                                size='small'
+                                                                sx={{
+                                                                    width: '100%',
+                                                                }}
+                                                            >
+                                                                {quiz.results.map((result, i) =>
+                                                                    result.name !== ''
+                                                                        ? <MenuItem
+                                                                            className={styles.menuItemColorful}
+                                                                            style={{
+                                                                                backgroundColor: result.color.concat('b0')
+                                                                            }}
+                                                                            key={i}
+                                                                            value={result.id}
+                                                                        >
+                                                                            {result.name}
+                                                                        </MenuItem>
+                                                                        : undefined
+                                                                )}
+                                                            </Select>
+                                                        </FormControl>
+                                                        <FormControl sx={{ width: '20%' }}>
+                                                            <IconButton
+                                                                onClick={() => handleDeleteAction(currentSlide, i, j)}
+                                                                sx={{ scale: '0.7', margin: '-4px' }}
+                                                            >
+                                                                <DeleteForeverIcon sx={{ scale: '1.2' }} />
+                                                            </IconButton>
+                                                        </FormControl>
+                                                    </div>
+                                                    <motion.div
+                                                        className='flex relative fillWidth'
+                                                        initial={{
+                                                            marginBottom: action.profile !== ''
+                                                                ? '0.00001px'
+                                                                : '-50px',
+                                                        }}
+                                                        animate={{
+                                                            marginBottom: action.profile !== ''
+                                                                ? '0.00001px'
+                                                                : '-50px',
+                                                        }}
+                                                        transition={{
+                                                            delay: action.profile !== ''
+                                                                ? 0
+                                                                : 0.15,
+                                                            duration: 0.3,
+                                                            ease: ANIMATION_FIELDS
+                                                        }}
+                                                    >
+                                                        <motion.div
+                                                            className='flex align-start relative fillWidth'
+                                                            initial={{
+                                                                right: action.profile !== ''
+                                                                    ? '0%'
+                                                                    : '-150%',
+                                                            }}
+                                                            animate={{
+                                                                right: action.profile !== ''
+                                                                    ? '0%'
+                                                                    : '-150%',
+                                                            }}
+                                                            transition={{
+                                                                delay: action.profile !== ''
+                                                                    ? 0.15
+                                                                    : 0,
+                                                                duration: 0.3,
+                                                                ease: ANIMATION_FIELDS
+                                                            }}
+                                                        >
+                                                            <FormControl sx={{
+                                                                width: '80%',
+                                                                display: 'flex',
+                                                            }}>
+                                                                <InputLabel size='small'>
+                                                                    Pontos
+                                                                </InputLabel>
+                                                                <Select
+                                                                    MenuProps={MenuProps}
+                                                                    input={<OutlinedInput label="Pontos" />}
+                                                                    value={action.points}
+                                                                    onChange={e => handleChangeOptionActionField(e.target.value, 'points', currentSlide, i, j)}
+                                                                    size='small'
+                                                                    sx={{
+                                                                        width: '100%',
+                                                                    }}
+                                                                >
+                                                                    <MenuItem value={1}>1 Ponto</MenuItem>
+                                                                    <MenuItem value={2}>2 Pontos</MenuItem>
+                                                                    <MenuItem value={3}>3 Pontos</MenuItem>
+                                                                </Select>
+                                                            </FormControl>
+                                                        </motion.div>
+                                                    </motion.div>
+                                                </div>
                                             )}
-                                            <MenuItem
-                                                value={'none'}
-                                            >
-                                                Nenhum
-                                            </MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                    <motion.div
-                                        className='flex relative size100'
-                                        initial={{
-                                            marginBottom: quiz.questions[currentSlide].options[0].actions[0].profile !== 'none'
-                                                ? '0.00001px'
-                                                : '-62px',
-                                        }}
-                                        animate={{
-                                            marginBottom: quiz.questions[currentSlide].options[0].actions[0].profile !== 'none'
-                                                ? '0.00001px'
-                                                : '-62px',
-                                        }}
-                                        transition={{
-                                            delay: quiz.questions[currentSlide].options[0].actions[0].profile !== 'none'
-                                                ? 0
-                                                : 0.15,
-                                            duration: 0.3,
-                                            ease: 'easeOut'
-                                        }}
-                                    >
-                                        <motion.div
-                                            className='flex relative size100'
-                                            initial={{
-                                                right: quiz.questions[currentSlide].options[0].actions[0].profile !== 'none'
-                                                    ? '0%'
-                                                    : '-150%',
-                                            }}
-                                            animate={{
-                                                right: quiz.questions[currentSlide].options[0].actions[0].profile !== 'none'
-                                                    ? '0%'
-                                                    : '-150%',
-                                            }}
-                                            transition={{
-                                                delay: quiz.questions[currentSlide].options[0].actions[0].profile !== 'none'
-                                                    ? 0.15
-                                                    : 0,
-                                                duration: 0.3,
-                                                ease: 'easeOut'
-                                            }}
-                                        >
-                                            <FormControl sx={{
-                                                width: '100%',
-                                                display: 'flex',
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                            }}>
-                                                <InputLabel size='small'>
-                                                    Pontos
-                                                </InputLabel>
-                                                <Select
-                                                    MenuProps={MenuProps}
-                                                    input={<OutlinedInput label="Pontos" />}
-                                                    value={quiz.questions[currentSlide].options[0].actions[0].points}
-                                                    onChange={e => handleChangeOptionActionField(e.target.value, 'points', 0, 0)}
+                                            {option.actions.length < quiz.results.length &&
+                                                <Button
                                                     size='small'
+                                                    variant='contained'
+                                                    onClick={() => addAction(currentSlide, i)}
                                                     sx={{
-                                                        width: '100%',
+                                                        width: '100%'
                                                     }}
                                                 >
-                                                    <MenuItem value={1}>1 Ponto</MenuItem>
-                                                    <MenuItem value={2}>2 Pontos</MenuItem>
-                                                    <MenuItem value={3}>3 Pontos</MenuItem>
-                                                </Select>
-                                            </FormControl>
-                                        </motion.div>
-                                    </motion.div>
-                                    <Button size='small' variant='contained'>
-                                        Adicionar Perfil
-                                    </Button>
-                                </div>
-                                <div
-                                    className={styles.divider}
-                                    style={{
-                                        backgroundColor: 'black',
-                                        opacity: 0.5,
-                                    }}
-                                >
-                                </div>
+                                                    Adicionar Perfil
+                                                </Button>
+                                            }
+                                        </div>
+                                        : undefined
+                                )}
                             </div>
                         }
                     </div>

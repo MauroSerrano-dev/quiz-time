@@ -6,13 +6,13 @@ export default function Step(props) {
         click,
         stepStyle,
         label,
-        labelStyle
+        labelStyle,
     } = props
 
     return (
         <div
             className={styles.step}
-            style={{ ...stepStyle }}
+            style={stepStyle}
             onClick={click}
         >
             {icon}

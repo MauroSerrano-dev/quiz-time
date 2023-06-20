@@ -107,13 +107,13 @@
 }
 
 #addProfileButton {
-    width: 50%;
+    margin-top: 1rem;
     font-size: 13px;
     line-height: 17px;
 }
 
 #addQuestionButton {
-    width: 50%;
+    margin-top: 1rem;
     font-size: 13px;
     line-height: 17px;
 }
@@ -147,7 +147,7 @@
     transition: right 300ms ease;
     overflow-y: auto;
     overflow-x: hidden;
-    padding-top: 2rem;
+    padding-top: 1rem;
 }
 
 .slideImgContainer {
@@ -299,6 +299,16 @@
     justify-content: flex-start;
     width: 80%;
     padding-bottom: 1rem;
+    gap: 0.6rem;
+}
+
+.inputTitle {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 0.5rem;
+    gap: 2%;
 }
 
 .inputLabel {
@@ -378,8 +388,20 @@
 }
 
 .divider {
+    position: relative;
     width: 90%;
     height: 0.1rem;
+    border-radius: 10rem;
+    background-color: black;
+    opacity: 0.5;
+    margin-bottom: 1rem;
+}
+
+.actionsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    width: 100%;
 }
 
 /* HOVER */

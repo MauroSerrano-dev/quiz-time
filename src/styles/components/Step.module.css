@@ -18,4 +18,11 @@
     width: 160px;
     font-size: 11px;
     transition: all 500ms ease;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.step:hover {
+    opacity: 0.8;
 }

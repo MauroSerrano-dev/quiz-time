@@ -1,5 +1,8 @@
 import styles from '@/styles/components/Stepper.module.css'
 import Step from './Step'
+import { Button } from '@mui/material'
+import NavigateBeforeRoundedIcon from '@mui/icons-material/NavigateBeforeRounded'
+import NavigateNextRoundedIcon from '@mui/icons-material/NavigateNextRounded'
 
 export default function Stepper(props) {
     const {
@@ -25,6 +28,42 @@ export default function Stepper(props) {
 
     return (
         <div style={{ ...containerStyle }} className={styles.container}>
+            <Button
+                onClick={() =>
+                    changeStep(currentStep > 0
+                        ? currentStep - 1
+                        : currentStep
+                    )
+                }
+                disabled={currentStep <= 0}
+                startIcon={<NavigateBeforeRoundedIcon />}
+                size='small'
+                sx={{
+                    position: 'absolute',
+                    left: '-24%',
+                    width: '115px'
+                }}
+            >
+                Voltar
+            </Button>
+            <Button
+                onClick={() =>
+                    changeStep(currentStep < steps.length - 1
+                        ? currentStep + 1
+                        : currentStep
+                    )
+                }
+                disabled={currentStep >= steps.length - 1}
+                endIcon={<NavigateNextRoundedIcon />}
+                size='small'
+                sx={{
+                    position: 'absolute',
+                    right: '-26%',
+                    width: '115px'
+                }}
+            >
+                Avançar
+            </Button>
             <div className={styles.incompleteContainer}>
                 {steps.map((icon, i) =>
                     <div key={i} className={styles.stepPath}>
