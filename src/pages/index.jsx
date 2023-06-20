@@ -8,8 +8,6 @@ export default function Index(props) {
 
   return (
     <div>
-      <Head>
-      </Head>
       <motion.div
         id={styles.container}
         initial={{ opacity: 0, scale: 1.5, y: 250 }}
