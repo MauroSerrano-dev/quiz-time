@@ -49,13 +49,14 @@ function MyApp(props) {
       <Head>
         <title>Quiz Time</title>
         <meta name="description" content="Quiz Time: Create captivating quizzes and deliver interactive presentations. Engage your audience with dynamic content and foster active participation. Perfect for educators, trainers, and presenters. Start creating interactive quizzes now!" />
+        <meta name="keywords" content="Quiz, Presentation, Create, Audience, Interact, Game, Jogo, Apresentação, Criar" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="referrer" content="no-referrer" />
 
         {/* Meta tags Open Graph */}
         <meta property="og:title" content="Quiz Time" />
         <meta property="og:description" content="Create captivating quizzes and deliver interactive presentations. Engage your audience with dynamic content and foster active participation. Perfect for educators, trainers, and presenters. Start creating interactive quizzes now!" />
-        <meta property="og:image" content="logos/logo.png" />
+        <meta property="og:image" content="logos/logo-white-blue.png" />
         <meta property="og:url" content="https://quiztimeapp.com" />
 
         <link rel="icon" href="logos/QT-logo.png" />
