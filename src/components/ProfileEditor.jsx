@@ -9,6 +9,7 @@ import {
     OutlinedInput,
     Slider,
     Switch,
+    TextField,
 } from '@mui/material'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import React, { useEffect } from 'react';
@@ -24,6 +25,7 @@ import OptionInput from './OptionInput'
 import { CustomTextField } from '../../utils/mui'
 import QuestionField from './QuestionField'
 import $ from 'jquery'
+import Router from "next/router";
 
 // ICONS
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
@@ -52,6 +54,12 @@ import CircleRoundedIcon from '@mui/icons-material/CircleRounded'
 const ANIMATION_FIELDS = [.59, 0, .03, 1.23]
 const ANIMATION_COLUMNS_DURATION = 300
 const ANIMATION_COLUMNS = `all ${ANIMATION_COLUMNS_DURATION}ms cubic-bezier(.59, 0, .03, 1.23)`
+
+const CATEGORIES = [
+    { value: 'personality', label: 'Teste de Personalidade' },
+    { value: 'fun', label: 'Divertido' },
+    { value: 'other', label: 'Outro' },
+]
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -93,6 +101,7 @@ const QUESTIONS_TYPES = new Map([
 
 export default function ProfileEditor(props) {
     const {
+        session,
         quiz,
         setQuiz,
         INICIAL_QUIZ,
@@ -106,21 +115,35 @@ export default function ProfileEditor(props) {
     const [stepDelay, setStepDelay] = useState(0)
     const [currentSlide, setCurrentSlide] = useState(0)
     const [notInDragNDropState, setNotInDragNDropState] = useState(true)
-    const [showModal, setShowModal] = useState(true)
-    const [showModalOpacity, setShowModalOpacity] = useState(true)
+    const [showInfoModal, setShowInfoModal] = useState(false)
+    const [showModalInfoOpacity, setShowInfoModalOpacity] = useState(false)
+    
     const [attSizeRef, setAttSizeRef] = useState(false)
+
+    const [alreadyShowedModal, setAlreadyShowedModal] = useState(false)
+    const [disableCreateQuiz, setDisableCreateQuiz] = useState(false)
+    const [userImgsSrc, setUserImgsSrc] = useState([])
     const [middleAllSize, setMiddleAllSize] = useState({
         width: $(`.${styles.middleAll}`).width(),
         height: $(`.${styles.middleAll}`).height()
     })
 
     useEffect(() => {
+        getUserImgsSrc()
+
         setTimeout(() => {
             setMiddleAllSize({
                 width: $(`.${styles.middleAll}`).width(),
                 height: $(`.${styles.middleAll}`).height()
             })
         }, 1)
+
+        if (!alreadyShowedModal) {
+            setAlreadyShowedModal(true)
+            setTimeout(() => {
+                openModal()
+            }, 200)
+        }
 
         function handleResize() {
             setMiddleAllSize({
@@ -155,10 +178,24 @@ export default function ProfileEditor(props) {
         }],
     ])
 
+    async function getUserImgsSrc() {
+        const options = {
+            method: 'GET',
+            headers: {
+                'id': session.user.id,
+                'field': 'imgsSrc'
+            },
+        }
+        await fetch("/api/users", options)
+            .then(response => response.json())
+            .then(response => setUserImgsSrc(response.value))
+            .catch(err => console.error(err))
+    }
+
     function handleAddQuestion() {
         setQuiz(prev => ({
             ...prev,
-            questions: [...prev.questions, INICIAL_QUESTION]
+            questions: [...prev.questions, { ...INICIAL_QUESTION, id: getNewQuestionId() }]
         }))
         changeCurrentSlide(quiz.questions.length)
     }
@@ -229,6 +266,13 @@ export default function ProfileEditor(props) {
             questions,
         }))
         setTimeout(() => setNotInDragNDropState(true), 300)
+    }
+
+    function getNewQuestionId() {
+        for (let i = 0; i < quiz.questions.length + 1; i++) {
+            if (quiz.questions.every(result => result.id !== `question-${i}`))
+                return `question-${i}`
+        }
     }
 
     function getNewProfileId() {
@@ -438,9 +482,16 @@ export default function ProfileEditor(props) {
     }
 
     function closeModal() {
-        setShowModalOpacity(false)
+        setShowInfoModalOpacity(false)
         setTimeout(() => {
-            setShowModal(false)
+            setShowInfoModal(false)
+        }, 300)
+    }
+
+    function openModal() {
+        setShowInfoModal(true)
+        setTimeout(() => {
+            setShowInfoModalOpacity(true)
         }, 300)
     }
 
@@ -620,6 +671,13 @@ export default function ProfileEditor(props) {
         }))
     }
 
+    function handleChangeQuizField(value, field) {
+        setQuiz(prev => ({
+            ...prev,
+            [field]: value
+        }))
+    }
+
     function handleChangeQuestionField(value, field) {
         setQuiz(prev => ({
             ...prev,
@@ -727,6 +785,46 @@ export default function ProfileEditor(props) {
         }))
     }
 
+    async function createQuiz(newQuiz) {
+        /* if (newQuiz.quizInfo.name === '') {
+            showInfoToast("Nenhum Quiz Selecitonado.", 3000)
+            return
+        }
+        if (containsAccents(newQuiz.code)) {
+            showInfoToast("O nome não pode conter acentos.", 3000)
+            return
+        }
+        if (!validateCodeCharacters(newQuiz.code)) {
+            showInfoToast("O nome deve conter apenas letras, números, espaços ou hífens.", 5000)
+            return
+        }
+        if (!validateCodeLength(newQuiz.code)) {
+            showInfoToast("O nome deve conter ao menos 3 letras ou números.", 5000)
+            return
+        }
+        if ((newQuiz.private && newQuiz.password.length < 3)) {
+            showInfoToast("A senha deve conter ao menos 3 caracteres.", 5000)
+            return
+        }
+        if (await getRoom(newQuiz.code)) {
+            showErrorToast("Sala já existente, por favor escolha outro nome.", 5000)
+            return
+        } */
+        setDisableCreateQuiz(false)
+        console.log(JSON.stringify({ field: 'quizzes', userEmail: session.user.email, newQuiz: newQuiz }))
+        const options = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ field: 'quizzes', userEmail: session.user.email, newQuiz: newQuiz })
+        }
+
+        await fetch('/api/users', options)
+            .then(response => response.json())
+            .then(response => console.log(response))
+            .catch(err => console.error(err))
+        Router.push(`/profile?id=${session.user.id}`)
+    }
+
     return (
         <motion.div
             id={styles.editorContainer}
@@ -735,7 +833,7 @@ export default function ProfileEditor(props) {
             transition={{ duration: 0.5, delay: 0.2, ease: [.62, -0.18, .32, 1.17] }}
             style={BACKGROUND_STYLES.get(quiz.style.background.type)}
         >
-            {showModal &&
+            {showInfoModal &&
                 <Modal
                     width={'550px'}
                     height={'450px'}
@@ -744,7 +842,7 @@ export default function ProfileEditor(props) {
                     widthSmall={'250px'}
                     heightSmall={'450px'}
                     closeModal={closeModal}
-                    showModalOpacity={showModalOpacity}
+                    showModalInfoOpacity={showModalInfoOpacity}
                     head={
                         <h2>Crie seu Quiz em Apenas 5 passos!</h2>
                     }
@@ -876,7 +974,6 @@ export default function ProfileEditor(props) {
                             id={styles.middleZero}
                         >
                             <FileInput
-                                index={0}
                                 type='results'
                                 quiz={quiz}
                                 setQuiz={setQuiz}
@@ -885,6 +982,9 @@ export default function ProfileEditor(props) {
                                 width='500px'
                                 height='300px'
                                 INICIAL_IMG={INICIAL_IMG}
+                                session={session}
+                                userImgsSrc={userImgsSrc}
+                                getUserImgsSrc={getUserImgsSrc}
                             />
                             <CustomTextField
                                 value={quiz.results[currentSlide].name}
@@ -892,6 +992,7 @@ export default function ProfileEditor(props) {
                                 onChange={handleProfileNameChange}
                                 variant='filled'
                                 autoComplete='off'
+                                spellCheck={false}
                             />
                         </div>
                     }
@@ -1066,13 +1167,16 @@ export default function ProfileEditor(props) {
                                 }}
                             >
                                 <FileInput
-                                    index={0}
                                     type='questions'
                                     quiz={quiz}
                                     setQuiz={setQuiz}
                                     currentSlide={currentSlide}
                                     img={quiz.questions[currentSlide].img}
                                     INICIAL_IMG={INICIAL_IMG}
+                                    session={session}
+                                    userImgsSrc={userImgsSrc}
+                                    getUserImgsSrc={getUserImgsSrc}
+                                    changeScale
                                 />
                             </div>
                             <div className={styles.editorOptionsContainer}>
@@ -1226,6 +1330,63 @@ export default function ProfileEditor(props) {
                                         : 'Adicionar Respostas Adicionais'
                                 }
                             </Button>
+                        </div>
+                    }
+                    {stepDelay === 4 &&
+                        <div
+                            className={styles.middleAll}
+                            id={styles.middleFour}
+                        >
+                            <div
+                                className={styles.finalContainer}
+                            >
+                                <TextField
+                                    label="Nome"
+                                    variant='outlined'
+                                    size='small'
+                                    autoComplete='off'
+                                    spellCheck={false}
+
+                                />
+                                <TextField
+                                    label="Descrição"
+                                    variant='outlined'
+                                    size='small'
+                                    autoComplete='off'
+                                    spellCheck={false}
+                                />
+                                <FormControl sx={{ width: '100%' }}>
+                                    <InputLabel size='small'>
+                                        Categoria
+                                    </InputLabel>
+                                    <Select
+                                        MenuProps={MenuProps}
+                                        input={<OutlinedInput label="Categoria" />}
+                                        value={quiz.category}
+                                        onChange={handleChangeQuizField}
+                                        size='small'
+                                        sx={{
+                                            width: '100%',
+                                        }}
+                                    >
+                                        {CATEGORIES.map((category, i) =>
+                                            <MenuItem
+                                                value={category.value}
+                                                key={i}
+                                            >
+                                                {category.label}
+                                            </MenuItem>
+                                        )}
+                                    </Select>
+                                </FormControl>
+                                <Button
+                                    variant='contained'
+                                    onClick={() => createQuiz(quiz)}
+                                    disabled={disableCreateQuiz}
+                                >
+                                    {disableCreateQuiz ? 'Criando Quiz' : 'Criar Quiz'}
+                                </Button>
+                            </div>
                         </div>
                     }
                 </div>
@@ -1467,8 +1628,19 @@ export default function ProfileEditor(props) {
                                                         </div>
                                                         <div className={styles.slide}>
                                                             <h5>{i + 1} {QUESTIONS_TYPES.get(question.type)}</h5>
-                                                            <div className={styles.slideBoard} style={BACKGROUND_STYLES.get(quiz.style.background.type)}>
-                                                                <div className={styles.miniQuestion}>
+                                                            <div
+                                                                className={styles.slideBoard}
+                                                                style={BACKGROUND_STYLES.get(quiz.style.background.type)}
+                                                            >
+                                                                <div
+                                                                    className={styles.miniQuestion}
+                                                                    style={{
+                                                                        transition: ANIMATION_COLUMNS,
+                                                                        marginTop: question.img.content === ''
+                                                                            ? '10%'
+                                                                            : '0px'
+                                                                    }}
+                                                                >
                                                                     <QuestionField
                                                                         editQuestionMode
                                                                         textColor={quiz.style.button.textColor}
@@ -1480,7 +1652,32 @@ export default function ProfileEditor(props) {
                                                                         disabled
                                                                     />
                                                                 </div>
-                                                                <div className={styles.optionsContainerSlide}>
+                                                                <motion.div
+                                                                    className={`${styles.slideQuestionImg}`}
+                                                                    initial={{
+                                                                        height: question.img.content === ''
+                                                                            ? '0px'
+                                                                            : '30%'
+                                                                    }}
+                                                                    animate={{
+                                                                        height: question.img.content === ''
+                                                                            ? '0px'
+                                                                            : '30%'
+                                                                    }}
+                                                                    transition={{
+                                                                        duration: 0.3,
+                                                                        ease: ANIMATION_FIELDS
+                                                                    }}
+                                                                >
+                                                                    <img
+                                                                        style={question.img.positionToFit === 'vertical'
+                                                                            ? { height: 'auto', width: '100%' }
+                                                                            : { height: '100%', width: 'auto' }
+                                                                        }
+                                                                        src={question.img.content}
+                                                                    />
+                                                                </motion.div>
+                                                                <div className={styles.optionsQuestionsSlide}>
                                                                     <div
                                                                         className={`
                                                                     ${styles.optionsRow} 
@@ -2230,7 +2427,7 @@ export default function ProfileEditor(props) {
                                             {option.actions.length < quiz.results.length &&
                                                 <Button
                                                     size='small'
-                                                    variant='contained'
+                                                    variant='text'
                                                     onClick={() => addAction(currentSlide, i)}
                                                     sx={{
                                                         width: '100%'

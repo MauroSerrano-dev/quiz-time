@@ -22,6 +22,8 @@
     border-radius: 4px;
     box-shadow: 0px 0px 20px 0px;
     overflow: hidden;
+    z-index: 5;
+    transition: all ease-out 200ms;
 }
 
 .dragContainer {
@@ -126,7 +128,43 @@
     cursor: pointer;
 }
 
+.modalBody {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+
+    height: 100%;
+    width: 100%;
+}
+
+.tabsContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+    height: 100%;
+    width: 25%;
+
+    padding-top: 10%;
+
+    border-right: solid rgba(0, 0, 0, 0.5) 2px;
+    box-shadow: 0px 0px 4px 0px black;
+
+    overflow: hidden;
+}
+
+.imgsContainer{
+    height: 100%;
+    width: 75%;
+}
+
 /* HOVER */
+
+.imgContainerHover:hover {
+    scale: 2.2;
+}
 
 .addButton:hover {
     background-color: rgb(190, 190, 190);

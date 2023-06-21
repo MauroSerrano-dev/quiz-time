@@ -340,7 +340,7 @@ const newRoom = {
                         "type": "standard"
                     }
                 ],
-                "quizzesCustom": [],
+                "quizzes": [],
                 "purchases": [],
                 "plan": { "name": "Free" },
                 "emailVerified": null
@@ -364,7 +364,7 @@ const newRoom = {
                         "type": "standard"
                     }
                 ],
-                "quizzesCustom": [],
+                "quizzes": [],
                 "purchases": [],
                 "plan": { "name": "Free" },
                 "emailVerified": null
@@ -397,7 +397,7 @@ const newRoom = {
                         "type": "standard"
                     }
                 ],
-                "quizzesCustom": [],
+                "quizzes": [],
                 "purchases": [],
                 "plan": { "name": "Free" },
                 "emailVerified": null
@@ -438,7 +438,7 @@ const newRoom = {
                         "type": "standard"
                     }
                 ],
-                "quizzesCustom": [],
+                "quizzes": [],
                 "purchases": [],
                 "plan": { "name": "Free" },
                 "emailVerified": null
@@ -490,7 +490,7 @@ const newRoom = {
                         "type": "standard"
                     }
                 ],
-                "quizzesCustom": [],
+                "quizzes": [],
                 "purchases": [],
                 "plan": { "name": "Free" },
                 "emailVerified": null
@@ -563,7 +563,7 @@ const newRoom = {
                         "type": "standard"
                     }
                 ],
-                "quizzesCustom": [],
+                "quizzes": [],
                 "purchases": [],
                 "plan": { "name": "Free" },
                 "emailVerified": null
@@ -653,7 +653,7 @@ const newRoom = {
                         "type": "standard"
                     }
                 ],
-                "quizzesCustom": [],
+                "quizzes": [],
                 "purchases": [],
                 "plan": { "name": "Free" },
                 "emailVerified": null
@@ -677,7 +677,7 @@ const newRoom = {
                         "type": "standard"
                     }
                 ],
-                "quizzesCustom": [],
+                "quizzes": [],
                 "purchases": [],
                 "plan": { "name": "Free" },
                 "emailVerified": null
@@ -767,7 +767,7 @@ const newRoom = {
                         "type": "standard"
                     }
                 ],
-                "quizzesCustom": [],
+                "quizzes": [],
                 "purchases": [],
                 "plan": { "name": "Free" },
                 "emailVerified": null
@@ -791,7 +791,7 @@ const newRoom = {
                         "type": "standard"
                     }
                 ],
-                "quizzesCustom": [],
+                "quizzes": [],
                 "purchases": [],
                 "plan": { "name": "Free" },
                 "emailVerified": null
@@ -815,7 +815,7 @@ const newRoom = {
                         "type": "standard"
                     }
                 ],
-                "quizzesCustom": [],
+                "quizzes": [],
                 "purchases": [],
                 "plan": { "name": "Free" },
                 "emailVerified": null

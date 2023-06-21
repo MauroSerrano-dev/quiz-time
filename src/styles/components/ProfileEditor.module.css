@@ -61,6 +61,7 @@
 }
 
 .slide {
+    position: relative;
     height: 100%;
     width: 80%;
     display: flex;
@@ -80,10 +81,10 @@
     align-items: center;
     justify-content: space-between;
 
-    gap: 5px;
     outline: solid 3px;
     outline-color: transparent;
     transition: outline-color ease 300ms;
+    padding: 3%;
 }
 
 .nameMiniContainer {
@@ -98,12 +99,13 @@
     padding-right: 5px;
     padding-left: 5px;
     border-radius: 10px;
-    margin-bottom: 10%;
+    margin-bottom: 7%;
+    margin-top: 3%;
 }
 
 .nameMiniContainer h5 {
-    margin-top: -1px;
-    margin-bottom: -1px;
+    margin-top: -2px;
+    margin-bottom: -2px;
 }
 
 #addProfileButton {
@@ -157,12 +159,27 @@
     align-items: center;
 
     position: relative;
-    width: 75px;
-    height: 45px;
+    width: 47%;
+    height: 50%;
 
     border-radius: 4px;
     box-shadow: 0px 0px 10px 0px;
     margin-top: 9%;
+    overflow: hidden;
+}
+
+.slideQuestionImg {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    position: relative;
+    width: 31%;
+    height: 30%;
+
+    border-radius: 4px;
+    box-shadow: 0px 0px 10px 0px;
     overflow: hidden;
 }
 
@@ -232,16 +249,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    
-    width: 220px;
-    height: 20%;
-    scale: 1;
-    transition: all ease-out 200ms;
-    z-index: 5;
-}
-
-.fileInputContainer:hover {
-    scale: 2.2;
 }
 
 .editorOptionsContainer {
@@ -366,25 +373,52 @@
 #middleTwo {
 }
 
+#middleFour {
+}
+
+.finalContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: var(--global-white);
+    height: 80%;
+    width: 50%;
+    border-radius: 0.5rem;
+}
+
 .optionsContainerSlide {
-    position: absolute;
-    bottom: 5%;
+    position: relative;
 
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    width: 90%;
+    width: 100%;
     height: 40%;
     gap: 5px;
     pointer-events: none;
 }
 
+.optionsQuestionsSlide {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    height: 42%;
+    gap: 5px;
+    pointer-events: none;
+}
+
 .miniQuestion {
-    width: 90%;
-    height: 15%;
-    margin-top: 11%;
+    width: 100%;
+    height: 18%;
+    margin-top: 10%;
 }
 
 .divider {

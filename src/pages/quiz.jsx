@@ -367,6 +367,7 @@ export default withRouter((props) => {
                                                             label="Senha"
                                                             variant='outlined'
                                                             autoComplete='off'
+                                                            spellCheck={false}
                                                         />
                                                     </div>
                                                 }

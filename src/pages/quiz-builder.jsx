@@ -31,8 +31,8 @@ const INICIAL_OPTION = {
 }
 
 const INICIAL_QUESTION = {
-    type: 'standard',
     id: '',
+    type: 'standard',
     content: '',
     options: [
         INICIAL_OPTION,
@@ -79,8 +79,8 @@ const INICIAL_QUIZ = {
     },
     results: [
         {
-            name: 'Perfil 1',
             id: 'profile-0',
+            name: 'Perfil 1',
             color: '#FFCCB6',
             img: {
                 content: '',
@@ -89,8 +89,8 @@ const INICIAL_QUIZ = {
             },
         },
         {
-            name: 'Perfil 2',
             id: 'profile-1',
+            name: 'Perfil 2',
             color: '#ABDEE6',
             img: {
                 content: '',
@@ -99,8 +99,8 @@ const INICIAL_QUIZ = {
             },
         },
         {
-            name: 'Perfil 3',
             id: 'profile-2',
+            name: 'Perfil 3',
             color: '#CCE2CB',
             img: {
                 content: '',
@@ -110,7 +110,10 @@ const INICIAL_QUIZ = {
         },
     ],
     questions: [
-        INICIAL_QUESTION,
+        {
+            id: 'question-0',
+            ...INICIAL_QUESTION
+        },
     ]
 }
 
@@ -191,6 +194,7 @@ export default function QuizBuilder(props) {
                         </div>
                         : quiz.mode === 'Profile' &&
                         <ProfileEditor
+                            session={session}
                             quiz={quiz}
                             setQuiz={setQuiz}
                             INICIAL_QUIZ={INICIAL_QUIZ}

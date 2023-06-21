@@ -17,7 +17,8 @@ export default NextAuth({
           image: profile.picture,
           createAt: new Date(),
           quizzesInfos: [{ name: 'Perfil Comportamental', purchaseDate: '', type: 'standard' }],
-          quizzesCustom: [],
+          quizzes: [],
+          imgsSrc: [],
           purchases: [],
           plan: { name: 'Free' }
         }
@@ -26,7 +27,17 @@ export default NextAuth({
   ],
   callbacks: {
     session: async (session) => {
-      return Promise.resolve(session);
+      return Promise.resolve({
+        ...session,
+        user: {
+          id: session.user.id,
+          name: session.user.name,
+          email: session.user.email,
+          image: session.user.image,
+          plan: session.user.plan,
+          quizzesInfos: session.user.quizzesInfos,
+        }
+      });
     },
     async signIn(props) {
       const { user, account, profile } = props;

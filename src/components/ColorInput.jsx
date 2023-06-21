@@ -45,6 +45,7 @@ export default function ColorInput(props) {
                     width: '100%',
                 }}
                 autoComplete='off'
+                spellCheck={false}
             />
             <div
                 className={styles.colorSample}

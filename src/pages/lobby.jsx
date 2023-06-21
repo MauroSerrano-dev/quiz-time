@@ -32,7 +32,6 @@ export default function Lobby(props) {
     const [searchCode, setSearchCode] = useState('')
     const [disableCreateNewRoom, setDisableCreateNewRoom] = useState(false)
     const [newCode, setNewCode] = useState('')
-    const [requestState, setRequestState] = useState('denied')
     const [showModal, setShowModal] = useState(false)
     const [showModalOpacity, setShowModalOpacity] = useState(false)
     const [passwordInputOpen, setPasswordInputOpen] = useState(false)
@@ -199,6 +198,7 @@ export default function Lobby(props) {
                             label="Nome da Sala"
                             variant='outlined'
                             autoComplete='off'
+                            spellCheck={false}
                             sx={{
                                 width: '40%',
                                 minWidth: '250px'
@@ -240,9 +240,26 @@ export default function Lobby(props) {
                             body={
                                 <div id={styles.bodyContainer}>
                                     <FormControl sx={{ height: '15%', width: '80%' }}>
-                                        <TextField value={newRoom.name} onChange={handleNewCodeChange} label="Nome" variant='outlined' size='small' autoComplete='off' />
+                                        <TextField
+                                            value={newRoom.name}
+                                            onChange={handleNewCodeChange}
+                                            label="Nome"
+                                            variant='outlined'
+                                            size='small'
+                                            autoComplete='off'
+                                            spellCheck={false}
+                                        />
                                     </FormControl>
-                                    <FormControl sx={{ height: '15%', width: '80%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
+                                    <FormControl
+                                        sx={{
+                                            height: '15%',
+                                            width: '80%',
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: '1rem'
+                                        }}>
                                         <FormControlLabel
                                             className={styles.labelSwitch}
                                             control={<Switch size={isSmall ? 'small' : 'medium'} />}
