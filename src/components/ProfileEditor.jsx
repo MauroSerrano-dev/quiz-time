@@ -842,7 +842,7 @@ export default function ProfileEditor(props) {
                     widthSmall={'250px'}
                     heightSmall={'450px'}
                     closeModal={closeModal}
-                    showModalInfoOpacity={showModalInfoOpacity}
+                    showModalOpacity={showModalInfoOpacity}
                     head={
                         <h2>Crie seu Quiz em Apenas 5 passos!</h2>
                     }

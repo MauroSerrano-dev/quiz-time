@@ -35,9 +35,8 @@ export default function FileInput(props) {
     const containerRef = useRef(null)
 
     useEffect(() => {
-        console.log(img)
         handleResize()
-
+        console.log(showModal)
         function handleResize() {
             setContainerSize({
                 width: containerRef.current.offsetWidth,
@@ -218,6 +217,7 @@ export default function FileInput(props) {
     }
 
     function openModal() {
+        console.log('click')
         if (img.content === '' && showModal === false) {
             setShowModal(true)
             setTimeout(() => {

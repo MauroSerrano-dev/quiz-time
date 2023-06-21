@@ -9,8 +9,8 @@ app.prepare().then(() => {
     const server = express();
 
     // Aumentando o limite de tamanho de corpo para 2MB
-    server.use(express.json({ limit: '2mb' }));
-    server.use(express.urlencoded({ limit: '2mb', extended: true }));
+    /* server.use(express.json({ limit: '2mb' }));
+    server.use(express.urlencoded({ limit: '2mb', extended: true })); */
 
     server.use((req, res, next) => {
         if (req.headers['x-forwarded-proto'] !== 'https' || req.headers.host !== process.env.PROD_URL) {
