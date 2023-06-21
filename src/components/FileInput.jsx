@@ -36,7 +36,6 @@ export default function FileInput(props) {
 
     useEffect(() => {
         handleResize()
-        console.log(showModal)
         function handleResize() {
             setContainerSize({
                 width: containerRef.current.offsetWidth,
@@ -105,16 +104,7 @@ export default function FileInput(props) {
                                 ? 'vertical'
                                 : 'horizontal',
                         }
-                        setQuiz(prev => ({
-                            ...prev,
-                            [type]: prev[type].map((item, i) =>
-                                currentSlide === i
-                                    ? {
-                                        ...item,
-                                        img: newImg
-                                    }
-                                    : item)
-                        }))
+                        putImg(newImg)
                         const options = {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
@@ -143,7 +133,7 @@ export default function FileInput(props) {
     function handleUploadImg(event) {
         if (event.target.files.length > 0) {
             const file = event.target.files[0];
-            console.log(file.size)
+
             if (event.target.files.length > 1)
                 showErrorToast("Não é possível carregar multiplos arquivos.", 3000)
             else if (file.type.split('/')[0] !== 'image'
@@ -173,7 +163,7 @@ export default function FileInput(props) {
                                 ? 'vertical'
                                 : 'horizontal',
                         }
-                        
+
                         const options = {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
@@ -217,13 +207,30 @@ export default function FileInput(props) {
     }
 
     function openModal() {
-        console.log('click')
         if (img.content === '' && showModal === false) {
             setShowModal(true)
             setTimeout(() => {
                 setShowModalOpacity(true)
             }, 300)
         }
+    }
+
+    function chooseImg(img) {
+        putImg(img)
+        closeModal()
+    }
+
+    function putImg(newImg) {
+        setQuiz(prev => ({
+            ...prev,
+            [type]: prev[type].map((item, i) =>
+                currentSlide === i
+                    ? {
+                        ...item,
+                        img: newImg
+                    }
+                    : item)
+        }))
     }
 
     return (
@@ -305,16 +312,15 @@ export default function FileInput(props) {
                                 /> */}
                         </div>
                     }
-                </div>
-                {img.content !== '' &&
-                    <div
-                        className={styles.userImgButtons}
-                        style={{
-                            gap: `${containerSize.width * 0.02}px`,
-                            bottom: `${containerSize.height * 0.03}px`
-                        }}
-                    >
-                        {/* <IconButton
+                    {img.content !== '' &&
+                        <div
+                            className={styles.userImgButtons}
+                            style={{
+                                gap: `${containerSize.width * 0.02}px`,
+                                bottom: `${containerSize.height * 0.03}px`
+                            }}
+                        >
+                            {/* <IconButton
                                 className={styles.buttons}
                                 color='neutral'
                                 size='small'
@@ -332,27 +338,28 @@ export default function FileInput(props) {
                                     }}
                                 />
                             </IconButton> */}
-                        <IconButton
-                            className={styles.buttons}
-                            color='neutral'
-                            onClick={deleteImg}
-                            size='small'
-                            style={{
-                                backgroundColor: '#00000080',
-                                width: `${containerSize.width * 0.085}px`,
-                                height: `${containerSize.width * 0.085}px`,
-                                transition: 'all ease 200ms'
-                            }}
-                        >
-                            <DeleteForeverIcon
+                            <IconButton
+                                className={styles.buttons}
+                                color='neutral'
+                                onClick={deleteImg}
+                                size='small'
                                 style={{
-                                    width: `${containerSize.width * 0.075}px`,
-                                    height: `${containerSize.width * 0.075}px`
+                                    backgroundColor: '#00000080',
+                                    width: `${containerSize.width * 0.085}px`,
+                                    height: `${containerSize.width * 0.085}px`,
+                                    transition: 'all ease 200ms'
                                 }}
-                            />
-                        </IconButton>
-                    </div>
-                }
+                            >
+                                <DeleteForeverIcon
+                                    style={{
+                                        width: `${containerSize.width * 0.065}px`,
+                                        height: `${containerSize.width * 0.065}px`
+                                    }}
+                                />
+                            </IconButton>
+                        </div>
+                    }
+                </div>
             </div>
             {showModal &&
                 <Modal
@@ -415,6 +422,7 @@ export default function FileInput(props) {
                             >
                                 {userImgsSrc.map((img, i) =>
                                     <img
+                                        onClick={() => chooseImg(img)}
                                         key={i}
                                         src={img.content}
                                         style={{
@@ -427,7 +435,8 @@ export default function FileInput(props) {
                                     type='file'
                                     /* className={styles.uploadImgInside} */
                                     onChange={handleUploadImg}
-                                    title=""
+                                    value=''
+                                    title=''
                                 />
                             </div>
                         </div>

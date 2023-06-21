@@ -63,15 +63,27 @@ async function pushUserQuiz(email, newQuiz) {
 async function pushUserImg(email, newImg) {
     try {
         const collection = await getMongoCollection(DATABASE, COLLECTION_NAME);
+        const user = await collection.findOne({ email: email })
+        const imgsSrc = user.imgsSrc
+        let ref
+        let i = 0
+        while (!ref) {
+            if(imgsSrc.every(img => img.ref !== `${i}-` + newImg.name + newImg.content.slice(20, 35)))
+                ref = `${i}-` + newImg.name + newImg.content.slice(20, 35)
+            i++
+        }
         const result = await collection.updateOne(
             { email: email },
             {
                 $push: {
-                    'imgsSrc': newImg
+                    'imgsSrc': {
+                        ...newImg,
+                        ref: ref
+                    }
                 }
             }
         )
-        return result
+        return result.ref
     } catch (error) {
         console.error('Erro ao adicionar a imagem do usuário:', error)
         throw error

@@ -20,9 +20,10 @@ export default async function handler(req, res) {
         }
 
         if (field === 'imgsSrc') {
-            await pushUserImg(userEmail, newImg);
+            const ref = await pushUserImg(userEmail, newImg);
             res.status(201).json({
-                message: 'Imagem Armazenada com Sucesso!'
+                message: 'Imagem Armazenada com Sucesso!',
+                ref: ref
             })
         }
     }
