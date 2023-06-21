@@ -19,6 +19,19 @@ export default function Navbar(props) {
     const [navActive, setNavActive] = useState(false)
     const { pathname } = useRouter()
     const [isOpen, toggleOpen] = useCycle(false, true);
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        }
+
+        window.addEventListener('resize', handleResize)
+
+        return () => {
+            window.removeEventListener('resize', handleResize)
+        }
+    }, [])
 
     return (
         <div id={styles.container}>
@@ -32,7 +45,10 @@ export default function Navbar(props) {
                     {/* <MenuToggle toggle={() => toggleOpen()} /> */}
                     <Link legacyBehavior href={'/'}>
                         <a>
-                            <Logo height='70%' hover />
+                            {windowWidth > 450
+                                ? <Logo height='70%' hover />
+                                : <img src='logos/QT-logo.png' alt='Quiz-Time-Logo' style={{ height: '70%' }} />
+                            }
                         </a>
                     </Link>
                 </div>
