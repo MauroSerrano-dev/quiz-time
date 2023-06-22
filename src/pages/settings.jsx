@@ -841,7 +841,6 @@ export default function Settings(props) {
 
         const response = await fetch('/api/quizzesStandard', options);
         const json = await response.json();
-        console.log(json)
     }
 
     async function handlePopulateRoom() {

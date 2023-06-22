@@ -32,17 +32,13 @@ export default function Logo(props) {
         }
     }, [])
 
-    useEffect(() => {
-        console.log(containerSize)
-    }, [containerSize])
-
     return (
         <div
             ref={containerRef}
             style={{
                 width: width ? width : undefined,
                 height: height ? height : undefined,
-                borderRadius: `${containerSize.width * 0.005}px`,
+                borderRadius: `${containerSize.width * 0.03}px`,
                 outline: `${containerSize.width * 0.01}px solid ${fill}`,
             }}
         >

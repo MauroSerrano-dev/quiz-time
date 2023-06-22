@@ -136,7 +136,6 @@ export default function Lobby(props) {
             .then(response => response.json())
             .then(response => { result = response.room })
             .catch(err => console.error(err))
-        console.log(result)
         return result
     }
 

@@ -117,19 +117,17 @@ export default function ProfileEditor(props) {
     const [notInDragNDropState, setNotInDragNDropState] = useState(true)
     const [showInfoModal, setShowInfoModal] = useState(false)
     const [showModalInfoOpacity, setShowInfoModalOpacity] = useState(false)
-    
+
     const [attSizeRef, setAttSizeRef] = useState(false)
 
     const [alreadyShowedModal, setAlreadyShowedModal] = useState(false)
     const [disableCreateQuiz, setDisableCreateQuiz] = useState(false)
-    const [userImgsSrc, setUserImgsSrc] = useState([])
     const [middleAllSize, setMiddleAllSize] = useState({
         width: $(`.${styles.middleAll}`).width(),
         height: $(`.${styles.middleAll}`).height()
     })
 
     useEffect(() => {
-        getUserImgsSrc()
 
         setTimeout(() => {
             setMiddleAllSize({
@@ -178,20 +176,6 @@ export default function ProfileEditor(props) {
         }],
     ])
 
-    async function getUserImgsSrc() {
-        const options = {
-            method: 'GET',
-            headers: {
-                'id': session.user.id,
-                'field': 'imgsSrc'
-            },
-        }
-        await fetch("/api/users", options)
-            .then(response => response.json())
-            .then(response => setUserImgsSrc(response.value))
-            .catch(err => console.error(err))
-    }
-
     function handleAddQuestion() {
         setQuiz(prev => ({
             ...prev,
@@ -210,14 +194,38 @@ export default function ProfileEditor(props) {
 
     function handleDuplicateQuestion(event, index) {
         event.stopPropagation()
+        const newQuestionId = getNewQuestionId()
+        const questionImg = quiz.questions[index].img
         setQuiz((prev, i) => ({
             ...prev,
             questions: prev.questions.slice(0, index + 1)
-                .concat(prev.questions[index])
+                .concat({ ...prev.questions[index], id: newQuestionId })
                 .concat(prev.questions.slice(index + 1, prev.questions.length))
         }))
         if (index <= currentSlide)
             setCurrentSlide(prev => prev + 1)
+        addImgDatabase(session.user.email, 'questions', newQuestionId, questionImg)
+    }
+
+    async function addImgDatabase(email, type, elementId, questionImg) {
+        const options = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userEmail: email,
+                field: 'img',
+                type: type,
+                elementId: elementId,
+                newImg: questionImg,
+            })
+        }
+
+        await fetch('/api/users', options)
+            .then(response => response.json())
+            .then(response => {
+                console.log(response)
+            })
+            .catch(err => console.error(err))
     }
 
     function handleDragEndProfiles(res) {
@@ -379,7 +387,6 @@ export default function ProfileEditor(props) {
     }
 
     function handleStyleColor(event, objName, fieldName) {
-        console.log(event, objName, fieldName)
         const newColor = typeof event === 'string'
             ? event.toUpperCase()
             : event.target.value[0] === '#'
@@ -813,12 +820,11 @@ export default function ProfileEditor(props) {
         setDisableCreateQuiz(false)
 
         const options = {
-            method: 'POST',
+            method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                field: 'quizzes', 
-                userEmail: session.user.email, 
-                newQuiz: newQuiz 
+                action: 'createQuiz',
+                userEmail: session.user.email
             })
         }
 
@@ -987,8 +993,7 @@ export default function ProfileEditor(props) {
                                 height='300px'
                                 INICIAL_IMG={INICIAL_IMG}
                                 session={session}
-                                userImgsSrc={userImgsSrc}
-                                getUserImgsSrc={getUserImgsSrc}
+                                step={step}
                             />
                             <CustomTextField
                                 value={quiz.results[currentSlide].name}
@@ -1178,9 +1183,8 @@ export default function ProfileEditor(props) {
                                     img={quiz.questions[currentSlide].img}
                                     INICIAL_IMG={INICIAL_IMG}
                                     session={session}
-                                    userImgsSrc={userImgsSrc}
-                                    getUserImgsSrc={getUserImgsSrc}
                                     changeScale
+                                    step={step}
                                 />
                             </div>
                             <div className={styles.editorOptionsContainer}>

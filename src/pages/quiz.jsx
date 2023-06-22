@@ -126,7 +126,6 @@ export default withRouter((props) => {
             method: 'GET'
         }
         await fetch("/api/socket", options)
-        console.log('code', code)
         socket = io({ query: { code: code, } });
 
         socket.on("getData", (startRoom) => {
@@ -145,8 +144,6 @@ export default withRouter((props) => {
 
         socket.on(`updateFieldsRoom${code}`, (att) => {
             const { roomAtt, fields } = att
-            console.log('roomAtt', roomAtt)
-            console.log('fields', fields)
             if (fields.state === 'active') {
                 setTimeout(() =>
                     setQuestionTransition(false), TRANSITION_DURATION)
@@ -176,7 +173,6 @@ export default withRouter((props) => {
     }
 
     function answerControl(option) {
-        console.log((option))
         const player = getPlayer()
         if (optionSelected === option) {
             setOptionSelected()
@@ -242,7 +238,6 @@ export default withRouter((props) => {
     }
 
     function joinQuiz() {
-        console.log('join')
         setJoined(true)
         socket.emit("joinRoom",
             {

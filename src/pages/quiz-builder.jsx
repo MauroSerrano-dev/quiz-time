@@ -4,6 +4,9 @@ import { useRouter } from 'next/router';
 import { motion } from "framer-motion"
 import NoSessionPage from '@/components/NoSessionPage';
 import ProfileEditor from '@/components/ProfileEditor';
+import io from "socket.io-client";
+
+let socket;
 
 const GAME_MODES = [
     { name: 'Profile' },
@@ -32,7 +35,7 @@ const INICIAL_OPTION = {
 }
 
 const INICIAL_QUESTION = {
-    id: '',
+    id: 'question-0',
     type: 'standard',
     content: '',
     options: [
@@ -115,19 +118,100 @@ const INICIAL_QUIZ = {
             id: 'question-0',
             ...INICIAL_QUESTION
         },
-    ]
+    ],
 }
 
 export default function QuizBuilder(props) {
     const { session, signIn } = props
 
     const [building, setBuilding] = useState(false)
+    const [canSave, setCanSave] = useState(true)
     const [quiz, setQuiz] = useState(INICIAL_QUIZ)
     const router = useRouter()
 
     useEffect(() => {
-        console.log(quiz)
+        if (socket)
+            socket.emit("saveSketch",
+                session.user.email,
+                {
+                    ...quiz,
+                    questions: quiz.questions.map((question, i) =>
+                    ({
+                        ...question,
+                        img: INICIAL_IMG,
+                        options: question.options.map((option, j) => ({ ...option, img: INICIAL_IMG }))
+                    })),
+                    results: quiz.results.map((result, i) => ({ ...result, img: INICIAL_IMG })),
+                }
+            )
+        /* console.log(quiz)
+        setCanSave(true)
+        saveQuiz()
+
+        const timeoutId = setTimeout(() => {
+        }, 1000)
+        if (canSave)
+            clearTimeout(timeoutId) */
     }, [quiz])
+
+    useEffect(() => {
+        socketInitializer()
+        /* console.log(quiz)
+        setCanSave(true)
+        saveQuiz()
+
+        const timeoutId = setTimeout(() => {
+        }, 1000)
+        if (canSave)
+            clearTimeout(timeoutId) */
+    }, [])
+
+    const socketInitializer = async () => {
+        const options = {
+            method: 'GET'
+        }
+        await fetch("/api/socket", options)
+
+        socket = io()
+    }
+
+    async function saveQuiz() {
+
+        const options = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                field: 'sketchs',
+                userEmail: session.user.email,
+                sketch: {
+                    ...quiz,
+                    results: quiz.results.map(result =>
+                    ({
+                        ...result,
+                        img: INICIAL_IMG
+                    })),
+                    questions: quiz.questions.map(question =>
+                    ({
+                        ...question,
+                        options: question.options.map(option =>
+                        ({
+                            ...option,
+                            img: INICIAL_IMG
+                        })),
+                        img: INICIAL_IMG
+                    }))
+                }
+            })
+        }
+
+        await fetch('/api/users', options)
+            .then(response => response.json())
+            .then(response => {
+                console.log(response)
+                setCanSave(true)
+            })
+            .catch(err => console.error(err))
+    }
 
     useEffect(() => {
         if (building) {

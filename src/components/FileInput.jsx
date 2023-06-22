@@ -3,7 +3,6 @@ import styles from '../styles/components/FileInput.module.css'
 import { showErrorToast } from '../../utils/toasts'
 import { useEffect, useRef, useState } from 'react'
 import { Button, IconButton } from '@mui/material'
-
 // ICONS
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import AddIcon from '@mui/icons-material/Add'
@@ -11,9 +10,17 @@ import CropIcon from '@mui/icons-material/Crop'
 import Modal from './Modal'
 import AccountBoxRoundedIcon from '@mui/icons-material/AccountBoxRounded';
 import GifBoxRoundedIcon from '@mui/icons-material/GifBoxRounded';
+import AWS from 'aws-sdk';
+
+AWS.config.update({
+    accessKeyId: process.env.NEXT_PUBLIC_ACCESS_KEY_ID_AWS,
+    secretAccessKey: process.env.NEXT_PUBLIC_SECRET_ACCESS_KEY_AWS,
+});
+
 
 export default function FileInput(props) {
     const {
+        quiz,
         setQuiz,
         currentSlide,
         img,
@@ -22,15 +29,15 @@ export default function FileInput(props) {
         height,
         INICIAL_IMG,
         session,
-        userImgsSrc,
-        getUserImgsSrc,
-        changeScale
+        changeScale,
+        step
     } = props
 
     const [isDraggingOver, setIsDraggingOver] = useState(false)
     const [showModal, setShowModal] = useState(false)
     const [showModalOpacity, setShowModalOpacity] = useState(false)
     const [containerSize, setContainerSize] = useState({ width: 0, height: 0 })
+    const s3 = new AWS.S3();
 
     const containerRef = useRef(null)
 
@@ -68,66 +75,7 @@ export default function FileInput(props) {
         setIsDraggingOver(false);
         const files = event.dataTransfer.files
 
-        handleDropImage({ target: { files: files } })
-    }
-
-    function handleDropImage(event) {
-        if (event.target.files.length > 0) {
-            const file = event.target.files[0];
-
-            if (event.target.files.length > 1)
-                showErrorToast("Não é possível carregar multiplos arquivos.", 3000)
-            else if (file.type.split('/')[0] !== 'image'
-                || file.type.split('/')[1].includes('svg'))
-                showErrorToast("Tipo incorreto, por favor insira uma imagem.", 3000)
-            else if (file.size > 1048576)
-                showErrorToast("Por favor insira uma imagem menor que 1MB.", 3000)
-            else {
-                const reader = new FileReader()
-
-                const url = URL.createObjectURL(file)
-                const img = new Image()
-
-                img.src = url
-
-                reader.onload = (e) => {
-                    const fileContent = e.target.result
-                    const fileName = file.name
-                    const fileType = file.type
-                    img.onload = async function () {
-                        const newImg = {
-                            content: fileContent,
-                            name: fileName,
-                            type: fileType,
-                            positionToFit: this.height > this.width
-                                || (this.width / this.height <= containerSize.width / containerSize.height)
-                                ? 'vertical'
-                                : 'horizontal',
-                        }
-                        putImg(newImg)
-                        const options = {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                field: 'imgsSrc',
-                                userEmail: session.user.email,
-                                newImg: newImg
-                            })
-                        }
-
-                        await fetch('/api/users', options)
-                            .then(response => response.json())
-                            .then(response => {
-                                getUserImgsSrc()
-                                console.log(response)
-                            })
-                            .catch(err => console.error(err))
-                        URL.revokeObjectURL(url)
-                    }
-                }
-                reader.readAsDataURL(file);
-            }
-        }
+        handleUploadImg({ target: { files: files } })
     }
 
     function handleUploadImg(event) {
@@ -164,28 +112,59 @@ export default function FileInput(props) {
                                 : 'horizontal',
                         }
 
-                        const options = {
+                        putImg(newImg)
+                        uploadImageToS3(newImg)
+
+                        /* const options = {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
-                                field: 'imgsSrc',
                                 userEmail: session.user.email,
-                                newImg: newImg
+                                field: 'img',
+                                type: step === 0
+                                    ? 'results'
+                                    : 'questions',
+                                elementId: quiz[
+                                    step === 0
+                                        ? 'results'
+                                        : 'questions'][currentSlide].id,
+                                newImg: newImg,
                             })
                         }
 
                         await fetch('/api/users', options)
                             .then(response => response.json())
                             .then(response => {
-                                getUserImgsSrc()
                                 console.log(response)
                             })
-                            .catch(err => console.error(err))
+                            .catch(err => console.error(err)) */
                         URL.revokeObjectURL(url)
                     }
                 }
                 reader.readAsDataURL(file);
             }
+        }
+    }
+
+    // Função para fazer o upload do newImg para o Amazon S3
+    async function uploadImageToS3(newImg) {
+        const bucketName = 'tamaluco'; // Nome do seu bucket no Amazon S3
+        const fileName = newImg.name; // Nome do arquivo a ser armazenado no S3
+        const fileContent = newImg.content; // Conteúdo do arquivo em formato base64
+        const fileType = newImg.type; // Tipo do arquivo
+
+        const params = {
+            Bucket: bucketName,
+            Key: fileName,
+            Body: fileContent,
+            ContentType: fileType,
+        };
+
+        try {
+            await s3.putObject(params).promise();
+            console.log('Upload concluído com sucesso!');
+        } catch (error) {
+            console.error('Erro ao fazer o upload:', error);
         }
     }
 
@@ -213,11 +192,6 @@ export default function FileInput(props) {
                 setShowModalOpacity(true)
             }, 300)
         }
-    }
-
-    function chooseImg(img) {
-        putImg(img)
-        closeModal()
     }
 
     function putImg(newImg) {
@@ -420,17 +394,6 @@ export default function FileInput(props) {
                             <div
                                 className={styles.imgsContainer}
                             >
-                                {userImgsSrc.map((img, i) =>
-                                    <img
-                                        onClick={() => chooseImg(img)}
-                                        key={i}
-                                        src={img.content}
-                                        style={{
-                                            width: '100px',
-                                            height: '100px',
-                                        }}
-                                    />
-                                )}
                                 <input
                                     type='file'
                                     /* className={styles.uploadImgInside} */

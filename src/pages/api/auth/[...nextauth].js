@@ -20,7 +20,8 @@ export default NextAuth({
           quizzes: [],
           imgsSrc: [],
           purchases: [],
-          plan: { name: 'Free' }
+          plan: { name: 'Free' },
+          sketchs: [],
         }
       },
     }),

@@ -1,6 +1,13 @@
 import { Server } from "socket.io";
 const mongoose = require("mongoose");
 
+const INICIAL_IMG = {
+  content: '',
+  name: '',
+  type: '',
+  ref: '',
+}
+
 export default function SocketHandler(req, res) {
 
   // Check if socket server has already been initialized
@@ -31,7 +38,11 @@ export default function SocketHandler(req, res) {
     // Listen for "change" events on the change stream
     changeStream.on("change", (change) => {
       if (change.updateDescription) {
-        io.emit(`updateFieldsRoom${change.fullDocument.code}`, { roomAtt: change.fullDocument, fields: change.updateDescription.updatedFields })
+        io.emit(`updateFieldsRoom${change.fullDocument.code}`,
+          {
+            roomAtt: change.fullDocument,
+            fields: change.updateDescription.updatedFields
+          })
       }
     })
   })
@@ -43,7 +54,8 @@ export default function SocketHandler(req, res) {
 
   io.on("connection", (socket) => {
     console.log('Socket.io client connected')
-    const roomCollection = mongoose.connection.collection("rooms")
+    const roomsCollection = mongoose.connection.collection("rooms")
+    const usersCollection = mongoose.connection.collection("users")
 
     // Get the current value of "active" from the process.env.COLL_ROOMS collection
     mongoose.connection.collection(process.env.COLL_ROOMS).findOne({ code: socket.handshake.query.code })
@@ -67,7 +79,7 @@ export default function SocketHandler(req, res) {
 
       delete updatedRoom._id
       // Obtenha uma referência à coleção "rooms" do MongoDB
-      roomCollection.updateOne(
+      roomsCollection.updateOne(
         { code: updatedRoom.code },
         { $set: updatedRoom }
       )
@@ -85,7 +97,7 @@ export default function SocketHandler(req, res) {
     socket.on("updateAnswer", (player, code) => {
       const newExpireAt = new Date()
       newExpireAt.setSeconds(newExpireAt.getSeconds() + 86400)
-      roomCollection.updateOne(
+      roomsCollection.updateOne(
         { code: code },
         {
           $set: {
@@ -111,7 +123,7 @@ export default function SocketHandler(req, res) {
     socket.on("joinRoom", (player, code) => {
       const newExpireAt = new Date()
       newExpireAt.setSeconds(newExpireAt.getSeconds() + 86400)
-      roomCollection.updateOne(
+      roomsCollection.updateOne(
         { code: code },
         {
           $push: {
@@ -133,7 +145,7 @@ export default function SocketHandler(req, res) {
     })
     // Listen for "leaveRoom" events emitted by the client
     socket.on("leaveRoom", (playerEmail, code) => {
-      roomCollection.updateOne(
+      roomsCollection.updateOne(
         { code: code },
         {
           $pull: { players: { "user.email": playerEmail } }
@@ -148,6 +160,70 @@ export default function SocketHandler(req, res) {
         })
         .catch((err) => {
           console.log("Error leaveRoom:", err);
+          /* io.emit("updateRoomError", err); */
+        })
+    })
+    // Listen for "saveSketch" events emitted by the client
+    socket.on("saveSketch", async (email, sketch) => {
+      const prev = await usersCollection.findOne({ email: email })
+
+      const prevSketch = prev.sketchs.length > 0 ? prev.sketchs[0] : undefined
+
+      function getPrevQuestionsImg(id) {
+        for (let i = 0; i < prevSketch.questions.length; i++) {
+          if (prevSketch.questions[i].id === id) {
+            return prevSketch.questions[i].img
+          }
+        }
+        return INICIAL_IMG
+      }
+
+      function getPrevResultsImg(id) {
+        for (let i = 0; i < prevSketch.results.length; i++) {
+          if (prevSketch.results[i].id === id) {
+            return prevSketch.results[i].img
+          }
+        }
+        return INICIAL_IMG
+      }
+
+      function getPrevOptionsImg(questionId, optionIndex) {
+        for (let i = 0; i < prevSketch.questions.length; i++) {
+          if (prevSketch.questions[i].id === questionId) {
+            for (let j = 0; j < prevSketch.questions[i].options.length; j++) {
+              return prevSketch.questions[i].options[optionIndex].img
+            }
+          }
+        }
+        return INICIAL_IMG
+      }
+      console.log(sketch)
+      usersCollection.updateOne(
+        { email: email },
+        {
+          $set: {
+            sketchs:
+              prevSketch
+                ? [{
+                  ...sketch,
+                  questions: sketch.questions.map((question, i) =>
+                  ({
+                    ...question,
+                    img: getPrevQuestionsImg(question.id),
+                    options: question.options.map((option, j) => ({ ...option, img: getPrevOptionsImg(question.id, j) }))
+                  })),
+                  results: sketch.results.map((result, i) => ({ ...result, img: getPrevResultsImg(result.id) })),
+                }]
+                : [sketch]
+          }
+        }
+      )
+        .then(() => {
+          console.log("saveSketch successfully");
+          /* io.emit("updateRoomSuccess", updatedRoom); */
+        })
+        .catch((err) => {
+          console.log("Error saveSketch:", err);
           /* io.emit("updateRoomError", err); */
         })
     })
