@@ -19,7 +19,8 @@ const INICIAL_ACTION = {
 const INICIAL_IMG = {
     content: '',
     name: '',
-    type: ''
+    type: '',
+    ref: '',
 }
 
 const INICIAL_OPTION = {

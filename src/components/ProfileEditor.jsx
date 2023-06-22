@@ -811,11 +811,15 @@ export default function ProfileEditor(props) {
             return
         } */
         setDisableCreateQuiz(false)
-        console.log(JSON.stringify({ field: 'quizzes', userEmail: session.user.email, newQuiz: newQuiz }))
+
         const options = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ field: 'quizzes', userEmail: session.user.email, newQuiz: newQuiz })
+            body: JSON.stringify({
+                field: 'quizzes', 
+                userEmail: session.user.email, 
+                newQuiz: newQuiz 
+            })
         }
 
         await fetch('/api/users', options)
