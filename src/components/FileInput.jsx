@@ -6,7 +6,6 @@ import { Button, IconButton } from '@mui/material'
 // ICONS
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import AddIcon from '@mui/icons-material/Add'
-import CropIcon from '@mui/icons-material/Crop'
 import Modal from './Modal'
 import AccountBoxRoundedIcon from '@mui/icons-material/AccountBoxRounded';
 import GifBoxRoundedIcon from '@mui/icons-material/GifBoxRounded';
@@ -112,6 +111,7 @@ export default function FileInput(props) {
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
                                 newImg: newImg,
+                                userId: session.user.id
                             })
                         }
 
@@ -148,8 +148,7 @@ export default function FileInput(props) {
     }
 
     function openModal() {
-        console.log('oi')
-        getImage('XZ9.gif')
+        getImage('profile-0')
         if (img.content === '' && showModal === false) {
             setShowModal(true)
             setTimeout(() => {
@@ -161,7 +160,10 @@ export default function FileInput(props) {
     async function getImage(fileName) {
         const options = {
             method: 'GET',
-            headers: { "filename": fileName },
+            headers: {
+                'filename': fileName,
+                'userid': session.user.id
+            },
         };
 
         const response = await fetch("/api/googleCloud", options);
@@ -171,6 +173,7 @@ export default function FileInput(props) {
         const { fileContents } = data;
         const jsonBuffer = Buffer.from(fileContents, 'hex');
         const img = JSON.parse(jsonBuffer.toString('utf-8'));
+        console.log(img)
         putImg(img);
     }
 

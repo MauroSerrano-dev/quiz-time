@@ -24,14 +24,13 @@ const storage = new Storage({
 
 const bucketName = 'quiztime';
 
-export default function handler(req, res) {
-
-    const { newImg } = req.body
+export default async function handler(req, res) {
 
     if (req.method === 'GET') {
         const fileName = req.headers.filename; // Nome do arquivo a ser obtido
+        const userId = req.headers.userid; // Nome do arquivo a ser obtido
 
-        const bucket = storage.bucket(bucketName);
+        const bucket = storage.bucket(userId);
         const file = bucket.file(fileName);
 
         file.download((err, fileContents) => {
@@ -44,10 +43,21 @@ export default function handler(req, res) {
         });
     }
 
+    const { newImg, userId } = req.body
+
     if (req.method === "POST") {
-        const bucket = storage.bucket(bucketName);
-        const fileName = newImg.name;
-        const fileContent = newImg.content;
+        if (!(await checkBucketExists(userId)))
+            await createBucket(userId)
+
+        const bucket = storage.bucket(userId);
+        const fileName = newImg.id;
+        const file = bucket.file(fileName);
+        const fileExists = await file.exists();
+
+        if (fileExists[0]) {
+            // Se o arquivo com o mesmo ID já existir, exclua-o antes de enviar o novo arquivo
+            await file.delete();
+        }
 
         const fileStream = bucket.file(fileName).createWriteStream();
 
@@ -60,5 +70,39 @@ export default function handler(req, res) {
         });
 
         fileStream.end(JSON.stringify(newImg));
+    }
+}
+
+// Função para verificar se o bucket já existe
+async function checkBucketExists(bucketName) {
+    try {
+        const [exists] = await storage.bucket(bucketName).exists();
+        return exists;
+    } catch (err) {
+        console.error('Erro ao verificar se o bucket existe:', err);
+        return false;
+    }
+}
+
+// Função para criar um novo bucket
+async function createBucket(bucketName) {
+    try {
+        const bucketExists = await checkBucketExists(bucketName);
+
+        if (bucketExists) {
+            console.log(`O bucket "${bucketName}" já existe.`);
+            return;
+        }
+
+        const location = 'EU'; // Defina a região desejada aqui
+
+        // Crie um novo bucket com o nome fornecido
+        await storage.createBucket(bucketName, {
+            location: location
+          });
+
+        console.log(`Bucket criado com sucesso: ${bucketName}`);
+    } catch (err) {
+        console.error('Erro ao criar o bucket:', err);
     }
 }
