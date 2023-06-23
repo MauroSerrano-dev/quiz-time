@@ -8,6 +8,7 @@ import { getLayout } from '../../utils/layout'
 import { showErrorToast } from '../../utils/toasts'
 import NoSessionPage from '@/components/NoSessionPage'
 import OptionInput from '@/components/OptionInput'
+import { getImage, getStandardQuiz, getUserQuiz } from '../../utils/api-caller'
 
 let socket
 
@@ -72,16 +73,48 @@ export default withRouter((props) => {
     }, [])
 
     useEffect(() => {
-        if (!room && code && session) {
+        if (!room && code && session)
             socketInitializer()
-        }
     }, [session, code])
 
     useEffect(() => {
         if (room && !quiz) {
+            async function getQuiz() {
+                let quizResponse;
+                if (true) {
+                    quizResponse = await getUserQuiz(session.user.id, '32b1aa1b-7106-4ad5-9bd6-4adb5f197ee9');
+                } else if (room.quizInfo.type === 'standard') {
+                    quizResponse = await getStandardQuiz(session.user.id, '32b1aa1b-7106-4ad5-9bd6-4adb5f197ee9');
+                }
+
+                try {
+                    const response = await quizResponse.json();
+                    const updatedQuiz = {
+                        ...response.quiz,
+                        questions: await Promise.all(response.quiz.questions.map(async (question, i) => {
+                            const img = question.img.id ? await getImage(session.user.id, question.img.id) : null;
+                            const options = await Promise.all(question.options.map(async (option, j) => {
+                                const optionImg = option.img.id ? await getImage(session.user.id, option.img.id) : null;
+                                return { ...option, img: optionImg };
+                            }));
+                            return { ...question, img: img, options: options };
+                        })),
+                        results: await Promise.all(response.quiz.results.map(async (result, i) => {
+                            const img = result.img.id ? await getImage(session.user.id, result.img.id) : null;
+                            return { ...result, img: img };
+                        })),
+                    }
+
+                    setQuiz(updatedQuiz);
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+
             getQuiz()
         }
     }, [room])
+
 
     useEffect(() => {
         if (room && joined && room.control) {
@@ -108,18 +141,6 @@ export default withRouter((props) => {
     useEffect(() => {
         setTimeout(() => setDots(prev => prev.length >= 3 ? '' : prev + '.'), 500)
     }, [dots])
-
-    async function getQuiz() {
-        const options = {
-            method: 'GET',
-            headers: { "quizname": room.quizInfo.name },
-        };
-
-        await fetch('/api/quizzesStandard', options)
-            .then(response => response.json())
-            .then(response => setQuiz(response.quiz))
-            .catch(err => console.error(err))
-    }
 
     const socketInitializer = async () => {
         const options = {
@@ -270,7 +291,7 @@ export default withRouter((props) => {
                 ...result, points: getPlayer()?.answers
                     .reduce((acc, answer) =>
                         acc + answer.actions.reduce((accumulator, action) =>
-                            action.profile === result.name
+                            action.profile === result.id
                                 ? accumulator + action.points
                                 : accumulator
                             , 0)
@@ -285,7 +306,7 @@ export default withRouter((props) => {
                 ...result, points: getPlayer()?.answers
                     .reduce((acc, answer) =>
                         acc + answer.actions.reduce((accumulator, action) =>
-                            action.profile === result.name
+                            action.profile === result.id
                                 ? accumulator + action.points
                                 : accumulator
                             , 0)
@@ -300,7 +321,7 @@ export default withRouter((props) => {
                 ...result, points: getPlayer()?.answers
                     .reduce((acc, answer) =>
                         acc + answer.actions.reduce((accumulator, action) =>
-                            action.profile === result.name
+                            action.profile === result.id
                                 ? accumulator + action.points
                                 : accumulator
                             , 0)
@@ -396,25 +417,27 @@ export default withRouter((props) => {
                                             animate="visible"
                                         >
                                             {quiz.questions[room.control ? room.currentQuestion : getPlayer().currentQuestion].options.map((option, i) =>
-                                                <motion.div key={`Option: ${i}`} variants={item}>
-                                                    <div className='flex' style={{ width: '800px', height: '100px' }} >
-                                                        <OptionInput
-                                                            onClick={() => room.control ? answerControl(i) : answer(i)}
-                                                            borderRadius={quiz.style.button.borderRadius}
-                                                            textColor={quiz.style.button.textColor}
-                                                            symbolColor={quiz.style.button.symbolColor}
-                                                            option={i}
-                                                            colorValue={quiz.style.button.template === 'monochrome'
-                                                                ? quiz.style.button.color
-                                                                : undefined
-                                                            }
-                                                            symbol={quiz.style.button.symbol}
-                                                            variant={quiz.style.button.variant}
-                                                            text={option.content}
-                                                            size='responsive'
-                                                        />
-                                                    </div>
-                                                </motion.div>
+                                                i < 4 || quiz.questions[room.currentQuestion].haveExtraOptions
+                                                    ? <motion.div key={`Option: ${i}`} variants={item}>
+                                                        <div className='flex' style={{ width: '800px', height: '100px' }} >
+                                                            <OptionInput
+                                                                onClick={() => room.control ? answerControl(i) : answer(i)}
+                                                                borderRadius={quiz.style.button.borderRadius}
+                                                                textColor={quiz.style.button.textColor}
+                                                                symbolColor={quiz.style.button.symbolColor}
+                                                                option={i}
+                                                                colorValue={quiz.style.button.template === 'monochrome'
+                                                                    ? quiz.style.button.color
+                                                                    : undefined
+                                                                }
+                                                                symbol={quiz.style.button.symbol}
+                                                                variant={quiz.style.button.variant}
+                                                                text={option.content}
+                                                                size='responsive'
+                                                            />
+                                                        </div>
+                                                    </motion.div>
+                                                    : undefined
                                             )}
                                         </motion.div>
                                     </div>
@@ -432,7 +455,14 @@ export default withRouter((props) => {
                                         animate={{ opacity: 1 }}
                                         transition={{ delay: TRANSITION_DURATION / 2000, duration: TRANSITION_DURATION / 1000, ease: [.62, -0.18, .32, 1.17] }}
                                     >
-                                        {layout.map((item, i) => <div id={styles.resultBlock} className='flex center' key={i}>{item.value}</div>)}
+                                        {layout.map((item, i) =>
+                                            <div
+                                                className={`${styles.resultBlock} flex center`}
+                                                key={i}
+                                            >
+                                                {item.value}
+                                            </div>
+                                        )}
                                     </motion.div>
                                 }
                             </div>

@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import NoSessionPage from '@/components/NoSessionPage';
 import ProfileEditor from '@/components/ProfileEditor';
 import io from "socket.io-client";
+const { v4: uuidv4 } = require('uuid');
 
 let socket;
 
@@ -55,8 +56,8 @@ const INICIAL_QUESTION = {
 }
 
 const INICIAL_QUIZ = {
-    name: 'My Quiz Name',
-    id: '',
+    name: '',
+    id: uuidv4(),
     category: '',
     style: {
         question: {
@@ -119,6 +120,10 @@ const INICIAL_QUIZ = {
             ...INICIAL_QUESTION
         },
     ],
+    layout: [
+        { name: 'Image' },
+        { name: 'ChartPie', legend: true },
+    ]
 }
 
 export default function QuizBuilder(props) {
@@ -130,7 +135,10 @@ export default function QuizBuilder(props) {
     const router = useRouter()
 
     useEffect(() => {
-        if (socket)
+        console.log(quiz)
+        if (!socket)
+            socketInitializer()
+        else {
             socket.emit("saveSketch",
                 session.user.email,
                 {
@@ -138,33 +146,22 @@ export default function QuizBuilder(props) {
                     questions: quiz.questions.map((question, i) =>
                     ({
                         ...question,
-                        img: INICIAL_IMG,
-                        options: question.options.map((option, j) => ({ ...option, img: INICIAL_IMG }))
+                        img: { id: question.img.id },
+                        options: question.options.map((option, j) =>
+                        ({
+                            ...option,
+                            img: { id: option.img.id }
+                        }))
                     })),
-                    results: quiz.results.map((result, i) => ({ ...result, img: INICIAL_IMG })),
+                    results: quiz.results.map((result, i) =>
+                    ({
+                        ...result,
+                        img: { id: result.img.id }
+                    })),
                 }
             )
-        console.log(quiz)
-        /* setCanSave(true)
-        saveQuiz()
-
-        const timeoutId = setTimeout(() => {
-        }, 1000)
-        if (canSave)
-            clearTimeout(timeoutId) */
+        }
     }, [quiz])
-
-    useEffect(() => {
-        socketInitializer()
-        /* console.log(quiz)
-        setCanSave(true)
-        saveQuiz()
-
-        const timeoutId = setTimeout(() => {
-        }, 1000)
-        if (canSave)
-            clearTimeout(timeoutId) */
-    }, [])
 
     const socketInitializer = async () => {
         const options = {

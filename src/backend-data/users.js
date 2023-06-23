@@ -10,10 +10,20 @@ async function getUserById(id) {
     return result;
 }
 
-async function getQuizNoImages(id, quizRef) {
+async function getQuiz(id, quizId) {
     const collection = await getMongoCollection(DATABASE, COLLECTION_NAME);
-    const result = await collection.findOne({ _id: new ObjectId(id), quizzes: { $elemMatch: { ref: quizRef } } })
-    /* return result; */
+    const result = await collection.aggregate([
+        { $match: { _id: new ObjectId(id) } },
+        { $unwind: "$quizzes" },
+        { $match: { "quizzes.id": quizId } },
+        { $project: { _id: 0, quizzes: 1 } }
+    ]).toArray();
+
+    if (result.length > 0) {
+        return result[0].quizzes;
+    } else {
+        return null;
+    }
 }
 
 async function setCustomerIdInDatabase(email, customerId) {
@@ -45,24 +55,11 @@ async function setUserPlan(email, plan) {
 async function saveSketch(email, sketch) {
     try {
         const collection = await getMongoCollection(DATABASE, COLLECTION_NAME);
-        const prev = await collection.findOne({ email: email })
-        
-        const prevSketch = prev.sketchs[0]
-        
         const result = await collection.updateOne(
             { email: email },
             {
                 $set: {
-                    'sketchs.0': {
-                        ...sketch,
-                        questions: sketch.questions.map((question, i) =>
-                        ({
-                            ...question,
-                            img: prevSketch.questions[i].img,
-                            options: question.options.map((option, j) => ({ ...option, img: prevSketch.questions[i].options[j].img }))
-                        })),
-                        results: sketch.results.map((result, i) => ({ ...result, img: prevSketch.results[i].img })),
-                    }
+                    'sketchs.0': [sketch]
                 }
             }
         )
@@ -96,33 +93,11 @@ async function createQuiz(email) {
     }
 }
 
-async function setImg(email, type, elementId, newImg) {
-    try {
-        const collection = await getMongoCollection(DATABASE, COLLECTION_NAME);
-        const result = await collection.updateOne(
-            { email: email },
-            {
-                $set: {
-                    [`sketchs.0.${type}.$[element].img`]: newImg
-                }
-            },
-            {
-                arrayFilters: [{ 'element.id': elementId }]
-            }
-        )
-        return result
-    } catch (error) {
-        console.error('Erro ao adicionar a imagem do usuário:', error)
-        throw error
-    }
-}
-
 export {
     getUserById,
     setUserPlan,
     setCustomerIdInDatabase,
-    setImg,
-    getQuizNoImages,
     saveSketch,
-    createQuiz
+    createQuiz,
+    getQuiz
 }

@@ -38,7 +38,7 @@ export default function Logo(props) {
             style={{
                 width: width ? width : undefined,
                 height: height ? height : undefined,
-                borderRadius: `${containerSize.width * 0.03}px`,
+                borderRadius: `${containerSize.width * 0.015}px`,
                 outline: `${containerSize.width * 0.01}px solid ${fill}`,
             }}
         >

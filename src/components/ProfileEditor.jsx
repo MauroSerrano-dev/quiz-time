@@ -195,7 +195,7 @@ export default function ProfileEditor(props) {
     function handleDuplicateQuestion(event, index) {
         event.stopPropagation()
         const newQuestionId = getNewQuestionId()
-        const questionImg = quiz.questions[index].img
+
         setQuiz((prev, i) => ({
             ...prev,
             questions: prev.questions.slice(0, index + 1)
@@ -204,28 +204,6 @@ export default function ProfileEditor(props) {
         }))
         if (index <= currentSlide)
             setCurrentSlide(prev => prev + 1)
-        addImgDatabase(session.user.email, 'questions', newQuestionId, questionImg)
-    }
-
-    async function addImgDatabase(email, type, elementId, questionImg) {
-        const options = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                userEmail: email,
-                field: 'img',
-                type: type,
-                elementId: elementId,
-                newImg: questionImg,
-            })
-        }
-
-        await fetch('/api/users', options)
-            .then(response => response.json())
-            .then(response => {
-                console.log(response)
-            })
-            .catch(err => console.error(err))
     }
 
     function handleDragEndProfiles(res) {
@@ -832,7 +810,7 @@ export default function ProfileEditor(props) {
             .then(response => response.json())
             .then(response => console.log(response))
             .catch(err => console.error(err))
-        Router.push(`/profile?id=${session.user.id}`)
+        /* Router.push(`/profile?id=${session.user.id}`) */
     }
 
     return (
@@ -1349,7 +1327,9 @@ export default function ProfileEditor(props) {
                                 className={styles.finalContainer}
                             >
                                 <TextField
-                                    label="Nome"
+                                    label="Nome do Quiz"
+                                    value={quiz.name}
+                                    onChange={(e) => handleChangeQuizField(e.target.value, 'name')}
                                     variant='outlined'
                                     size='small'
                                     autoComplete='off'
@@ -1371,7 +1351,7 @@ export default function ProfileEditor(props) {
                                         MenuProps={MenuProps}
                                         input={<OutlinedInput label="Categoria" />}
                                         value={quiz.category}
-                                        onChange={handleChangeQuizField}
+                                        onChange={(e) => handleChangeQuizField(e.target.value, 'category')}
                                         size='small'
                                         sx={{
                                             width: '100%',
@@ -1389,7 +1369,7 @@ export default function ProfileEditor(props) {
                                 </FormControl>
                                 <Button
                                     variant='contained'
-                                    onClick={() => createQuiz(quiz)}
+                                    onClick={createQuiz}
                                     disabled={disableCreateQuiz}
                                 >
                                     {disableCreateQuiz ? 'Criando Quiz' : 'Criar Quiz'}

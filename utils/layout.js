@@ -23,6 +23,7 @@ const IMG_SIZES = new Map([
 ])
 
 function insertLayout(item, results, allResults, radarData) {
+    console.log(results)
     switch (item.name) {
         case 'Image': return {
             name: 'Image',

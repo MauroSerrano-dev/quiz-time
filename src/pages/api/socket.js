@@ -165,55 +165,12 @@ export default function SocketHandler(req, res) {
     })
     // Listen for "saveSketch" events emitted by the client
     socket.on("saveSketch", async (email, sketch) => {
-      const prev = await usersCollection.findOne({ email: email })
-
-      const prevSketch = prev.sketchs.length > 0 ? prev.sketchs[0] : undefined
-
-      function getPrevQuestionsImg(id) {
-        for (let i = 0; i < prevSketch.questions.length; i++) {
-          if (prevSketch.questions[i].id === id) {
-            return prevSketch.questions[i].img
-          }
-        }
-        return INICIAL_IMG
-      }
-
-      function getPrevResultsImg(id) {
-        for (let i = 0; i < prevSketch.results.length; i++) {
-          if (prevSketch.results[i].id === id) {
-            return prevSketch.results[i].img
-          }
-        }
-        return INICIAL_IMG
-      }
-
-      function getPrevOptionsImg(questionId, optionIndex) {
-        for (let i = 0; i < prevSketch.questions.length; i++) {
-          if (prevSketch.questions[i].id === questionId) {
-            for (let j = 0; j < prevSketch.questions[i].options.length; j++) {
-              return prevSketch.questions[i].options[optionIndex].img
-            }
-          }
-        }
-        return INICIAL_IMG
-      }
+      
       usersCollection.updateOne(
         { email: email },
         {
           $set: {
-            sketchs:
-              prevSketch
-                ? [{
-                  ...sketch,
-                  questions: sketch.questions.map((question, i) =>
-                  ({
-                    ...question,
-                    img: getPrevQuestionsImg(question.id),
-                    options: question.options.map((option, j) => ({ ...option, img: getPrevOptionsImg(question.id, j) }))
-                  })),
-                  results: sketch.results.map((result, i) => ({ ...result, img: getPrevResultsImg(result.id) })),
-                }]
-                : [sketch]
+            sketchs: [sketch]
           }
         }
       )

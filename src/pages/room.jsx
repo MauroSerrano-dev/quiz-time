@@ -8,6 +8,7 @@ import { Button } from '@mui/material';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import PlayersList from '@/components/PlayersList';
 import NoSessionPage from '@/components/NoSessionPage';
+import { getStandardQuiz, getUserQuiz } from '../../utils/api-caller';
 
 let socket;
 
@@ -29,7 +30,16 @@ export default withRouter((props) => {
 
     useEffect(() => {
         if (room && !quiz) {
+            async function getQuiz() {
+                if (true)
+                    return await getUserQuiz(session.user.id, '32b1aa1b-7106-4ad5-9bd6-4adb5f197ee9')
+                if (room.quizInfo.type === 'standard')
+                    return await getStandardQuiz(session.user.id, '32b1aa1b-7106-4ad5-9bd6-4adb5f197ee9')
+            }
             getQuiz()
+                .then(response => response.json())
+                .then(response => setQuiz(response.quiz))
+                .catch(err => console.error(err))
         }
     }, [room])
 
@@ -58,18 +68,6 @@ export default withRouter((props) => {
             setActiveShow(roomAtt.state === 'active')
             setRoom(roomAtt)
         })
-    }
-
-    async function getQuiz() {
-        const options = {
-            method: 'GET',
-            headers: { "quizname": room.quizInfo.name },
-        }
-
-        await fetch(room.quizInfo.type === 'standard' ? '/api/quizzesStandard' : '/api/quizzesCustom', options)
-            .then(response => response.json())
-            .then(response => setQuiz(response.quiz))
-            .catch(err => console.error(err))
     }
 
     return (

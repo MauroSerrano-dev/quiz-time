@@ -70,20 +70,20 @@
     flex-wrap: wrap;
 }
 
-#resultBlock {
+.resultBlock {
     width: 40%;
 }
 
 /* Small Mobile */
 @media (max-width: 350px) {
-    #resultBlock {
+    .resultBlock {
         width: 255px;
     }
 }
 
 /* Mobile */
 @media (min-width: 351px) and (max-width: 700px) {
-    #resultBlock {
+    .resultBlock {
         width: 351px;
     }
 }

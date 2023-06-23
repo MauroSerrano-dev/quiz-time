@@ -18,7 +18,7 @@ export default function Index(props) {
           <div className={styles.section} id={styles.one}>
             <div id={styles.crowdContainer}>
               <div id={styles.crowdImg}>
-                <Image fill src='/crowd.jpg' alt='Crowd Presentation' />
+                <Image priority fill src='/crowd.jpg' alt='Crowd Presentation' />
               </div>
               <img src='/tela.jpg' id={styles.telaImg} />
             </div>

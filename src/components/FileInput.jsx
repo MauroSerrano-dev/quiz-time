@@ -94,7 +94,7 @@ export default function FileInput(props) {
                     const fileType = file.type
                     img.onload = async function () {
                         const newImg = {
-                            id: `quiz-${session.user.quizCreatedCounter}_${id}`,
+                            id: `quiz-${quiz.id}_${id}`,
                             content: fileContent,
                             name: fileName,
                             type: fileType,
@@ -148,33 +148,13 @@ export default function FileInput(props) {
     }
 
     function openModal() {
-        /* getImage(`quiz-${session.user.quizCreatedCounter}_profile-0`) */
+        /* getImage(`quiz-${quiz.id}_profile-0`) */
         if (img.content === '' && showModal === false) {
             setShowModal(true)
             setTimeout(() => {
                 setShowModalOpacity(true)
             }, 300)
         }
-    }
-
-    async function getImage(fileName) {
-        const options = {
-            method: 'GET',
-            headers: {
-                'filename': fileName,
-                'userid': session.user.id
-            },
-        };
-
-        const response = await fetch("/api/googleCloud", options);
-        const data = await response.json();
-
-        // Aqui você pode acessar o objeto completo
-        const { fileContents } = data;
-        const jsonBuffer = Buffer.from(fileContents, 'hex');
-        const img = JSON.parse(jsonBuffer.toString('utf-8'));
-        console.log(img)
-        putImg(img);
     }
 
     function putImg(newImg) {
