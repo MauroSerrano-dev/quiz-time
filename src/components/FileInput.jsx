@@ -94,7 +94,7 @@ export default function FileInput(props) {
                     const fileType = file.type
                     img.onload = async function () {
                         const newImg = {
-                            id: id,
+                            id: `quiz-${session.user.quizCreatedCounter}_${id}`,
                             content: fileContent,
                             name: fileName,
                             type: fileType,
@@ -148,7 +148,7 @@ export default function FileInput(props) {
     }
 
     function openModal() {
-        getImage('profile-0')
+        /* getImage(`quiz-${session.user.quizCreatedCounter}_profile-0`) */
         if (img.content === '' && showModal === false) {
             setShowModal(true)
             setTimeout(() => {

@@ -22,6 +22,7 @@ export default NextAuth({
           purchases: [],
           plan: { name: 'Free' },
           sketchs: [],
+          quizCreatedCounter: 0,
         }
       },
     }),
@@ -37,6 +38,7 @@ export default NextAuth({
           image: session.user.image,
           plan: session.user.plan,
           quizzesInfos: session.user.quizzesInfos,
+          quizCreatedCounter: session.user.quizCreatedCounter
         }
       });
     },

@@ -22,8 +22,6 @@ const storage = new Storage({
     }
 });
 
-const bucketName = 'quiztime';
-
 export default async function handler(req, res) {
 
     if (req.method === 'GET') {
