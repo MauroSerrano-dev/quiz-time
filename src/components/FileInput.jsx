@@ -67,10 +67,10 @@ export default function FileInput(props) {
         setIsDraggingOver(false);
         const files = event.dataTransfer.files
 
-        handleUploadImg({ target: { files: files } })
+        handleUploadImg({ target: { files: files } }, quiz[step === 0 ? 'results' : 'questions'][currentSlide].id)
     }
 
-    function handleUploadImg(event) {
+    function handleUploadImg(event, id) {
         if (event.target.files.length > 0) {
             const file = event.target.files[0];
 
@@ -95,6 +95,7 @@ export default function FileInput(props) {
                     const fileType = file.type
                     img.onload = async function () {
                         const newImg = {
+                            id: id,
                             content: fileContent,
                             name: fileName,
                             type: fileType,
@@ -105,7 +106,7 @@ export default function FileInput(props) {
                         }
 
                         putImg(newImg)
-                        console.log(newImg)
+
                         const options = {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
@@ -114,7 +115,7 @@ export default function FileInput(props) {
                             })
                         }
 
-                        await fetch('/api/uploadimg', options)
+                        await fetch('/api/googleCloud', options)
                             .then(response => response.json())
                             .then(response => {
                                 console.log(response)
@@ -163,14 +164,14 @@ export default function FileInput(props) {
             headers: { "filename": fileName },
         };
 
-        const response = await fetch("/api/uploadimg", options);
+        const response = await fetch("/api/googleCloud", options);
         const data = await response.json();
 
         // Aqui você pode acessar o objeto completo
         const { fileContents } = data;
         const jsonBuffer = Buffer.from(fileContents, 'hex');
         const img = JSON.parse(jsonBuffer.toString('utf-8'));
-        putImg(img); // Output: { "name": "john" }
+        putImg(img);
     }
 
     function putImg(newImg) {
@@ -376,7 +377,7 @@ export default function FileInput(props) {
                                 <input
                                     type='file'
                                     /* className={styles.uploadImgInside} */
-                                    onChange={handleUploadImg}
+                                    onChange={(e) => handleUploadImg(e, quiz[step === 0 ? 'results' : 'questions'][currentSlide].id)}
                                     value=''
                                     title=''
                                 />
