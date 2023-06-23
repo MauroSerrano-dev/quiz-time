@@ -10,13 +10,6 @@ import CropIcon from '@mui/icons-material/Crop'
 import Modal from './Modal'
 import AccountBoxRoundedIcon from '@mui/icons-material/AccountBoxRounded';
 import GifBoxRoundedIcon from '@mui/icons-material/GifBoxRounded';
-import AWS from 'aws-sdk';
-
-AWS.config.update({
-    accessKeyId: process.env.NEXT_PUBLIC_ACCESS_KEY_ID_AWS,
-    secretAccessKey: process.env.NEXT_PUBLIC_SECRET_ACCESS_KEY_AWS,
-});
-
 
 export default function FileInput(props) {
     const {
@@ -37,7 +30,6 @@ export default function FileInput(props) {
     const [showModal, setShowModal] = useState(false)
     const [showModalOpacity, setShowModalOpacity] = useState(false)
     const [containerSize, setContainerSize] = useState({ width: 0, height: 0 })
-    const s3 = new AWS.S3();
 
     const containerRef = useRef(null)
 
@@ -113,58 +105,27 @@ export default function FileInput(props) {
                         }
 
                         putImg(newImg)
-                        uploadImageToS3(newImg)
-
-                        /* const options = {
+                        console.log(newImg)
+                        const options = {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
-                                userEmail: session.user.email,
-                                field: 'img',
-                                type: step === 0
-                                    ? 'results'
-                                    : 'questions',
-                                elementId: quiz[
-                                    step === 0
-                                        ? 'results'
-                                        : 'questions'][currentSlide].id,
                                 newImg: newImg,
                             })
                         }
 
-                        await fetch('/api/users', options)
+                        await fetch('/api/uploadimg', options)
                             .then(response => response.json())
                             .then(response => {
                                 console.log(response)
                             })
-                            .catch(err => console.error(err)) */
+                            .catch(err => console.error(err))
+
                         URL.revokeObjectURL(url)
                     }
                 }
                 reader.readAsDataURL(file);
             }
-        }
-    }
-
-    // Função para fazer o upload do newImg para o Amazon S3
-    async function uploadImageToS3(newImg) {
-        const bucketName = 'tamaluco'; // Nome do seu bucket no Amazon S3
-        const fileName = newImg.name; // Nome do arquivo a ser armazenado no S3
-        const fileContent = newImg.content; // Conteúdo do arquivo em formato base64
-        const fileType = newImg.type; // Tipo do arquivo
-
-        const params = {
-            Bucket: bucketName,
-            Key: fileName,
-            Body: fileContent,
-            ContentType: fileType,
-        };
-
-        try {
-            await s3.putObject(params).promise();
-            console.log('Upload concluído com sucesso!');
-        } catch (error) {
-            console.error('Erro ao fazer o upload:', error);
         }
     }
 
@@ -186,12 +147,30 @@ export default function FileInput(props) {
     }
 
     function openModal() {
+        console.log('oi')
+        getImage('XZ9.gif')
         if (img.content === '' && showModal === false) {
             setShowModal(true)
             setTimeout(() => {
                 setShowModalOpacity(true)
             }, 300)
         }
+    }
+
+    async function getImage(fileName) {
+        const options = {
+            method: 'GET',
+            headers: { "filename": fileName },
+        };
+
+        const response = await fetch("/api/uploadimg", options);
+        const data = await response.json();
+
+        // Aqui você pode acessar o objeto completo
+        const { fileContents } = data;
+        const jsonBuffer = Buffer.from(fileContents, 'hex');
+        const img = JSON.parse(jsonBuffer.toString('utf-8'));
+        putImg(img); // Output: { "name": "john" }
     }
 
     function putImg(newImg) {

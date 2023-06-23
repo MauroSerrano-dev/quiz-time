@@ -144,8 +144,8 @@ export default function QuizBuilder(props) {
                     results: quiz.results.map((result, i) => ({ ...result, img: INICIAL_IMG })),
                 }
             )
-        /* console.log(quiz)
-        setCanSave(true)
+        console.log(quiz)
+        /* setCanSave(true)
         saveQuiz()
 
         const timeoutId = setTimeout(() => {

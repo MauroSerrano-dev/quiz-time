@@ -197,7 +197,6 @@ export default function SocketHandler(req, res) {
         }
         return INICIAL_IMG
       }
-      console.log(sketch)
       usersCollection.updateOne(
         { email: email },
         {
