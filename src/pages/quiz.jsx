@@ -89,6 +89,7 @@ export default withRouter((props) => {
 
                 try {
                     const response = await quizResponse.json();
+                    console.log('front', response)
                     const updatedQuiz = {
                         ...response.quiz,
                         questions: await Promise.all(response.quiz.questions.map(async (question, i) => {

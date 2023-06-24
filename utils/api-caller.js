@@ -20,6 +20,8 @@ export function getStandardQuiz() {
 }
 
 export async function getImage(userId, fileId) {
+    console.log('userId', userId)
+    console.log('fileId', fileId)
     const options = {
         method: 'GET',
         headers: {
