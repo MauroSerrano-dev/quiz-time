@@ -29,10 +29,12 @@ export async function getImage(userId, fileId) {
             'filename': fileId,
         },
     }
-
+    
     const response = await fetch('/api/googleCloud', options)
     const data = await response.json()
-
+    console.log('response', response)
+    console.log('data', data)
+    
     // Aqui você pode acessar o objeto completo
     const { fileContents } = data;
     const jsonBuffer = Buffer.from(fileContents, 'hex')
