@@ -20,8 +20,6 @@ export function getStandardQuiz() {
 }
 
 export async function getImage(userId, fileId) {
-    console.log('userId', userId)
-    console.log('fileId', fileId)
     const options = {
         method: 'GET',
         headers: {
@@ -32,8 +30,6 @@ export async function getImage(userId, fileId) {
     
     const response = await fetch('/api/googleCloud', options)
     const data = await response.json()
-    console.log('response', response)
-    console.log('data', data)
     
     // Aqui você pode acessar o objeto completo
     const { fileContents } = data;
