@@ -98,10 +98,6 @@ export default withRouter((props) => {
         socket.emit("updateRoom", { ...room, control: isControl })
     }
 
-    function handleOpenActivities() {
-        
-    }
-
     return (
         <div>
             {session === null
@@ -120,7 +116,8 @@ export default withRouter((props) => {
                                     <div id={styles.ownerView}>
                                         {room.state === 'disable' &&
                                             <div id={styles.disableContainer}>
-                                                <Button variant="outlined" onClick={handleOpenActivities}>Fazer Atividade</Button>
+                                                <Button variant="outlined">Jogar um Quiz</Button>
+                                                <Button variant="outlined">Obter Opinião</Button>
                                             </div>
                                         }
                                         <div id={styles.playersList}>
