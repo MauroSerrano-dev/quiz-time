@@ -9,7 +9,7 @@ import HexagonRoundedIcon from '@mui/icons-material/HexagonRounded';
 import SquareRoundedIcon from '@mui/icons-material/SquareRounded';
 import CircleRoundedIcon from '@mui/icons-material/CircleRounded';
 
-const TEXT_LIMIT = 70
+const TEXT_LIMIT = 80
 
 const SIZES = new Map([
     [

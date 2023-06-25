@@ -98,6 +98,10 @@ export default withRouter((props) => {
         socket.emit("updateRoom", { ...room, control: isControl })
     }
 
+    function handleOpenActivities() {
+        
+    }
+
     return (
         <div>
             {session === null
@@ -111,48 +115,12 @@ export default withRouter((props) => {
                         }
                         {room && Object.keys(room).length > 0 &&
                             <div id={styles.roomContainer}>
-                                <h1 id={styles.roomName}>Essa é a sala: {room.name}</h1>
+                                <h1 id={styles.roomName}>Controle da Sala {room.name}</h1>
                                 {session.user.email === room.owner &&
-                                    <section id={styles.ownerView}>
+                                    <div id={styles.ownerView}>
                                         {room.state === 'disable' &&
-                                            <motion.div
-                                                initial={{ opacity: 0, y: 30 }}
-                                                animate={disableShow ? { opacity: 1, y: 0 } : { opacity: 0, y: 0 }}
-                                                transition={{ delay: disableShow ? 0.5 : 0, duration: disableShow ? 1.2 : 0.6, easings: ["easeInOut"] }}
-                                                id={styles.disableContainer}
-                                            >
-                                                <ButtonGroup>
-                                                    <Button sx={{ width: '120px' }} variant={room.control ? 'outlined' : 'contained'} onClick={() => switchControl(false)}>Auto-Play</Button>
-                                                    <Button sx={{ width: '120px' }} variant={room.control ? 'contained' : 'outlined'} onClick={() => switchControl(true)}>Control</Button>
-                                                </ButtonGroup>
-                                                <Button variant="outlined" onClick={startQuiz}>Start Quiz</Button>
-                                            </motion.div>}
-                                        {room.state === 'active' && quiz &&
-                                            <motion.div
-                                                initial={{ opacity: 0 }}
-                                                animate={activeShow ? { opacity: 1 } : { opacity: 0 }}
-                                                transition={{ delay: activeShow ? 0.5 : 0, duration: activeShow ? 1.2 : 0.6, easings: ["easeInOut"] }}
-                                                id={styles.activeContainer}
-                                            >
-                                                {room.control &&
-                                                    <section id={styles.questionOptions}>
-                                                        <div>
-                                                            <Button variant="contained" onClick={prevQuestion} disabled={room.currentQuestion === 0}>Prev Question</Button>
-                                                            <Button variant="contained" onClick={nextQuestion}>Next Question</Button>
-                                                        </div>
-                                                    </section>
-                                                }
-                                                <Button variant="outlined" onClick={resetQuiz}>Reset Quiz</Button>
-                                            </motion.div>
-                                        }
-                                        {room.state === 'finish' &&
-                                            <div>
-                                                <Button variant="outlined" onClick={showResults}>Mostrar Resultados</Button>
-                                            </div>
-                                        }
-                                        {room.state === 'results' &&
-                                            <div>
-                                                <h2>Finalizado</h2>
+                                            <div id={styles.disableContainer}>
+                                                <Button variant="outlined" onClick={handleOpenActivities}>Fazer Atividade</Button>
                                             </div>
                                         }
                                         <div id={styles.playersList}>
@@ -161,7 +129,7 @@ export default withRouter((props) => {
                                                 <p key={`Player: ${i}`}>{player.user.name} {player.answers.some((answer) => answer.questionIndex === room.currentQuestion) ? 'check' : ''}</p>
                                             )}
                                         </div>
-                                    </section>
+                                    </div>
                                 }
                                 {session.user.email !== room.owner &&
                                     <div>

@@ -6,7 +6,7 @@ import { validateCodeCharacters, validateCodeLength, containsAccents } from "../
 import { showInfoToast, showErrorToast } from "../../utils/toasts";
 import { motion } from "framer-motion"
 import Switch from '@mui/material/Switch';
-import { TextField, Button, Select, FormControlLabel, FormGroup, MenuItem, OutlinedInput, InputLabel, FormControl, Box } from '@mui/material';
+import { TextField, Button, FormControlLabel, FormControl } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import LoadingButton from '@mui/lab/LoadingButton';
 import NoSessionPage from '@/components/NoSessionPage';
@@ -31,10 +31,8 @@ export default function Lobby(props) {
     const [newRoom, setNewRoom] = useState(INICIAL_ROOM)
     const [searchCode, setSearchCode] = useState('')
     const [disableCreateNewRoom, setDisableCreateNewRoom] = useState(false)
-    const [newCode, setNewCode] = useState('')
     const [showModal, setShowModal] = useState(false)
     const [showModalOpacity, setShowModalOpacity] = useState(false)
-    const [passwordInputOpen, setPasswordInputOpen] = useState(false)
     const [firstClickPrivite, setFirstClickPrivite] = useState(false)
     const [isSmall, setIsSmall] = useState()
 
@@ -55,7 +53,6 @@ export default function Lobby(props) {
     }
 
     function handleNewCodeChange(event) {
-        setNewCode(event.target.value)
         setNewRoom(prev => { return { ...prev, name: event.target.value, code: convertToCode(event.target.value) } })
     }
 
@@ -66,18 +63,9 @@ export default function Lobby(props) {
     function handleNewIsPrivate(event) {
         setFirstClickPrivite(true)
         const { checked } = event.target
-        if (checked)
-            setPasswordInputOpen(prev => !prev)
-        else {
+        if (!checked)
             setNewRoom(prev => { return { ...prev, password: '' } })
-            setTimeout(() => setPasswordInputOpen(prev => !prev), 1000)
-        }
         setNewRoom(prev => { return { ...prev, private: checked } })
-    }
-
-    function handleNewControl(event) {
-        const { checked } = event.target
-        setNewRoom(prev => { return { ...prev, control: checked } })
     }
 
     async function handleSubmitCode(event) {
@@ -112,15 +100,10 @@ export default function Lobby(props) {
         setShowModal(true)
     }
 
-    function handleQuizSelectorChange(event) {
-        setNewRoom(prev => { return { ...prev, quizInfo: session.user.quizzesInfos[event.target.value] } })
-    }
-
     function closeModal() {
         setFirstClickPrivite(false)
         setShowModalOpacity(false)
         setTimeout(() => {
-            setPasswordInputOpen(false)
             setShowModal(false)
             setNewRoom(INICIAL_ROOM)
         }, 300)
@@ -140,10 +123,6 @@ export default function Lobby(props) {
     }
 
     async function createNewRoom() {
-        if (newRoom.quizInfo.name === '') {
-            showInfoToast("Nenhum Quiz Selecitonado.", 3000)
-            return
-        }
         if (containsAccents(newRoom.code)) {
             showInfoToast("O nome não pode conter acentos.", 3000)
             return
@@ -160,11 +139,11 @@ export default function Lobby(props) {
             showInfoToast("A senha deve conter ao menos 3 caracteres.", 5000)
             return
         }
+        setDisableCreateNewRoom(true)
         if (await getRoom(newRoom.code)) {
             showErrorToast("Sala já existente, por favor escolha outro nome.", 5000)
             return
         }
-        setDisableCreateNewRoom(true)
         const options = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -175,7 +154,7 @@ export default function Lobby(props) {
             .then(response => response.json())
             .then(response => console.log(response))
             .catch(err => console.error(err))
-        Router.push(`/room?code=${newRoom.code}`)
+        Router.push(`/controller?code=${newRoom.code}`)
     }
 
     return (
@@ -278,36 +257,6 @@ export default function Lobby(props) {
                                                 <TextField value={newRoom.password} label="Senha" variant='outlined' size='small' autoComplete='off' />
                                             </FormControl>
                                         </motion.div>
-                                    </FormControl>
-                                    <FormControlLabel
-                                        className={styles.labelSwitch}
-                                        onChange={handleNewControl}
-                                        checked={newRoom.control}
-                                        control={<Switch size={isSmall ? 'small' : 'medium'} />}
-                                        label="Controlar Perguntas:"
-                                        labelPlacement="start"
-                                    />
-                                    <FormControl sx={{ width: '80%' }}>
-                                        <InputLabel size='small' id="select-label">Quiz</InputLabel>
-                                        <Select
-                                            labelId="select-label"
-                                            id="select"
-                                            name={newRoom.quizInfo.name}
-                                            value={session.user.quizzesInfos.reduce((acc, item, i) => item.name === newRoom.quizInfo.name && item.type === newRoom.quizInfo.type ? i : '', '')}
-                                            onChange={handleQuizSelectorChange}
-                                            input={<OutlinedInput label="Quiz" />}
-                                            size='small'
-                                        >
-                                            {session.user.quizzesInfos.map((quiz, i) => (
-                                                <MenuItem
-                                                    key={`Quiz: ${i}`}
-                                                    name={quiz.name}
-                                                    value={i}
-                                                >
-                                                    {quiz.name}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
                                     </FormControl>
                                 </div>
                             }
