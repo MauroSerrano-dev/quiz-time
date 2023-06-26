@@ -12,6 +12,7 @@ let socket;
 export default withRouter((props) => {
     const { session, signIn } = props
     const [room, setRoom] = useState()
+    const [state, setState] = useState('none')
     const [disableShow, setDisableShow] = useState(false)
     const [activeShow, setActiveShow] = useState(false)
     const [quiz, setQuiz] = useState()
@@ -98,34 +99,45 @@ export default withRouter((props) => {
         socket.emit("updateRoom", { ...room, control: isControl })
     }
 
+    function changeState(newState) {
+        setState(newState)
+    }
+
     return (
-        <div>
+        <div className='flex size100'>
             {session === null
                 ? <NoSessionPage signIn={signIn} />
                 : <div id={styles.container}>
-                    <main>
+                    <div className='flex size100'>
                         {room && Object.keys(room).length === 0 &&
                             <div>
-                                <h1 id={styles.roomName}>Esta sala não existe</h1>
+                                <h2 id={styles.roomName}>Esta sala não existe</h2>
                             </div>
                         }
                         {room && Object.keys(room).length > 0 &&
-                            <div id={styles.roomContainer}>
-                                <h1 id={styles.roomName}>Controle da Sala {room.name}</h1>
+                            <div id={styles.controllerContainer}>
+                                <h2 id={styles.roomName}>Controle da Sala {room.name}</h2>
                                 {session.user.email === room.owner &&
                                     <div id={styles.ownerView}>
-                                        {room.state === 'disable' &&
-                                            <div id={styles.disableContainer}>
-                                                <Button variant="outlined">Jogar um Quiz</Button>
-                                                <Button variant="outlined">Obter Opinião</Button>
+                                        {state === 'none' &&
+                                            <div id={styles.menu}>
+                                                <Button onClick={() => changeState('quiz')} variant="outlined" sx={{ width: '100%', height: '160px' }}>Jogar um Quiz</Button>
+                                                <Button variant="outlined" sx={{ width: '100%', height: '160px' }}>Fazer Enquete</Button>
+                                                <Button variant="outlined" sx={{ width: '100%', height: '160px' }}>Modo Q&A</Button>
+                                                <Button variant="outlined" sx={{ width: '100%', height: '160px' }}>QR Code</Button>
                                             </div>
                                         }
-                                        <div id={styles.playersList}>
+                                        {state === 'quiz' &&
+                                            <div id={styles.quizMenu}>
+
+                                            </div>
+                                        }
+                                        {/* <div id={styles.playersList}>
                                             <h3>Players</h3>
                                             {room.players.map((player, i) =>
                                                 <p key={`Player: ${i}`}>{player.user.name} {player.answers.some((answer) => answer.questionIndex === room.currentQuestion) ? 'check' : ''}</p>
                                             )}
-                                        </div>
+                                        </div> */}
                                     </div>
                                 }
                                 {session.user.email !== room.owner &&
@@ -135,7 +147,7 @@ export default withRouter((props) => {
                                 }
                             </div>
                         }
-                    </main>
+                    </div>
                 </div>
             }
         </div>

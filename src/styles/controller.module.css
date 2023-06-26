@@ -1,20 +1,27 @@
 #container {
   --text-color: var(--text-white);
+  width: 100%;
+  height: 100%;
+  border: dashed green 2px;
+  padding-bottom: 1rem;
+  padding-right: 1rem;
+  padding-left: 1rem;
 }
 
 #ownerView {
   width: 100%;
+  height: 100%;
+  border: red dashed 2px;
 }
 
-#roomContainer {
+#controllerContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 
   width: 100%;
-
-  gap: 1rem;
+  height: 100%;
 }
 
 #questionOptions {
@@ -42,17 +49,35 @@
 }
 
 #roomName {
-  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  width: 100%;
+  height: 9%;
+
+  border: pink dashed 2px;
 }
 
-#disableContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+#menu {
+  display: grid;
+  place-items: center;
+  grid-template-columns: 1fr 1fr;
   gap: 1rem;
-  margin-bottom: 2rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+#quizMenu {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  height: 100%;
+
+  border: dashed blue 2px;
 }
 
 #linkContainer {
