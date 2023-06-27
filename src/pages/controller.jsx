@@ -3,7 +3,7 @@ import styles from '../styles/controller.module.css'
 import io from "socket.io-client";
 import { useEffect, useState } from 'react';
 import { color, motion } from "framer-motion"
-import { Button, ButtonGroup } from '@mui/material';
+import { Button, ButtonGroup, FormControlLabel, Switch } from '@mui/material';
 import NoSessionPage from '@/components/NoSessionPage';
 import { getStandardQuiz, getUserQuiz } from '../../utils/api-caller';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
@@ -116,6 +116,7 @@ export default withRouter((props) => {
             quizInfo: quizInfo,
             state: 'active',
         })
+        setState('quizControl')
     }
 
     return (
@@ -136,53 +137,53 @@ export default withRouter((props) => {
                                         {state === 'none' &&
                                             <div id={styles.menu}>
                                                 <Button
-                                                    onClick={() => changeState('quiz')}
+                                                    onClick={() => changeState('quizSelector')}
                                                     variant="outlined"
-                                                    sx={{ 
-                                                        width: '100%', 
+                                                    sx={{
+                                                        width: '100%',
                                                         height: '130px',
                                                         fontSize: '22px',
                                                         lineHeight: '29px',
-                                                     }}
+                                                    }}
                                                 >
                                                     Jogar Quiz
                                                 </Button>
                                                 <Button
                                                     variant="outlined"
-                                                    sx={{ 
-                                                        width: '100%', 
+                                                    sx={{
+                                                        width: '100%',
                                                         height: '130px',
                                                         fontSize: '22px',
                                                         lineHeight: '29px',
-                                                     }}
+                                                    }}
                                                 >
                                                     Fazer Enquete
                                                 </Button>
                                                 <Button
                                                     variant="outlined"
-                                                    sx={{ 
-                                                        width: '100%', 
+                                                    sx={{
+                                                        width: '100%',
                                                         height: '130px',
                                                         fontSize: '22px',
                                                         lineHeight: '29px',
-                                                     }}
+                                                    }}
                                                 >
                                                     Modo Q&A
                                                 </Button>
                                                 <Button
                                                     variant="outlined"
-                                                    sx={{ 
-                                                        width: '100%', 
+                                                    sx={{
+                                                        width: '100%',
                                                         height: '130px',
                                                         fontSize: '22px',
                                                         lineHeight: '29px',
-                                                     }}
+                                                    }}
                                                 >
                                                     QR Code
                                                 </Button>
                                             </div>
                                         }
-                                        {state === 'quiz' &&
+                                        {state === 'quizSelector' &&
                                             <div id={styles.quizMenu}>
                                                 <div id={styles.quizHead}>
                                                     <Button
@@ -273,6 +274,62 @@ export default withRouter((props) => {
                                                         }
                                                     </div>
                                                 </div>
+                                            </div>
+                                        }
+                                        {state === 'quizControl' &&
+                                            <div id={styles.quizControl}>
+                                                <FormControlLabel
+                                                    control={<Switch />}
+                                                    label="Free-Play:"
+                                                    labelPlacement="start"
+                                                    /* onChange={handleNewIsPrivate}
+                                                    checked={newRoom.private} */
+                                                />
+                                                <Button
+                                                    variant="outlined"
+                                                    sx={{
+                                                        width: '100%',
+                                                        height: '130px',
+                                                        fontSize: '22px',
+                                                        lineHeight: '29px',
+                                                    }}
+                                                >
+                                                    Voltar Pergunta
+                                                </Button>
+                                                <Button
+                                                    variant="outlined"
+                                                    sx={{
+                                                        width: '100%',
+                                                        height: '130px',
+                                                        fontSize: '22px',
+                                                        lineHeight: '29px',
+                                                    }}
+                                                >
+                                                    Próxima Pergunta
+                                                </Button>
+                                                <Button
+                                                    variant="outlined"
+                                                    sx={{
+                                                        width: '100%',
+                                                        height: '130px',
+                                                        fontSize: '22px',
+                                                        lineHeight: '29px',
+                                                    }}
+                                                >
+                                                    Mostrar Estatística
+                                                </Button>
+                                                <Button
+                                                    variant="outlined"
+                                                    color='error'
+                                                    sx={{
+                                                        width: '100%',
+                                                        height: '130px',
+                                                        fontSize: '22px',
+                                                        lineHeight: '29px',
+                                                    }}
+                                                >
+                                                    Cancelar Quiz
+                                                </Button>
                                             </div>
                                         }
                                         {/* <div id={styles.playersList}>
