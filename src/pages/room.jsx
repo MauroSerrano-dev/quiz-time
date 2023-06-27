@@ -166,7 +166,7 @@ export default withRouter((props) => {
                                         }
                                     </section>
                                 }
-                                {session.user.email !== room.owner &&
+                                {session.user.id !== room.owner.id &&
                                     <div>
                                         <h3>Esta é a visão de quem não é dono da sala</h3>
                                     </div>
