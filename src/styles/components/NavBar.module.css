@@ -138,11 +138,14 @@
     cursor: pointer;
     font-weight: normal;
     padding: 3px 0px;
+    border-bottom-color: transparent;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
 }
 
 .navOption:hover {
     font-weight: bold;
-    border-bottom: 4px solid currentColor;
+    border-bottom-color: currentColor;
 }
 
 #currentPage {
@@ -187,8 +190,7 @@
     .nav_menu_list {
         flex-direction: column;
         width: 150px;
-        min-height: calc(100vh - 60px);
-        height: 60px;
+        height: 91vh;
         background-color: var(--body-background-color);
         border-left: solid var(--global-white);
         row-gap: 24px;
@@ -196,7 +198,7 @@
         padding: 24px 16px;
         
         position: fixed;
-        top: 60px;
+        top: 9vh;
     }
 
     #middle {

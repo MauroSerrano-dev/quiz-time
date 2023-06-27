@@ -16,13 +16,12 @@ export default NextAuth({
           email: profile.email,
           image: profile.picture,
           createAt: new Date(),
-          quizzesInfos: [{ name: 'Perfil Comportamental', purchaseDate: '', type: 'standard' }],
+          quizzesInfo: [],
           quizzes: [],
           imgsSrc: [],
           purchases: [],
           plan: { name: 'Free' },
           sketchs: [],
-          quizCreatedCounter: 0,
         }
       },
     }),
@@ -37,8 +36,7 @@ export default NextAuth({
           email: session.user.email,
           image: session.user.image,
           plan: session.user.plan,
-          quizzesInfos: session.user.quizzesInfos,
-          quizCreatedCounter: session.user.quizCreatedCounter
+          quizzesInfo: session.user.quizzesInfo,
         }
       });
     },

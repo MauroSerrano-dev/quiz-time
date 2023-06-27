@@ -79,12 +79,14 @@ export default withRouter((props) => {
 
     useEffect(() => {
         if (room && !quiz) {
+            console.log('room', room)
+            console.log('quiz', quiz)
             async function getQuiz() {
                 let quizResponse;
                 if (true) {
-                    quizResponse = await getUserQuiz(session.user.id, '32b1aa1b-7106-4ad5-9bd6-4adb5f197ee9');
+                    quizResponse = await getUserQuiz(session.user.id, room.quizInfo.id);
                 } else if (room.quizInfo.type === 'standard') {
-                    quizResponse = await getStandardQuiz(session.user.id, '32b1aa1b-7106-4ad5-9bd6-4adb5f197ee9');
+                    quizResponse = await getStandardQuiz(session.user.id, room.quizInfo.id);
                 }
 
                 try {
@@ -316,7 +318,7 @@ export default withRouter((props) => {
     }
 
     function getAllSubResults() {
-        return quiz.subResults.map(result => {
+        return quiz.subResults?.map(result => {
             return {
                 ...result, points: getPlayer()?.answers
                     .reduce((acc, answer) =>

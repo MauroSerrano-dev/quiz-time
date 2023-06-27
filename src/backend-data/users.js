@@ -78,11 +78,19 @@ async function createQuiz(email) {
 
         const newQuiz = prev.sketchs[0]
 
+        const quizInfo = {
+            name: newQuiz.name,
+            id: newQuiz.id,
+            category: newQuiz.category,
+            mode: newQuiz.mode,
+        }
+
         const result = await collection.updateOne(
             { email: email },
             {
                 $push: {
-                    'quizzes': newQuiz
+                    'quizzes': newQuiz,
+                    'quizzesInfo': quizInfo,
                 }
             }
         )

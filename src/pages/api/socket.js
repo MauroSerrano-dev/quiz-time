@@ -1,13 +1,6 @@
 import { Server } from "socket.io";
 const mongoose = require("mongoose");
 
-const INICIAL_IMG = {
-  content: '',
-  name: '',
-  type: '',
-  ref: '',
-}
-
 export default function SocketHandler(req, res) {
 
   // Check if socket server has already been initialized

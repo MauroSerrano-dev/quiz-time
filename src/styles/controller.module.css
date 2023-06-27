@@ -2,16 +2,12 @@
   --text-color: var(--text-white);
   width: 100%;
   height: 100%;
-  border: dashed green 2px;
-  padding-bottom: 1rem;
-  padding-right: 1rem;
-  padding-left: 1rem;
+  background-color: #121212;
 }
 
 #ownerView {
   width: 100%;
   height: 100%;
-  border: red dashed 2px;
 }
 
 #controllerContainer {
@@ -56,8 +52,6 @@
 
   width: 100%;
   height: 9%;
-
-  border: pink dashed 2px;
 }
 
 #menu {
@@ -67,17 +61,80 @@
   gap: 1rem;
   margin-left: 1rem;
   margin-right: 1rem;
+  margin-top: 1rem;
 }
 
 #quizMenu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100%;
+
+  position: relative;
+}
+
+#quizHead {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+
+  width: 100%;
+  height: 8%;
+
+  border-bottom: rgb(81, 81, 81) solid 1px;
+}
+
+#quizBody {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
 
+  width: 100%;
+  height: 92%;
+}
+
+#quizSelector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+
+  width: 32%;
+  height: 100%;
+}
+
+#selectorBarContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 1%;
   height: 100%;
 
-  border: dashed blue 2px;
+}
+
+#selectorBar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 7%;
+  background-color: var(--primary);
+
+  position: relative;
+}
+
+#quizzesContainer {
+  width: calc(67% - 1px);
+  height: 100%;
+
+  border-left: rgb(81, 81, 81) solid 1px;
 }
 
 #linkContainer {

@@ -2,10 +2,11 @@ import { withRouter } from 'next/router'
 import styles from '../styles/controller.module.css'
 import io from "socket.io-client";
 import { useEffect, useState } from 'react';
-import { motion } from "framer-motion"
+import { color, motion } from "framer-motion"
 import { Button, ButtonGroup } from '@mui/material';
 import NoSessionPage from '@/components/NoSessionPage';
 import { getStandardQuiz, getUserQuiz } from '../../utils/api-caller';
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 
 let socket;
 
@@ -16,6 +17,7 @@ export default withRouter((props) => {
     const [disableShow, setDisableShow] = useState(false)
     const [activeShow, setActiveShow] = useState(false)
     const [quiz, setQuiz] = useState()
+    const [quizTab, setQuizTab] = useState('mine')
 
     const { code } = props.router.query
 
@@ -26,6 +28,7 @@ export default withRouter((props) => {
     }, [session, code])
 
     useEffect(() => {
+        console.log(room)
         if (room && !quiz) {
             async function getQuiz() {
                 if (true)
@@ -63,23 +66,23 @@ export default withRouter((props) => {
 
     }
 
-    const nextQuestion = async () => {
+    const nextQuestion = () => {
         if (room.currentQuestion >= quiz.questions.length - 1)
             socket.emit("updateRoom", { ...room, state: 'finish' })
         else
             socket.emit("updateRoom", { ...room, currentQuestion: room.currentQuestion + 1 })
     }
 
-    const prevQuestion = async () => {
+    const prevQuestion = () => {
         if (room.currentQuestion > 0)
             socket.emit("updateRoom", { ...room, currentQuestion: room.currentQuestion - 1 })
     }
 
-    async function showResults() {
+    function showResults() {
         socket.emit("updateRoom", { ...room, state: 'results' })
     }
 
-    const resetQuiz = async () => {
+    const resetQuiz = () => {
         setDisableShow(true)
         setActiveShow(false)
         setTimeout(() => {
@@ -103,6 +106,18 @@ export default withRouter((props) => {
         setState(newState)
     }
 
+    function changeQuizTab(newTab) {
+        setQuizTab(newTab)
+    }
+
+    function handleChooseQuiz(quizInfo) {
+        socket.emit("updateRoom", {
+            ...room,
+            quizInfo: quizInfo,
+            state: 'active',
+        })
+    }
+
     return (
         <div className='flex size100'>
             {session === null
@@ -116,20 +131,148 @@ export default withRouter((props) => {
                         }
                         {room && Object.keys(room).length > 0 &&
                             <div id={styles.controllerContainer}>
-                                <h2 id={styles.roomName}>Controle da Sala {room.name}</h2>
                                 {session.user.email === room.owner &&
                                     <div id={styles.ownerView}>
                                         {state === 'none' &&
                                             <div id={styles.menu}>
-                                                <Button onClick={() => changeState('quiz')} variant="outlined" sx={{ width: '100%', height: '160px' }}>Jogar um Quiz</Button>
-                                                <Button variant="outlined" sx={{ width: '100%', height: '160px' }}>Fazer Enquete</Button>
-                                                <Button variant="outlined" sx={{ width: '100%', height: '160px' }}>Modo Q&A</Button>
-                                                <Button variant="outlined" sx={{ width: '100%', height: '160px' }}>QR Code</Button>
+                                                <Button
+                                                    onClick={() => changeState('quiz')}
+                                                    variant="outlined"
+                                                    sx={{ 
+                                                        width: '100%', 
+                                                        height: '130px',
+                                                        fontSize: '22px',
+                                                        lineHeight: '29px',
+                                                     }}
+                                                >
+                                                    Jogar Quiz
+                                                </Button>
+                                                <Button
+                                                    variant="outlined"
+                                                    sx={{ 
+                                                        width: '100%', 
+                                                        height: '130px',
+                                                        fontSize: '22px',
+                                                        lineHeight: '29px',
+                                                     }}
+                                                >
+                                                    Fazer Enquete
+                                                </Button>
+                                                <Button
+                                                    variant="outlined"
+                                                    sx={{ 
+                                                        width: '100%', 
+                                                        height: '130px',
+                                                        fontSize: '22px',
+                                                        lineHeight: '29px',
+                                                     }}
+                                                >
+                                                    Modo Q&A
+                                                </Button>
+                                                <Button
+                                                    variant="outlined"
+                                                    sx={{ 
+                                                        width: '100%', 
+                                                        height: '130px',
+                                                        fontSize: '22px',
+                                                        lineHeight: '29px',
+                                                     }}
+                                                >
+                                                    QR Code
+                                                </Button>
                                             </div>
                                         }
                                         {state === 'quiz' &&
                                             <div id={styles.quizMenu}>
-
+                                                <div id={styles.quizHead}>
+                                                    <Button
+                                                        onClick={() => changeState('none')}
+                                                        startIcon={<ArrowBackRoundedIcon />}
+                                                        sx={{
+                                                            color: 'white',
+                                                            height: '100%',
+                                                        }}
+                                                    >
+                                                        Voltar
+                                                    </Button>
+                                                </div>
+                                                <div id={styles.quizBody}>
+                                                    <div id={styles.quizSelector}>
+                                                        <Button
+                                                            onClick={() => changeQuizTab('mine')}
+                                                            sx={{
+                                                                fontWeight: 'bold',
+                                                                transition: 'all ease-out 200ms',
+                                                                width: '100%',
+                                                                height: '7%',
+                                                                color: quizTab === 'mine'
+                                                                    ? 'var(--primary)'
+                                                                    : 'white',
+                                                            }}
+                                                        >
+                                                            Meus
+                                                        </Button>
+                                                        <Button
+                                                            onClick={() => changeQuizTab('quizTime')}
+                                                            sx={{
+                                                                fontWeight: 'bold',
+                                                                transition: 'all ease-out 200ms',
+                                                                width: '100%',
+                                                                height: '7%',
+                                                                color: quizTab === 'quizTime'
+                                                                    ? 'var(--primary)'
+                                                                    : 'white',
+                                                            }}                                                    >
+                                                            Quiz Time
+                                                        </Button>
+                                                        <Button
+                                                            onClick={() => changeQuizTab('community')}
+                                                            sx={{
+                                                                fontWeight: 'bold',
+                                                                transition: 'all ease-out 200ms',
+                                                                width: '100%',
+                                                                height: '7%',
+                                                                color: quizTab === 'community'
+                                                                    ? 'var(--primary)'
+                                                                    : 'white',
+                                                            }}                                                    >
+                                                            Comunidade
+                                                        </Button>
+                                                    </div>
+                                                    <div id={styles.selectorBarContainer}>
+                                                        <div
+                                                            id={styles.selectorBar}
+                                                            style={{
+                                                                transition: 'all ease-out 200ms',
+                                                                top: quizTab === 'mine'
+                                                                    ? '0'
+                                                                    : quizTab === 'quizTime'
+                                                                        ? '7%'
+                                                                        : quizTab === 'community'
+                                                                            ? '14%'
+                                                                            : '0'
+                                                            }}
+                                                        >
+                                                        </div>
+                                                    </div>
+                                                    <div id={styles.quizzesContainer}>
+                                                        {quizTab === 'mine' &&
+                                                            session.user.quizzesInfo.map((quizInfo, i) =>
+                                                                <div
+                                                                    key={i}
+                                                                    className={styles.quizOption}
+                                                                >
+                                                                    <Button onClick={() => handleChooseQuiz(quizInfo)}>
+                                                                        {quizInfo.name}
+                                                                    </Button>
+                                                                    <Button onClick={resetQuiz}>
+                                                                        Reset
+                                                                    </Button>
+                                                                </div>
+                                                            )
+                                                        }
+                                                    </div>
+                                                </div>
                                             </div>
                                         }
                                         {/* <div id={styles.playersList}>
