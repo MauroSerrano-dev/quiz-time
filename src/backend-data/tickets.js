@@ -5,7 +5,7 @@ const COLLECTION_NAME = process.env.COLL_TICKETS;
 
 async function getTicket(id) {
   const collection = await getMongoCollection(DATABASE, COLLECTION_NAME);
-  const result = await collection.findOne({ _id: id });
+  const result = await collection.findOne({ _id: new ObjectId(id) });
   return result;
 }
 

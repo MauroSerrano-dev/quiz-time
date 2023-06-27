@@ -70,11 +70,11 @@ async function saveSketch(email, sketch) {
     }
 }
 
-async function createQuiz(email) {
+async function createQuiz(id, email) {
     try {
         const collection = await getMongoCollection(DATABASE, COLLECTION_NAME);
 
-        const prev = await collection.findOne({ email: email })
+        const prev = await collection.findOne({ _id: new ObjectId(id) })
 
         const newQuiz = prev.sketchs[0]
 
@@ -83,6 +83,10 @@ async function createQuiz(email) {
             id: newQuiz.id,
             category: newQuiz.category,
             mode: newQuiz.mode,
+            creator: {
+                id: id,
+                email: email,
+            }
         }
 
         const result = await collection.updateOne(

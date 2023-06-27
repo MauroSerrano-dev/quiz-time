@@ -22,7 +22,16 @@ const INICIAL_ROOM = {
     control: false,
     password: '',
     state: 'disable',
-    quizInfo: { name: '', purchaseDate: '', type: '' },
+    quizInfo: {
+        name: '',
+        id: '',
+        category: '',
+        mode: '',
+        creator: {
+            id: '',
+            email: ''
+        }
+    },
     currentQuestion: 0, players: []
 }
 
@@ -147,7 +156,13 @@ export default function Lobby(props) {
         const options = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ...newRoom, owner: session.user.email })
+            body: JSON.stringify({
+                ...newRoom,
+                owner: {
+                    id: session.user.id,
+                    email: session.user.email
+                }
+            })
         }
 
         await fetch('/api/rooms', options)

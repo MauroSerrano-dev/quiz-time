@@ -802,6 +802,7 @@ export default function ProfileEditor(props) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 action: 'createQuiz',
+                id: session.user.id,
                 userEmail: session.user.email
             })
         }

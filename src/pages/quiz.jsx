@@ -84,25 +84,26 @@ export default withRouter((props) => {
             async function getQuiz() {
                 let quizResponse;
                 if (true) {
-                    quizResponse = await getUserQuiz(session.user.id, room.quizInfo.id);
+                    quizResponse = await getUserQuiz(room.quizInfo.creator.id, room.quizInfo.id);
                 } else if (room.quizInfo.type === 'standard') {
                     quizResponse = await getStandardQuiz(session.user.id, room.quizInfo.id);
                 }
 
                 try {
                     const response = await quizResponse.json();
+                    console.log(response)
                     const updatedQuiz = {
                         ...response.quiz,
                         questions: await Promise.all(response.quiz.questions.map(async (question, i) => {
-                            const img = question.img.id ? await getImage(session.user.id, question.img.id) : null;
+                            const img = question.img.id ? await getImage(room.quizInfo.creator.id, question.img.id) : null;
                             const options = await Promise.all(question.options.map(async (option, j) => {
-                                const optionImg = option.img.id ? await getImage(session.user.id, option.img.id) : null;
+                                const optionImg = option.img.id ? await getImage(room.quizInfo.creator.id, option.img.id) : null;
                                 return { ...option, img: optionImg };
                             }));
                             return { ...question, img: img, options: options };
                         })),
                         results: await Promise.all(response.quiz.results.map(async (result, i) => {
-                            const img = result.img.id ? await getImage(session.user.id, result.img.id) : null;
+                            const img = result.img.id ? await getImage(room.quizInfo.creator.id, result.img.id) : null;
                             return { ...result, img: img };
                         })),
                     }
@@ -136,7 +137,7 @@ export default withRouter((props) => {
     }, [room, quiz])
 
     useEffect(() => {
-        if (room && room.private && !joined && session.user.email !== room.owner)
+        if (room && room.private && !joined && session.user.email !== room.owner.email)
             lockRoom()
     }, [room])
 
