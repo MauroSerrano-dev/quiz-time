@@ -131,7 +131,7 @@ export default withRouter((props) => {
                         }
                         {room && Object.keys(room).length > 0 &&
                             <div id={styles.controllerContainer}>
-                                {session.user.email === room.owner &&
+                                {session.user.id === room.owner.id &&
                                     <div id={styles.ownerView}>
                                         {state === 'none' &&
                                             <div id={styles.menu}>

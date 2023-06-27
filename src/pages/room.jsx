@@ -84,7 +84,7 @@ export default withRouter((props) => {
                         {room &&
                             <div id={styles.roomContainer}>
                                 <h1 id={styles.roomName}>Essa é a sala: {room.name}</h1>
-                                {session.user.email === room.owner &&
+                                {session.user.id === room.owner.id &&
                                     <section id={styles.ownerView}>
                                         {room.state === 'disable' &&
                                             <motion.div
