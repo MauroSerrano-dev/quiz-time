@@ -1,4 +1,15 @@
 const { getMongoCollection } = require("./utils/mongodb");
+import { initializeApp } from 'firebase/app'
+import { getDatabase, ref, set } from 'firebase/database'
+import { getFirebaseConfig } from './utils/firebase';
+
+const firebaseConfig = getFirebaseConfig()
+
+const app = initializeApp(firebaseConfig)
+
+function addNewRoom(code, room) {
+
+}
 
 const DATABASE = process.env.MONGODB_DB;
 const COLLECTION_NAME = process.env.COLL_ROOMS;
@@ -10,12 +21,25 @@ async function getRoom(code) {
 }
 
 async function addRoom(room) {
-  const collection = await getMongoCollection(DATABASE, COLLECTION_NAME);
 
   // Adicione o campo de data de expiração ao documento
   const expireAt = new Date();
   expireAt.setSeconds(expireAt.getSeconds() + 86400);
   room.expireAt = expireAt;
+
+
+  const db = getDatabase()
+
+  const reference = ref(db, 'rooms/' + room.code)
+
+  set(reference, {
+    ...room,
+    expireDate: {
+      text: expireAt.toString(),
+      number: expireAt.valueOf(),
+    }
+  })
+
 
   const result = await collection.insertOne(room);
 
