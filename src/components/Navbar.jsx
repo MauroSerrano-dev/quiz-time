@@ -74,6 +74,7 @@ export default function Navbar(props) {
                 <div id={styles.rightSide}>
                     {session &&
                         <div id={styles.rightSideLogin}>
+                            <p>{session.user.plan.name}</p>
                             <AvatarMenu session={session} signOut={signOut} />
                         </div>
                     }
