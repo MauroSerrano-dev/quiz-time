@@ -24,9 +24,11 @@ export default function PlayerCard(props) {
             </div>
             <div id={styles.infos} className='flex center'>
                 <p id={styles.name}>{player.user.name}</p>
-                <div id={styles.progressBarContainer}>
-                    <div id={styles.bar} style={{ left: `${progress - 100}%` }}></div>
-                </div>
+                {progress &&
+                    <div id={styles.progressBarContainer}>
+                        <div id={styles.bar} style={{ left: `${progress - 100}%` }}></div>
+                    </div>
+                }
             </div>
         </motion.div>
     )

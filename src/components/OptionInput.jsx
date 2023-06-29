@@ -57,6 +57,9 @@ export default function OptionInput(props) {
         placeholder,
         inputMode,
         onClick,
+        width,
+        height,
+        hideText,
     } = props
 
     const containerRef = useRef(null)
@@ -79,6 +82,11 @@ export default function OptionInput(props) {
         removeFocusFromAllElements()
     }, [attSizeRef])
 
+    useEffect(() => {
+        const divElement = inputTextRef.current
+        divElement.innerText = text === '' && placeholder ? placeholder : text
+    }, [text])
+
 
     useEffect(() => {
 
@@ -99,22 +107,6 @@ export default function OptionInput(props) {
             $(window).off('resize', handleResize)
         }
     }, [])
-
-    /* useEffect(() => {
-        function handleClickOutside(event) {
-            console.log(event.target.className)
-            if (inputMode && event.target.className !== styles.textInput) {
-                console.log('blur')
-                inputTextRef.current.blur()
-            }
-        }
-
-        document.addEventListener('mousedown', handleClickOutside);
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        }
-    }, []) */
 
     useEffect(() => {
         if (colorValue.length === 5)
@@ -266,14 +258,18 @@ export default function OptionInput(props) {
 
     const TEXT_VARIANTS = new Map([
         ['outlined', {
-            color: text === '' && !isFocused && placeholder
-                ? color.concat('90')
-                : color,
+            color: hideText
+                ? color.concat('00')
+                : text === '' && !isFocused && placeholder
+                    ? color.concat('90')
+                    : color,
         }],
         ['contained', {
-            color: text === '' && !isFocused && placeholder
-                ? textColor.concat('90')
-                : textColor,
+            color: hideText
+                ? textColor.concat('00')
+                : text === '' && !isFocused && placeholder
+                    ? textColor.concat('90')
+                    : textColor,
         }],
     ])
 
@@ -334,12 +330,16 @@ export default function OptionInput(props) {
             onMouseLeave={handleMouseLeave}
             onClick={onClick ? onClick : undefined}
             style={{
-                width: size === 'responsive'
-                    ? '50%'
-                    : `${SIZES.get(size).width}px`,
-                height: size === 'responsive'
-                    ? '100%'
-                    : `${SIZES.get(size).height}px`,
+                width: width !== undefined
+                    ? width
+                    : size === 'responsive'
+                        ? '50%'
+                        : `${SIZES.get(size).width}px`,
+                height: height !== undefined
+                    ? height
+                    : size === 'responsive'
+                        ? '100%'
+                        : `${SIZES.get(size).height}px`,
                 transition: animation,
                 borderStyle: 'solid',
                 borderWidth: `${buttonSize.height * BORDER_WIDTH}px`,
@@ -418,7 +418,7 @@ export default function OptionInput(props) {
                     style={{
                         ...TEXT_VARIANTS.get(variant),
                         fontSize: `${buttonSize.height * 0.19}px`,
-                        transition: editMode ? animation : FAST_ANIMATION,
+                        transition: animation,
                         cursor: inputMode ? 'text' : 'pointer',
                         paddingTop: text === '' && isFocused
                             ? `${(buttonSize.height / 2) - (buttonSize.height * 0.19 / 2) - (buttonSize.height * 0.024 / 2)}px`

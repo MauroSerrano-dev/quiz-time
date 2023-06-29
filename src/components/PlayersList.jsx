@@ -26,7 +26,10 @@ const container = {
 }
 
 export default function PlayersList(props) {
-    const { players, totalQuestions } = props
+    const { 
+        players, 
+        totalQuestions 
+    } = props
     const [open, setOpen] = useState(false)
     const [items, setItems] = useState(players)
     const [showPlayers, setShowPlayers] = useState(false)
@@ -81,7 +84,7 @@ export default function PlayersList(props) {
                         <PlayerCard
                             key={`Player: ${i}`}
                             player={player}
-                            progress={(player.answers.length / totalQuestions) * 100}
+                            progress={totalQuestions ? (player.answers.length / totalQuestions) * 100 : undefined}
                             top={`${(LIST_SIZE.paddingTop + 1) + ((ITEM_SIZE.height + LIST_SIZE.gap) * player.position)}px`}
                             zIndex={players.length - player.position}
                             width={`${ITEM_SIZE.width}px`}

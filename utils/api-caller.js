@@ -10,10 +10,10 @@ export function getUserQuiz(userId, quizId) {
     return fetch('/api/userQuiz', options)
 }
 
-export function getStandardQuiz() {
+export function getStandardQuiz(quizId) {
     const options = {
         method: 'GET',
-        headers: { "quizname": room.quizInfo.name },
+        headers: { "quizid": quizId },
     }
 
     return fetch('/api/quizzesStandard', options)
@@ -36,4 +36,12 @@ export async function getImage(userId, fileId) {
     const jsonBuffer = Buffer.from(fileContents, 'hex')
     const img = JSON.parse(jsonBuffer.toString('utf-8'))
     return img
+}
+
+export function getAllQuizzesStandardInfo() {
+    const options = {
+        method: 'GET',
+        headers: { type: 'info' },
+    }
+    return fetch("/api/quizzesStandard", options)
 }

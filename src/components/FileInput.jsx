@@ -117,9 +117,7 @@ export default function FileInput(props) {
 
                         await fetch('/api/googleCloud', options)
                             .then(response => response.json())
-                            .then(response => {
-                                console.log(response)
-                            })
+                            .then(response => console.log(response))
                             .catch(err => console.error(err))
 
                         URL.revokeObjectURL(url)

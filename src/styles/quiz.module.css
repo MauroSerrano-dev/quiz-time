@@ -22,6 +22,10 @@
     width: 335px;
 }
 
+#questionOptions {
+    width: 90%;
+}
+
 #questionContainer {
     display: flex;
     flex-direction: column;
@@ -29,6 +33,7 @@
     align-items: center;
     text-align: center;
     height: 80px;
+    width: 100%;
     margin-bottom: 1rem;
 }
 

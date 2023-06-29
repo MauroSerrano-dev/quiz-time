@@ -22,6 +22,7 @@ const INICIAL_ROOM = {
     control: false,
     password: '',
     state: 'disable',
+    controllerState: 'menu',
     quizInfo: {
         name: '',
         id: '',
@@ -161,7 +162,7 @@ export default function Lobby(props) {
                 owner: {
                     id: session.user.id,
                     email: session.user.email
-                }
+                }, 
             })
         }
 

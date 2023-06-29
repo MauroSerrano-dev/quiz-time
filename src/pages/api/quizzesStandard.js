@@ -1,10 +1,13 @@
-import { getQuiz, updateQuiz } from "../../backend-data/quizzesStandard";
+import { getQuiz, updateQuiz, getAllQuizzesInfo } from "../../backend-data/quizzesStandard";
 
 export default async function handler(req, res) {
 
     if (req.method === "GET") {
-        const quizName = req.headers.quizname
-        return res.status(200).json({ quiz: await getQuiz(quizName) })
+        const quizid = req.headers.quizid
+        const type = req.headers.type
+        if (type === 'info')
+            return res.status(200).json({ quizzes: await getAllQuizzesInfo() })
+        return res.status(200).json({ quiz: await getQuiz(quizid) })
     }
     else if (req.method === "PATCH") {
         const { quiz } = req.body

@@ -62,7 +62,6 @@ export default withRouter((props) => {
                 navigator.msMaxTouchPoints > 0
             )
         }
-
         checkIsMobile()
 
         window.addEventListener('resize', checkIsMobile)
@@ -78,20 +77,28 @@ export default withRouter((props) => {
     }, [session, code])
 
     useEffect(() => {
-        if (room && !quiz) {
-            console.log('room', room)
-            console.log('quiz', quiz)
+        if (room && quiz)
+            console.log('results', getResults())
+        console.log(room)
+        console.log(quiz)
+    }, [quiz, room])
+
+    useEffect(() => {
+        if (room && room.quizInfo.id !== '' && !quiz) {
             async function getQuiz() {
                 let quizResponse;
-                if (true) {
-                    quizResponse = await getUserQuiz(room.quizInfo.creator.id, room.quizInfo.id);
-                } else if (room.quizInfo.type === 'standard') {
-                    quizResponse = await getStandardQuiz(session.user.id, room.quizInfo.id);
+                if (room.quizInfo.type === 'standard') {
+                    quizResponse = await getStandardQuiz(room.quizInfo.id);
+                    const response = await quizResponse.json();
+                    setQuiz(response.quiz)
+                    return
                 }
+                else
+                    quizResponse = await getUserQuiz(room.quizInfo.creator.id, room.quizInfo.id);
+
 
                 try {
                     const response = await quizResponse.json();
-                    console.log(response)
                     const updatedQuiz = {
                         ...response.quiz,
                         questions: await Promise.all(response.quiz.questions.map(async (question, i) => {
@@ -113,7 +120,7 @@ export default withRouter((props) => {
                     console.error(err);
                 }
             }
-
+            console.log(room.quizInfo)
             getQuiz()
         }
     }, [room])
@@ -289,18 +296,19 @@ export default withRouter((props) => {
     }
 
     function getResults() {
-        return quiz.results.map(result => {
-            return {
-                ...result, points: getPlayer()?.answers
+        return quiz.results.map(result => (
+            {
+                ...result,
+                points: getPlayer()?.answers
                     .reduce((acc, answer) =>
                         acc + answer.actions.reduce((accumulator, action) =>
-                            action.profile === result.id
+                            action.profile === result.name
                                 ? accumulator + action.points
                                 : accumulator
                             , 0)
                         , 0)
             }
-        }).sort((a, b) => b.points - a.points).reduce((acc, result) => acc.length === 0 || acc[0].points === result.points ? [...acc, result] : acc, [])
+        )).sort((a, b) => b.points - a.points).reduce((acc, result) => acc.length === 0 || acc[0].points === result.points ? [...acc, result] : acc, [])
     }
 
     function getAllResults() {
@@ -309,7 +317,7 @@ export default withRouter((props) => {
                 ...result, points: getPlayer()?.answers
                     .reduce((acc, answer) =>
                         acc + answer.actions.reduce((accumulator, action) =>
-                            action.profile === result.id
+                            action.profile === result.name
                                 ? accumulator + action.points
                                 : accumulator
                             , 0)
@@ -324,7 +332,7 @@ export default withRouter((props) => {
                 ...result, points: getPlayer()?.answers
                     .reduce((acc, answer) =>
                         acc + answer.actions.reduce((accumulator, action) =>
-                            action.profile === result.id
+                            action.profile === result.name
                                 ? accumulator + action.points
                                 : accumulator
                             , 0)
@@ -359,17 +367,18 @@ export default withRouter((props) => {
     }
 
     return (
-        <div>
+        <div className='flex size100'>
             {session === null
                 ? <NoSessionPage signIn={signIn} />
                 : <motion.div id={styles.container}
+                    className='flex size100'
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.5, delay: 0.5, ease: [.62, -0.18, .32, 1.17] }}
                 >
-                    <main>
+                    <div className='flex size100'>
                         {room &&
-                            <div>
+                            <div className='flex start size100'>
                                 <h3 id={styles.roomName}>{room.quizInfo.name}</h3>
                                 {room.state === 'disable' &&
                                     <div>
@@ -411,7 +420,9 @@ export default withRouter((props) => {
                                             animate={questionTransition ? { opacity: 0 } : { opacity: 1 }}
                                             transition={{ duration: TRANSITION_DURATION / 1000, ease: [.62, -0.18, .32, 1.17] }}
                                         >
-                                            <h2>{room.control ? room.currentQuestion + 1 : getPlayer().currentQuestion + 1}. {quiz.questions[room.control ? room.currentQuestion : getPlayer().currentQuestion].content}</h2>
+                                            <h2>
+                                                {room.control ? room.currentQuestion + 1 : getPlayer().currentQuestion + 1}. {quiz.questions[room.control ? room.currentQuestion : getPlayer().currentQuestion].content}
+                                            </h2>
                                         </motion.div>
                                         <motion.div
                                             id={styles.optionsContainer}
@@ -419,10 +430,13 @@ export default withRouter((props) => {
                                             initial="hidden"
                                             animate="visible"
                                         >
-                                            {quiz.questions[room.control ? room.currentQuestion : getPlayer().currentQuestion].options.map((option, i) =>
+                                            {quiz.questions[room.control
+                                                ? room.currentQuestion
+                                                : getPlayer().currentQuestion
+                                            ].options.map((option, i) =>
                                                 i < 4 || quiz.questions[room.currentQuestion].haveExtraOptions
-                                                    ? <motion.div key={`Option: ${i}`} variants={item}>
-                                                        <div className='flex' style={{ width: '800px', height: '100px' }} >
+                                                    ? <motion.div className='fillWidth' key={`Option: ${i}`} variants={item}>
+                                                        <div className='flex' style={{ width: '100%', height: '100px' }} >
                                                             <OptionInput
                                                                 onClick={() => room.control ? answerControl(i) : answer(i)}
                                                                 borderRadius={quiz.style.button.borderRadius}
@@ -436,7 +450,9 @@ export default withRouter((props) => {
                                                                 symbol={quiz.style.button.symbol}
                                                                 variant={quiz.style.button.variant}
                                                                 text={option.content}
-                                                                size='responsive'
+                                                                width='100%'
+                                                                height='100%'
+                                                                hideText={questionTransition}
                                                             />
                                                         </div>
                                                     </motion.div>
@@ -470,7 +486,7 @@ export default withRouter((props) => {
                                 }
                             </div>
                         }
-                    </main>
+                    </div>
                 </motion.div>
             }
         </div >

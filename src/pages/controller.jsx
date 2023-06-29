@@ -2,46 +2,40 @@ import { withRouter } from 'next/router'
 import styles from '../styles/controller.module.css'
 import io from "socket.io-client";
 import { useEffect, useState } from 'react';
-import { color, motion } from "framer-motion"
-import { Button, ButtonGroup, FormControlLabel, Switch } from '@mui/material';
+import { Button, FormControlLabel, Switch } from '@mui/material';
 import NoSessionPage from '@/components/NoSessionPage';
-import { getStandardQuiz, getUserQuiz } from '../../utils/api-caller';
+import { getAllQuizzesStandardInfo, getStandardQuiz, getUserQuiz } from '../../utils/api-caller';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
+import PlayersList from '@/components/PlayersList';
 
 let socket;
 
 export default withRouter((props) => {
     const { session, signIn } = props
     const [room, setRoom] = useState()
-    const [state, setState] = useState('none')
     const [disableShow, setDisableShow] = useState(false)
     const [activeShow, setActiveShow] = useState(false)
+    const [quizzesStandard, setQuizzesStandard] = useState([])
     const [quiz, setQuiz] = useState()
     const [quizTab, setQuizTab] = useState('mine')
 
     const { code } = props.router.query
 
     useEffect(() => {
+        async function getAllQuizzesInfo() {
+            await getAllQuizzesStandardInfo()
+                .then(response => response.json())
+                .then(response => setQuizzesStandard(response.quizzes))
+                .catch(err => console.error(err))
+        }
+        getAllQuizzesInfo()
+    }, [])
+
+    useEffect(() => {
         if (!room && code && session) {
             socketInitializer()
         }
     }, [session, code])
-
-    useEffect(() => {
-        console.log(room)
-        if (room && !quiz) {
-            async function getQuiz() {
-                if (true)
-                    return await getUserQuiz(session.user.id, '32b1aa1b-7106-4ad5-9bd6-4adb5f197ee9')
-                if (room.quizInfo.type === 'standard')
-                    return await getStandardQuiz(session.user.id, '32b1aa1b-7106-4ad5-9bd6-4adb5f197ee9')
-            }
-            getQuiz()
-                .then(response => response.json())
-                .then(response => setQuiz(response.quiz))
-                .catch(err => console.error(err))
-        }
-    }, [room])
 
     const socketInitializer = async () => {
         const options = {
@@ -68,25 +62,42 @@ export default withRouter((props) => {
 
     const nextQuestion = () => {
         if (room.currentQuestion >= quiz.questions.length - 1)
-            socket.emit("updateRoom", { ...room, state: 'finish' })
+            socket.emit("updateRoom", {
+                ...room,
+                state: 'finish'
+            })
         else
-            socket.emit("updateRoom", { ...room, currentQuestion: room.currentQuestion + 1 })
+            socket.emit("updateRoom", {
+                ...room,
+                currentQuestion: room.currentQuestion + 1
+            })
     }
 
     const prevQuestion = () => {
         if (room.currentQuestion > 0)
-            socket.emit("updateRoom", { ...room, currentQuestion: room.currentQuestion - 1 })
+            socket.emit("updateRoom", {
+                ...room,
+                currentQuestion:
+                    room.currentQuestion - 1
+            })
     }
 
     function showResults() {
-        socket.emit("updateRoom", { ...room, state: 'results' })
+        socket.emit("updateRoom", {
+            ...room,
+            state: 'results'
+        })
     }
 
     const resetQuiz = () => {
         setDisableShow(true)
         setActiveShow(false)
         setTimeout(() => {
-            socket.emit("updateRoom", { ...room, state: 'disable', currentQuestion: 0, players: [] })
+            socket.emit("updateRoom", {
+                ...room, state: 'disable',
+                currentQuestion: 0,
+                players: []
+            })
         }, 600)
     }
 
@@ -94,16 +105,30 @@ export default withRouter((props) => {
         setDisableShow(false)
         setActiveShow(true)
         setTimeout(() => {
-            socket.emit("updateRoom", { ...room, state: 'active' })
+            socket.emit("updateRoom", {
+                ...room,
+                state: 'active'
+            })
         }, 600)
     }
 
     function switchControl(isControl) {
-        socket.emit("updateRoom", { ...room, control: isControl })
+        socket.emit("updateRoom", {
+            ...room,
+            control: isControl
+        })
     }
 
     function changeState(newState) {
-        setState(newState)
+        socket.emit("updateRoom", {
+            ...room,
+            controllerState: newState
+        })
+    }
+
+    function handleBackToMenu() {
+        changeState('menu')
+        setQuizTab('mine')
     }
 
     function changeQuizTab(newTab) {
@@ -114,9 +139,43 @@ export default withRouter((props) => {
         socket.emit("updateRoom", {
             ...room,
             quizInfo: quizInfo,
+            controllerState: 'quizControl'
+        })
+    }
+
+    function handleStartQuiz() {
+        socket.emit("updateRoom", {
+            ...room,
             state: 'active',
         })
-        setState('quizControl')
+    }
+
+    function handleShowStatistic() {
+        console.log(room)
+    }
+
+    function handleCancelQuiz() {
+        socket.emit("updateRoom", {
+            ...room,
+            state: 'disable',
+            quizInfo: {
+                category: '',
+                creator: {
+                    id: '',
+                    email: ''
+                },
+                id: '',
+                mode: '',
+                name: ''
+            }
+        })
+    }
+
+    function handleSwitchControl(event) {
+        socket.emit("updateRoom", {
+            ...room,
+            control: !event.target.checked
+        })
     }
 
     return (
@@ -134,7 +193,7 @@ export default withRouter((props) => {
                             <div id={styles.controllerContainer}>
                                 {session.user.id === room.owner.id &&
                                     <div id={styles.ownerView}>
-                                        {state === 'none' &&
+                                        {room.controllerState === 'menu' &&
                                             <div id={styles.menu}>
                                                 <Button
                                                     onClick={() => changeState('quizSelector')}
@@ -142,7 +201,7 @@ export default withRouter((props) => {
                                                     sx={{
                                                         width: '100%',
                                                         height: '130px',
-                                                        fontSize: '22px',
+                                                        fontSize: '17px',
                                                         lineHeight: '29px',
                                                     }}
                                                 >
@@ -153,7 +212,7 @@ export default withRouter((props) => {
                                                     sx={{
                                                         width: '100%',
                                                         height: '130px',
-                                                        fontSize: '22px',
+                                                        fontSize: '17px',
                                                         lineHeight: '29px',
                                                     }}
                                                 >
@@ -164,30 +223,30 @@ export default withRouter((props) => {
                                                     sx={{
                                                         width: '100%',
                                                         height: '130px',
-                                                        fontSize: '22px',
+                                                        fontSize: '17px',
                                                         lineHeight: '29px',
                                                     }}
                                                 >
-                                                    Modo Q&A
+                                                    Começar Q&A
                                                 </Button>
                                                 <Button
                                                     variant="outlined"
                                                     sx={{
                                                         width: '100%',
                                                         height: '130px',
-                                                        fontSize: '22px',
+                                                        fontSize: '17px',
                                                         lineHeight: '29px',
                                                     }}
                                                 >
-                                                    QR Code
+                                                    Abrir Telão
                                                 </Button>
                                             </div>
                                         }
-                                        {state === 'quizSelector' &&
+                                        {room.controllerState === 'quizSelector' &&
                                             <div id={styles.quizMenu}>
                                                 <div id={styles.quizHead}>
                                                     <Button
-                                                        onClick={() => changeState('none')}
+                                                        onClick={handleBackToMenu}
                                                         startIcon={<ArrowBackRoundedIcon />}
                                                         sx={{
                                                             color: 'white',
@@ -223,7 +282,8 @@ export default withRouter((props) => {
                                                                 color: quizTab === 'quizTime'
                                                                     ? 'var(--primary)'
                                                                     : 'white',
-                                                            }}                                                    >
+                                                            }}
+                                                        >
                                                             Quiz Time
                                                         </Button>
                                                         <Button
@@ -236,7 +296,8 @@ export default withRouter((props) => {
                                                                 color: quizTab === 'community'
                                                                     ? 'var(--primary)'
                                                                     : 'white',
-                                                            }}                                                    >
+                                                            }}
+                                                        >
                                                             Comunidade
                                                         </Button>
                                                     </div>
@@ -266,8 +327,17 @@ export default withRouter((props) => {
                                                                     <Button onClick={() => handleChooseQuiz(quizInfo)}>
                                                                         {quizInfo.name}
                                                                     </Button>
-                                                                    <Button onClick={resetQuiz}>
-                                                                        Reset
+                                                                </div>
+                                                            )
+                                                        }
+                                                        {quizTab === 'quizTime' &&
+                                                            quizzesStandard.map((quizInfo, i) =>
+                                                                <div
+                                                                    key={i}
+                                                                    className={styles.quizOption}
+                                                                >
+                                                                    <Button onClick={() => handleChooseQuiz(quizInfo)}>
+                                                                        {quizInfo.name}
                                                                     </Button>
                                                                 </div>
                                                             )
@@ -276,68 +346,95 @@ export default withRouter((props) => {
                                                 </div>
                                             </div>
                                         }
-                                        {state === 'quizControl' &&
-                                            <div id={styles.quizControl}>
-                                                <FormControlLabel
-                                                    control={<Switch />}
-                                                    label="Free-Play:"
-                                                    labelPlacement="start"
-                                                    /* onChange={handleNewIsPrivate}
-                                                    checked={newRoom.private} */
-                                                />
-                                                <Button
-                                                    variant="outlined"
-                                                    sx={{
-                                                        width: '100%',
-                                                        height: '130px',
-                                                        fontSize: '22px',
-                                                        lineHeight: '29px',
-                                                    }}
-                                                >
-                                                    Voltar Pergunta
-                                                </Button>
-                                                <Button
-                                                    variant="outlined"
-                                                    sx={{
-                                                        width: '100%',
-                                                        height: '130px',
-                                                        fontSize: '22px',
-                                                        lineHeight: '29px',
-                                                    }}
-                                                >
-                                                    Próxima Pergunta
-                                                </Button>
-                                                <Button
-                                                    variant="outlined"
-                                                    sx={{
-                                                        width: '100%',
-                                                        height: '130px',
-                                                        fontSize: '22px',
-                                                        lineHeight: '29px',
-                                                    }}
-                                                >
-                                                    Mostrar Estatística
-                                                </Button>
-                                                <Button
-                                                    variant="outlined"
-                                                    color='error'
-                                                    sx={{
-                                                        width: '100%',
-                                                        height: '130px',
-                                                        fontSize: '22px',
-                                                        lineHeight: '29px',
-                                                    }}
-                                                >
-                                                    Cancelar Quiz
-                                                </Button>
-                                            </div>
-                                        }
-                                        {/* <div id={styles.playersList}>
-                                            <h3>Players</h3>
-                                            {room.players.map((player, i) =>
-                                                <p key={`Player: ${i}`}>{player.user.name} {player.answers.some((answer) => answer.questionIndex === room.currentQuestion) ? 'check' : ''}</p>
-                                            )}
-                                        </div> */}
+                                        {room.controllerState === 'quizControl' && (
+                                            room.state === 'disable'
+                                                ? <div>
+                                                    <Button
+                                                        onClick={handleBackToMenu}
+                                                        startIcon={<ArrowBackRoundedIcon />}
+                                                        sx={{
+                                                            color: 'white',
+                                                            height: '100%',
+                                                        }}
+                                                    >
+                                                        Voltar
+                                                    </Button>
+                                                    <Button
+                                                        variant="outlined"
+                                                        onClick={handleStartQuiz}
+                                                        sx={{
+                                                            width: '100%',
+                                                            height: '130px',
+                                                            fontSize: '17px',
+                                                            lineHeight: '29px',
+                                                        }}
+                                                    >
+                                                        Começar Quiz
+                                                    </Button>
+                                                </div>
+                                                : <div id={styles.quizControl}>
+                                                    <FormControlLabel
+                                                        control={<Switch />}
+                                                        label="Free-Play:"
+                                                        labelPlacement="start"
+                                                        onChange={handleSwitchControl}
+                                                        checked={!room.control}
+                                                    />
+                                                    <div className='flex row'>
+                                                        <Button
+                                                            variant="outlined"
+                                                            sx={{
+                                                                width: '100%',
+                                                                height: '130px',
+                                                                fontSize: '17px',
+                                                                lineHeight: '29px',
+                                                            }}
+                                                        >
+                                                            Voltar Pergunta
+                                                        </Button>
+                                                        <Button
+                                                            variant="outlined"
+                                                            sx={{
+                                                                width: '100%',
+                                                                height: '130px',
+                                                                fontSize: '17px',
+                                                                lineHeight: '29px',
+                                                            }}
+                                                        >
+                                                            Próxima Pergunta
+                                                        </Button>
+                                                    </div>
+                                                    <Button
+                                                        variant="outlined"
+                                                        onClick={handleShowStatistic}
+                                                        sx={{
+                                                            width: '100%',
+                                                            height: '130px',
+                                                            fontSize: '17px',
+                                                            lineHeight: '29px',
+                                                        }}
+                                                    >
+                                                        Mostrar Estatística
+                                                    </Button>
+                                                    <Button
+                                                        variant="outlined"
+                                                        onClick={handleCancelQuiz}
+                                                        color='error'
+                                                        sx={{
+                                                            width: '100%',
+                                                            height: '130px',
+                                                            fontSize: '17px',
+                                                            lineHeight: '29px',
+                                                        }}
+                                                    >
+                                                        Cancelar Quiz
+                                                    </Button>
+                                                </div>
+                                        )}
+                                        <PlayersList
+                                            players={room.players}
+                                            totalQuestions={quiz?.questions.length}
+                                        />
                                     </div>
                                 }
                                 {session.user.id !== room.owner.id &&
