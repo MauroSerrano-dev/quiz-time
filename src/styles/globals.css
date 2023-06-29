@@ -169,31 +169,6 @@ section {
   position: absolute;
 }
 
-/* .blob {
-  height: 350px;
-  aspect-ratio: 1;
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  translate: -50% -50%;
-  border-radius: 100%;
-  background: linear-gradient(
-    to right,
-    aquamarine,
-    mediumpurple
-  );
-  animation: rotate 20s infinite;
-  z-index: -20;
-}
-
-.blur {
-  height: 100%;
-  width: 100%;
-  position: fixed;
-  z-index: -10;
-  backdrop-filter: blur(150px);
-} */
-
 /* @media (prefers-color-scheme: light) {
   html {
     color-scheme: light;

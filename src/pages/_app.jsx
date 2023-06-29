@@ -63,8 +63,6 @@ function MyApp(props) {
         <Script src="https://js.stripe.com/v3/" async></Script>
       </Head>
       <ThemeProvider theme={mainTheme}>
-        {/* <div id='blob'></div>
-        <div id='blur'></div> */}
         <SessionProvider>
           <DataHandler pageProps={pageProps} Component={Component} />
           <ToastContainer newestOnTop transition={Flip} style={{ color: 'white' }} className="foo" />
