@@ -62,6 +62,7 @@ export default function SocketHandler(req, res) {
 
     // Listen for "updateRoom" events emitted by the client
     socket.on("updateRoom", (updatedRoom) => {
+      console.log('então')
       delete updatedRoom.expireAt
       // Verifique se o campo 'expireAt' existe no documento
       const newExpireAt = new Date()
