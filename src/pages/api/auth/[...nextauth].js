@@ -1,8 +1,9 @@
 import NextAuth from "next-auth";
-import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import GoogleProvider from 'next-auth/providers/google';
-import { getClientPromise } from "../../../backend-data/utils/mongodb";
 import { createCustomer, getCustomerByEmail } from "../../../backend-data/utils/stripe";
+
+import { FirestoreAdapter } from '@next-auth/firebase-adapter'
+import { cert } from "firebase-admin/app";
 
 export default NextAuth({
   providers: [
@@ -58,6 +59,11 @@ export default NextAuth({
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
-  database: process.env.MONGODB_URI,
-  adapter: MongoDBAdapter(getClientPromise()),
+  adapter: FirestoreAdapter({
+    credential: cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+    })
+  }),
 });

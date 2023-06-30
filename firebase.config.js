@@ -1,6 +1,6 @@
-import { initializeApp } from 'firebase/app'
-import { getDatabase, ref, set } from 'firebase/database'
-import { getFirebaseConfig } from './utils/firebase';
+/* import { initializeApp, getApps, getApp } from 'firebase/app'
+import { getFirestore } from 'firebase/firebase';
+import { getStorage } from 'firebase/storage'
 
 const firebaseConfig = {
     apiKey: process.env.FIREBASE_API_KEY,
@@ -12,3 +12,14 @@ const firebaseConfig = {
     appId: process.env.FIREBASE_APP_ID,
     measurementId: process.env.FIREBASE_MEASUREMENT_ID
 }
+
+const app = getApps.Length > 0 ? getApp() : initializeApp(firebaseConfig)
+
+const db = getFirestore(app)
+const storage = getStorage(app)
+
+export {
+    app,
+    db,
+    storage
+} */
