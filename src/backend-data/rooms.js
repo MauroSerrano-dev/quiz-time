@@ -21,17 +21,17 @@ async function getRoom(code) {
 }
 
 async function addRoom(room) {
-
+  
   // Adicione o campo de data de expiração ao documento
   const expireAt = new Date();
   expireAt.setSeconds(expireAt.getSeconds() + 86400);
   room.expireAt = expireAt;
 
-
+  
   const db = getDatabase()
 
   const reference = ref(db, 'rooms/' + room.code)
-
+  
   set(reference, {
     ...room,
     expireDate: {
@@ -39,13 +39,13 @@ async function addRoom(room) {
       number: expireAt.valueOf(),
     }
   })
-
+  
+  const collection = await getMongoCollection(DATABASE, COLLECTION_NAME);
 
   const result = await collection.insertOne(room);
 
   // Crie o índice de expiração se ainda não existir
   await collection.createIndex({ expireAt: 1 }, { expireAfterSeconds: 86400 });
-
   return result.insertedId;
 }
 
