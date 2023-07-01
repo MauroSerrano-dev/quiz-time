@@ -1,107 +1,156 @@
-const { getMongoCollection } = require("./utils/mongodb");
-const { ObjectId } = require("mongodb");
+import { getFirestore, updateDoc, doc, getDoc, getDocs, serverTimestamp, arrayUnion, where, query, collection } from 'firebase/firestore'
+import { initializeApp } from 'firebase/app'
+import { getFirebaseConfig } from './utils/firebase'
 
-const DATABASE = process.env.MONGODB_DB;
-const COLLECTION_NAME = 'users';
+// Inicialize o aplicativo Firebase
+const firebaseConfig = getFirebaseConfig()
+
+const app = initializeApp(firebaseConfig)
 
 async function getUserById(id) {
-    const collection = await getMongoCollection(DATABASE, COLLECTION_NAME);
-    const result = await collection.findOne({ _id: new ObjectId(id) })
-    return result;
+    const db = getFirestore();
+    const userRef = doc(db, process.env.COLL_USERS, id)
+
+    try {
+        const userDoc = await getDoc(userRef)
+
+        // Verifique se o documento existe
+        if (userDoc.exists()) {
+            const userData = userDoc.data()
+
+            return userData
+        } else {
+            console.log("User document not found")
+        }
+    } catch (error) {
+        console.log("Error getting user:", error)
+    }
 }
 
 async function getQuiz(id, quizId) {
-    const collection = await getMongoCollection(DATABASE, COLLECTION_NAME);
-    const result = await collection.aggregate([
-        { $match: { _id: new ObjectId(id) } },
-        { $unwind: "$quizzes" },
-        { $match: { "quizzes.id": quizId } },
-        { $project: { _id: 0, quizzes: 1 } }
-    ]).toArray();
+    const db = getFirestore();
+    const userRef = doc(db, 'users', id);
 
-    if (result.length > 0) {
-        return result[0].quizzes;
-    } else {
-        return null;
+    try {
+        const userDoc = await getDoc(userRef)
+
+        // Verifique se o documento existe
+        if (userDoc.exists()) {
+            const userData = userDoc.data()
+            const quizzes = userData.quizzes
+
+            const quiz = quizzes.find((quiz) => quiz.id === quizId)
+
+            if (quiz) {
+                return quiz
+            } else {
+                return null
+            }
+        } else {
+            console.log("User document not found")
+            return null;
+        }
+    } catch (error) {
+        console.log("Error getting quiz:", error)
+        return null
     }
 }
 
 async function setCustomerIdInDatabase(email, customerId) {
-    const collection = await getMongoCollection(DATABASE, COLLECTION_NAME);
-    const result = await collection.updateOne(
-        { email: email },
-        {
-            $set: {
-                'stripeCustomerId': customerId
-            }
+    const db = getFirestore()
+    const usersCollectionRef = collection(db, 'users')
+
+    try {
+        const querySnapshot = await getDocs(query(usersCollectionRef, where('email', '==', email)))
+
+        if (!querySnapshot.empty) {
+            const userDoc = querySnapshot.docs[0]
+            const userData = userDoc.data()
+
+            // Adicione ou atualize o campo
+            userData.stripeCustomerId = customerId
+            userData.updatedAt = serverTimestamp()
+
+            // Salve o documento atualizado de volta no Firestore
+            await updateDoc(userDoc.ref, userData)
+
+            console.log("createQuiz successfully")
+        } else {
+            console.log("User document not found")
         }
-    )
-    return result;
+    } catch (error) {
+        console.log("Error saving newQuiz:", error)
+    }
 }
 
 async function setUserPlan(email, plan) {
-    const collection = await getMongoCollection(DATABASE, COLLECTION_NAME);
-    const result = await collection.updateOne(
-        { email: email },
-        {
-            $set: {
-                'plan': plan
-            }
-        }
-    )
-    return result;
-}
+    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+    console.log('email', email, plan)
+    const db = getFirestore()
+    const usersCollectionRef = collection(db, 'users')
 
-async function saveSketch(email, sketch) {
     try {
-        const collection = await getMongoCollection(DATABASE, COLLECTION_NAME);
-        const result = await collection.updateOne(
-            { email: email },
-            {
-                $set: {
-                    'sketchs.0': [sketch]
-                }
-            }
-        )
-        return result
+        const querySnapshot = await getDocs(query(usersCollectionRef, where('email', '==', email)))
+
+        if (!querySnapshot.empty) {
+            const userDoc = querySnapshot.docs[0]
+            const userData = userDoc.data()
+            console.log('userData', userData)
+            // Adicione ou atualize o campo
+            userData.plan = plan
+            userData.updatedAt = serverTimestamp()
+
+            // Salve o documento atualizado de volta no Firestore
+            await updateDoc(userDoc.ref, userData)
+
+            console.log("createQuiz successfully")
+        } else {
+            console.log("User document not found")
+        }
     } catch (error) {
-        console.error('Erro ao salvar o rascunho do usuário:', error)
-        throw error
+        console.log("Error saving newQuiz:", error)
     }
 }
 
 async function createQuiz(id, email) {
+    const db = getFirestore();
+    const userRef = doc(db, 'users', id)
+
     try {
-        const collection = await getMongoCollection(DATABASE, COLLECTION_NAME);
+        const userDoc = await getDoc(userRef)
 
-        const prev = await collection.findOne({ _id: new ObjectId(id) })
+        // Verifique se o documento existe
+        if (userDoc.exists()) {
+            const userData = userDoc.data()
 
-        const newQuiz = prev.sketchs[0]
+            const newQuiz = userData.sketchs[0]
 
-        const quizInfo = {
-            name: newQuiz.name,
-            id: newQuiz.id,
-            category: newQuiz.category,
-            mode: newQuiz.mode,
-            creator: {
-                id: id,
-                email: email,
-            }
-        }
-
-        const result = await collection.updateOne(
-            { email: email },
-            {
-                $push: {
-                    'quizzes': newQuiz,
-                    'quizzesInfo': quizInfo,
+            const quizInfo = {
+                name: newQuiz.name,
+                id: newQuiz.id,
+                category: newQuiz.category,
+                mode: newQuiz.mode,
+                creator: {
+                    id: id,
+                    email: email,
                 }
             }
-        )
-        return result
+
+            // Adicione ou atualize o campo
+            userData.quizzes = arrayUnion(newQuiz)
+            userData.quizzesInfo = arrayUnion(quizInfo)
+            userData.sketchs = []
+            userData.updatedAt = serverTimestamp()
+
+            // Salve o documento atualizado de volta no Firestore
+            await updateDoc(userRef, userData)
+
+            console.log("createQuiz successfully")
+        } else {
+            console.log("User document not found")
+        }
     } catch (error) {
-        console.error('Erro ao adicionar o quiz do usuário:', error)
-        throw error
+        console.log("Error saving newQuiz:", error)
     }
 }
 
@@ -109,7 +158,6 @@ export {
     getUserById,
     setUserPlan,
     setCustomerIdInDatabase,
-    saveSketch,
     createQuiz,
     getQuiz
 }

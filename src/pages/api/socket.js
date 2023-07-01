@@ -1,11 +1,19 @@
-import { Server } from "socket.io";
-const mongoose = require("mongoose");
+import { Server } from "socket.io"
+const mongoose = require("mongoose")
+import { getFirestore, updateDoc, doc, getDoc, serverTimestamp } from 'firebase/firestore'
+import { initializeApp } from 'firebase/app'
+import { getFirebaseConfig } from "@/backend-data/utils/firebase"
+
+// Inicialize o aplicativo Firebase
+const firebaseConfig = getFirebaseConfig()
+
+const app = initializeApp(firebaseConfig);
 
 export default function SocketHandler(req, res) {
 
   // Check if socket server has already been initialized
   if (res.socket.server.io) {
-    console.log("Socket.IO server already set up");
+    console.log("Socket.IO server already set up")
     res.end();
     return;
   }
@@ -17,7 +25,7 @@ export default function SocketHandler(req, res) {
 
   // Handle MongoDB connection errors
   mongoose.connection.on("error", err => {
-    console.log("MongoDB connection error:", err);
+    console.log("MongoDB connection error:", err)
   });
 
   // MongoDB connection successful
@@ -157,8 +165,33 @@ export default function SocketHandler(req, res) {
         })
     })
     // Listen for "saveSketch" events emitted by the client
-    socket.on("saveSketch", async (email, sketch) => {
-      
+    socket.on("saveSketch", async (id, email, sketch) => {
+
+      const db = getFirestore();
+      const userRef = doc(db, 'users', id);
+
+      try {
+        const userDoc = await getDoc(userRef);
+
+        // Verifique se o documento existe
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+
+          // Adicione ou atualize o campo "sketchs" no documento
+          userData.sketchs = [sketch];
+          userData.updatedAt = serverTimestamp();
+
+          // Salve o documento atualizado de volta no Firestore
+          await updateDoc(userRef, userData);
+
+          console.log("saveSketch successfully");
+        } else {
+          console.log("User document not found");
+        }
+      } catch (error) {
+        console.log("Error saving sketch:", error);
+      }
+
       usersCollection.updateOne(
         { email: email },
         {

@@ -140,6 +140,7 @@ export default function QuizBuilder(props) {
             socketInitializer()
         else {
             socket.emit("saveSketch",
+                session.user.id,
                 session.user.email,
                 {
                     ...quiz,
@@ -170,44 +171,6 @@ export default function QuizBuilder(props) {
         await fetch("/api/socket", options)
 
         socket = io()
-    }
-
-    async function saveQuiz() {
-
-        const options = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                field: 'sketchs',
-                userEmail: session.user.email,
-                sketch: {
-                    ...quiz,
-                    results: quiz.results.map(result =>
-                    ({
-                        ...result,
-                        img: INICIAL_IMG
-                    })),
-                    questions: quiz.questions.map(question =>
-                    ({
-                        ...question,
-                        options: question.options.map(option =>
-                        ({
-                            ...option,
-                            img: INICIAL_IMG
-                        })),
-                        img: INICIAL_IMG
-                    }))
-                }
-            })
-        }
-
-        await fetch('/api/users', options)
-            .then(response => response.json())
-            .then(response => {
-                console.log(response)
-                setCanSave(true)
-            })
-            .catch(err => console.error(err))
     }
 
     useEffect(() => {
