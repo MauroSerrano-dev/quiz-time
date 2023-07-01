@@ -17,7 +17,8 @@ async function getUserById(id) {
         // Verifique se o documento existe
         if (userDoc.exists()) {
             const userData = userDoc.data()
-
+            
+            console.log("User found")
             return userData
         } else {
             console.log("User document not found")
