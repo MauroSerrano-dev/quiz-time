@@ -13,7 +13,6 @@ export default async function handler(req, res) {
             userId,
             userEmail,
         } = req.body
-        console.log('api', action, userEmail)
 
         if (action === 'createQuiz') {
             await createQuiz(userId, userEmail);
