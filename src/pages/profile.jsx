@@ -11,13 +11,14 @@ export default withRouter((props) => {
     const [user, setUser] = useState()
 
     useEffect(() => {
-        getUser(id)
+        if (!user)
+            getUser(id)
     }, [id])
 
     async function getUser(id) {
         const options = {
             method: 'GET',
-            headers: { "id": id },
+            headers: { 'id': id },
         }
 
         await fetch('/api/users', options)
