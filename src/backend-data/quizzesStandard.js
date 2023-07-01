@@ -1,36 +1,72 @@
-const { getMongoCollection } = require("./utils/mongodb");
-const { ObjectId } = require("mongodb");
-
-const DATABASE = process.env.MONGODB_DB;
-const COLLECTION_NAME = 'quizzesStandard';
-
 async function getQuiz(id) {
-    const collection = await getMongoCollection(DATABASE, COLLECTION_NAME);
-    const result = await collection.findOne({ _id: new ObjectId(id) });
-    return result;
+    const db = getFirestore();
+    const userRef = doc(db, process.env.COLL_QUIZZES_STANDARD, id)
+
+    try {
+        const quizDoc = await getDoc(userRef)
+
+        // Verifique se o documento existe
+        if (quizDoc.exists()) {
+            const quizData = quizDoc.data()
+
+            return quizData
+        } else {
+            console.log("Quiz document not found")
+        }
+    } catch (error) {
+        console.log("Error getting quiz:", error)
+    }
 }
 
 async function getAllQuizzesInfo() {
-    const collection = await getMongoCollection(DATABASE, COLLECTION_NAME);
-    const quizzes = await collection.find().toArray();
-    const result = quizzes.map(quiz => (
-        {
-            id: quiz._id,
-            name: quiz.name,
-            type: 'standard'
+    const db = getFirestore()
+    const usersCollectionRef = collection(db, process.env.COLL_QUIZZES_STANDARD)
+
+    try {
+        const querySnapshot = await getDocs(usersCollectionRef)
+
+        if (!querySnapshot.empty) {
+            const users = []
+            querySnapshot.forEach((doc) => {
+                users.push(doc.data())
+            });
+
+            return users
+        } else {
+            console.log("No user documents found");
+            return []
         }
-    ))
-    return result;
+    } catch (error) {
+        console.log("Error getting user documents:", error)
+        return []
+    }
 }
 
 async function updateQuiz(quiz) {
-    const collection = await getMongoCollection(DATABASE, COLLECTION_NAME);
-    delete quiz._id;
-    const result = await collection.updateOne(
-        { name: quiz.name },
-        { $set: { ...quiz } }
-    );
-    return result;
+    const db = getFirestore();
+    const userRef = doc(db, process.env.COLL_QUIZZES_STANDARD, quiz.id)
+
+    try {
+        const userDoc = await getDoc(userRef)
+
+        // Verifique se o documento existe
+        if (userDoc.exists()) {
+            const userData = userDoc.data()
+
+            // Adicione ou atualize o campo
+            userData = quiz
+            userData.updatedAt = serverTimestamp()
+
+            // Salve o documento atualizado de volta no Firestore
+            await updateDoc(userRef, userData)
+
+            console.log("updateQuiz successfully")
+        } else {
+            console.log("User document not found")
+        }
+    } catch (error) {
+        console.log("Error updating quiz:", error)
+    }
 }
 
 

@@ -29,7 +29,7 @@ async function getUserById(id) {
 
 async function getQuiz(id, quizId) {
     const db = getFirestore();
-    const userRef = doc(db, 'users', id);
+    const userRef = doc(db, process.env.COLL_USERS, id);
 
     try {
         const userDoc = await getDoc(userRef)
@@ -58,7 +58,7 @@ async function getQuiz(id, quizId) {
 
 async function setCustomerIdInDatabase(email, customerId) {
     const db = getFirestore()
-    const usersCollectionRef = collection(db, 'users')
+    const usersCollectionRef = collection(db, process.env.COLL_USERS)
 
     try {
         const querySnapshot = await getDocs(query(usersCollectionRef, where('email', '==', email)))
@@ -84,10 +84,8 @@ async function setCustomerIdInDatabase(email, customerId) {
 }
 
 async function setUserPlan(email, plan) {
-    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
-    console.log('email', email, plan)
     const db = getFirestore()
-    const usersCollectionRef = collection(db, 'users')
+    const usersCollectionRef = collection(db, process.env.COLL_USERS)
 
     try {
         const querySnapshot = await getDocs(query(usersCollectionRef, where('email', '==', email)))
@@ -95,7 +93,7 @@ async function setUserPlan(email, plan) {
         if (!querySnapshot.empty) {
             const userDoc = querySnapshot.docs[0]
             const userData = userDoc.data()
-            console.log('userData', userData)
+
             // Adicione ou atualize o campo
             userData.plan = plan
             userData.updatedAt = serverTimestamp()
@@ -114,7 +112,7 @@ async function setUserPlan(email, plan) {
 
 async function createQuiz(id, email) {
     const db = getFirestore();
-    const userRef = doc(db, 'users', id)
+    const userRef = doc(db, process.env.COLL_USERS, id)
 
     try {
         const userDoc = await getDoc(userRef)
