@@ -7,9 +7,7 @@ async function getQuiz(id) {
 
         // Verifique se o documento existe
         if (quizDoc.exists()) {
-            const quizData = quizDoc.data()
-
-            return quizData
+            return quizDoc.data()
         } else {
             console.log("Quiz document not found")
         }
