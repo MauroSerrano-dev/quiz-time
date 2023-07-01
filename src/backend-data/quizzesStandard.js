@@ -7,7 +7,9 @@ async function getQuiz(id) {
 
         // Verifique se o documento existe
         if (quizDoc.exists()) {
-            return quizDoc.data()
+            const quizData = quizDoc.data()
+
+            return quizData
         } else {
             console.log("Quiz document not found")
         }
@@ -49,14 +51,9 @@ async function updateQuiz(quiz) {
 
         // Verifique se o documento existe
         if (userDoc.exists()) {
-            const userData = userDoc.data()
-
-            // Adicione ou atualize o campo
-            userData = quiz
-            userData.updatedAt = serverTimestamp()
-
+            
             // Salve o documento atualizado de volta no Firestore
-            await updateDoc(userRef, userData)
+            await updateDoc(userRef, quiz)
 
             console.log("updateQuiz successfully")
         } else {
