@@ -177,20 +177,23 @@ export default withRouter((props) => {
     }
 
     function socketsListeners(prevRoom) {
-        console.log(prevRoom)
         socket.on(`updateFieldsRoom${code}`, (att) => {
             const { roomAtt } = att
             if (roomAtt.state !== prevRoom.state) {
                 setTimeout(() =>
-                    setQuestionTransition(false),
-                    TRANSITION_DURATION
+                setQuestionTransition(false),
+                TRANSITION_DURATION
                 )
             }
             if (roomAtt.players && roomAtt.players[session.user.id] !== undefined)
-                setJoined(true)
+            setJoined(true)
             else
-                setJoined(false)
-            if (roomAtt.currentQuestion !== prevRoom.currentQuestion) {
+            setJoined(false)
+            
+            console.log('room', room.currentQuestion)
+            console.log('roomAtt.currentQuestion', roomAtt.currentQuestion)
+            console.log('prevRoom.currentQuestion', prevRoom.currentQuestion)
+            if (false) {
                 setQuestionTransition(true)
                 setTimeout(() => {
                     setRoom(roomAtt)
@@ -201,7 +204,6 @@ export default withRouter((props) => {
                 turnOffTransition()
                 setRoom(roomAtt)
             }
-            setRoom(roomAtt)
         })
     }
 
@@ -214,7 +216,6 @@ export default withRouter((props) => {
 
     function answerControl(option) {
         const player = getPlayer()
-
         if (optionSelected === option) {
             setOptionSelected()
             delete player.answers[room.currentQuestion]
