@@ -39,13 +39,14 @@ async function getAllQuizzesInfo() {
                 quizzes.push({
                     id: data.id,
                     name: data.name,
+                    type: 'standard',
+                    totalQuestions: data.questions.length,
                     category: data.category,
                     mode: data.mode,
                     creator: { 
                         id: 'quiz-time-app',
                         uui: 'quiz-time-app',
                     },
-                    type: 'standard',
                 })
             })
 

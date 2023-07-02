@@ -17,7 +17,7 @@ async function getUserById(id) {
         // Verifique se o documento existe
         if (userDoc.exists()) {
             const userData = userDoc.data()
-            
+
             console.log("User found")
             return userData
         } else {
@@ -125,8 +125,11 @@ async function createQuiz(id, email, uui) {
             const newQuiz = userData.sketchs[0]
 
             const quizInfo = {
-                name: newQuiz.name,
                 id: newQuiz.id,
+                name: newQuiz.name,
+                type: newQuiz.type,
+                totalQuestions: newQuiz.questions.length,
+
                 category: newQuiz.category,
                 mode: newQuiz.mode,
                 creator: {
@@ -138,7 +141,7 @@ async function createQuiz(id, email, uui) {
 
             // Adicione ou atualize o campo
             userData.quizzes = arrayUnion(newQuiz)
-            userData.quizzesInfo = arrayUnion(quizInfo)
+            userData.quizzesInfos = arrayUnion(quizInfo)
             userData.sketchs = []
             userData.updatedAt = serverTimestamp()
 

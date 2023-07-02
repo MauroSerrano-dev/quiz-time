@@ -25,15 +25,17 @@ const INICIAL_ROOM = {
     state: 'disable',
     controllerState: 'menu',
     quizInfo: {
-        name: '',
         id: '',
+        name: '',
+        type: '',
+        totalQuestions: 0,
         category: '',
         mode: '',
         creator: {
             id: '',
             email: '',
             uui: '',
-        }
+        },
     },
 }
 

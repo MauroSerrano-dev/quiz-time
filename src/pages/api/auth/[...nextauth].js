@@ -19,7 +19,7 @@ export default NextAuth({
           email: profile.email,
           image: profile.picture,
           createAt: new Date(),
-          quizzesInfo: [],
+          quizzesInfos: [],
           quizzes: [],
           imgsSrc: [],
           purchases: [],
@@ -40,7 +40,7 @@ export default NextAuth({
           email: session.user.email,
           image: session.user.image,
           plan: session.user.plan,
-          quizzesInfo: session.user.quizzesInfo,
+          quizzesInfos: session.user.quizzesInfos,
         }
       });
     },

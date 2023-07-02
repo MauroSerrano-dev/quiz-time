@@ -68,7 +68,6 @@ export default function SocketHandler(req, res) {
       }
 
       const roomRef = ref(db, `rooms/${updatedRoom.code}`)
-      console.log(updatedRoom)
       await set(roomRef, updatedRoom)
     })
 

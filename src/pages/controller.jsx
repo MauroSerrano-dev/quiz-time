@@ -38,6 +38,10 @@ export default withRouter((props) => {
         }
     }, [session, code])
 
+    useEffect(() => {
+        console.log(quiz)
+    }, [quiz])
+
     const socketInitializer = async () => {
         const options = {
             method: 'GET'
@@ -64,7 +68,7 @@ export default withRouter((props) => {
     }
 
     const nextQuestion = () => {
-        if (room.currentQuestion >= quiz.questions.length - 1)
+        if (room.currentQuestion >= room.quizInfo.totalQuestions - 1)
             socket.emit("updateRoom", {
                 ...room,
                 state: 'finish'
@@ -157,6 +161,13 @@ export default withRouter((props) => {
         console.log(room)
     }
 
+    function handleShowResults() {
+        socket.emit("updateRoom", {
+            ...room,
+            state: 'results'
+        })
+    }
+
     function handleCancelQuiz() {
         socket.emit("updateRoom", {
             ...room,
@@ -165,6 +176,7 @@ export default withRouter((props) => {
                 id: '',
                 name: '',
                 type: '',
+                totalQuestions: 0,
                 category: '',
                 creator: {
                     id: '',
@@ -324,7 +336,7 @@ export default withRouter((props) => {
                                                     </div>
                                                     <div id={styles.quizzesContainer}>
                                                         {quizTab === 'mine' &&
-                                                            session.user.quizzesInfo.map((quizInfo, i) =>
+                                                            session.user.quizzesInfos.map((quizInfo, i) =>
                                                                 <div
                                                                     key={i}
                                                                     className={styles.quizOption}
@@ -398,6 +410,7 @@ export default withRouter((props) => {
                                                             Voltar Pergunta
                                                         </Button>
                                                         <Button
+                                                            onClick={nextQuestion}
                                                             variant="outlined"
                                                             sx={{
                                                                 width: '100%',
@@ -409,6 +422,18 @@ export default withRouter((props) => {
                                                             Próxima Pergunta
                                                         </Button>
                                                     </div>
+                                                    <Button
+                                                        variant="outlined"
+                                                        onClick={handleShowResults}
+                                                        sx={{
+                                                            width: '100%',
+                                                            height: '130px',
+                                                            fontSize: '17px',
+                                                            lineHeight: '29px',
+                                                        }}
+                                                    >
+                                                        Mostrar Resultados
+                                                    </Button>
                                                     <Button
                                                         variant="outlined"
                                                         onClick={handleShowStatistic}
@@ -438,7 +463,7 @@ export default withRouter((props) => {
                                         )}
                                         <PlayersList
                                             players={room.players === undefined ? [] : Object.keys(key => room.players[key])}
-                                            totalQuestions={quiz?.questions.length}
+                                            totalQuestions={room.quizInfo.totalQuestions}
                                         />
                                     </div>
                                 }

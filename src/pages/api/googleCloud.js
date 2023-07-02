@@ -73,9 +73,7 @@ export default async function handler(req, res) {
 // Função para verificar se o bucket já existe
 async function checkBucketExists(bucketName) {
     try {
-        console.log('bucketName', bucketName)
         const [exists] = await storage.bucket(bucketName).exists();
-        console.log('exists', exists)
         return exists;
     } catch (err) {
         console.error('Erro ao verificar se o bucket existe:', err);

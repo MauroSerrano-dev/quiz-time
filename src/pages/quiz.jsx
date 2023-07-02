@@ -124,15 +124,6 @@ export default withRouter((props) => {
     }, [room])
 
     useEffect(() => {
-        if (room && getPlayer()) {
-            console.log('room', room)
-            console.log('quiz', quiz)
-            console.log(joined)
-            console.log(getPlayer().state)
-        }
-    }, [quiz, room, joined])
-
-    useEffect(() => {
         if (room && joined && room.control) {
             updateOptionSelected()
         }
@@ -171,7 +162,6 @@ export default withRouter((props) => {
             if (startRoom) {
                 if (startRoom.players && Object.keys(startRoom.players).some(playerId => playerId === session.user.id)) {
                     setJoined(true)
-                    console.log(startRoom.players[session.user.id])
                     if (Object.keys(
                         startRoom.players[session.user.id].answers === undefined
                             ? {}
@@ -213,36 +203,34 @@ export default withRouter((props) => {
     }
 
     function updateOptionSelected() {
-        if (getPlayer()?.answers.some(answer => answer.questionIndex === room.currentQuestion))
-            setOptionSelected(getPlayer().answers.filter(answer => answer.questionIndex === room.currentQuestion)[0].optionIndex)
+        if (getPlayer()?.answers !== undefined && getPlayer()?.answers[room.currentQuestion] !== undefined)
+            setOptionSelected(getPlayer().answers[room.currentQuestion].optionIndex)
         else
             setOptionSelected()
     }
 
     function answerControl(option) {
         const player = getPlayer()
+
         if (optionSelected === option) {
             setOptionSelected()
-            socket.emit("updateAnswer",
-                {
-                    ...player,
-                    answers: player.answers.filter(answer => answer.questionIndex !== room.currentQuestion)
-                }, code
-            )
+            delete player.answers[room.currentQuestion]
+            socket.emit("updatePlayer", player, code)
         }
         else {
             setOptionSelected(option)
-            socket.emit("updateAnswer",
-                {
-                    ...player,
-                    answers: player.answers.filter(answer => answer.questionIndex !== room.currentQuestion)
-                        .concat([{
-                            ...quiz.questions[room.currentQuestion].options[option],
-                            questionIndex: room.currentQuestion,
-                            optionIndex: option
-                        }])
-                }, code
-            )
+            const attPlayer = {
+                ...player,
+                answers: {
+                    ...player.answers,
+                    [room.currentQuestion]: {
+                        ...quiz.questions[room.currentQuestion].options[option],
+                        questionIndex: room.currentQuestion,
+                        optionIndex: option,
+                    }
+                }
+            }
+            socket.emit("updatePlayer", attPlayer, code)
         }
     }
 
