@@ -9,6 +9,8 @@ import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import PlayersList from '@/components/PlayersList';
 import NoSessionPage from '@/components/NoSessionPage';
 import { getStandardQuiz, getUserQuiz } from '../../utils/api-caller';
+import CloseFullscreenRoundedIcon from '@mui/icons-material/CloseFullscreenRounded';
+import OpenInFullRoundedIcon from '@mui/icons-material/OpenInFullRounded';
 
 let socket;
 
@@ -19,8 +21,51 @@ export default withRouter((props) => {
     const [activeShow, setActiveShow] = useState(false)
     const [noRoom, setNoRoom] = useState(false)
     const [quiz, setQuiz] = useState()
+    const [isFullscreen, setIsFullscreen] = useState(false);
 
     const { code } = props.router.query
+
+    const toggleFullscreen = () => {
+        if (!isFullscreen) {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.mozRequestFullScreen) {
+                document.documentElement.mozRequestFullScreen();
+            } else if (document.documentElement.webkitRequestFullscreen) {
+                document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) {
+                document.documentElement.msRequestFullscreen();
+            }
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        }
+    };
+
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            setIsFullscreen(document.fullscreenElement !== null);
+        };
+
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('msfullscreenchange', handleFullscreenChange);
+
+        return () => {
+            document.removeEventListener('fullscreenchange', handleFullscreenChange);
+            document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+            document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+            document.removeEventListener('msfullscreenchange', handleFullscreenChange);
+        };
+    }, []);
 
     useEffect(() => {
         if (!room && code && session) {
@@ -124,10 +169,20 @@ export default withRouter((props) => {
                                                     </a>
                                                 </div>
                                                 <a href={`${process.env.NEXT_PUBLIC_SITE_URL}/controller?code=${code}`} target='_blank'>
-                                                    <Button variant="outlined" endIcon={<SportsEsportsIcon />}>
+                                                    <Button
+                                                        variant="outlined"
+                                                        endIcon={<SportsEsportsIcon />}
+                                                    >
                                                         Controller
                                                     </Button>
                                                 </a>
+                                                <Button
+                                                    onClick={toggleFullscreen}
+                                                    variant="outlined"
+                                                    endIcon={isFullscreen ? <CloseFullscreenRoundedIcon /> : <OpenInFullRoundedIcon />}
+                                                >
+                                                    {isFullscreen ? 'Sair da Tela Cheia' : 'Tela Cheia'}
+                                                </Button>
                                             </motion.div>}
                                         {room.state === 'active' && quiz &&
                                             <motion.div
