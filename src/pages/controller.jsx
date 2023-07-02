@@ -16,7 +16,6 @@ export default withRouter((props) => {
     const [disableShow, setDisableShow] = useState(false)
     const [activeShow, setActiveShow] = useState(false)
     const [quizzesStandard, setQuizzesStandard] = useState([])
-    const [quiz, setQuiz] = useState()
     const [quizTab, setQuizTab] = useState('mine')
 
     const { code } = props.router.query
@@ -37,10 +36,6 @@ export default withRouter((props) => {
             socketInitializer()
         }
     }, [session, code])
-
-    useEffect(() => {
-        console.log(quiz)
-    }, [quiz])
 
     const socketInitializer = async () => {
         const options = {
