@@ -1,217 +1,150 @@
-import { Server } from "socket.io"
-const mongoose = require("mongoose")
-import { getFirestore, updateDoc, doc, getDoc, serverTimestamp } from 'firebase/firestore'
+import { Server } from 'socket.io'
+import { getFirestore, updateDoc, doc, getDoc, serverTimestamp, onSnapshot } from 'firebase/firestore'
 import { initializeApp } from 'firebase/app'
-import { getFirebaseConfig } from "@/backend-data/utils/firebase"
-
-// Inicialize o aplicativo Firebase
-const firebaseConfig = getFirebaseConfig()
-
-const app = initializeApp(firebaseConfig);
+import { getFirebaseConfig } from '@/backend-data/utils/firebase'
+import { getDatabase, ref, set, onChildChanged, orderByChild, get, push, remove, onValue } from 'firebase/database'
 
 export default function SocketHandler(req, res) {
 
+  // Inicialize o aplicativo Firebase
+  const firebaseConfig = getFirebaseConfig()
+
+  const app = initializeApp(firebaseConfig)
+
+  // Connect to Realtime Database
+  const db = getDatabase()
+  const dbFirestore = getFirestore()
+  const roomsRef = ref(db, 'rooms')
+
   // Check if socket server has already been initialized
   if (res.socket.server.io) {
-    console.log("Socket.IO server already set up")
+    console.log('Socket.IO server already set up')
     res.end();
     return;
   }
-  // Connect to MongoDB database
-  mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  });
 
-  // Handle MongoDB connection errors
-  mongoose.connection.on("error", err => {
-    console.log("MongoDB connection error:", err)
-  });
+  // Monitorar todas as mudanças na coleção 'rooms'
+  onChildChanged(roomsRef, async (snapshot) => {
 
-  // MongoDB connection successful
-  mongoose.connection.once("open", () => {
-    console.log("MongoDB database connected")
+    const roomCode = snapshot.key
+    const roomData = snapshot.val()
 
-    // Create a change stream for the rooms collection
-    console.log("Setting change streams")
-    const changeStream = mongoose.connection.collection(process.env.COLL_ROOMS).watch([], { fullDocument: 'updateLookup' })
-
-    // Listen for "change" events on the change stream
-    changeStream.on("change", (change) => {
-      if (change.updateDescription) {
-        io.emit(`updateFieldsRoom${change.fullDocument.code}`,
-          {
-            roomAtt: change.fullDocument,
-            fields: change.updateDescription.updatedFields
-          })
+    io.emit(`updateFieldsRoom${roomCode}`,
+      {
+        roomAtt: roomData,
       }
-    })
+    )
   })
 
   // Initialize socket server
-  const io = new Server(res.socket.server);
-  console.log('Socket.IO server listening on port:', process.env.PORT || 3000);
+  const io = new Server(res.socket.server)
+  console.log('Socket.IO server listening on port:', process.env.PORT || 3000)
   res.socket.server.io = io;
 
-  io.on("connection", (socket) => {
+  io.on('connection', (socket) => {
     console.log('Socket.io client connected')
-    const roomsCollection = mongoose.connection.collection("rooms")
-    const usersCollection = mongoose.connection.collection("users")
 
-    // Get the current value of "active" from the process.env.COLL_ROOMS collection
-    mongoose.connection.collection(process.env.COLL_ROOMS).findOne({ code: socket.handshake.query.code })
-      .then((result) => {
-        const room = result ? { ...result } : null
-        socket.emit("getData", room)
-      })
-      .catch((err) => {
-        console.log('Error getting initial data:', err)
-      })
+    socket.on('getRoom', async (code) => {
 
-    // Listen for "updateRoom" events emitted by the client
-    socket.on("updateRoom", (updatedRoom) => {
-      delete updatedRoom.expireAt
-      // Verifique se o campo 'expireAt' existe no documento
-      const newExpireAt = new Date()
-      newExpireAt.setSeconds(newExpireAt.getSeconds() + 1)
-
-      // Atualize o campo 'expireAt' com o novo tempo de expiração
-      updatedRoom.expireAt = newExpireAt;
-
-      delete updatedRoom._id
-      // Obtenha uma referência à coleção "rooms" do MongoDB
-      roomsCollection.updateOne(
-        { code: updatedRoom.code },
-        { $set: updatedRoom }
-      )
-        .then(() => {
-          console.log("Room updated successfully");
-          /* io.emit("updateRoomSuccess", updatedRoom); */
-        })
-        .catch((err) => {
-          console.log("Error updating room:", err);
-          /* io.emit("updateRoomError", err); */
-        });
+      const roomRef = ref(db, `rooms/${code}`)
+      // Obtém os dados da sala
+      const roomSnapshot = await get(roomRef);
+      const room = roomSnapshot.val();
+      socket.emit(`sendRoom${code}`, room)
     })
 
-    // Listen for "updateAnswer" events emitted by the client
-    socket.on("updateAnswer", (player, code) => {
+    // Listen for 'updateRoom' events emitted by the client
+    socket.on('updateRoom', async (updatedRoom) => {
       const newExpireAt = new Date()
       newExpireAt.setSeconds(newExpireAt.getSeconds() + 86400)
-      roomsCollection.updateOne(
-        { code: code },
-        {
-          $set: {
-            'players.$[element]': player,
-            expireAt: newExpireAt
-          }
-        },
-        {
-          arrayFilters: [{ 'element.user.email': player.user.email }]
-        }
-      )
-        .then(() => {
-          console.log("Answer updated successfully");
-          /* io.emit("updateRoomSuccess", updateAnswer); */
-        })
-        .catch((err) => {
-          console.log("Error updating answer:", err);
-          /* io.emit("updateRoomError", err); */
-        })
+
+      // Atualize o campo de data de expiração ao documento
+      const expireAt = new Date()
+      expireAt.setSeconds(expireAt.getSeconds() + 86400)
+
+      updatedRoom.expireDate = {
+        text: expireAt.toString(),
+        number: expireAt.valueOf(),
+      }
+
+      const roomRef = ref(db, `rooms/${updatedRoom.code}`)
+      console.log(updatedRoom)
+      await set(roomRef, updatedRoom)
     })
 
-    // Listen for "joinRoom" events emitted by the client
-    socket.on("joinRoom", (player, code) => {
+    // Listen for 'updatePlayer' events emitted by the client
+    socket.on('updatePlayer', async (attPlayer, code) => {
+
       const newExpireAt = new Date()
       newExpireAt.setSeconds(newExpireAt.getSeconds() + 86400)
-      roomsCollection.updateOne(
-        { code: code },
-        {
-          $push: {
-            players: player
-          },
-          $set: {
-            expireAt: newExpireAt
-          }
-        }
-      )
-        .then(() => {
-          console.log("JoinRoom successfully");
-          /* io.emit("updateRoomSuccess", updatedRoom); */
-        })
-        .catch((err) => {
-          console.log("Error joinRoom:", err);
-          /* io.emit("updateRoomError", err); */
-        })
-    })
-    // Listen for "leaveRoom" events emitted by the client
-    socket.on("leaveRoom", (playerEmail, code) => {
-      roomsCollection.updateOne(
-        { code: code },
-        {
-          $pull: { players: { "user.email": playerEmail } }
-        },
-        {
-          arrayFilters: [{ "element.user.email": playerEmail }]
-        }
-      )
-        .then(() => {
-          console.log("leaveRoom successfully");
-          /* io.emit("updateRoomSuccess", updatedRoom); */
-        })
-        .catch((err) => {
-          console.log("Error leaveRoom:", err);
-          /* io.emit("updateRoomError", err); */
-        })
-    })
-    // Listen for "saveSketch" events emitted by the client
-    socket.on("saveSketch", async (id, email, sketch) => {
 
-      const db = getFirestore();
-      const userRef = doc(db, 'users', id);
+      const roomRef = ref(db, `rooms/${code}/expireDate`)
+      await set(roomRef,
+        {
+          text: newExpireAt.toString(),
+          number: newExpireAt.valueOf(),
+        }
+      )
+
+      const playerRef = ref(db, `rooms/${code}/players/${attPlayer.user.id}`)
+      await set(playerRef, attPlayer)
+    })
+
+    // Listen for 'joinRoom' events emitted by the client
+    socket.on('joinRoom', async (player, code) => {
+
+      // Atualize o campo de data de expiração ao documento
+      const expireAt = new Date()
+      expireAt.setSeconds(expireAt.getSeconds() + 86400)
+
+      const roomRef = ref(db, `rooms/${code}/expireDate`)
+      await set(roomRef,
+        {
+          text: expireAt.toString(),
+          number: expireAt.valueOf(),
+        }
+      )
+
+      const playersRef = ref(db, `rooms/${code}/players/${player.user.id}`)
+      await set(playersRef, player)
+    })
+
+    // Listen for 'leaveRoom' events emitted by the client
+    socket.on('leaveRoom', async (playerId, code) => {
+
+      const playerRef = ref(db, `rooms/${code}/players/${playerId}`);
+      await remove(playerRef);
+    })
+
+    // Listen for 'saveSketch' events emitted by the client
+    socket.on('saveSketch', async (id, email, sketch) => {
+      const userRef = doc(dbFirestore, 'users', id);
 
       try {
         const userDoc = await getDoc(userRef);
 
         // Verifique se o documento existe
         if (userDoc.exists()) {
-          const userData = userDoc.data();
+          const userData = userDoc.data()
 
-          // Adicione ou atualize o campo "sketchs" no documento
-          userData.sketchs = [sketch];
-          userData.updatedAt = serverTimestamp();
+          // Adicione ou atualize o campo 'sketchs' no documento
+          userData.sketchs = [sketch]
+          userData.updatedAt = serverTimestamp()
 
           // Salve o documento atualizado de volta no Firestore
-          await updateDoc(userRef, userData);
+          await updateDoc(userRef, userData)
 
-          console.log("saveSketch successfully");
+          console.log('saveSketch successfully')
         } else {
-          console.log("User document not found");
+          console.log('User document not found')
         }
       } catch (error) {
-        console.log("Error saving sketch:", error);
+        console.log('Error saving sketch:', error)
       }
-
-      usersCollection.updateOne(
-        { email: email },
-        {
-          $set: {
-            sketchs: [sketch]
-          }
-        }
-      )
-        .then(() => {
-          console.log("saveSketch successfully");
-          /* io.emit("updateRoomSuccess", updatedRoom); */
-        })
-        .catch((err) => {
-          console.log("Error saveSketch:", err);
-          /* io.emit("updateRoomError", err); */
-        })
     })
   })
 
 
-  console.log("Setting up socket");
+  console.log('Setting up socket');
   res.end();
 }

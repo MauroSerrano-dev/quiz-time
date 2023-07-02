@@ -22,6 +22,7 @@ export default withRouter((props) => {
     const { code } = props.router.query
 
     useEffect(() => {
+
         async function getAllQuizzesInfo() {
             await getAllQuizzesStandardInfo()
                 .then(response => response.json())
@@ -45,7 +46,9 @@ export default withRouter((props) => {
 
         socket = io({ query: { code: code } })
 
-        socket.on("getData", (room) => {
+        socket.emit('getRoom', code)
+
+        socket.on(`sendRoom${code}`, (room) => {
             setRoom(room)
             setDisableShow(room.state === 'disable')
             setActiveShow(room.state === 'active')
@@ -139,7 +142,7 @@ export default withRouter((props) => {
         socket.emit("updateRoom", {
             ...room,
             quizInfo: quizInfo,
-            controllerState: 'quizControl'
+            controllerState: 'quizControl',
         })
     }
 
@@ -159,14 +162,16 @@ export default withRouter((props) => {
             ...room,
             state: 'disable',
             quizInfo: {
+                id: '',
+                name: '',
+                type: '',
                 category: '',
                 creator: {
                     id: '',
-                    email: ''
+                    email: '',
+                    uui: '',
                 },
-                id: '',
                 mode: '',
-                name: ''
             }
         })
     }
@@ -432,7 +437,7 @@ export default withRouter((props) => {
                                                 </div>
                                         )}
                                         <PlayersList
-                                            players={room.players}
+                                            players={room.players === undefined ? [] : Object.keys(key => room.players[key])}
                                             totalQuestions={quiz?.questions.length}
                                         />
                                     </div>

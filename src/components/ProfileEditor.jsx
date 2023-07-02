@@ -803,7 +803,8 @@ export default function ProfileEditor(props) {
             body: JSON.stringify({
                 action: 'createQuiz',
                 userId: session.user.id,
-                userEmail: session.user.email
+                userEmail: session.user.email,
+                userUui: session.user.uui,
             })
         }
 

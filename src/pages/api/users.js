@@ -12,10 +12,11 @@ export default async function handler(req, res) {
             action,
             userId,
             userEmail,
+            userUui,
         } = req.body
 
         if (action === 'createQuiz') {
-            await createQuiz(userId, userEmail);
+            await createQuiz(userId, userEmail, userUui);
             res.status(201).json({
                 message: 'Quiz Criado com Sucesso!'
             })

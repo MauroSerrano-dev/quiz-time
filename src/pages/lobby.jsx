@@ -18,6 +18,7 @@ import Logo from '@/components/Logo';
 const INICIAL_ROOM = {
     name: '',
     code: '',
+    currentQuestion: 0,
     private: false,
     control: false,
     password: '',
@@ -30,10 +31,10 @@ const INICIAL_ROOM = {
         mode: '',
         creator: {
             id: '',
-            email: ''
+            email: '',
+            uui: '',
         }
     },
-    currentQuestion: 0, players: []
 }
 
 export default function Lobby(props) {
@@ -162,7 +163,7 @@ export default function Lobby(props) {
                 owner: {
                     id: session.user.id,
                     email: session.user.email
-                }, 
+                },
             })
         }
 

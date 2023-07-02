@@ -135,7 +135,6 @@ export default function QuizBuilder(props) {
     const router = useRouter()
 
     useEffect(() => {
-        console.log(quiz)
         if (!socket)
             socketInitializer()
         else {

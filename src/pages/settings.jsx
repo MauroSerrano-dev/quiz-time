@@ -14,7 +14,7 @@ const radarOrder2 = [subResult1, subResult3, subResult2, subResult4]
 const radarOrder = [subResult1, result3, subResult3, result2, subResult2, result1, subResult4, result4]
 
 const quiz = {
-    _id: '123',
+    id: '123',
     category: '',
     style: {
         question: {
@@ -296,10 +296,10 @@ const quiz = {
         },
     ],
     results: [
-        { name: result1, texts: [{ ref: 'Preferência Cerebral', value: 'Fazer rápido' }], img: { content: 'shark.jpg', name: 'shark', type: 'jpg' }, color: '#ABDEE6' },
-        { name: result2, texts: [{ ref: 'Preferência Cerebral', value: 'Fazer junto' }], img: { content: 'cat.jpg', name: 'cat', type: 'jpg' }, color: '#FFD8BE' },
-        { name: result3, texts: [{ ref: 'Preferência Cerebral', value: 'Fazer diferente' }], img: { content: 'eagle.jpg', name: 'eagle', type: 'jpg' }, color: '#FFF7D2' },
-        { name: result4, texts: [{ ref: 'Preferência Cerebral', value: 'Fazer certo' }], img: { content: 'wolf.jpg', name: 'wolf', type: 'jpg' }, color: '#CBAACB' },
+        { name: result1, id: 'profile-0', texts: [{ ref: 'Preferência Cerebral', value: 'Fazer rápido' }], img: { content: 'shark.jpg', id: 'quiz-123_profile-0', name: 'shark', type: 'jpg' }, color: '#ABDEE6' },
+        { name: result2, id: 'profile-1', texts: [{ ref: 'Preferência Cerebral', value: 'Fazer junto' }], img: { content: 'cat.jpg', id: 'quiz-123_profile-1', name: 'cat', type: 'jpg' }, color: '#FFD8BE' },
+        { name: result3, id: 'profile-2', texts: [{ ref: 'Preferência Cerebral', value: 'Fazer diferente' }], img: { content: 'eagle.jpg', id: 'quiz-123_profile-2', name: 'eagle', type: 'jpg' }, color: '#FFF7D2' },
+        { name: result4, id: 'profile-3', texts: [{ ref: 'Preferência Cerebral', value: 'Fazer certo' }], img: { content: 'wolf.jpg', id: 'quiz-123_profile-3', name: 'wolf', type: 'jpg' }, color: '#CBAACB' },
     ],
     resultLayout: [],
     subResults: [
@@ -826,7 +826,7 @@ const newRoom = {
             "lastAnswerDate": "2023-05-30T01:45:20.586Z"
         }
     ],
-    "owner": "mauro.serrano.dev@gmail.com"
+    "owner": "Quiz Time"
 }
 
 export default function Settings(props) {
@@ -834,7 +834,7 @@ export default function Settings(props) {
 
     async function handlePopulateQuiz() {
         const options = {
-            method: "PATCH",
+            method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ quiz: quiz }),
         };

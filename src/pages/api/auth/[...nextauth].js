@@ -4,6 +4,7 @@ import { createCustomer, getCustomerByEmail } from "../../../backend-data/utils/
 
 import { FirestoreAdapter } from '@next-auth/firebase-adapter'
 import { cert } from "firebase-admin/app";
+const { v4: uuidv4 } = require('uuid');
 
 export default NextAuth({
   providers: [
@@ -13,6 +14,7 @@ export default NextAuth({
       profile(profile) {
         return {
           id: profile.email,
+          uui: uuidv4(),
           name: profile.name,
           email: profile.email,
           image: profile.picture,
@@ -33,6 +35,7 @@ export default NextAuth({
         ...session,
         user: {
           id: session.user.id,
+          uui: session.user.uui,
           name: session.user.name,
           email: session.user.email,
           image: session.user.image,

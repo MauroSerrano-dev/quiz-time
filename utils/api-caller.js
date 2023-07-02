@@ -19,22 +19,22 @@ export function getStandardQuiz(quizId) {
     return fetch('/api/quizzesStandard', options)
 }
 
-export async function getImage(userId, fileId) {
+export async function getImage(userUui, fileId) {
     const options = {
         method: 'GET',
         headers: {
-            'userid': userId,
+            'useruui': userUui,
             'filename': fileId,
         },
     }
-    
     const response = await fetch('/api/googleCloud', options)
     const data = await response.json()
-    
+
     // Aqui você pode acessar o objeto completo
     const { fileContents } = data;
     const jsonBuffer = Buffer.from(fileContents, 'hex')
     const img = JSON.parse(jsonBuffer.toString('utf-8'))
+    console.log('img', img)
     return img
 }
 

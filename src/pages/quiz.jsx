@@ -52,7 +52,7 @@ export default withRouter((props) => {
     const [layout, setLayout] = useState([])
     const [locked, setLocked] = useState(false)
     const [unlockCode, setUnlockCode] = useState('')
-    const [isMobile, setIsMobile] = useState(false);
+    const [isMobile, setIsMobile] = useState(false)
 
     useEffect(() => {
         const checkIsMobile = () => {
@@ -67,7 +67,7 @@ export default withRouter((props) => {
         window.addEventListener('resize', checkIsMobile)
 
         return () => {
-            window.removeEventListener('resize', checkIsMobile);
+            window.removeEventListener('resize', checkIsMobile)
         }
     }, [])
 
@@ -77,54 +77,60 @@ export default withRouter((props) => {
     }, [session, code])
 
     useEffect(() => {
-        if (room && quiz)
-            console.log('results', getResults())
-        console.log(room)
-        console.log(quiz)
-    }, [quiz, room])
+        if (room)
+            socketsListeners(room)
+    }, [room])
 
     useEffect(() => {
         if (room && room.quizInfo.id !== '' && !quiz) {
             async function getQuiz() {
-                let quizResponse;
-                if (room.quizInfo.type === 'standard') {
-                    quizResponse = await getStandardQuiz(room.quizInfo.id);
-                    const response = await quizResponse.json();
-                    setQuiz(response.quiz)
-                    return
-                }
+                let quizResponse
+                if (room.quizInfo.type === 'standard')
+                    quizResponse = await getStandardQuiz(room.quizInfo.id)
                 else
-                    quizResponse = await getUserQuiz(room.quizInfo.creator.id, room.quizInfo.id);
-
+                    quizResponse = await getUserQuiz(room.quizInfo.creator.id, room.quizInfo.id)
 
                 try {
-                    const response = await quizResponse.json();
+                    const response = await quizResponse.json()
                     const updatedQuiz = {
                         ...response.quiz,
                         questions: await Promise.all(response.quiz.questions.map(async (question, i) => {
-                            const img = question.img.id ? await getImage(room.quizInfo.creator.id, question.img.id) : null;
+                            const img = question.img && question.img.id
+                                ? await getImage(room.quizInfo.creator.uui, question.img.id)
+                                : null
                             const options = await Promise.all(question.options.map(async (option, j) => {
-                                const optionImg = option.img.id ? await getImage(room.quizInfo.creator.id, option.img.id) : null;
-                                return { ...option, img: optionImg };
+                                const optionImg = option.img && option.img.id
+                                    ? await getImage(room.quizInfo.creator.uui, option.img.id)
+                                    : null
+                                return { ...option, img: optionImg }
                             }));
-                            return { ...question, img: img, options: options };
+                            return { ...question, img: img, options: options }
                         })),
                         results: await Promise.all(response.quiz.results.map(async (result, i) => {
-                            const img = result.img.id ? await getImage(room.quizInfo.creator.id, result.img.id) : null;
+                            const img = result.img.id
+                                ? await getImage(room.quizInfo.creator.uui, result.img.id)
+                                : null
                             return { ...result, img: img };
                         })),
                     }
 
-                    setQuiz(updatedQuiz);
+                    setQuiz(updatedQuiz)
                 } catch (err) {
-                    console.error(err);
+                    console.error(err)
                 }
             }
-            console.log(room.quizInfo)
             getQuiz()
         }
     }, [room])
 
+    useEffect(() => {
+        if (room && getPlayer()) {
+            console.log('room', room)
+            console.log('quiz', quiz)
+            console.log(joined)
+            console.log(getPlayer().state)
+        }
+    }, [quiz, room, joined])
 
     useEffect(() => {
         if (room && joined && room.control) {
@@ -152,36 +158,46 @@ export default withRouter((props) => {
         setTimeout(() => setDots(prev => prev.length >= 3 ? '' : prev + '.'), 500)
     }, [dots])
 
-    const socketInitializer = async () => {
+    async function socketInitializer() {
         const options = {
             method: 'GET'
         }
         await fetch("/api/socket", options)
-        socket = io({ query: { code: code, } });
+        socket = io({ query: { code: code } })
 
-        socket.on("getData", (startRoom) => {
+        socket.emit('getRoom', code)
+
+        socket.on(`sendRoom${code}`, (startRoom) => {
             if (startRoom) {
-                if (startRoom.players.some(player => player.user.email === session.user.email)) {
+                if (startRoom.players && Object.keys(startRoom.players).some(playerId => playerId === session.user.id)) {
                     setJoined(true)
-                    if (startRoom.players.filter(player => player.user.email === session.user.email)[0].answers
-                        .some(answer => answer.questionIndex === startRoom.currentQuestion) && startRoom.control)
-                        setOptionSelected(startRoom.players
-                            .filter(player => player.user.email === session.user.email)[0].answers
-                            .filter(answer => answer.questionIndex === startRoom.currentQuestion)[0].optionIndex)
+                    console.log(startRoom.players[session.user.id])
+                    if (Object.keys(
+                        startRoom.players[session.user.id].answers === undefined
+                            ? {}
+                            : startRoom.players[session.user.id].answers
+                    )
+                        .some(answer => answer.questionIndex === startRoom.currentQuestion) && startRoom.control
+                    )
+                        setOptionSelected(startRoom.players[session.user.id].answers[startRoom.currentQuestion].optionIndex)
                 }
                 setRoom(startRoom)
             }
         })
+    }
 
+    function socketsListeners(prevRoom) {
         socket.on(`updateFieldsRoom${code}`, (att) => {
-            const { roomAtt, fields } = att
-            if (fields.state === 'active') {
+            const { roomAtt } = att
+            if (roomAtt.state !== prevRoom.state) {
                 setTimeout(() =>
-                    setQuestionTransition(false), TRANSITION_DURATION)
+                    setQuestionTransition(false),
+                    TRANSITION_DURATION
+                )
             }
-            if (roomAtt.players.every(player => player.user.email !== session.user.email))
+            if (!roomAtt.players || roomAtt.players[session.user.id] === undefined)
                 setJoined(false)
-            if (fields.currentQuestion !== undefined) {
+            if (roomAtt.currentQuestion !== prevRoom.currentQuestion) {
                 setQuestionTransition(true)
                 setTimeout(() => {
                     setRoom(roomAtt)
@@ -189,10 +205,10 @@ export default withRouter((props) => {
                 }, TRANSITION_DURATION)
             }
             else {
-                if (Object.keys(fields).some(key => key.includes('players.') && fields[key].user.email === session.user.email))
-                    turnOffTransition()
+                turnOffTransition()
                 setRoom(roomAtt)
             }
+            setRoom(roomAtt)
         })
     }
 
@@ -242,22 +258,20 @@ export default withRouter((props) => {
 
         setTimeout(() => {
             const player = getPlayer()
-            socket.emit("updateAnswer",
-                {
-                    ...player,
-                    currentQuestion: showResult ? player.currentQuestion : player.currentQuestion + 1,
-                    state: showResult ? 'result' : player.state,
-                    lastAnswerDate: new Date(),
-                    answers: [
-                        ...player.answers,
-                        {
-                            ...quiz.questions[player.currentQuestion].options[option],
-                            questionIndex: player.currentQuestion,
-                            optionIndex: option
-                        }
-                    ]
-                }, code
-            )
+            const attPlayer = {
+                ...player,
+                currentQuestion: player.currentQuestion + 1,
+                state: showResult ? 'result' : player.state,
+                answers: {
+                    ...player.answers,
+                    [player.currentQuestion]: {
+                        ...quiz.questions[player.currentQuestion].options[option],
+                        questionIndex: player.currentQuestion,
+                        optionIndex: option,
+                    },
+                },
+            }
+            socket.emit("updatePlayer", attPlayer, code)
         }, TRANSITION_DURATION * 2.1 + 400)
     }
 
@@ -273,7 +287,6 @@ export default withRouter((props) => {
         socket.emit("joinRoom",
             {
                 user: session.user,
-                answers: [],
                 currentQuestion: 0,
                 state: 'answering'
             }, code
@@ -284,7 +297,11 @@ export default withRouter((props) => {
         if (room.private)
             lockRoom()
         setJoined(false)
-        socket.emit("updateRoom", { ...room, players: room.players.filter(player => player.user.email !== session.user.email) });
+        socket.emit(
+            "leaveRoom",
+            session.user.id,
+            code
+        )
     }
 
     function lockRoom() {
@@ -342,7 +359,7 @@ export default withRouter((props) => {
     }
 
     function getPlayer() {
-        return room.players.filter(player => player.user.email === session.user.email)[0]
+        return room.players ? room.players[session.user.id] : null
     }
 
     function getRadarData(order, allResults, allSubResults) {
@@ -379,7 +396,9 @@ export default withRouter((props) => {
                     <div className='flex size100'>
                         {room &&
                             <div className='flex start size100'>
-                                <h3 id={styles.roomName}>{room.quizInfo.name}</h3>
+                                <h3 id={styles.roomName}>
+                                    {room.quizInfo.name}
+                                </h3>
                                 {room.state === 'disable' &&
                                     <div>
                                         {!joined &&
@@ -421,7 +440,17 @@ export default withRouter((props) => {
                                             transition={{ duration: TRANSITION_DURATION / 1000, ease: [.62, -0.18, .32, 1.17] }}
                                         >
                                             <h2>
-                                                {room.control ? room.currentQuestion + 1 : getPlayer().currentQuestion + 1}. {quiz.questions[room.control ? room.currentQuestion : getPlayer().currentQuestion].content}
+                                                {`${room.control
+                                                    ? room.currentQuestion + 1
+                                                    : getPlayer().currentQuestion + 1
+                                                    }
+                                                . 
+                                                ${quiz.questions[
+                                                        room.control
+                                                            ? room.currentQuestion
+                                                            : getPlayer().currentQuestion].content
+                                                    }`
+                                                }
                                             </h2>
                                         </motion.div>
                                         <motion.div

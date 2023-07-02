@@ -98,6 +98,7 @@ export default function FileInput(props) {
                             content: fileContent,
                             name: fileName,
                             type: fileType,
+                            userId: session.user.id,
                             positionToFit: this.height > this.width
                                 || (this.width / this.height <= containerSize.width / containerSize.height)
                                 ? 'vertical'
@@ -111,7 +112,7 @@ export default function FileInput(props) {
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
                                 newImg: newImg,
-                                userId: session.user.id
+                                userUui: session.user.uui
                             })
                         }
 

@@ -111,7 +111,7 @@ async function setUserPlan(email, plan) {
     }
 }
 
-async function createQuiz(id, email) {
+async function createQuiz(id, email, uui) {
     const db = getFirestore();
     const userRef = doc(db, process.env.COLL_USERS, id)
 
@@ -132,6 +132,7 @@ async function createQuiz(id, email) {
                 creator: {
                     id: id,
                     email: email,
+                    uui: uui,
                 }
             }
 

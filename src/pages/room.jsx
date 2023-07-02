@@ -51,7 +51,9 @@ export default withRouter((props) => {
 
         socket = io({ query: { code: code } })
 
-        socket.on("getData", (room) => {
+        socket.emit('getRoom', code)
+
+        socket.on(`sendRoom${code}`, (room) => {
             if (room) {
                 setRoom(room)
                 setDisableShow(room.state === 'disable')

@@ -26,9 +26,9 @@ export default async function handler(req, res) {
 
     if (req.method === 'GET') {
         const fileName = req.headers.filename; // Nome do arquivo a ser obtido
-        const userId = req.headers.userid; // Nome do arquivo a ser obtido
+        const userUui = req.headers.useruui; // Nome do bucket
 
-        const bucket = storage.bucket(userId);
+        const bucket = storage.bucket(userUui);
         const file = bucket.file(fileName);
 
         file.download((err, fileContents) => {
@@ -41,13 +41,12 @@ export default async function handler(req, res) {
         });
     }
 
-    const { newImg, userId } = req.body
-
+    const { newImg, userUui } = req.body
     if (req.method === "POST") {
-        if (!(await checkBucketExists(userId)))
-            await createBucket(userId)
+        if (!(await checkBucketExists(userUui)))
+            await createBucket(userUui)
 
-        const bucket = storage.bucket(userId);
+        const bucket = storage.bucket(userUui);
         const fileName = newImg.id;
         const file = bucket.file(fileName);
         const fileExists = await file.exists();
@@ -74,7 +73,9 @@ export default async function handler(req, res) {
 // Função para verificar se o bucket já existe
 async function checkBucketExists(bucketName) {
     try {
+        console.log('bucketName', bucketName)
         const [exists] = await storage.bucket(bucketName).exists();
+        console.log('exists', exists)
         return exists;
     } catch (err) {
         console.error('Erro ao verificar se o bucket existe:', err);
@@ -97,7 +98,7 @@ async function createBucket(bucketName) {
         // Crie um novo bucket com o nome fornecido
         await storage.createBucket(bucketName, {
             location: location
-          });
+        });
 
         console.log(`Bucket criado com sucesso: ${bucketName}`);
     } catch (err) {

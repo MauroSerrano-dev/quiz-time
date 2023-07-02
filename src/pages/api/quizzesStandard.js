@@ -1,4 +1,4 @@
-import { getQuiz, updateQuiz, getAllQuizzesInfo } from "../../backend-data/quizzesStandard";
+import { getQuiz, updateQuiz, getAllQuizzesInfo, createQuiz } from "../../backend-data/quizzesStandard";
 
 export default async function handler(req, res) {
 
@@ -8,6 +8,13 @@ export default async function handler(req, res) {
         if (type === 'info')
             return res.status(200).json({ quizzes: await getAllQuizzesInfo() })
         return res.status(200).json({ quiz: await getQuiz(quizid) })
+    }
+    else if (req.method === "POST") {
+        const { quiz } = req.body
+        createQuiz(quiz)
+        res.status(200).json({
+            message: 'Quiz Criado com Sucesso!'
+        });
     }
     else if (req.method === "PATCH") {
         const { quiz } = req.body
