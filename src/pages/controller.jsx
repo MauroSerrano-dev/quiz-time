@@ -457,7 +457,7 @@ export default withRouter((props) => {
                                                 </div>
                                         )}
                                         <PlayersList
-                                            players={room.players === undefined ? [] : Object.keys(key => room.players[key])}
+                                            players={room.players === undefined ? [] : Object.keys(room.players).map(index => room.players[index])}
                                             totalQuestions={room.quizInfo.totalQuestions}
                                         />
                                     </div>

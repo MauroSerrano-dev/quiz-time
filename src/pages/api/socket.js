@@ -91,7 +91,7 @@ export default function SocketHandler(req, res) {
 
     // Listen for 'joinRoom' events emitted by the client
     socket.on('joinRoom', async (player, code) => {
-
+      
       // Atualize o campo de data de expiração ao documento
       const expireAt = new Date()
       expireAt.setSeconds(expireAt.getSeconds() + 86400)

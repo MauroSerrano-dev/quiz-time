@@ -177,6 +177,7 @@ export default withRouter((props) => {
     }
 
     function socketsListeners(prevRoom) {
+        console.log(prevRoom)
         socket.on(`updateFieldsRoom${code}`, (att) => {
             const { roomAtt } = att
             if (roomAtt.state !== prevRoom.state) {
@@ -185,7 +186,9 @@ export default withRouter((props) => {
                     TRANSITION_DURATION
                 )
             }
-            if (!roomAtt.players || roomAtt.players[session.user.id] === undefined)
+            if (roomAtt.players && roomAtt.players[session.user.id] !== undefined)
+                setJoined(true)
+            else
                 setJoined(false)
             if (roomAtt.currentQuestion !== prevRoom.currentQuestion) {
                 setQuestionTransition(true)
@@ -271,7 +274,6 @@ export default withRouter((props) => {
     }
 
     function joinQuiz() {
-        setJoined(true)
         socket.emit("joinRoom",
             {
                 user: session.user,
