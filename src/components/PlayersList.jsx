@@ -84,7 +84,11 @@ export default function PlayersList(props) {
                         <PlayerCard
                             key={`Player: ${i}`}
                             player={player}
-                            progress={totalQuestions ? ((player.answers ? Object.keys(player.answers).length : 0) / totalQuestions) * 100 : undefined}
+                            progress={
+                                totalQuestions && player.answers
+                                    ? (Object.keys(player.answers).length / totalQuestions) * 100
+                                    : undefined
+                            }
                             top={`${(LIST_SIZE.paddingTop + 1) + ((ITEM_SIZE.height + LIST_SIZE.gap) * player.position)}px`}
                             zIndex={players.length - player.position}
                             width={`${ITEM_SIZE.width}px`}
