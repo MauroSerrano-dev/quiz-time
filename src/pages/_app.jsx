@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Head from 'next/head'
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import MontserratRegular from '../../public/fonts/montserrat.ttf';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Script from 'next/script';
 
 const mainTheme = createTheme({
@@ -31,18 +31,26 @@ const mainTheme = createTheme({
 function MyApp(props) {
   const { Component, pageProps } = props
 
+  const [windowWidth, setWindowWidth] = useState(0);
+  const [windowHeight, setWindowHeight] = useState(0);
+
   useEffect(() => {
-    const blob = document.getElementsByClassName('blob')[0]
-    if (blob) {
-      document.addEventListener('mousemove', event => {
-        const { clientX, clientY } = event
-        blob.animate({
-          left: `${clientX}px`,
-          top: `${clientY}px`
-        }, { duration: 3000, fill: 'forwards' })
-      })
-    }
-  }, [])
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+      setWindowHeight(window.innerHeight);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Inicialize os valores iniciais ao carregar a página
+    setWindowWidth(window.innerWidth);
+    setWindowHeight(window.innerHeight);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
 
   return (
     <div>
@@ -64,8 +72,10 @@ function MyApp(props) {
       </Head>
       <ThemeProvider theme={mainTheme}>
         <SessionProvider>
-          <DataHandler pageProps={pageProps} Component={Component} />
+          {/* <DataHandler pageProps={pageProps} Component={Component} /> */}
           <ToastContainer newestOnTop transition={Flip} style={{ color: 'white' }} className="foo" />
+          <div style={{ border: 'red dashed 2px', width: `${windowWidth}px`, height: `${windowHeight}px`, position: 'fixed', zIndex: '99999999999' }}>
+          </div>
         </SessionProvider>
       </ThemeProvider>
     </div>
