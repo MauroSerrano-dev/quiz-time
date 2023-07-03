@@ -72,10 +72,10 @@ function MyApp(props) {
       </Head>
       <ThemeProvider theme={mainTheme}>
         <SessionProvider>
-          {/* <DataHandler pageProps={pageProps} Component={Component} /> */}
+          <DataHandler pageProps={pageProps} Component={Component} />
           <ToastContainer newestOnTop transition={Flip} style={{ color: 'white' }} className="foo" />
-          <div style={{ border: 'red dashed 2px', width: `${windowWidth}px`, height: `${windowHeight}px`, position: 'fixed', zIndex: '99999999999' }}>
-          </div>
+          {/* <div style={{ border: 'red dashed 2px', width: `${windowWidth}px`, height: `${windowHeight}px`, position: 'fixed', zIndex: '99999999999' }}>
+          </div> */}
         </SessionProvider>
       </ThemeProvider>
     </div>

@@ -18,9 +18,9 @@ export default function DataHandler(props) {
     return loading
         ? <LoadingPage progress={session === undefined ? 50 : 100} />
         : <div id={styles.website}>
-            <Navbar session={session} signIn={signIn} signOut={signOut} />
+            {/* <Navbar session={session} signIn={signIn} signOut={signOut} />
             <div id={styles.componentContainer} >
                 <Component{...pageProps} session={session} signIn={signIn} />
-            </div>
+            </div> */}
         </div>
 }
