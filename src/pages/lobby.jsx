@@ -14,30 +14,7 @@ import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import { CustomTextField } from '../../utils/mui';
 import Logo from '@/components/Logo';
-
-const INICIAL_ROOM = {
-    name: '',
-    code: '',
-    currentQuestion: 0,
-    private: false,
-    control: false,
-    password: '',
-    state: 'disable',
-    controllerState: 'menu',
-    quizInfo: {
-        id: '',
-        name: '',
-        type: '',
-        totalQuestions: 0,
-        category: '',
-        mode: '',
-        creator: {
-            id: '',
-            email: '',
-            uui: '',
-        },
-    },
-}
+import { INICIAL_ROOM } from '../../utils/inicials-consts';
 
 export default function Lobby(props) {
     const { session, signIn } = props

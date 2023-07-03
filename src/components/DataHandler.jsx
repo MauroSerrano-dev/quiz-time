@@ -10,6 +10,7 @@ export default function DataHandler(props) {
     const [loading, setLoading] = useState(true)
     const [windowWidth, setWindowWidth] = useState(0);
     const [windowHeight, setWindowHeight] = useState(0);
+    const [showNavbar, setShowNavbar] = useState(true);
 
     useEffect(() => {
         if (loading && session !== undefined) {
@@ -43,9 +44,18 @@ export default function DataHandler(props) {
                 height: `${windowHeight}px`,
             }}
         >
-            <Navbar session={session} signIn={signIn} signOut={signOut} />
-            <div id={styles.componentContainer} >
-                <Component{...pageProps} session={session} signIn={signIn} />
+            {showNavbar &&
+                <Navbar session={session} signIn={signIn} signOut={signOut} />
+            }
+            <div
+                id={styles.componentContainer}
+                style={{
+                    height: showNavbar
+                        ? '91%'
+                        : '100%'
+                }}
+            >
+                <Component{...pageProps} session={session} signIn={signIn} setShowNavbar={setShowNavbar} />
             </div>
-        </div>
+        </div >
 }

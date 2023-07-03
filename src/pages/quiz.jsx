@@ -94,11 +94,11 @@ export default withRouter((props) => {
                     const response = await quizResponse.json()
                     const updatedQuiz = {
                         ...response.quiz,
-                        questions: await Promise.all(response.quiz.questions.map(async (question, i) => {
+                        questions: await Promise.all(response.quiz.questions.map(async (question) => {
                             const img = question.img && question.img.id
                                 ? await getImage(room.quizInfo.creator.uui, question.img.id)
                                 : null
-                            const options = await Promise.all(question.options.map(async (option, j) => {
+                            const options = await Promise.all(question.options.map(async (option) => {
                                 const optionImg = option.img && option.img.id
                                     ? await getImage(room.quizInfo.creator.uui, option.img.id)
                                     : null
@@ -106,7 +106,7 @@ export default withRouter((props) => {
                             }));
                             return { ...question, img: img, options: options }
                         })),
-                        results: await Promise.all(response.quiz.results.map(async (result, i) => {
+                        results: await Promise.all(response.quiz.results.map(async (result) => {
                             const img = result.img.id
                                 ? await getImage(room.quizInfo.creator.uui, result.img.id)
                                 : null
@@ -190,9 +190,6 @@ export default withRouter((props) => {
             else
                 setJoined(false)
 
-            console.log('room', room.currentQuestion)
-            console.log('roomAtt.currentQuestion', roomAtt.currentQuestion)
-            console.log('prevRoom.currentQuestion', prevRoom.currentQuestion)
             if (false) {
                 setQuestionTransition(true)
                 setTimeout(() => {
@@ -208,7 +205,14 @@ export default withRouter((props) => {
     }
 
     function updateOptionSelected() {
-        if (getPlayer()?.answers !== undefined && getPlayer()?.answers[room.currentQuestion] !== undefined)
+        if (
+            getPlayer() !== null &&
+            getPlayer() !== undefined &&
+            getPlayer().answers !== null &&
+            getPlayer().answers !== undefined &&
+            getPlayer().answers[room.currentQuestion] !== null &&
+            getPlayer().answers[room.currentQuestion] !== undefined
+        )
             setOptionSelected(getPlayer().answers[room.currentQuestion].optionIndex)
         else
             setOptionSelected()
@@ -304,49 +308,67 @@ export default withRouter((props) => {
     }
 
     function getResults() {
-        return quiz.results.map(result => (
-            {
+        const player = getPlayer()
+        if (player) {
+            return quiz.results.map(result => ({
                 ...result,
-                points: getPlayer()?.answers
-                    .reduce((acc, answer) =>
-                        acc + answer.actions.reduce((accumulator, action) =>
-                            action.profile === result.name
-                                ? accumulator + action.points
-                                : accumulator
+                points: player.answers ?
+                    Object.keys(player.answers)
+                        .reduce((acc, key) =>
+                            acc + player.answers[key].actions.reduce((accumulator, action) =>
+                                action.profile === result.name
+                                    ? accumulator + action.points
+                                    : accumulator
+                                , 0)
                             , 0)
-                        , 0)
-            }
-        )).sort((a, b) => b.points - a.points).reduce((acc, result) => acc.length === 0 || acc[0].points === result.points ? [...acc, result] : acc, [])
+                    : 0
+            }))
+                .sort((a, b) => b.points - a.points).reduce((acc, result) => acc.length === 0 || acc[0].points === result.points ? [...acc, result] : acc, [])
+        }
+        return []
     }
 
     function getAllResults() {
-        return quiz.results.map(result => {
-            return {
-                ...result, points: getPlayer()?.answers
-                    .reduce((acc, answer) =>
-                        acc + answer.actions.reduce((accumulator, action) =>
-                            action.profile === result.name
-                                ? accumulator + action.points
-                                : accumulator
+        const player = getPlayer()
+        console.log('player', player)
+        if (player) {
+            return quiz.results.map(result => ({
+                ...result,
+                points: player.answers
+                    ? Object.keys(player.answers)
+                        .reduce((acc, key) =>
+                            acc + player.answers[key].actions.reduce((accumulator, action) =>
+                                action.profile === result.name
+                                    ? accumulator + action.points
+                                    : accumulator
+                                , 0)
                             , 0)
-                        , 0)
-            }
-        }).sort((a, b) => b.points - a.points)
+                    : 0
+            }))
+                .sort((a, b) => b.points - a.points)
+        }
+        return []
     }
 
     function getAllSubResults() {
-        return quiz.subResults?.map(result => {
-            return {
-                ...result, points: getPlayer()?.answers
-                    .reduce((acc, answer) =>
-                        acc + answer.actions.reduce((accumulator, action) =>
-                            action.profile === result.name
-                                ? accumulator + action.points
-                                : accumulator
+        const player = getPlayer()
+        if (player) {
+            return quiz.subResults?.map(result => ({
+                ...result,
+                points: player.answers
+                    ? Object.keys(player.answers)
+                        .reduce((acc, key) =>
+                            acc + player.answers[key].actions.reduce((accumulator, action) =>
+                                action.profile === result.name
+                                    ? accumulator + action.points
+                                    : accumulator
+                                , 0)
                             , 0)
-                        , 0)
-            }
-        }).sort((a, b) => b.points - a.points)
+                    : 0
+            }))
+                .sort((a, b) => b.points - a.points)
+        }
+        return []
     }
 
     function getPlayer() {
@@ -354,6 +376,9 @@ export default withRouter((props) => {
     }
 
     function getRadarData(order, allResults, allSubResults) {
+        console.log(order)
+        console.log(allResults)
+        console.log(allSubResults)
         return order.map(name => allResults.concat(allSubResults).find(e => e.name === name))
     }
 
@@ -423,7 +448,7 @@ export default withRouter((props) => {
                                     </div>
                                 }
                                 {room.state === 'active' && quiz && joined && getPlayer().state === 'answering' &&
-                                    <div id={styles.questionOptions}>
+                                    <div id={styles.activeContainer}>
                                         <motion.div
                                             id={styles.questionContainer}
                                             initial={{ opacity: 0 }}

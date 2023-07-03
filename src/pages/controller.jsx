@@ -62,21 +62,23 @@ export default withRouter((props) => {
 
     }
 
-    const nextQuestion = () => {
-        if (room.currentQuestion >= room.quizInfo.totalQuestions - 1)
-            socket.emit("updateRoom", {
-                ...room,
-                state: 'finish'
-            })
-        else
-            socket.emit("updateRoom", {
-                ...room,
-                currentQuestion: room.currentQuestion + 1
-            })
+    function nextQuestion() {
+        if (room.state === 'active') {
+            if (room.currentQuestion >= room.quizInfo.totalQuestions - 1)
+                socket.emit("updateRoom", {
+                    ...room,
+                    state: 'finish'
+                })
+            else
+                socket.emit("updateRoom", {
+                    ...room,
+                    currentQuestion: room.currentQuestion + 1
+                })
+        }
     }
 
-    const prevQuestion = () => {
-        if (room.currentQuestion > 0)
+    function prevQuestion() {
+        if (room.currentQuestion > 0 && room.state === 'active')
             socket.emit("updateRoom", {
                 ...room,
                 currentQuestion:
@@ -167,6 +169,7 @@ export default withRouter((props) => {
         socket.emit("updateRoom", {
             ...room,
             state: 'disable',
+            currentQuestion: 0,
             quizInfo: {
                 id: '',
                 name: '',
@@ -241,17 +244,23 @@ export default withRouter((props) => {
                                                 >
                                                     Começar Q&A
                                                 </Button>
-                                                <Button
-                                                    variant="outlined"
-                                                    sx={{
-                                                        width: '100%',
-                                                        height: '130px',
-                                                        fontSize: '17px',
-                                                        lineHeight: '29px',
-                                                    }}
+                                                <a
+                                                    href={`${process.env.NEXT_PUBLIC_SITE_URL}/room?code=${code}`}
+                                                    target='_blank'
+                                                    className='fillWidth'
                                                 >
-                                                    Abrir Telão
-                                                </Button>
+                                                    <Button
+                                                        variant="outlined"
+                                                        sx={{
+                                                            width: '100%',
+                                                            height: '130px',
+                                                            fontSize: '17px',
+                                                            lineHeight: '29px',
+                                                        }}
+                                                    >
+                                                        Abrir Telão
+                                                    </Button>
+                                                </a>
                                             </div>
                                         }
                                         {room.controllerState === 'quizSelector' &&
@@ -394,6 +403,7 @@ export default withRouter((props) => {
                                                     />
                                                     <div className='flex row'>
                                                         <Button
+                                                            onClick={prevQuestion}
                                                             variant="outlined"
                                                             sx={{
                                                                 width: '100%',

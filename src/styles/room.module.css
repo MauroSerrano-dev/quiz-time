@@ -1,9 +1,7 @@
 #container {
-  --text-color: var(--text-white);
-}
-
-#ownerView {
   width: 100%;
+  height: 100%;
+  --text-color: var(--text-white);
 }
 
 #roomContainer {
@@ -13,32 +11,9 @@
   justify-content: center;
 
   width: 100%;
-
-  gap: 1rem;
-}
-
-#questionOptions {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  gap: 5rem;
-  width: 100%;
-}
-
-#optionsContainer {
-  display: grid;
-  place-items: center;
-  grid-template-columns: 1fr 1fr;
-  width: 70%;
-  height: 200px;
-  gap: 1rem;
-}
-
-#optionButton {
-  width: 100%;
   height: 100%;
+
+  gap: 1rem;
 }
 
 #roomName {
@@ -71,18 +46,6 @@
 
 #linkContainer a:hover {
   text-decoration: underline #e5e5e5;
-}
-
-#activeContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-
-  width: 100%;
-
-  gap: 3rem;
 }
 
 #qrContainer {
@@ -134,4 +97,53 @@
   position: absolute;
   right: 7rem;
   top: 8rem;
+}
+
+#activeContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  padding: 3%;
+}
+
+#questionContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 15%;
+  width: 100%;
+  font-size: 30px;
+}
+
+#optionsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+
+  padding-top: 5%;
+  height: 70%;
+  width: 100%;
+  gap: 1rem;
+  --text-color: var(--text-black);
+}
+
+.optionsRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 15px;
+  width: 100%;
+  height: 50%;
+}
+
+.rowExtraOptions {
+  height: 33.33333333333333%;
 }

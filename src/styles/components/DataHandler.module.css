@@ -1,6 +1,4 @@
 #componentContainer {
-    height: 91%;
-
     position: relative;
 
     overflow-y: auto;
@@ -9,5 +7,4 @@
 }
 
 /* Mobile, Tablet and Smaller Desktop*/
-@media (max-width: 1120px) {
-}
+@media (max-width: 1120px) {}

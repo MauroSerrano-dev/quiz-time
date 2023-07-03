@@ -25,7 +25,7 @@ const quiz = {
         button: {
             color: '#009fda',
             variant: 'contained',
-            template: 'monochrome',
+            template: 'colorful',
             symbol: 'polygons',
             symbolColor: '#1c222c',
             textColor: '#1c222c',
@@ -130,7 +130,7 @@ const quiz = {
                 { content: 'Fazer progresso', actions: [{ profile: result1, points: 1 }, { profile: subResult4, points: 1 }, { profile: subResult2, points: 1 }] },
                 { content: 'Construir memórias', actions: [{ profile: result2, points: 1 }, { profile: subResult3, points: 1 }, { profile: subResult2, points: 1 }] },
                 { content: 'Fazer sentido', actions: [{ profile: result4, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult4, points: 1 }] },
-                { content: 'Tornar as pessoas confortáveis', actions: [{ profile: result3, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult3, points: 1 }] },
+                { content: 'Deixar as pessoas confortáveis', actions: [{ profile: result3, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult3, points: 1 }] },
             ],
             optionsRandom: false
         },
