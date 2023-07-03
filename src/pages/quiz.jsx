@@ -455,26 +455,34 @@ export default withRouter((props) => {
                                                 : getPlayer().currentQuestion
                                             ].options.map((option, i) =>
                                                 i < 4 || quiz.questions[room.currentQuestion].haveExtraOptions
-                                                    ? <motion.div className='fillWidth' key={`Option: ${i}`} variants={item}>
-                                                        <div className='flex' style={{ width: '100%', height: '100px' }} >
-                                                            <OptionInput
-                                                                onClick={() => room.control ? answerControl(i) : answer(i)}
-                                                                borderRadius={quiz.style.button.borderRadius}
-                                                                textColor={quiz.style.button.textColor}
-                                                                symbolColor={quiz.style.button.symbolColor}
-                                                                option={i}
-                                                                colorValue={quiz.style.button.template === 'monochrome'
-                                                                    ? quiz.style.button.color
-                                                                    : undefined
-                                                                }
-                                                                symbol={quiz.style.button.symbol}
-                                                                variant={quiz.style.button.variant}
-                                                                text={option.content}
-                                                                width='100%'
-                                                                height='100%'
-                                                                hideText={questionTransition}
-                                                            />
-                                                        </div>
+                                                    ? <motion.div
+                                                        style={{
+                                                            width: '100%',
+                                                            height: `${i < 4 || quiz.questions[room.currentQuestion].haveExtraOptions
+                                                                ? 25
+                                                                : (100 / 6)
+                                                                }%`
+                                                        }}
+                                                        key={`Option: ${i}`}
+                                                        variants={item}
+                                                    >
+                                                        <OptionInput
+                                                            onClick={() => room.control ? answerControl(i) : answer(i)}
+                                                            borderRadius={quiz.style.button.borderRadius}
+                                                            textColor={quiz.style.button.textColor}
+                                                            symbolColor={quiz.style.button.symbolColor}
+                                                            option={i}
+                                                            colorValue={quiz.style.button.template === 'monochrome'
+                                                                ? quiz.style.button.color
+                                                                : undefined
+                                                            }
+                                                            symbol={quiz.style.button.symbol}
+                                                            variant={quiz.style.button.variant}
+                                                            text={option.content}
+                                                            width='100%'
+                                                            height='100%'
+                                                            hideText={questionTransition}
+                                                        />
                                                     </motion.div>
                                                     : undefined
                                             )}
