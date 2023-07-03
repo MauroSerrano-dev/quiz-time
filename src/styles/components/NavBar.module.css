@@ -2,7 +2,7 @@
     position: absolute;
     display: flex;
     top: 0px;
-    height: 9vh;
+    height: 9%;
     width: 100%;
     background-color: var(--body-background-color);
     transition: all 650ms ease-in-out;
@@ -169,7 +169,7 @@
 /* Mobile, Tablet and Smaller Desktop*/
 @media (max-width: 1120px) {
     #container {
-        height: 9vh;
+        height: 9%;
     }
 
     #nav_menu_bar {
@@ -190,7 +190,7 @@
     .nav_menu_list {
         flex-direction: column;
         width: 150px;
-        height: 91vh;
+        height: 91%;
         background-color: var(--body-background-color);
         border-left: solid var(--global-white);
         row-gap: 24px;
@@ -198,7 +198,7 @@
         padding: 24px 16px;
         
         position: fixed;
-        top: 9vh;
+        top: 9%;
     }
 
     #middle {

@@ -31,27 +31,6 @@ const mainTheme = createTheme({
 function MyApp(props) {
   const { Component, pageProps } = props
 
-  const [windowWidth, setWindowWidth] = useState(0);
-  const [windowHeight, setWindowHeight] = useState(0);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-      setWindowHeight(window.innerHeight);
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    // Inicialize os valores iniciais ao carregar a página
-    setWindowWidth(window.innerWidth);
-    setWindowHeight(window.innerHeight);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
-
   return (
     <div>
       <Head>
@@ -74,8 +53,6 @@ function MyApp(props) {
         <SessionProvider>
           <DataHandler pageProps={pageProps} Component={Component} />
           <ToastContainer newestOnTop transition={Flip} style={{ color: 'white' }} className="foo" />
-          {/* <div style={{ border: 'red dashed 2px', width: `${windowWidth}px`, height: `${windowHeight}px`, position: 'fixed', zIndex: '99999999999' }}>
-          </div> */}
         </SessionProvider>
       </ThemeProvider>
     </div>
