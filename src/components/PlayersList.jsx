@@ -85,8 +85,8 @@ export default function PlayersList(props) {
                             key={`Player: ${i}`}
                             player={player}
                             progress={
-                                totalQuestions && player.answers
-                                    ? (Object.keys(player.answers).length / totalQuestions) * 100
+                                totalQuestions
+                                    ? (Object.keys(player.answers ? player.answers : {}).length / totalQuestions) * 100
                                     : undefined
                             }
                             top={`${(LIST_SIZE.paddingTop + 1) + ((ITEM_SIZE.height + LIST_SIZE.gap) * player.position)}px`}

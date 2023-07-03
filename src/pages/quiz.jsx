@@ -468,6 +468,12 @@ export default withRouter((props) => {
                                                     >
                                                         <OptionInput
                                                             onClick={() => room.control ? answerControl(i) : answer(i)}
+                                                            state={optionSelected === undefined
+                                                                ? undefined
+                                                                : optionSelected === i
+                                                                    ? 'chosen'
+                                                                    : 'notChosen'
+                                                            }
                                                             borderRadius={quiz.style.button.borderRadius}
                                                             textColor={quiz.style.button.textColor}
                                                             symbolColor={quiz.style.button.symbolColor}

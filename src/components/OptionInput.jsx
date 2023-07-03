@@ -41,6 +41,7 @@ const BORDER_WIDTH = 0.024
 export default function OptionInput(props) {
 
     const {
+        state = 'default',
         option,
         text,
         size = 'medium',
@@ -64,12 +65,13 @@ export default function OptionInput(props) {
 
     const containerRef = useRef(null)
     const inputTextRef = useRef(null)
-
     const [isHovered, setIsHovered] = useState(false)
     const [color, setColor] = useState(colorValue)
     const [animation, setAnimation] = useState(FAST_ANIMATION)
     const [isFocused, setIsFocused] = useState(false)
     const [buttonSize, setButtonSize] = useState({ width: 0, height: 0 })
+
+    const supportsHoverAndPointer = window.matchMedia('(hover: hover)').matches && window.matchMedia('(pointer: fine)').matches;
 
     useEffect(() => {
         setButtonSize({
@@ -115,15 +117,31 @@ export default function OptionInput(props) {
             setColor(colorValue)
     }, [colorValue])
 
+    const BUTTON_STATE = new Map([
+        ['default', {}],
+        ['chosen', {
+
+        }],
+        ['notChosen', {
+            opacity: 0.5,
+        }],
+    ])
+
     const BUTTON_VARIANTS = new Map([
         ['outlined', {
             borderColor: color,
-            backgroundColor: isHovered ? color.concat('25') : color.concat('0a'),
+            backgroundColor: isHovered && supportsHoverAndPointer
+                ? color.concat('25')
+                : color.concat('0a'),
         }],
         ['contained', {
             borderColor: 'transparent',
-            backgroundColor: isHovered ? color.concat('c0') : color,
-            boxShadow: isHovered ? '0px 3px 25px -10px' : '0px 3px 20px -15px'
+            backgroundColor: isHovered && supportsHoverAndPointer
+                ? color.concat('c0')
+                : color,
+            boxShadow: isHovered && supportsHoverAndPointer
+                ? '0px 3px 25px -10px'
+                : '0px 3px 20px -15px'
         }],
     ])
 
@@ -232,7 +250,7 @@ export default function OptionInput(props) {
         ['outlined', {
             outlineColor: symbol === 'polygons'
                 ? 'transparent'
-                : isHovered
+                : isHovered && supportsHoverAndPointer
                     ? color
                     : color.concat('c0'),
             borderRadius: symbol === 'polygons'
@@ -250,7 +268,7 @@ export default function OptionInput(props) {
             color: color,
         }],
         ['contained', {
-            color: isHovered
+            color: isHovered && supportsHoverAndPointer
                 ? color.concat('c0')
                 : color,
         }],
@@ -345,6 +363,7 @@ export default function OptionInput(props) {
                 borderWidth: `${buttonSize.height * BORDER_WIDTH}px`,
                 borderRadius: `${buttonSize.height * borderRadius * 0.005}px`,
                 ...BUTTON_VARIANTS.get(variant),
+                ...BUTTON_STATE.get(state),
             }}
         >
             <div className={styles.symbolContainer}

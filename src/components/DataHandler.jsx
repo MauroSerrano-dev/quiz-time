@@ -40,7 +40,7 @@ export default function DataHandler(props) {
         : <div
             style={{
                 width: `${windowWidth}px`,
-                height: `${windowHeight}px`
+                height: `${windowHeight}px`,
             }}
         >
             <Navbar session={session} signIn={signIn} signOut={signOut} />

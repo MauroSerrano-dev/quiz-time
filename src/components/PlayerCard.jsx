@@ -11,7 +11,14 @@ const item = {
 }
 
 export default function PlayerCard(props) {
-    const { player, progress, top, zIndex, width, height } = props
+    const {
+        player,
+        progress,
+        top,
+        zIndex,
+        width,
+        height,
+    } = props
 
     return (
         <motion.div
@@ -24,7 +31,7 @@ export default function PlayerCard(props) {
             </div>
             <div id={styles.infos} className='flex center'>
                 <p id={styles.name}>{player.user.name}</p>
-                {progress &&
+                {progress !== undefined &&
                     <div id={styles.progressBarContainer}>
                         <div id={styles.bar} style={{ left: `${progress - 100}%` }}></div>
                     </div>
