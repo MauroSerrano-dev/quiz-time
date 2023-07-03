@@ -77,7 +77,7 @@ export default withRouter((props) => {
     }, [session, code])
 
     useEffect(() => {
-        if (room)
+        if (room && socket !== undefined)
             socketsListeners(room)
     }, [room])
 
@@ -181,15 +181,15 @@ export default withRouter((props) => {
             const { roomAtt } = att
             if (roomAtt.state !== prevRoom.state) {
                 setTimeout(() =>
-                setQuestionTransition(false),
-                TRANSITION_DURATION
+                    setQuestionTransition(false),
+                    TRANSITION_DURATION
                 )
             }
             if (roomAtt.players && roomAtt.players[session.user.id] !== undefined)
-            setJoined(true)
+                setJoined(true)
             else
-            setJoined(false)
-            
+                setJoined(false)
+
             console.log('room', room.currentQuestion)
             console.log('roomAtt.currentQuestion', roomAtt.currentQuestion)
             console.log('prevRoom.currentQuestion', prevRoom.currentQuestion)
@@ -386,7 +386,7 @@ export default withRouter((props) => {
                 >
                     <div className='flex size100'>
                         {room &&
-                            <div className='flex start size100'>
+                            <div id={styles.bodyContainer}>
                                 <h3 id={styles.roomName}>
                                     {room.quizInfo.name}
                                 </h3>

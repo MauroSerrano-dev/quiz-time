@@ -53,8 +53,8 @@ export default function PlayersList(props) {
     useEffect(() => {
         const tempPlayers = [...players]
         const sortedPlayers = tempPlayers.sort((a, b) =>
-            b.answers.length !== a.answers.length
-                ? b.answers.length - a.answers.length
+            Object.keys(b.answers ? b.answers : {}).length !== Object.keys(a.answers ? a.answers : {}).length
+                ? Object.keys(b.answers ? b.answers : {}).length - Object.keys(a.answers ? a.answers : {}).length
                 : new Date(a.lastAnswerDate) - new Date(b.lastAnswerDate)
         )
         setItems(players.map(player => { return { ...player, position: sortedPlayers.findIndex(p => p.user.email === player.user.email) } }))
