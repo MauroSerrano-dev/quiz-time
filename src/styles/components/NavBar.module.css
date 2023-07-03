@@ -1,9 +1,10 @@
 #container {
-    position: absolute;
+    position: relative;
     display: flex;
-    top: 0px;
+
     height: 9%;
     width: 100%;
+
     background-color: var(--body-background-color);
     transition: all 650ms ease-in-out;
     z-index: 1;
@@ -168,10 +169,6 @@
 
 /* Mobile, Tablet and Smaller Desktop*/
 @media (max-width: 1120px) {
-    #container {
-        height: 9%;
-    }
-
     #nav_menu_bar {
         height: 35px;
         width: 50px;
@@ -196,7 +193,7 @@
         row-gap: 24px;
         right: -288px;
         padding: 24px 16px;
-        
+
         position: fixed;
         top: 9%;
     }
