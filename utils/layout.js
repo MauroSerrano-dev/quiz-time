@@ -23,6 +23,7 @@ const IMG_SIZES = new Map([
 ])
 
 function insertLayout(item, results, allResults, radarData) {
+    console.log('res', results)
     switch (item.name) {
         case 'Image': return {
             name: 'Image',
@@ -35,7 +36,7 @@ function insertLayout(item, results, allResults, radarData) {
                                 style={{
                                     width: `${IMG_SIZES.get(results.length)}%`,
                                     height: `${IMG_SIZES.get(results.length)}%`,
-                                    fontSize: `${IMG_SIZES.get(results.length)/6}px`,
+                                    fontSize: `${IMG_SIZES.get(results.length) / 6}px`,
                                 }}
                                 key={`Result: ${i}`}
                             >
@@ -52,8 +53,11 @@ function insertLayout(item, results, allResults, radarData) {
             name: 'ChartPie',
             value:
                 <Box className={styles.layoutItem} id={styles.itemPie}>
-                    <div id={styles.pieContainer} className='flex center'>
-                        <ChartPie data={allResults} totalPoints={allResults.reduce((acc, result) => acc + result.points, 0)} />
+                    <div className='flex center fillWidth'>
+                        <ChartPie
+                            data={allResults}
+                            totalPoints={allResults.reduce((acc, result) => acc + result.points, 0)}
+                        />
                     </div>
                 </Box>
         }

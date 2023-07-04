@@ -45,7 +45,7 @@ export default function PlayersList(props) {
     }
 
     const styleOpen = {
-        right: `${ITEM_SIZE.width * 0.545}px`
+        right: `${ITEM_SIZE.width * 0.544}px`
     }
 
     const styleClose = {

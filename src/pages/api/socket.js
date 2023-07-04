@@ -71,6 +71,12 @@ export default function SocketHandler(req, res) {
       await set(roomRef, updatedRoom)
     })
 
+    // Listen for 'saveResults' events emitted by the client
+    socket.on('saveResults', (code) => {
+      console.log(code)
+      io.emit(`saveResults${code}`)
+    })
+
     // Listen for 'updatePlayer' events emitted by the client
     socket.on('updatePlayer', async (attPlayer, code) => {
 
@@ -142,7 +148,6 @@ export default function SocketHandler(req, res) {
       }
     })
   })
-
 
   console.log('Setting up socket');
   res.end();

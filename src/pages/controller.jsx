@@ -63,11 +63,14 @@ export default withRouter((props) => {
 
     function nextQuestion() {
         if (room.state === 'active') {
-            if (room.currentQuestion >= room.quizInfo.totalQuestions - 1)
+            if (room.currentQuestion >= room.quizInfo.totalQuestions - 1) {
+                console.log('desgraça')
+                socket.emit(`saveResults`, code)
                 socket.emit("updateRoom", {
                     ...room,
                     state: 'finish'
                 })
+            }
             else
                 socket.emit("updateRoom", {
                     ...room,
@@ -165,11 +168,19 @@ export default withRouter((props) => {
     }
 
     function handleCancelQuiz() {
-        console.log('cancel', room)
+
+        let newPlayersList = room.players
+
+        Object.keys(newPlayersList).forEach(playerId => {
+            delete newPlayersList[playerId].results
+            delete newPlayersList[playerId].answers
+        })
+
         socket.emit("updateRoom", {
             ...room,
             state: 'disable',
             currentQuestion: 0,
+            players: newPlayersList
         })
     }
 

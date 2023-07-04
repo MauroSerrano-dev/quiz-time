@@ -16,7 +16,8 @@
 
 #tabContainer {
     position: absolute;
-    right: 134px;
+    right: 132px;
+
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -27,10 +28,13 @@
 
     border-top-left-radius: 0.5rem;
     border-bottom-left-radius: 0.5rem;
-    border: solid var(--primary) 1px;
+    border-left: solid var(--primary) 1px;
+    border-top: solid var(--primary) 1px;
+    border-bottom: solid var(--primary) 1px;
     background-color: var(--body-background-color);
     cursor: pointer;
     transition: right 200ms ease-in-out;
+    z-index: 5;
 }
 
 #tabContainer:hover {

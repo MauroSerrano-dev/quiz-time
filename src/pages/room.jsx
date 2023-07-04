@@ -12,6 +12,7 @@ import { getImage, getStandardQuiz, getUserQuiz } from '../../utils/api-caller';
 import CloseFullscreenRoundedIcon from '@mui/icons-material/CloseFullscreenRounded';
 import OpenInFullRoundedIcon from '@mui/icons-material/OpenInFullRounded';
 import OptionInput from '@/components/OptionInput';
+import ChartPie from '@/components/ChartPie';
 
 let socket;
 
@@ -382,7 +383,13 @@ export default withRouter((props) => {
                                         }
                                         {room.state === 'results' &&
                                             <div>
-                                                <h2>Finalizado</h2>
+                                                <h2>Estatísticas</h2>
+                                                <div className='flex center fillWidth'>
+                                                    <ChartPie
+                                                        data={Object.keys(room.players).map(key => room.players[key].results).reduce((acc, result) => acc.concat(result), [])}
+                                                        totalPoints={Object.keys(room.players).length}
+                                                    />
+                                                </div>
                                             </div>
                                         }
                                         {quiz &&

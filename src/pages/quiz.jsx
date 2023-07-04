@@ -44,7 +44,6 @@ export default withRouter((props) => {
     const [dots, setDots] = useState('')
     const [joined, setJoined] = useState(false)
     const [optionSelected, setOptionSelected] = useState()
-    const [results, setResults] = useState([])
     const [allResults, setAllResults] = useState([])
     const [allSubResults, setAllSubResults] = useState([])
     const [questionTransition, setQuestionTransition] = useState(false)
@@ -127,16 +126,16 @@ export default withRouter((props) => {
         if (room && joined && room.control) {
             updateOptionSelected()
         }
-        if (room && quiz && (room.state === 'finish' || room.state === 'results' || getPlayer()?.state === 'result')) {
-            const myResults = getResults()
+        if (room && quiz && getPlayer() && getPlayer().results && (room.state === 'finish' || room.state === 'results' || getPlayer().state === 'result')) {
             const myAllResults = getAllResults()
             const myAllSubResults = getAllSubResults()
             const chartRadarIndex = quiz.layout.findIndex(item => item.name === 'ChartRadar')
-            const myRadarData = chartRadarIndex !== -1 ? getRadarData(quiz.layout[chartRadarIndex].radarOrder, myAllResults, myAllSubResults) : []
-            setResults(myResults)
+            const myRadarData = chartRadarIndex !== -1
+                ? getRadarData(quiz.layout[chartRadarIndex].radarOrder, myAllResults, myAllSubResults)
+                : []
             setAllResults(myAllResults)
             setAllSubResults(myAllSubResults)
-            setLayout(getLayout(quiz.layout, myResults, myAllResults, myRadarData))
+            setLayout(getLayout(quiz.layout, getPlayer().results, myAllResults, myRadarData))
         }
     }, [room, quiz])
 
@@ -177,6 +176,10 @@ export default withRouter((props) => {
     }
 
     function socketsListeners(prevRoom) {
+        socket.on(`saveResults${code}`, () => {
+            console.log('recebido')
+            saveResults()
+        })
         socket.on(`updateFieldsRoom${code}`, (att) => {
             const { roomAtt } = att
             if (roomAtt.state !== prevRoom.state) {
@@ -307,30 +310,41 @@ export default withRouter((props) => {
         setLocked(false)
     }
 
-    function getResults() {
-        const player = getPlayer()
-        if (player) {
-            return quiz.results.map(result => ({
-                ...result,
-                points: player.answers ?
-                    Object.keys(player.answers)
-                        .reduce((acc, key) =>
-                            acc + player.answers[key].actions.reduce((accumulator, action) =>
-                                action.profile === result.name
-                                    ? accumulator + action.points
-                                    : accumulator
-                                , 0)
-                            , 0)
-                    : 0
-            }))
-                .sort((a, b) => b.points - a.points).reduce((acc, result) => acc.length === 0 || acc[0].points === result.points ? [...acc, result] : acc, [])
+    function handleResults() {
+        saveResults()
+    }
+
+    function saveResults() {
+        if (room && quiz && !getPlayer().results) {
+            const player = getPlayer()
+            let newPlayer
+            if (player) {
+                newPlayer = {
+                    ...player,
+                    results: quiz.results.map(result => ({
+                        ...result,
+                        points: player.answers ?
+                            Object.keys(player.answers)
+                                .reduce((acc, key) =>
+                                    acc + player.answers[key].actions.reduce((accumulator, action) =>
+                                        action.profile === result.name
+                                            ? accumulator + action.points
+                                            : accumulator
+                                        , 0)
+                                    , 0)
+                            : 0
+                    }))
+                        .sort((a, b) => b.points - a.points).reduce((acc, result) => acc.length === 0 || acc[0].points === result.points ? [...acc, result] : acc, [])
+                }
+            }
+            console.log('player', player)
+            console.log('newPlayer', newPlayer)
+            socket.emit("updatePlayer", newPlayer, code)
         }
-        return []
     }
 
     function getAllResults() {
         const player = getPlayer()
-        console.log('player', player)
         if (player) {
             return quiz.results.map(result => ({
                 ...result,
@@ -376,9 +390,6 @@ export default withRouter((props) => {
     }
 
     function getRadarData(order, allResults, allSubResults) {
-        console.log(order)
-        console.log(allResults)
-        console.log(allSubResults)
         return order.map(name => allResults.concat(allSubResults).find(e => e.name === name))
     }
 
@@ -525,7 +536,7 @@ export default withRouter((props) => {
                                         <h2>Finalizado</h2>
                                     </div>
                                 }
-                                {quiz && (room.state === 'results' || getPlayer()?.state === 'result') && results && joined &&
+                                {quiz && getPlayer() && (room.state === 'results' || getPlayer().state === 'result') && getPlayer().results && joined &&
                                     <motion.div
 
                                         id={styles.resultContainer}

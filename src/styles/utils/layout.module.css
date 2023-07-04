@@ -71,10 +71,6 @@
     height: auto;
 }
 
-#pieContainer{
-    width: 100%;
-}
-
 /* Small Mobile */
 @media (max-width: 350px) {
 
