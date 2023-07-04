@@ -1369,6 +1369,30 @@ export default function ProfileEditor(props) {
                                         )}
                                     </Select>
                                 </FormControl>
+                                <FormControl sx={{ width: '100%' }}>
+                                    <InputLabel size='small'>
+                                        Idioma
+                                    </InputLabel>
+                                    <Select
+                                        MenuProps={MenuProps}
+                                        input={<OutlinedInput label="Idioma" />}
+                                        value={quiz.category}
+                                        onChange={(e) => handleChangeQuizField(e.target.value, 'category')}
+                                        size='small'
+                                        sx={{
+                                            width: '100%',
+                                        }}
+                                    >
+                                        {CATEGORIES.map((category, i) =>
+                                            <MenuItem
+                                                value={category.value}
+                                                key={i}
+                                            >
+                                                {category.label}
+                                            </MenuItem>
+                                        )}
+                                    </Select>
+                                </FormControl>
                                 <Button
                                     variant='contained'
                                     onClick={createQuiz}

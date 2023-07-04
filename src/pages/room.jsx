@@ -169,6 +169,7 @@ export default withRouter((props) => {
     }
 
     function getCharPieData() {
+        console.log(room)
         return Object.keys(room.players).map(key => room.players[key].results).reduce((acc, result) => acc.concat(result), [])
     }
 

@@ -296,10 +296,153 @@ const quiz = {
         },
     ],
     results: [
-        { name: result1, id: 'profile-0', texts: [{ ref: 'Preferência Cerebral', value: 'Fazer rápido' }], img: { content: 'shark.jpg', id: 'quiz-123_profile-0', name: 'shark', type: 'jpg' }, color: '#ABDEE6' },
-        { name: result2, id: 'profile-1', texts: [{ ref: 'Preferência Cerebral', value: 'Fazer junto' }], img: { content: 'cat.jpg', id: 'quiz-123_profile-1', name: 'cat', type: 'jpg' }, color: '#FFD8BE' },
-        { name: result3, id: 'profile-2', texts: [{ ref: 'Preferência Cerebral', value: 'Fazer diferente' }], img: { content: 'eagle.jpg', id: 'quiz-123_profile-2', name: 'eagle', type: 'jpg' }, color: '#FFF7D2' },
-        { name: result4, id: 'profile-3', texts: [{ ref: 'Preferência Cerebral', value: 'Fazer certo' }], img: { content: 'wolf.jpg', id: 'quiz-123_profile-3', name: 'wolf', type: 'jpg' }, color: '#CBAACB' },
+        {
+            name: result1,
+            id: 'profile-0',
+            texts: [
+                {
+                    ref: 'Característica Principal',
+                    value: 'Fazer rápido.'
+                },
+                {
+                    ref: 'Traços Comportamentais',
+                    value: 'Senso de urgência, iniciativa, prático, impulsivo, vencer desafios, aqui e agora, auto suficiente, não delegar.'
+                },
+                {
+                    ref: 'Pontos Fortes',
+                    value: 'Ação, fazer que ocorra, para com a burocracia, motivação.'
+                },
+                {
+                    ref: 'Pontos de Melhorias',
+                    value: 'Socialmente um desastre, faz da forma mais fácil, relacionamento complicado, precisa melhorar paciência, atenção às pessoas, humildade, consideração, trabalhar coletivamente, ouvir mais.'
+                },
+                {
+                    ref: 'Motivações',
+                    value: 'Liberdade para agir individualmente, controle das proprias atividades, resolver os problemas do seu jeito, competição, variedade de atividades, não ter que repetir tarefas.'
+                },
+                {
+                    ref: 'Valores',
+                    value: 'Resultado.'
+                },
+            ],
+            img: {
+                content: 'shark.jpg',
+                id: 'quiz-123_profile-0',
+                name: 'shark',
+                type: 'jpg'
+            }, color: '#ABDEE6'
+        },
+        {
+            name: result2,
+            id: 'profile-1',
+            texts: [
+                {
+                    ref: 'Característica Principal',
+                    value: 'Fazer junto.'
+                },
+                {
+                    ref: 'Traços Comportamentais',
+                    value: 'Sensível, relacionamentos, time, tradicional, contribuição, busca harmonia, delega autoridade.'
+                },
+                {
+                    ref: 'Pontos Fortes',
+                    value: 'Comunicação, mantém a harmonia, desenvolve e mantém a cultura, comunicação aberta.'
+                },
+                {
+                    ref: 'Pontos de Melhorias',
+                    value: 'Esconder conflitos, felicidade acima dos resultados, manipulação através de sentimentos. Abordagem mais direta, controle de tempo, controle emocional, mais foco, prazos realistas, trabalhar mais a razão.'
+                },
+                {
+                    ref: 'Motivações',
+                    value: 'Segurança, aceitação social, construir o consenso, reconhecimento da equipa, supervisão compreensiva, ambiente harmonico, trabalho em grupo.'
+                },
+                {
+                    ref: 'Valores',
+                    value: 'Felicidade e igualdade (pensa nos outros).'
+                },
+            ],
+            img: {
+                content: 'cat.jpg',
+                id: 'quiz-123_profile-1',
+                name: 'cat',
+                type: 'jpg'
+            },
+            color: '#FFD8BE'
+        },
+        {
+            name: result3,
+            id: 'profile-2',
+            texts: [
+                {
+                    ref: 'Característica Principal',
+                    value: 'Fazer diferente.'
+                },
+                {
+                    ref: 'Traços Comportamentais',
+                    value: 'Criativo, intuitivo, foco no futuro, distraído, curioso, informal e flexível.'
+                },
+                {
+                    ref: 'Pontos Fortes',
+                    value: 'Idealização, provocar mudanças, antecipar o futuro, criatividade.'
+                },
+                {
+                    ref: 'Pontos de Melhorias',
+                    value: 'Falta de atenção no presente, impaciência e rebeldia, defender o novo pelo novo, trabalho em equipa, verbalização.'
+                },
+                {
+                    ref: 'Motivações',
+                    value: 'Liberdade de expressão, ausência de controle rígido, oportunidade para delegar.'
+                },
+                {
+                    ref: 'Valores',
+                    value: 'Criatividade e liberdade (inspirar idéias).'
+                },
+            ],
+            img: {
+                content: 'eagle.jpg',
+                id: 'quiz-123_profile-2',
+                name: 'eagle',
+                type: 'jpg'
+            },
+            color: '#FFF7D2'
+        },
+        {
+            name: result4,
+            id: 'profile-3',
+            texts: [
+                {
+                    ref: 'Característica Principal',
+                    value: 'Fazer certo.'
+                },
+                {
+                    ref: 'Traços Comportamentais',
+                    value: 'Detalhista, organizado, estrategista, busca do conhecimento, pontual, conservador, previsivel.'
+                },
+                {
+                    ref: 'Pontos Fortes',
+                    value: 'Organização, passado presente e futuro, consistência, conformidade e qualidade, lealdade e segurança, regras e responsabilidades.'
+                },
+                {
+                    ref: 'Pontos de Melhorias',
+                    value: 'Dificuldade de se adaptar a mudanças, pode impedir o progresso, detalhista, estruturado e demasiadamente sistematizado. Melhorar o entusiasmo, flexibilidade, aceitação de outros estilos comportamentais, método de atalho.'
+                },
+                {
+                    ref: 'Motivações',
+                    value: 'Certeza, compreensão exata das regras, conhecimento específico, ausência de riscos e erros, vero produto acabado (começo, meio e fim).'
+                },
+                {
+                    ref: 'Valores',
+                    value: 'Ordem e controle.'
+                },
+            ],
+            img: {
+                content: 'wolf.jpg',
+                id: 'quiz-123_profile-3',
+                name: 'wolf',
+                type: 'jpg'
+            },
+            color: '#CBAACB'
+        },
     ],
     resultLayout: [],
     subResults: [
@@ -312,7 +455,12 @@ const quiz = {
         { name: 'Image' },
         { name: 'ChartPie', legend: true },
         { name: 'ChartRadar', radarOrder: radarOrder },
-        { name: 'Title', title: 'Preferência Cerebral' }
+        { name: 'Title', title: 'Característica Principal' },
+        { name: 'Title', title: 'Traços Comportamentais' },
+        { name: 'Title', title: 'Pontos Fortes' },
+        { name: 'Title', title: 'Pontos de Melhorias' },
+        { name: 'Title', title: 'Motivações' },
+        { name: 'Title', title: 'Valores' },
     ]
 }
 

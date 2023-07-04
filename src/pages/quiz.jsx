@@ -314,7 +314,7 @@ export default withRouter((props) => {
     }
 
     function saveResults() {
-        if (room && quiz && !getPlayer().results) {
+        if (room && quiz && getPlayer() && !getPlayer().results) {
             const player = getPlayer()
             let newPlayer
             if (player) {
