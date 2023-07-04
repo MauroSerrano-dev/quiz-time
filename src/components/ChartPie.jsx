@@ -4,12 +4,20 @@ import { easeInOut, motion } from 'framer-motion';
 import styles from '../styles/components/ChartPie.module.css'
 
 const RADIAN = Math.PI / 180;
-const renderCustomizedLabel = (event) => {
-    const { cx, cy, midAngle, innerRadius, outerRadius, percent, index } = event
+function renderCustomizedLabel(event) {
+    const {
+        cx,
+        cy,
+        midAngle,
+        innerRadius,
+        outerRadius,
+        percent,
+        index
+    } = event
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
+    
     return (
         <motion.text
             x={x}
@@ -26,7 +34,7 @@ const renderCustomizedLabel = (event) => {
         </motion.text>)
 }
 
-const CustomTooltip = (event, totalPoints) => {
+function CustomTooltip(event, totalPoints) {
     const { active, payload, label } = event
     if (active) {
         return (
@@ -46,7 +54,7 @@ const CustomTooltip = (event, totalPoints) => {
 }
 
 export default class ChartPie extends PureComponent {
-
+    
     render() {
         return (
             <div id={styles.container}>

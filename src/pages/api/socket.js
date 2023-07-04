@@ -73,7 +73,6 @@ export default function SocketHandler(req, res) {
 
     // Listen for 'saveResults' events emitted by the client
     socket.on('saveResults', (code) => {
-      console.log(code)
       io.emit(`saveResults${code}`)
     })
 

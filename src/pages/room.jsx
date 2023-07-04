@@ -13,6 +13,7 @@ import CloseFullscreenRoundedIcon from '@mui/icons-material/CloseFullscreenRound
 import OpenInFullRoundedIcon from '@mui/icons-material/OpenInFullRounded';
 import OptionInput from '@/components/OptionInput';
 import ChartPie from '@/components/ChartPie';
+import { lightBlue } from '@mui/material/colors';
 
 let socket;
 
@@ -97,10 +98,6 @@ export default withRouter((props) => {
     }, [session, code])
 
     useEffect(() => {
-        console.log(room, quiz)
-    }, [room, quiz])
-
-    useEffect(() => {
         if (room && room.quizInfo.id !== '' && !quiz) {
             async function getQuiz() {
                 let quizResponse
@@ -171,8 +168,12 @@ export default withRouter((props) => {
         })
     }
 
+    function getCharPieData() {
+        return Object.keys(room.players).map(key => room.players[key].results).reduce((acc, result) => acc.concat(result), [])
+    }
+
     return (
-        <div className='size100' onClick={() => console.log(room, quiz)}>
+        <div className='size100'>
             {session === null
                 ? <NoSessionPage signIn={signIn} />
                 : <div id={styles.container}>
@@ -384,11 +385,14 @@ export default withRouter((props) => {
                                         {room.state === 'results' &&
                                             <div>
                                                 <h2>Estatísticas</h2>
-                                                <div className='flex center fillWidth'>
-                                                    <ChartPie
-                                                        data={Object.keys(room.players).map(key => room.players[key].results).reduce((acc, result) => acc.concat(result), [])}
-                                                        totalPoints={Object.keys(room.players).length}
-                                                    />
+                                                <div className='flex row'>
+                                                    <h3>Total de Jogadores: {room.players ? Object.keys(room.players).length : 0}</h3>
+                                                    <div className='flex center fillWidth'>
+                                                        <ChartPie
+                                                            data={getCharPieData()}
+                                                            totalPoints={Object.keys(room.players).length}
+                                                        />
+                                                    </div>
                                                 </div>
                                             </div>
                                         }

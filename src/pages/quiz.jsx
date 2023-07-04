@@ -177,7 +177,6 @@ export default withRouter((props) => {
 
     function socketsListeners(prevRoom) {
         socket.on(`saveResults${code}`, () => {
-            console.log('recebido')
             saveResults()
         })
         socket.on(`updateFieldsRoom${code}`, (att) => {
@@ -337,8 +336,7 @@ export default withRouter((props) => {
                         .sort((a, b) => b.points - a.points).reduce((acc, result) => acc.length === 0 || acc[0].points === result.points ? [...acc, result] : acc, [])
                 }
             }
-            console.log('player', player)
-            console.log('newPlayer', newPlayer)
+            console.log(newPlayer)
             socket.emit("updatePlayer", newPlayer, code)
         }
     }

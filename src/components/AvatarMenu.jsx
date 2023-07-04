@@ -44,7 +44,7 @@ export default function AvatarMenu(props) {
   return (
     <React.Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-        <Tooltip title="Account settings">
+        <Tooltip title="Menu">
           <IconButton
             onClick={handleClick}
             size="small"
@@ -94,7 +94,7 @@ export default function AvatarMenu(props) {
               <ListItemIcon>
                 <AccountCircleRoundedIcon fontSize="medium" />
               </ListItemIcon>
-              Profile
+              Perfil
             </MenuItem>
           </a>
         </Link>
@@ -102,7 +102,7 @@ export default function AvatarMenu(props) {
           <ListItemIcon>
             <ContactSupportIcon fontSize="medium" />
           </ListItemIcon>
-          Quiz List
+          Meus Quizzes
         </MenuItem>
         <Divider />
         <Link legacyBehavior href={'/settings'}>
@@ -111,7 +111,7 @@ export default function AvatarMenu(props) {
               <ListItemIcon>
                 <Settings fontSize="medium" />
               </ListItemIcon>
-              Settings
+              Configurações
             </MenuItem>
           </a>
         </Link>
@@ -121,7 +121,7 @@ export default function AvatarMenu(props) {
               <ListItemIcon>
                 <SupportAgentIcon fontSize="medium" />
               </ListItemIcon>
-              Support
+              Suporte
             </MenuItem>
           </a>
         </Link>
@@ -129,7 +129,7 @@ export default function AvatarMenu(props) {
           <ListItemIcon>
             <Logout fontSize="medium" />
           </ListItemIcon>
-          Logout
+          Sair
         </MenuItem>
       </Menu>
     </React.Fragment>
