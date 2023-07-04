@@ -28,7 +28,8 @@ const container = {
 export default function PlayersList(props) {
     const {
         players,
-        totalQuestions
+        totalQuestions,
+        noProgressBar,
     } = props
     const [open, setOpen] = useState(false)
     const [items, setItems] = useState(players)
@@ -63,14 +64,14 @@ export default function PlayersList(props) {
     return (
         <div
             id={styles.container}
-            style={{ right: open ? `${ITEM_SIZE.width * 0.56}px` : `-${ITEM_SIZE.width * 0.56}px` }}
+            style={{ right: open ? `${ITEM_SIZE.width * 0.54}px` : `-${ITEM_SIZE.width * 0.6}px` }}
         >
             <div
                 id={styles.tabContainer}
                 onClick={handleTabClick}
                 style={open ? styleOpen : styleClose}
             >
-                <p>Players</p>
+                <p>{players.length} {players.length === 1 ? 'Player' : 'Players'}</p>
             </div>
             <div id={styles.playersContainer} style={{ paddingTop: `${LIST_SIZE.paddingTop}px` }}>
                 <motion.div
@@ -85,7 +86,7 @@ export default function PlayersList(props) {
                             key={`Player: ${i}`}
                             player={player}
                             progress={
-                                totalQuestions
+                                totalQuestions && !noProgressBar
                                     ? (Object.keys(player.answers ? player.answers : {}).length / totalQuestions) * 100
                                     : undefined
                             }

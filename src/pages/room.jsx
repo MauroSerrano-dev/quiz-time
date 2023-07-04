@@ -96,6 +96,10 @@ export default withRouter((props) => {
     }, [session, code])
 
     useEffect(() => {
+        console.log(room, quiz)
+    }, [room, quiz])
+
+    useEffect(() => {
         if (room && room.quizInfo.id !== '' && !quiz) {
             async function getQuiz() {
                 let quizResponse
@@ -232,14 +236,6 @@ export default withRouter((props) => {
                                                         <h2>{process.env.NEXT_PUBLIC_SITE_DOMAIN}/quiz?code={code}</h2>
                                                     </a>
                                                 </div>
-                                                <a href={`${process.env.NEXT_PUBLIC_SITE_URL}/controller?code=${code}`} target='_blank'>
-                                                    <Button
-                                                        variant="outlined"
-                                                        endIcon={<SportsEsportsIcon />}
-                                                    >
-                                                        Controller
-                                                    </Button>
-                                                </a>
                                             </motion.div>
                                         }
                                         {room.state === 'active' && quiz &&
@@ -393,6 +389,7 @@ export default withRouter((props) => {
                                             <PlayersList
                                                 players={room.players === undefined ? [] : Object.keys(room.players).map(index => room.players[index])}
                                                 totalQuestions={room.quizInfo.totalQuestions}
+                                                noProgressBar={room.control}
                                             />
                                         }
                                     </div>

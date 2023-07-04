@@ -21,7 +21,6 @@ export default withRouter((props) => {
     const { code } = props.router.query
 
     useEffect(() => {
-
         async function getAllQuizzesInfo() {
             await getAllQuizzesStandardInfo()
                 .then(response => response.json())
@@ -166,23 +165,11 @@ export default withRouter((props) => {
     }
 
     function handleCancelQuiz() {
+        console.log('cancel', room)
         socket.emit("updateRoom", {
             ...room,
             state: 'disable',
             currentQuestion: 0,
-            quizInfo: {
-                id: '',
-                name: '',
-                type: '',
-                totalQuestions: 0,
-                category: '',
-                creator: {
-                    id: '',
-                    email: '',
-                    uui: '',
-                },
-                mode: '',
-            }
         })
     }
 
