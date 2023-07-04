@@ -10,7 +10,7 @@ const { v4: uuidv4 } = require('uuid');
 let socket;
 
 const GAME_MODES = [
-    { name: 'Profile' },
+    { name: 'Perfil Comportamental' },
     { name: 'Right or Wrong' },
     { name: "Who's Most Likely To" },
 ]
