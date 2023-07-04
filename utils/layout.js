@@ -73,7 +73,9 @@ function insertLayout(item, results, allResults, radarData) {
                 <Box id={styles.itemTitle} className={`${styles.layoutItem} flex start`}>
                     <h2>{item.title}</h2>
                     {results.map((result, i) =>
-                        <p key={i}>{result.texts.filter(text => text.ref === item.title)[0].value}</p>
+                        <p key={i}>
+                            {result.texts.filter(text => text.ref === item.title)[0].value}
+                        </p>
                     )}
                 </Box>
         }
