@@ -89,7 +89,7 @@ export default withRouter((props) => {
                         if (startRoom.players && Object.keys(startRoom.players).some(playerId => playerId === session.user.id)) {
                             if (startRoom.players[session.user.id].results
                                 && startRoom.players[session.user.id].results.length > 0
-                                && startRoom.players[session.user.id].results[0].img.content === ''
+                                && startRoom.players[session.user.id].results[0].img.content === undefined
                             ) {
                                 console.log('b', startRoom)
                                 startRoom.players[session.user.id].results.forEach(async (result) => {
@@ -123,7 +123,7 @@ export default withRouter((props) => {
                         if (roomAtt.players && roomAtt.players[session.user.id] !== undefined) {
                             if (roomAtt.players[session.user.id].results
                                 && roomAtt.players[session.user.id].results.length > 0
-                                && roomAtt.players[session.user.id].results[0].img.content === ''
+                                && roomAtt.players[session.user.id].results[0].img.content === undefined
                             ) {
                                 console.log('c', roomAtt)
                                 roomAtt.players[session.user.id].results.forEach(async (result) => {
@@ -341,7 +341,7 @@ export default withRouter((props) => {
                         ...result,
                         img: {
                             ...result.img,
-                            content: '',
+                            content: undefined,
                         },
                         points: player.answers ?
                             Object.keys(player.answers)
