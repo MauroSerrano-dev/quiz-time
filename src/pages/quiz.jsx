@@ -1,5 +1,5 @@
 import styles from '../styles/quiz.module.css'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { withRouter } from 'next/router'
 import io from "socket.io-client"
 import { motion } from "framer-motion"
@@ -39,8 +39,8 @@ export default withRouter((props) => {
     const { session, signIn } = props
     const { code } = props.router.query
 
-    const [quiz, setQuiz] = useState()
     const [room, setRoom] = useState()
+    const [quiz, setQuiz] = useState()
     const [dots, setDots] = useState('')
     const [joined, setJoined] = useState(false)
     const [optionSelected, setOptionSelected] = useState()
@@ -52,6 +52,9 @@ export default withRouter((props) => {
     const [locked, setLocked] = useState(false)
     const [unlockCode, setUnlockCode] = useState('')
     const [isMobile, setIsMobile] = useState(false)
+
+    const getPlayerResultsRef = useRef(getPlayerResults);
+    const roomRef = useRef(room);
 
     useEffect(() => {
         const checkIsMobile = () => {
@@ -76,8 +79,8 @@ export default withRouter((props) => {
     }, [session, code])
 
     useEffect(() => {
-        if (room && socket !== undefined)
-            socketsListeners(room)
+        getPlayerResultsRef.current = getPlayerResults
+        roomRef.current = room
     }, [room])
 
     useEffect(() => {
@@ -172,37 +175,36 @@ export default withRouter((props) => {
                 }
                 setRoom(startRoom)
             }
-        })
-    }
+            socket.on(`saveResults${code}`, () => {
+                const newPlayer = getPlayerResultsRef.current()
+                console.log('ooo', newPlayer)
+                socket.emit("updatePlayer", newPlayer, code)
+            })
+            socket.on(`updateFieldsRoom${code}`, (att) => {
+                const { roomAtt } = att
+                if (roomAtt.state !== roomRef.current.state) {
+                    setTimeout(() =>
+                        setQuestionTransition(false),
+                        TRANSITION_DURATION
+                    )
+                }
+                if (roomAtt.players && roomAtt.players[session.user.id] !== undefined)
+                    setJoined(true)
+                else
+                    setJoined(false)
 
-    function socketsListeners(prevRoom) {
-        socket.on(`saveResults${code}`, () => {
-            saveResults()
-        })
-        socket.on(`updateFieldsRoom${code}`, (att) => {
-            const { roomAtt } = att
-            if (roomAtt.state !== prevRoom.state) {
-                setTimeout(() =>
-                    setQuestionTransition(false),
-                    TRANSITION_DURATION
-                )
-            }
-            if (roomAtt.players && roomAtt.players[session.user.id] !== undefined)
-                setJoined(true)
-            else
-                setJoined(false)
-
-            if (false) {
-                setQuestionTransition(true)
-                setTimeout(() => {
+                if (false) {
+                    setQuestionTransition(true)
+                    setTimeout(() => {
+                        setRoom(roomAtt)
+                        setQuestionTransition(false)
+                    }, TRANSITION_DURATION)
+                }
+                else {
+                    turnOffTransition()
                     setRoom(roomAtt)
-                    setQuestionTransition(false)
-                }, TRANSITION_DURATION)
-            }
-            else {
-                turnOffTransition()
-                setRoom(roomAtt)
-            }
+                }
+            })
         })
     }
 
@@ -313,7 +315,8 @@ export default withRouter((props) => {
         saveResults()
     }
 
-    function saveResults() {
+    function getPlayerResults() {
+        console.log('aaaaaaaaaaaaaaa')
         if (room && quiz && getPlayer() && !getPlayer().results) {
             const player = getPlayer()
             let newPlayer
@@ -336,8 +339,7 @@ export default withRouter((props) => {
                         .sort((a, b) => b.points - a.points).reduce((acc, result) => acc.length === 0 || acc[0].points === result.points ? [...acc, result] : acc, [])
                 }
             }
-            console.log(newPlayer)
-            socket.emit("updatePlayer", newPlayer, code)
+            return newPlayer
         }
     }
 

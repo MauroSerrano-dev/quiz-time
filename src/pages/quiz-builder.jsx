@@ -10,9 +10,9 @@ const { v4: uuidv4 } = require('uuid');
 let socket;
 
 const GAME_MODES = [
-    { name: 'Perfil Comportamental' },
-    { name: 'Right or Wrong' },
-    { name: "Who's Most Likely To" },
+    { name: 'Perfil Comportamental', value: 'profile' },
+    { name: 'Right or Wrong', value: 'rightOrWorng'  },
+    { name: "Who's Most Likely To", value: 'who'  },
 ]
 
 const INICIAL_ACTION = {
@@ -229,14 +229,14 @@ export default function QuizBuilder(props) {
                                     <div
                                         key={`Game Mode: ${i}`}
                                         className={styles.gameOption}
-                                        onClick={() => handleSelectMode(gMode.name)}
+                                        onClick={() => handleSelectMode(gMode.value)}
                                     >
                                         <h2>{gMode.name}</h2>
                                     </div>
                                 )}
                             </div>
                         </div>
-                        : quiz.mode === 'Profile' &&
+                        : quiz.mode === 'profile' &&
                         <ProfileEditor
                             session={session}
                             quiz={quiz}
