@@ -125,6 +125,7 @@ export default withRouter((props) => {
                                 && roomAtt.players[session.user.id].results.length > 0
                                 && roomAtt.players[session.user.id].results[0].img.content === ''
                             ) {
+                                console.log('c', roomAtt)
                                 roomAtt.players[session.user.id].results.forEach(async (result) => {
                                     result.img = await getImage(roomAtt.quizInfo.creator.uui, result.img.id)
                                 })
