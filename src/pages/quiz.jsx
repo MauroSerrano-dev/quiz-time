@@ -53,7 +53,7 @@ export default withRouter((props) => {
     const [unlockCode, setUnlockCode] = useState('')
     const [isMobile, setIsMobile] = useState(false)
 
-    const getPlayerResultsRef = useRef(getPlayerResults);
+    const setPlayerResultsRef = useRef(setPlayerResults);
     const roomRef = useRef(room);
 
     useEffect(() => {
@@ -99,9 +99,8 @@ export default withRouter((props) => {
                         }
                         setRoom(startRoom)
                     }
-                    socket.on(`saveResults${code}`, async () => {
-                        const newPlayer = await getPlayerResultsRef.current()
-                        socket.emit("updatePlayer", newPlayer, code)
+                    socket.on(`saveResults${code}`, () => {
+                        setPlayerResultsRef.current()
                     })
                     socket.on(`updateFieldsRoom${code}`, (att) => {
                         const { roomAtt } = att
@@ -135,7 +134,7 @@ export default withRouter((props) => {
     }, [session, code])
 
     useEffect(() => {
-        getPlayerResultsRef.current = getPlayerResults
+        setPlayerResultsRef.current = setPlayerResults
         roomRef.current = room
     }, [room])
 
@@ -310,7 +309,7 @@ export default withRouter((props) => {
         setLocked(false)
     }
 
-    async function getPlayerResults() {
+    async function setPlayerResults() {
         if (room && quiz && getPlayer() && !getPlayer().results) {
             const player = getPlayer()
             let newPlayer
@@ -334,10 +333,12 @@ export default withRouter((props) => {
                                     , 0)
                             : 0
                     }))
-                        .sort((a, b) => b.points - a.points).reduce((acc, result) => acc.length === 0 || acc[0].points === result.points ? [...acc, result] : acc, [])
+                        .sort((a, b) => b.points - a.points).reduce((acc, result) => acc.length === 0 || acc[0].points === result.points
+                            ? [...acc, result]
+                            : acc, [])
                 }
             }
-            return newPlayer
+            socket.emit("updatePlayer", newPlayer, code)
         }
     }
 
