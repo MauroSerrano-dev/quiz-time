@@ -222,18 +222,18 @@ export default withRouter((props) => {
 
     function answerControl(option) {
         const player = getPlayer()
-        const playerResults = getPlayerResults(player)
         if (optionSelected === option) {
             setOptionSelected()
-            delete playerResults.answers[room.currentQuestion]
+            delete player.answers[room.currentQuestion]
+            const playerResults = getPlayerResults(player)
             socket.emit("updatePlayer", playerResults, code)
         }
         else {
             setOptionSelected(option)
             const attPlayer = {
-                ...playerResults,
+                ...player,
                 answers: {
-                    ...playerResults.answers,
+                    ...player.answers,
                     [room.currentQuestion]: {
                         ...quiz.questions[room.currentQuestion].options[option],
                         questionIndex: room.currentQuestion,
@@ -241,7 +241,8 @@ export default withRouter((props) => {
                     }
                 }
             }
-            socket.emit("updatePlayer", attPlayer, code)
+            const playerResults = getPlayerResults(attPlayer)
+            socket.emit("updatePlayer", playerResults, code)
         }
     }
 
@@ -311,7 +312,7 @@ export default withRouter((props) => {
     }
 
     function getPlayerResults(player) {
-        if (room && quiz && getPlayer() && !getPlayer().results) {
+        if (room && quiz && getPlayer() && !getPlayer().results) { 
             let newPlayer
             if (player) {
                 newPlayer = {
@@ -338,6 +339,7 @@ export default withRouter((props) => {
                             : acc, [])
                 }
             }
+            console.log('player', player)
             console.log('newPlayer', newPlayer)
             return newPlayer
         }
