@@ -100,7 +100,7 @@ export default withRouter((props) => {
                         setRoom(startRoom)
                     }
                     socket.on(`saveResults${code}`, () => {
-                        getPlayerResultsRef.current()
+                        /* getPlayerResultsRef.current() */
                     })
                     socket.on(`updateFieldsRoom${code}`, (att) => {
                         const { roomAtt } = att
