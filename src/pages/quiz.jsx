@@ -92,8 +92,8 @@ export default withRouter((props) => {
                                 && startRoom.players[session.user.id].results[0].img.content === undefined
                             ) {
                                 console.log('b', startRoom)
-                                startRoom.players[session.user.id].results.forEach(async (result) => {
-                                    result.img = await getImage(startRoom.quizInfo.creator.uui, result.img.id)
+                                startRoom.players[session.user.id].results.forEach(result => {
+                                    result.img = quiz.results.filter(quizRes => quizRes.id === result.id)[0].img
                                 })
                             }
                             setJoined(true)
@@ -123,11 +123,11 @@ export default withRouter((props) => {
                         if (roomAtt.players && roomAtt.players[session.user.id] !== undefined) {
                             if (roomAtt.players[session.user.id].results
                                 && roomAtt.players[session.user.id].results.length > 0
-                                && roomAtt.players[session.user.id].results[0].img.content === undefined
+                                && roomAtt.players[session.user.id].results[0].img === undefined
                             ) {
                                 console.log('c', roomAtt)
-                                roomAtt.players[session.user.id].results.forEach(async (result) => {
-                                    result.img = await getImage(roomAtt.quizInfo.creator.uui, result.img.id)
+                                roomAtt.players[session.user.id].results.forEach(result => {
+                                    result.img = quiz.results.filter(quizRes => quizRes.id === result.id)[0].img
                                 })
                             }
                             setJoined(true)
