@@ -222,27 +222,29 @@ export default withRouter((props) => {
 
     function answerControl(option) {
         const player = getPlayer()
-        if (optionSelected === option) {
-            setOptionSelected()
-            delete player.answers[room.currentQuestion]
-            const playerResults = getPlayerResults(player)
-            socket.emit("updatePlayer", playerResults, code)
-        }
-        else {
-            setOptionSelected(option)
-            const attPlayer = {
-                ...player,
-                answers: {
-                    ...player.answers,
-                    [room.currentQuestion]: {
-                        ...quiz.questions[room.currentQuestion].options[option],
-                        questionIndex: room.currentQuestion,
-                        optionIndex: option,
+        if (player) {
+            if (optionSelected === option) {
+                setOptionSelected()
+                delete player.answers[room.currentQuestion]
+                const playerResults = getPlayerResults(player)
+                socket.emit("updatePlayer", playerResults, code)
+            }
+            else {
+                setOptionSelected(option)
+                const attPlayer = {
+                    ...player,
+                    answers: {
+                        ...player.answers,
+                        [room.currentQuestion]: {
+                            ...quiz.questions[room.currentQuestion].options[option],
+                            questionIndex: room.currentQuestion,
+                            optionIndex: option,
+                        }
                     }
                 }
+                const playerResults = getPlayerResults(attPlayer)
+                socket.emit("updatePlayer", playerResults, code)
             }
-            const playerResults = getPlayerResults(attPlayer)
-            socket.emit("updatePlayer", playerResults, code)
         }
     }
 
@@ -312,7 +314,7 @@ export default withRouter((props) => {
     }
 
     function getPlayerResults(player) {
-        if (room && quiz && getPlayer() && !getPlayer().results) { 
+        if (room && quiz && getPlayer() && !getPlayer().results) {
             let newPlayer
             if (player) {
                 newPlayer = {
