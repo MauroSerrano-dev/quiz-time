@@ -117,7 +117,7 @@ export default withRouter((props) => {
                         else
                             setJoined(false)
 
-                        if (false) {
+                        if (roomAtt.control) {
                             setQuestionTransition(true)
                             setTimeout(() => {
                                 setRoom(roomAtt)
@@ -131,7 +131,7 @@ export default withRouter((props) => {
                     })
                 })
             }
-            
+
             socketInitializer()
         }
     }, [session, code])
