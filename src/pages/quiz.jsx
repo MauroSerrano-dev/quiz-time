@@ -53,7 +53,7 @@ export default withRouter((props) => {
     const [unlockCode, setUnlockCode] = useState('')
     const [isMobile, setIsMobile] = useState(false)
 
-    const setPlayerResultsRef = useRef(setPlayerResults);
+    const getPlayerResultsRef = useRef(getPlayerResults);
     const roomRef = useRef(room);
 
     useEffect(() => {
@@ -100,7 +100,7 @@ export default withRouter((props) => {
                         setRoom(startRoom)
                     }
                     socket.on(`saveResults${code}`, () => {
-                        setPlayerResultsRef.current()
+                        getPlayerResultsRef.current()
                     })
                     socket.on(`updateFieldsRoom${code}`, (att) => {
                         const { roomAtt } = att
@@ -134,7 +134,7 @@ export default withRouter((props) => {
     }, [session, code])
 
     useEffect(() => {
-        setPlayerResultsRef.current = setPlayerResults
+        getPlayerResultsRef.current = getPlayerResults
         roomRef.current = room
     }, [room])
 
@@ -222,17 +222,18 @@ export default withRouter((props) => {
 
     function answerControl(option) {
         const player = getPlayer()
+        const playerResults = getPlayerResults(player)
         if (optionSelected === option) {
             setOptionSelected()
-            delete player.answers[room.currentQuestion]
-            socket.emit("updatePlayer", player, code)
+            delete playerResults.answers[room.currentQuestion]
+            socket.emit("updatePlayer", playerResults, code)
         }
         else {
             setOptionSelected(option)
             const attPlayer = {
-                ...player,
+                ...playerResults,
                 answers: {
-                    ...player.answers,
+                    ...playerResults.answers,
                     [room.currentQuestion]: {
                         ...quiz.questions[room.currentQuestion].options[option],
                         questionIndex: room.currentQuestion,
@@ -309,9 +310,8 @@ export default withRouter((props) => {
         setLocked(false)
     }
 
-    async function setPlayerResults() {
+    async function getPlayerResults(player) {
         if (room && quiz && getPlayer() && !getPlayer().results) {
-            const player = getPlayer()
             let newPlayer
             if (player) {
                 newPlayer = {
@@ -338,7 +338,7 @@ export default withRouter((props) => {
                             : acc, [])
                 }
             }
-            socket.emit("updatePlayer", newPlayer, code)
+            return newPlayer
         }
     }
 
