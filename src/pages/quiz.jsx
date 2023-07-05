@@ -3,12 +3,12 @@ import { useEffect, useRef, useState } from 'react'
 import { withRouter } from 'next/router'
 import io from "socket.io-client"
 import { motion } from "framer-motion"
-import { Button, Box, Grid, TextField } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import { getLayout } from '../../utils/layout'
 import { showErrorToast } from '../../utils/toasts'
 import NoSessionPage from '@/components/NoSessionPage'
 import OptionInput from '@/components/OptionInput'
-import { getImage, getStandardQuiz, getUserQuiz, savePlayerResults } from '../../utils/api-caller'
+import { getImage, getStandardQuiz, getUserQuiz } from '../../utils/api-caller'
 
 let socket
 
@@ -101,8 +101,7 @@ export default withRouter((props) => {
                     }
                     socket.on(`saveResults${code}`, () => {
                         const newPlayer = getPlayerResultsRef.current()
-                        console.log('ooo', newPlayer)
-                        savePlayerResults(newPlayer, code)
+                        socket.emit("updatePlayer", newPlayer, code)
                     })
                     socket.on(`updateFieldsRoom${code}`, (att) => {
                         const { roomAtt } = att
@@ -112,8 +111,17 @@ export default withRouter((props) => {
                                 TRANSITION_DURATION
                             )
                         }
-                        if (roomAtt.players && roomAtt.players[session.user.id] !== undefined)
+                        if (roomAtt.players && roomAtt.players[session.user.id] !== undefined) {
                             setJoined(true)
+                            if (roomAtt.players[session.user.id].results
+                                && roomAtt.players[session.user.id].results.length > 0
+                                && roomAtt.players[session.user.id].results[0].img.content === ''
+                            ) {
+                                roomAtt.players[session.user.id].results.forEach(async (result) => {
+                                    result.img = await getImage(roomAtt.quizInfo.creator.uui, result.img.id)
+                                })
+                            }
+                        }
                         else
                             setJoined(false)
 
@@ -312,12 +320,7 @@ export default withRouter((props) => {
         setLocked(false)
     }
 
-    function handleResults() {
-        saveResults()
-    }
-
     function getPlayerResults() {
-        console.log('aaaaaaaaaaaaaaa')
         if (room && quiz && getPlayer() && !getPlayer().results) {
             const player = getPlayer()
             let newPlayer
@@ -326,6 +329,10 @@ export default withRouter((props) => {
                     ...player,
                     results: quiz.results.map(result => ({
                         ...result,
+                        img: {
+                            ...result.img,
+                            content: '',
+                        },
                         points: player.answers ?
                             Object.keys(player.answers)
                                 .reduce((acc, key) =>

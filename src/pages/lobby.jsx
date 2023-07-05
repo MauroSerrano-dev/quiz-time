@@ -147,9 +147,6 @@ export default function Lobby(props) {
         }
 
         await fetch('/api/rooms', options)
-            .then(response => response.json())
-            .then(response => console.log(response))
-            .catch(err => console.error(err))
         Router.push(`/controller?code=${newRoom.code}`)
     }
 

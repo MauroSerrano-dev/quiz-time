@@ -44,15 +44,3 @@ export function getAllQuizzesStandardInfo() {
     }
     return fetch("/api/quizzesStandard", options)
 }
-
-export function savePlayerResults(newPlayer, code) {
-    const options = {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: {
-            newPlayer: newPlayer,
-            code: code,
-        },
-    }
-    return fetch("/api/player", options)
-}
