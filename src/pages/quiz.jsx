@@ -91,6 +91,7 @@ export default withRouter((props) => {
                                 && startRoom.players[session.user.id].results.length > 0
                                 && startRoom.players[session.user.id].results[0].img.content === ''
                             ) {
+                                console.log('b', startRoom)
                                 startRoom.players[session.user.id].results.forEach(async (result) => {
                                     result.img = await getImage(startRoom.quizInfo.creator.uui, result.img.id)
                                 })
@@ -133,7 +134,7 @@ export default withRouter((props) => {
                         else
                             setJoined(false)
 
-                        if (roomAtt.control) {
+                        if (false/* roomAtt.control */) {
                             setQuestionTransition(true)
                             setTimeout(() => {
                                 setRoom(roomAtt)
