@@ -314,37 +314,34 @@ export default withRouter((props) => {
     }
 
     function getPlayerResults(player) {
-        if (room && quiz && getPlayer() && !getPlayer().results) {
-            let newPlayer
-            if (player) {
-                newPlayer = {
-                    ...player,
-                    results: quiz.results.map(result => ({
-                        ...result,
-                        img: {
-                            ...result.img,
-                            content: '',
-                        },
-                        points: player.answers ?
-                            Object.keys(player.answers)
-                                .reduce((acc, key) =>
-                                    acc + player.answers[key].actions.reduce((accumulator, action) =>
-                                        action.profile === result.name
-                                            ? accumulator + action.points
-                                            : accumulator
-                                        , 0)
+        let newPlayer
+        if (room && quiz && player && player.answers) {
+            console.log(player)
+            newPlayer = {
+                ...player,
+                results: quiz.results.map(result => ({
+                    ...result,
+                    img: {
+                        ...result.img,
+                        content: '',
+                    },
+                    points: player.answers ?
+                        Object.keys(player.answers)
+                            .reduce((acc, key) =>
+                                acc + player.answers[key].actions.reduce((accumulator, action) =>
+                                    action.profile === result.name
+                                        ? accumulator + action.points
+                                        : accumulator
                                     , 0)
-                            : 0
-                    }))
-                        .sort((a, b) => b.points - a.points).reduce((acc, result) => acc.length === 0 || acc[0].points === result.points
-                            ? [...acc, result]
-                            : acc, [])
-                }
+                                , 0)
+                        : 0
+                }))
+                    .sort((a, b) => b.points - a.points).reduce((acc, result) => acc.length === 0 || acc[0].points === result.points
+                        ? [...acc, result]
+                        : acc, [])
             }
-            console.log('player', player)
-            console.log('newPlayer', newPlayer)
-            return newPlayer
         }
+        return newPlayer
     }
 
     function getAllResults() {
