@@ -99,8 +99,8 @@ export default withRouter((props) => {
                         }
                         setRoom(startRoom)
                     }
-                    socket.on(`saveResults${code}`, () => {
-                        const newPlayer = getPlayerResultsRef.current()
+                    socket.on(`saveResults${code}`, async () => {
+                        const newPlayer = await getPlayerResultsRef.current()
                         socket.emit("updatePlayer", newPlayer, code)
                     })
                     socket.on(`updateFieldsRoom${code}`, (att) => {
@@ -310,7 +310,7 @@ export default withRouter((props) => {
         setLocked(false)
     }
 
-    function getPlayerResults() {
+    async function getPlayerResults() {
         if (room && quiz && getPlayer() && !getPlayer().results) {
             const player = getPlayer()
             let newPlayer
