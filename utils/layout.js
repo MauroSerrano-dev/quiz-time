@@ -22,7 +22,7 @@ const IMG_SIZES = new Map([
     [16, 25],
 ])
 
-function insertLayout(item, results, allResults, radarData) {
+function insertLayout(item, results, allResults, radarData, quizResults) {
     switch (item.name) {
         case 'Image': return {
             name: 'Image',
@@ -40,7 +40,7 @@ function insertLayout(item, results, allResults, radarData) {
                                 key={`Result: ${i}`}
                             >
                                 <div className={styles.resultImgContainer}>
-                                    <img src={result.img.content} alt={result.img.name} title={result.img.name} />
+                                    <img src={quizResults.filter(quizResult => quizResult.id === result.id)[0].img.content} alt={result.img.name} title={result.img.name} />
                                 </div>
                                 <h2>{result.name}</h2>
                             </div>
@@ -83,10 +83,10 @@ function insertLayout(item, results, allResults, radarData) {
     }
 }
 
-function getLayout(items, results, allResults, radarData) {
+function getLayout(items, results, allResults, radarData, quizResults) {
     const layout = []
     for (let i = 0; i < items.length; i++) {
-        layout.push(insertLayout(items[i], results, allResults, radarData))
+        layout.push(insertLayout(items[i], results, allResults, radarData, quizResults))
     }
     return layout
 }

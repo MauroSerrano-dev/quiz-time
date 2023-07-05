@@ -87,15 +87,6 @@ export default withRouter((props) => {
                 socket.on(`sendRoom${code}`, (startRoom) => {
                     if (startRoom) {
                         if (startRoom.players && Object.keys(startRoom.players).some(playerId => playerId === session.user.id)) {
-                            if (startRoom.players[session.user.id].results
-                                && startRoom.players[session.user.id].results.length > 0
-                                && startRoom.players[session.user.id].results[0].img.content === undefined
-                            ) {
-                                console.log('b', startRoom)
-                                startRoom.players[session.user.id].results.forEach(result => {
-                                    result.img = quiz.results.filter(quizRes => quizRes.id === result.id)[0].img
-                                })
-                            }
                             setJoined(true)
                             if (Object.keys(
                                 startRoom.players[session.user.id].answers === undefined
@@ -120,21 +111,10 @@ export default withRouter((props) => {
                                 TRANSITION_DURATION
                             )
                         }
-                        if (roomAtt.players && roomAtt.players[session.user.id] !== undefined) {
-                            if (roomAtt.players[session.user.id].results
-                                && roomAtt.players[session.user.id].results.length > 0
-                                && roomAtt.players[session.user.id].results[0].img === undefined
-                            ) {
-                                console.log('c', roomAtt)
-                                roomAtt.players[session.user.id].results.forEach(result => {
-                                    result.img = quiz.results.filter(quizRes => quizRes.id === result.id)[0].img
-                                })
-                            }
+                        if (roomAtt.players && roomAtt.players[session.user.id] !== undefined)
                             setJoined(true)
-                        }
                         else
                             setJoined(false)
-
                         if (false/* roomAtt.control */) {
                             setQuestionTransition(true)
                             setTimeout(() => {
@@ -214,7 +194,7 @@ export default withRouter((props) => {
                 : []
             setAllResults(myAllResults)
             setAllSubResults(myAllSubResults)
-            setLayout(getLayout(quiz.layout, getPlayer().results, myAllResults, myRadarData))
+            setLayout(getLayout(quiz.layout, getPlayer().results, myAllResults, myRadarData, quiz.results))
         }
     }, [room, quiz])
 
@@ -553,7 +533,6 @@ export default withRouter((props) => {
                                 }
                                 {quiz && getPlayer() && (room.state === 'results' || getPlayer().state === 'result') && getPlayer().results && joined &&
                                     <motion.div
-
                                         id={styles.resultContainer}
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
