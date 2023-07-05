@@ -78,6 +78,7 @@ export default function SocketHandler(req, res) {
 
     // Listen for 'updatePlayer' events emitted by the client
     socket.on('updatePlayer', async (attPlayer, code) => {
+      console.log('aaaaaaaaaaaaaaaa', attPlayer, code)
       const newExpireAt = new Date()
       newExpireAt.setSeconds(newExpireAt.getSeconds() + 86400)
 
