@@ -321,7 +321,7 @@ export default withRouter((props) => {
                         ...result,
                         img: {
                             ...result.img,
-                            content: undefined,
+                            content: '',
                         },
                         points: player.answers ?
                             Object.keys(player.answers)
