@@ -87,6 +87,14 @@ export default withRouter((props) => {
                 socket.on(`sendRoom${code}`, (startRoom) => {
                     if (startRoom) {
                         if (startRoom.players && Object.keys(startRoom.players).some(playerId => playerId === session.user.id)) {
+                            if (startRoom.players[session.user.id].results
+                                && startRoom.players[session.user.id].results.length > 0
+                                && startRoom.players[session.user.id].results[0].img.content === ''
+                            ) {
+                                startRoom.players[session.user.id].results.forEach(async (result) => {
+                                    result.img = await getImage(startRoom.quizInfo.creator.uui, result.img.id)
+                                })
+                            }
                             setJoined(true)
                             if (Object.keys(
                                 startRoom.players[session.user.id].answers === undefined
@@ -112,7 +120,6 @@ export default withRouter((props) => {
                             )
                         }
                         if (roomAtt.players && roomAtt.players[session.user.id] !== undefined) {
-                            setJoined(true)
                             if (roomAtt.players[session.user.id].results
                                 && roomAtt.players[session.user.id].results.length > 0
                                 && roomAtt.players[session.user.id].results[0].img.content === ''
@@ -121,6 +128,7 @@ export default withRouter((props) => {
                                     result.img = await getImage(roomAtt.quizInfo.creator.uui, result.img.id)
                                 })
                             }
+                            setJoined(true)
                         }
                         else
                             setJoined(false)
