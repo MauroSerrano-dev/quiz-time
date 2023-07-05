@@ -399,17 +399,19 @@ export default withRouter((props) => {
                                                 </div>
                                             </div>
                                         }
-                                        <div
-                                            className={styles.answersView}
-                                            style={{
-                                                '--text-color': Object.keys(room.players).filter(playerId => room.players[playerId].answers && room.players[playerId].answers[room.currentQuestion]).length === Object.keys(room.players).length
-                                                    ? 'var(--primary)'
-                                                    : undefined
-                                            }}
-                                        >
-                                            <h4>Respostas</h4>
-                                            <h4>{Object.keys(room.players).filter(playerId => room.players[playerId].answers && room.players[playerId].answers[room.currentQuestion]).length} / {Object.keys(room.players).length}</h4>
-                                        </div>
+                                        {room.players &&
+                                            <div
+                                                className={styles.answersView}
+                                                style={{
+                                                    '--text-color': Object.keys(room.players).filter(playerId => room.players[playerId].answers && room.players[playerId].answers[room.currentQuestion]).length === Object.keys(room.players).length
+                                                        ? 'var(--primary)'
+                                                        : undefined
+                                                }}
+                                            >
+                                                <h4>Respostas</h4>
+                                                <h4>{Object.keys(room.players).filter(playerId => room.players[playerId].answers && room.players[playerId].answers[room.currentQuestion]).length} / {Object.keys(room.players).length}</h4>
+                                            </div>
+                                        }
                                         <PlayersList
                                             players={room.players === undefined ? [] : Object.keys(room.players).map(index => room.players[index])}
                                             totalQuestions={room.quizInfo.totalQuestions}

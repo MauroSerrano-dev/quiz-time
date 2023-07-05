@@ -8,7 +8,7 @@ import { getLayout } from '../../utils/layout'
 import { showErrorToast } from '../../utils/toasts'
 import NoSessionPage from '@/components/NoSessionPage'
 import OptionInput from '@/components/OptionInput'
-import { getImage, getStandardQuiz, getUserQuiz } from '../../utils/api-caller'
+import { getImage, getStandardQuiz, getUserQuiz, savePlayerResults } from '../../utils/api-caller'
 
 let socket
 
@@ -102,7 +102,7 @@ export default withRouter((props) => {
                     socket.on(`saveResults${code}`, () => {
                         const newPlayer = getPlayerResultsRef.current()
                         console.log('ooo', newPlayer)
-                        socket.emit("updatePlayer", newPlayer, code)
+                        savePlayerResults(newPlayer, code)
                     })
                     socket.on(`updateFieldsRoom${code}`, (att) => {
                         const { roomAtt } = att
