@@ -95,7 +95,7 @@ export default withRouter((props) => {
                             )
                                 .some(answer => answer.questionIndex === startRoom.currentQuestion) && startRoom.control
                             )
-                                setOptionSelected(startRoom.players[session.user.id].answers[startRoom.currentQuestion].optionIndex)
+                                setOptionSelected(startRoom.players[session.user.id].answers[`answer-${startRoom.currentQuestion}`].optionIndex)
                         }
                         setRoom(startRoom)
                     }
@@ -212,10 +212,10 @@ export default withRouter((props) => {
             getPlayer() !== undefined &&
             getPlayer().answers !== null &&
             getPlayer().answers !== undefined &&
-            getPlayer().answers[room.currentQuestion] !== null &&
-            getPlayer().answers[room.currentQuestion] !== undefined
+            getPlayer().answers[`answer-${room.currentQuestion}`] !== null &&
+            getPlayer().answers[`answer-${room.currentQuestion}`] !== undefined
         )
-            setOptionSelected(getPlayer().answers[room.currentQuestion].optionIndex)
+            setOptionSelected(getPlayer().answers[`answer-${room.currentQuestion}`].optionIndex)
         else
             setOptionSelected()
     }
@@ -225,7 +225,7 @@ export default withRouter((props) => {
         if (player) {
             if (optionSelected === option) {
                 setOptionSelected()
-                delete player.answers[room.currentQuestion]
+                delete player.answers[`answer-${room.currentQuestion}`]
                 const playerResults = getPlayerResults(player)
                 socket.emit("updatePlayer", playerResults, code)
             }
@@ -235,7 +235,7 @@ export default withRouter((props) => {
                     ...player,
                     answers: {
                         ...player.answers,
-                        [room.currentQuestion]: {
+                        [`answer-${room.currentQuestion}`]: {
                             ...quiz.questions[room.currentQuestion].options[option],
                             questionIndex: room.currentQuestion,
                             optionIndex: option,
@@ -316,7 +316,6 @@ export default withRouter((props) => {
     function getPlayerResults(player) {
         let newPlayer
         if (room && quiz && player && player.answers) {
-            console.log(player)
             newPlayer = {
                 ...player,
                 results: quiz.results.map(result => ({
@@ -333,7 +332,9 @@ export default withRouter((props) => {
                                         ? accumulator + action.points
                                         : accumulator
                                     , 0)
-                                , 0)
+                                , 0
+                            )
+
                         : 0
                 }))
                     .sort((a, b) => b.points - a.points).reduce((acc, result) => acc.length === 0 || acc[0].points === result.points

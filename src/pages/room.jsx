@@ -403,13 +403,13 @@ export default withRouter((props) => {
                                             <div
                                                 className={styles.answersView}
                                                 style={{
-                                                    '--text-color': Object.keys(room.players).filter(playerId => room.players[playerId].answers && room.players[playerId].answers[room.currentQuestion]).length === Object.keys(room.players).length
+                                                    '--text-color': Object.keys(room.players).filter(playerId => room.players[playerId].answers && room.players[playerId].answers[`answer-${room.currentQuestion}`]).length === Object.keys(room.players).length
                                                         ? 'var(--primary)'
                                                         : undefined
                                                 }}
                                             >
                                                 <h4>Respostas</h4>
-                                                <h4>{Object.keys(room.players).filter(playerId => room.players[playerId].answers && room.players[playerId].answers[room.currentQuestion]).length} / {Object.keys(room.players).length}</h4>
+                                                <h4>{Object.keys(room.players).filter(playerId => room.players[playerId].answers && room.players[playerId].answers[`answer-${room.currentQuestion}`]).length} / {Object.keys(room.players).length}</h4>
                                             </div>
                                         }
                                         <PlayersList
