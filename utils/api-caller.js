@@ -34,6 +34,7 @@ export async function getImage(userUui, fileId) {
     const { fileContents } = data;
     const jsonBuffer = Buffer.from(fileContents, 'hex')
     const img = JSON.parse(jsonBuffer.toString('utf-8'))
+    console.log('masdmaksdmklqdmwlkdnasndjasndjasdnsad', img)
     return img
 }
 
