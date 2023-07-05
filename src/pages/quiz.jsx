@@ -74,8 +74,66 @@ export default withRouter((props) => {
     }, [])
 
     useEffect(() => {
-        if (!room && code && session)
+        if (!room && code && session) {
+            async function socketInitializer() {
+                const options = {
+                    method: 'GET'
+                }
+                await fetch("/api/socket", options)
+                socket = io({ query: { code: code } })
+
+                socket.emit('getRoom', code)
+
+                socket.on(`sendRoom${code}`, (startRoom) => {
+                    if (startRoom) {
+                        if (startRoom.players && Object.keys(startRoom.players).some(playerId => playerId === session.user.id)) {
+                            setJoined(true)
+                            if (Object.keys(
+                                startRoom.players[session.user.id].answers === undefined
+                                    ? {}
+                                    : startRoom.players[session.user.id].answers
+                            )
+                                .some(answer => answer.questionIndex === startRoom.currentQuestion) && startRoom.control
+                            )
+                                setOptionSelected(startRoom.players[session.user.id].answers[startRoom.currentQuestion].optionIndex)
+                        }
+                        setRoom(startRoom)
+                    }
+                    socket.on(`saveResults${code}`, () => {
+                        const newPlayer = getPlayerResultsRef.current()
+                        console.log('ooo', newPlayer)
+                        socket.emit("updatePlayer", newPlayer, code)
+                    })
+                    socket.on(`updateFieldsRoom${code}`, (att) => {
+                        const { roomAtt } = att
+                        if (roomAtt.state !== roomRef.current.state) {
+                            setTimeout(() =>
+                                setQuestionTransition(false),
+                                TRANSITION_DURATION
+                            )
+                        }
+                        if (roomAtt.players && roomAtt.players[session.user.id] !== undefined)
+                            setJoined(true)
+                        else
+                            setJoined(false)
+
+                        if (false) {
+                            setQuestionTransition(true)
+                            setTimeout(() => {
+                                setRoom(roomAtt)
+                                setQuestionTransition(false)
+                            }, TRANSITION_DURATION)
+                        }
+                        else {
+                            turnOffTransition()
+                            setRoom(roomAtt)
+                        }
+                    })
+                })
+            }
+            
             socketInitializer()
+        }
     }, [session, code])
 
     useEffect(() => {
@@ -150,63 +208,6 @@ export default withRouter((props) => {
     useEffect(() => {
         setTimeout(() => setDots(prev => prev.length >= 3 ? '' : prev + '.'), 500)
     }, [dots])
-
-    async function socketInitializer() {
-        const options = {
-            method: 'GET'
-        }
-        await fetch("/api/socket", options)
-        socket = io({ query: { code: code } })
-
-        socket.emit('getRoom', code)
-
-        socket.on(`sendRoom${code}`, (startRoom) => {
-            if (startRoom) {
-                if (startRoom.players && Object.keys(startRoom.players).some(playerId => playerId === session.user.id)) {
-                    setJoined(true)
-                    if (Object.keys(
-                        startRoom.players[session.user.id].answers === undefined
-                            ? {}
-                            : startRoom.players[session.user.id].answers
-                    )
-                        .some(answer => answer.questionIndex === startRoom.currentQuestion) && startRoom.control
-                    )
-                        setOptionSelected(startRoom.players[session.user.id].answers[startRoom.currentQuestion].optionIndex)
-                }
-                setRoom(startRoom)
-            }
-            socket.on(`saveResults${code}`, () => {
-                const newPlayer = getPlayerResultsRef.current()
-                console.log('ooo', newPlayer)
-                socket.emit("updatePlayer", newPlayer, code)
-            })
-            socket.on(`updateFieldsRoom${code}`, (att) => {
-                const { roomAtt } = att
-                if (roomAtt.state !== roomRef.current.state) {
-                    setTimeout(() =>
-                        setQuestionTransition(false),
-                        TRANSITION_DURATION
-                    )
-                }
-                if (roomAtt.players && roomAtt.players[session.user.id] !== undefined)
-                    setJoined(true)
-                else
-                    setJoined(false)
-
-                if (false) {
-                    setQuestionTransition(true)
-                    setTimeout(() => {
-                        setRoom(roomAtt)
-                        setQuestionTransition(false)
-                    }, TRANSITION_DURATION)
-                }
-                else {
-                    turnOffTransition()
-                    setRoom(roomAtt)
-                }
-            })
-        })
-    }
 
     function updateOptionSelected() {
         if (

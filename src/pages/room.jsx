@@ -93,6 +93,35 @@ export default withRouter((props) => {
 
     useEffect(() => {
         if (!room && code && session) {
+            const socketInitializer = async () => {
+                const options = {
+                    method: 'GET'
+                }
+                await fetch("/api/socket", options)
+
+                socket = io({ query: { code: code } })
+
+                socket.emit('getRoom', code)
+
+                socket.on(`sendRoom${code}`, (room) => {
+                    if (room) {
+                        setRoom(room)
+                        setDisableShow(room.state === 'disable')
+                        setActiveShow(room.state === 'active')
+                    }
+                    else {
+                        setNoRoom(true)
+                    }
+                })
+
+                socket.on(`updateFieldsRoom${code}`, (att) => {
+                    const { roomAtt } = att
+                    setDisableShow(roomAtt.state === 'disable')
+                    setActiveShow(roomAtt.state === 'active')
+                    setRoom(roomAtt)
+                })
+            }
+
             socketInitializer()
         }
     }, [session, code])
@@ -138,35 +167,6 @@ export default withRouter((props) => {
             getQuiz()
         }
     }, [room])
-
-    const socketInitializer = async () => {
-        const options = {
-            method: 'GET'
-        }
-        await fetch("/api/socket", options)
-
-        socket = io({ query: { code: code } })
-
-        socket.emit('getRoom', code)
-
-        socket.on(`sendRoom${code}`, (room) => {
-            if (room) {
-                setRoom(room)
-                setDisableShow(room.state === 'disable')
-                setActiveShow(room.state === 'active')
-            }
-            else {
-                setNoRoom(true)
-            }
-        })
-
-        socket.on(`updateFieldsRoom${code}`, (att) => {
-            const { roomAtt } = att
-            setDisableShow(roomAtt.state === 'disable')
-            setActiveShow(roomAtt.state === 'active')
-            setRoom(roomAtt)
-        })
-    }
 
     function getCharPieData() {
         console.log(room)
@@ -399,13 +399,13 @@ export default withRouter((props) => {
                                                 </div>
                                             </div>
                                         }
-                                        <div 
-                                        className={styles.answersView}
-                                        style={{
-                                            '--text-color': Object.keys(room.players).filter(playerId => room.players[playerId].answers && room.players[playerId].answers[room.currentQuestion]).length === Object.keys(room.players).length
-                                            ? 'var(--primary)'
-                                            : undefined
-                                        }}
+                                        <div
+                                            className={styles.answersView}
+                                            style={{
+                                                '--text-color': Object.keys(room.players).filter(playerId => room.players[playerId].answers && room.players[playerId].answers[room.currentQuestion]).length === Object.keys(room.players).length
+                                                    ? 'var(--primary)'
+                                                    : undefined
+                                            }}
                                         >
                                             <h4>Respostas</h4>
                                             <h4>{Object.keys(room.players).filter(playerId => room.players[playerId].answers && room.players[playerId].answers[room.currentQuestion]).length} / {Object.keys(room.players).length}</h4>
