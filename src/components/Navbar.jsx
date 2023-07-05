@@ -80,7 +80,7 @@ export default function Navbar(props) {
                     }
                     {!session &&
                         <div>
-                            <Button variant="outlined" id={styles.loginButton} onClick={() => signIn()}>Sign in</Button>
+                            <Button variant="outlined" id={styles.loginButton} onClick={() => signIn()}>Login</Button>
                         </div>
                     }
                     <div onClick={() => setNavActive(!navActive)} id={styles.nav_menu_bar}>

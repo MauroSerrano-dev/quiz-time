@@ -64,14 +64,14 @@ export default function PlayersList(props) {
     return (
         <div
             id={styles.container}
-            style={{ right: open ? `${ITEM_SIZE.width * 0.54}px` : `-${ITEM_SIZE.width * 0.6}px` }}
+            style={{ right: open ? `${ITEM_SIZE.width * 0.54}px` : `-${ITEM_SIZE.width * 0.55}px` }}
         >
             <div
                 id={styles.tabContainer}
                 onClick={handleTabClick}
                 style={open ? styleOpen : styleClose}
             >
-                <p>{players.length} {players.length === 1 ? 'Player' : 'Players'}</p>
+                <p>{players.length} {players.length === 1 ? 'Jogador' : 'Jogadores'}</p>
             </div>
             <div id={styles.playersContainer} style={{ paddingTop: `${LIST_SIZE.paddingTop}px` }}>
                 <motion.div
@@ -97,8 +97,13 @@ export default function PlayersList(props) {
                         />
                     )}
                     {players.map((player, i) =>
-                        <div key={`Placer ${i}`} style={{ width: `${ITEM_SIZE.width}px`, height: `${ITEM_SIZE.height}px` }}></div>
+                        <div key={`Placer ${i}`} style={{ width: `${ITEM_SIZE.width}px`, height: `${ITEM_SIZE.height}px` }}>
+                        </div>
                     )}
+                    {players.length === 0 &&
+                        <div style={{ width: `${ITEM_SIZE.width}px`, height: `${ITEM_SIZE.height}px` }}>
+                        </div>
+                    }
                 </motion.div>
             </div>
         </div>

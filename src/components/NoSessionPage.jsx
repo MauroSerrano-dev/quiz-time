@@ -9,7 +9,7 @@ export default function NoSessionPage(props) {
     return (
         <div id={styles.noSessionContainer}>
             <Logo width='40%' />
-            <Button variant="outlined" onClick={signIn}>Sign in</Button>
+            <Button variant="outlined" onClick={signIn}>Login</Button>
         </div>
     )
 }

@@ -76,7 +76,7 @@ export default withRouter((props) => {
         setShowNavbar(false)
         const handleFullscreenChange = () => {
             setIsFullscreen(document.fullscreenElement !== null);
-        };
+        }
 
         document.addEventListener('fullscreenchange', handleFullscreenChange);
         document.addEventListener('mozfullscreenchange', handleFullscreenChange);
@@ -88,8 +88,8 @@ export default withRouter((props) => {
             document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
             document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
             document.removeEventListener('msfullscreenchange', handleFullscreenChange);
-        };
-    }, []);
+        }
+    }, [])
 
     useEffect(() => {
         if (!room && code && session) {
@@ -186,24 +186,26 @@ export default withRouter((props) => {
                         }
                         {room &&
                             <div id={styles.roomContainer}>
-                                <h3 id={styles.roomName}>Código da Sala: {room.name}</h3>
+                                {/* <h3 id={styles.roomName}>{room.name}</h3> */}
                                 {session.user.id === room.owner.id &&
                                     <div className='size100'>
-                                        <Button
-                                            onClick={toggleFullscreen}
-                                            variant="outlined"
-                                            sx={{
-                                                position: 'absolute',
-                                                right: '2rem',
-                                                top: '2rem',
-                                            }}
-                                            endIcon={isFullscreen
-                                                ? <CloseFullscreenRoundedIcon />
-                                                : <OpenInFullRoundedIcon
-                                                />}
-                                        >
-                                            {isFullscreen ? 'Sair da Tela Cheia' : 'Tela Cheia'}
-                                        </Button>
+                                        {!isFullscreen &&
+                                            <Button
+                                                onClick={toggleFullscreen}
+                                                variant="outlined"
+                                                sx={{
+                                                    position: 'absolute',
+                                                    left: '2rem',
+                                                    top: '2rem',
+                                                }}
+                                                endIcon={isFullscreen
+                                                    ? <CloseFullscreenRoundedIcon />
+                                                    : <OpenInFullRoundedIcon
+                                                    />}
+                                            >
+                                                {isFullscreen ? 'Sair da Tela Cheia' : 'Tela Cheia'}
+                                            </Button>
+                                        }
                                         {room.state === 'disable' &&
                                             <motion.div
                                                 initial={{ opacity: 0, y: 30 }}
@@ -211,7 +213,7 @@ export default withRouter((props) => {
                                                 transition={{ delay: disableShow ? 0.5 : 0, duration: disableShow ? 1.2 : 0.6, easings: ["easeInOut"] }}
                                                 id={styles.disableContainer}
                                             >
-                                                <div id={styles.qrContainer}>
+                                                {/* <div id={styles.qrContainer}>
                                                     <div id={styles.qrCode}>
                                                         <QRCode
                                                             value={`${process.env.NEXT_PUBLIC_SITE_DOMAIN}/quiz?code=${code}`}
@@ -238,7 +240,7 @@ export default withRouter((props) => {
                                                     <a href={`${process.env.NEXT_PUBLIC_SITE_URL}/quiz?code=${code}`} target='_blank'>
                                                         <h2>{process.env.NEXT_PUBLIC_SITE_DOMAIN}/quiz?code={code}</h2>
                                                     </a>
-                                                </div>
+                                                </div> */}
                                             </motion.div>
                                         }
                                         {room.state === 'active' && quiz &&
@@ -397,13 +399,22 @@ export default withRouter((props) => {
                                                 </div>
                                             </div>
                                         }
-                                        {quiz &&
-                                            <PlayersList
-                                                players={room.players === undefined ? [] : Object.keys(room.players).map(index => room.players[index])}
-                                                totalQuestions={room.quizInfo.totalQuestions}
-                                                noProgressBar={room.control}
-                                            />
-                                        }
+                                        <div 
+                                        className={styles.answersView}
+                                        style={{
+                                            '--text-color': Object.keys(room.players).filter(playerId => room.players[playerId].answers && room.players[playerId].answers[room.currentQuestion]).length === Object.keys(room.players).length
+                                            ? 'var(--primary)'
+                                            : undefined
+                                        }}
+                                        >
+                                            <h4>Respostas</h4>
+                                            <h4>{Object.keys(room.players).filter(playerId => room.players[playerId].answers && room.players[playerId].answers[room.currentQuestion]).length} / {Object.keys(room.players).length}</h4>
+                                        </div>
+                                        <PlayersList
+                                            players={room.players === undefined ? [] : Object.keys(room.players).map(index => room.players[index])}
+                                            totalQuestions={room.quizInfo.totalQuestions}
+                                            noProgressBar={room.control}
+                                        />
                                     </div>
                                 }
                                 {session.user.id !== room.owner.id &&

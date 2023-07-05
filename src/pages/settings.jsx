@@ -228,7 +228,7 @@ const quiz = {
             content: 'Eu gosto de...',
             options: [
                 { content: 'Complexidade, mesmo se confuso', actions: [{ profile: result3, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult3, points: 1 }] },
-                { content: 'Ordem e sistematização', actions: [{ profile: result4, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult4, points: 1 }] },
+                { content: 'Ordem e organização', actions: [{ profile: result4, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult4, points: 1 }] },
                 { content: 'Calor humano e animação', actions: [{ profile: result2, points: 1 }, { profile: subResult3, points: 1 }, { profile: subResult2, points: 1 }] },
                 { content: 'Coisas claras e simples', actions: [{ profile: result1, points: 1 }, { profile: subResult4, points: 1 }, { profile: subResult2, points: 1 }] },
             ],

@@ -421,9 +421,6 @@ export default withRouter((props) => {
                     <div className='flex size100'>
                         {room &&
                             <div id={styles.bodyContainer}>
-                                <h3 id={styles.roomName}>
-                                    {room.quizInfo.name}
-                                </h3>
                                 {room.state === 'disable' &&
                                     <div>
                                         {!joined &&

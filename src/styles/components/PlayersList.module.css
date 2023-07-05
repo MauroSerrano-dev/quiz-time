@@ -5,7 +5,7 @@
     align-items: flex-start;
 
     position: fixed;
-    top: 120px;
+    top: 12%;
 
     transition: all 200ms ease-in-out;
 
@@ -21,9 +21,10 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    padding-left: 15px;
 
-    width: 120px;
+    width: 127px;
     height: 43px;
 
     border-top-left-radius: 0.5rem;
@@ -38,7 +39,7 @@
 }
 
 #tabContainer:hover {
-    right: 138px;
+    right: 136px;
 }
 
 #tabContainer p {

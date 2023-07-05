@@ -39,7 +39,7 @@
 
 #activeContainer {
     width: 90%;
-    height: 92%;
+    height: 100%;
 }
 
 #questionContainer {
@@ -48,7 +48,7 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    height: 15%;
+    height: 25%;
     width: 100%;
 }
 
@@ -59,7 +59,7 @@
     justify-content: flex-start;
 
     padding-top: 5%;
-    height: 80%;
+    height: 70%;
     width: 100%;
     gap: 1rem;
     --text-color: var(--text-black);
