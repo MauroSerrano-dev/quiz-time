@@ -78,8 +78,7 @@ export default function SocketHandler(req, res) {
 
     // Listen for 'updatePlayer' events emitted by the client
     socket.on('updatePlayer', async (attPlayer, code) => {
-      if (attPlayer.results)
-        console.log('aaaaaaaaaaaaaaaa', attPlayer.results, attPlayer.results.img)
+      console.log('aaaaaaaaaaaaaaaa', attPlayer?.user, attPlayer?.results, attPlayer?.results?.img)
       const newExpireAt = new Date()
       newExpireAt.setSeconds(newExpireAt.getSeconds() + 86400)
 
