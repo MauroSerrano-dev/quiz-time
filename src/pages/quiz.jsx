@@ -310,7 +310,7 @@ export default withRouter((props) => {
         setLocked(false)
     }
 
-    async function getPlayerResults(player) {
+    function getPlayerResults(player) {
         if (room && quiz && getPlayer() && !getPlayer().results) {
             let newPlayer
             if (player) {
@@ -338,6 +338,7 @@ export default withRouter((props) => {
                             : acc, [])
                 }
             }
+            console.log('newPlayer', newPlayer)
             return newPlayer
         }
     }
