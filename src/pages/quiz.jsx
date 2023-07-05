@@ -221,18 +221,27 @@ export default withRouter((props) => {
     }
 
     function answerControl(option) {
+        const now = new Date()
         const player = getPlayer()
         if (player) {
             if (optionSelected === option) {
                 setOptionSelected()
                 delete player.answers[`answer-${room.currentQuestion}`]
                 const playerResults = getPlayerResults(player)
-                socket.emit("updatePlayer", playerResults, code)
+                socket.emit(
+                    "updatePlayer",
+                    {
+                        ...playerResults,
+                        lastAnswerDate: { number: now.valueOf(), text: now.toString() }
+                    },
+                    code
+                )
             }
             else {
                 setOptionSelected(option)
                 const attPlayer = {
                     ...player,
+                    lastAnswerDate: { number: now.valueOf(), text: now.toString() },
                     answers: {
                         ...player.answers,
                         [`answer-${room.currentQuestion}`]: {
@@ -314,6 +323,7 @@ export default withRouter((props) => {
     }
 
     function getPlayerResults(player) {
+        console.log(player, 'player')
         let newPlayer
         if (room && quiz && player && player.answers) {
             newPlayer = {
