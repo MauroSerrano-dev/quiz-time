@@ -454,7 +454,7 @@ export default withRouter((props) => {
                                                         />
                                                     </div>
                                                 }
-                                                <Button variant="outlined" onClick={locked ? handleSubmitUnlock : joinQuiz}>Entrar</Button>
+                                                <Button variant="outlined" onClick={locked ? handleSubmitUnlock : joinQuiz}>Entrar na Sala</Button>
                                             </div>
                                         }
                                         {joined &&
