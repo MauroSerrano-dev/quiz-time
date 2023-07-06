@@ -107,7 +107,7 @@ const quiz = {
         {
             content: 'Minha preocupação é...',
             options: [
-                { content: 'Gerar a idéia global', actions: [{ profile: result3, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult3, points: 1 }] },
+                { content: 'Gerar a ideia global', actions: [{ profile: result3, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult3, points: 1 }] },
                 { content: 'Fazer com quem as pessoas gostem', actions: [{ profile: result2, points: 1 }, { profile: subResult3, points: 1 }, { profile: subResult2, points: 1 }] },
                 { content: 'Fazer com que funcione', actions: [{ profile: result4, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult4, points: 1 }] },
                 { content: 'Fazer com que aconteça', actions: [{ profile: result1, points: 1 }, { profile: subResult4, points: 1 }, { profile: subResult2, points: 1 }] },
@@ -199,7 +199,7 @@ const quiz = {
             options: [
                 { content: 'Se colocar na frente', actions: [{ profile: result1, points: 1 }, { profile: subResult4, points: 1 }, { profile: subResult2, points: 1 }] },
                 { content: 'Colocar os outros na frente', actions: [{ profile: result2, points: 1 }, { profile: subResult3, points: 1 }, { profile: subResult2, points: 1 }] },
-                { content: 'Mudar de idéia', actions: [{ profile: result3, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult3, points: 1 }] },
+                { content: 'Mudar de ideia', actions: [{ profile: result3, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult3, points: 1 }] },
                 { content: 'Ser consistente', actions: [{ profile: result4, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult4, points: 1 }] },
             ],
             optionsRandom: false
@@ -299,147 +299,151 @@ const quiz = {
         {
             name: result1,
             id: 'profile-0',
-            texts: [
+            lists: [
                 {
                     ref: 'Característica Principal',
-                    value: 'Fazer rápido.'
+                    values: ['Fazer rápido']
                 },
                 {
                     ref: 'Traços Comportamentais',
-                    value: 'Senso de urgência, iniciativa, prático, impulsivo, vencer desafios, aqui e agora, auto suficiente, não delegar.'
+                    values: ['Senso de urgência', 'Iniciativa', 'Prático', 'Impulsivo', 'Vencer desafios', 'Aqui e agora', 'Auto suficiente', 'Não delegar']
                 },
                 {
                     ref: 'Pontos Fortes',
-                    value: 'Ação, fazer que ocorra, para com a burocracia, motivação.'
+                    values: ['Ação', 'Fazer que ocorra', 'Para com a burocracia', 'Motivação']
                 },
                 {
                     ref: 'Pontos de Melhorias',
-                    value: 'Socialmente um desastre, faz da forma mais fácil, relacionamento complicado, precisa melhorar paciência, atenção às pessoas, humildade, consideração, trabalhar coletivamente, ouvir mais.'
+                    values: ['Socialmente um desastre', 'Faz da forma mais fácil', 'Relacionamento complicado', 'Precisa melhorar paciência', 'Atenção às pessoas', 'Humildade', 'Consideração', 'Trabalhar coletivamente', 'Ouvir mais']
                 },
                 {
                     ref: 'Motivações',
-                    value: 'Liberdade para agir individualmente, controle das proprias atividades, resolver os problemas do seu jeito, competição, variedade de atividades, não ter que repetir tarefas.'
+                    values: ['Liberdade para agir individualmente', 'Controle das proprias atividades', 'Resolver os problemas do seu jeito', 'Competição', 'Variedade de atividades', 'Não ter que repetir tarefas']
                 },
                 {
                     ref: 'Valores',
-                    value: 'Resultado.'
+                    values: ['Resultado']
                 },
             ],
             img: {
-                content: 'shark.jpg',
+                content: 'leopard.jpg',
                 id: 'quiz-123_profile-0',
-                name: 'shark',
-                type: 'jpg'
+                name: 'leopard',
+                type: 'jpg',
+                positionToFit: 'vertical'
             }, color: '#ABDEE6'
         },
         {
             name: result2,
             id: 'profile-1',
-            texts: [
+            lists: [
                 {
                     ref: 'Característica Principal',
-                    value: 'Fazer junto.'
+                    values: ['Fazer junto']
                 },
                 {
                     ref: 'Traços Comportamentais',
-                    value: 'Sensível, relacionamentos, time, tradicional, contribuição, busca harmonia, delega autoridade.'
+                    values: ['Sensível', 'Relacionamentos', 'Time', 'Tradicional', 'Contribuição', 'Busca harmonia', 'Delega autoridade']
                 },
                 {
                     ref: 'Pontos Fortes',
-                    value: 'Comunicação, mantém a harmonia, desenvolve e mantém a cultura, comunicação aberta.'
+                    values: ['Comunicação', 'Mantém a harmonia', 'Desenvolve e mantém a cultura', 'Comunicação aberta']
                 },
                 {
                     ref: 'Pontos de Melhorias',
-                    value: 'Esconder conflitos, felicidade acima dos resultados, manipulação através de sentimentos. Abordagem mais direta, controle de tempo, controle emocional, mais foco, prazos realistas, trabalhar mais a razão.'
+                    values: ['Esconder conflitos', 'Felicidade acima dos resultados', 'Manipulação através de sentimentos', 'Abordagem mais direta', 'Controle de tempo', 'Controle emocional', 'Mais foco', 'Prazos realistas', 'Trabalhar mais a razão']
                 },
                 {
                     ref: 'Motivações',
-                    value: 'Segurança, aceitação social, construir o consenso, reconhecimento da equipa, supervisão compreensiva, ambiente harmonico, trabalho em grupo.'
+                    values: ['Segurança', 'Aceitação social', 'Construir o consenso', 'Reconhecimento da equipa', 'Supervisão compreensiva', 'Ambiente harmonico', 'Trabalho em grupo']
                 },
                 {
                     ref: 'Valores',
-                    value: 'Felicidade e igualdade (pensa nos outros).'
+                    values: ['Felicidade e igualdade (pensa nos outros)']
                 },
             ],
             img: {
-                content: 'cat.jpg',
+                content: 'dog.jpg',
                 id: 'quiz-123_profile-1',
-                name: 'cat',
-                type: 'jpg'
+                name: 'dog',
+                type: 'jpg',
+                positionToFit: 'vertical',
             },
             color: '#FFD8BE'
         },
         {
             name: result3,
             id: 'profile-2',
-            texts: [
+            lists: [
                 {
                     ref: 'Característica Principal',
-                    value: 'Fazer diferente.'
+                    values: ['Fazer diferente']
                 },
                 {
                     ref: 'Traços Comportamentais',
-                    value: 'Criativo, intuitivo, foco no futuro, distraído, curioso, informal e flexível.'
+                    values: ['Criativo', 'Intuitivo', 'Foco no futuro', 'Distraído', 'Curioso', 'Informal e flexível']
                 },
                 {
                     ref: 'Pontos Fortes',
-                    value: 'Idealização, provocar mudanças, antecipar o futuro, criatividade.'
+                    values: ['Idealização', 'Provocar mudanças', 'Antecipar o futuro', 'Criatividade']
                 },
                 {
                     ref: 'Pontos de Melhorias',
-                    value: 'Falta de atenção no presente, impaciência e rebeldia, defender o novo pelo novo, trabalho em equipa, verbalização.'
+                    values: ['Falta de atenção no presente', 'Impaciência e rebeldia', 'Defender o novo pelo novo', 'Trabalho em equipa', 'Verbalização']
                 },
                 {
                     ref: 'Motivações',
-                    value: 'Liberdade de expressão, ausência de controle rígido, oportunidade para delegar.'
+                    values: ['Liberdade de expressão', 'Ausência de controle rígido', 'Oportunidade para delegar']
                 },
                 {
                     ref: 'Valores',
-                    value: 'Criatividade e liberdade (inspirar idéias).'
+                    values: ['Criatividade e liberdade (inspirar ideias)']
                 },
             ],
             img: {
                 content: 'eagle.jpg',
                 id: 'quiz-123_profile-2',
                 name: 'eagle',
-                type: 'jpg'
+                type: 'jpg',
+                positionToFit: 'horizontal',
             },
             color: '#FFF7D2'
         },
         {
             name: result4,
             id: 'profile-3',
-            texts: [
+            lists: [
                 {
                     ref: 'Característica Principal',
-                    value: 'Fazer certo.'
+                    values: ['Fazer certo']
                 },
                 {
                     ref: 'Traços Comportamentais',
-                    value: 'Detalhista, organizado, estrategista, busca do conhecimento, pontual, conservador, previsivel.'
+                    values: ['Detalhista', 'Organizado', 'Estrategista', 'Busca do conhecimento', 'Pontual', 'Conservador', 'Previsivel']
                 },
                 {
                     ref: 'Pontos Fortes',
-                    value: 'Organização, passado presente e futuro, consistência, conformidade e qualidade, lealdade e segurança, regras e responsabilidades.'
+                    values: ['Organização', 'Passado presente e futuro', 'Consistência', 'Conformidade e qualidade', 'Lealdade e segurança', 'Regras e responsabilidades']
                 },
                 {
                     ref: 'Pontos de Melhorias',
-                    value: 'Dificuldade de se adaptar a mudanças, pode impedir o progresso, detalhista, estruturado e demasiadamente sistematizado. Melhorar o entusiasmo, flexibilidade, aceitação de outros estilos comportamentais, método de atalho.'
+                    values: ['Dificuldade de se adaptar a mudanças', 'Pode impedir o progresso', 'Detalhista', 'Estruturado e demasiadamente sistematizado', 'Melhorar o entusiasmo', 'Flexibilidade', 'Aceitação de outros estilos comportamentais', 'Método de atalho']
                 },
                 {
                     ref: 'Motivações',
-                    value: 'Certeza, compreensão exata das regras, conhecimento específico, ausência de riscos e erros, vero produto acabado (começo, meio e fim).'
+                    values: ['Certeza', 'Compreensão exata das regras', 'Conhecimento específico', 'Ausência de riscos e erros', 'Vero produto acabado (começo, meio e fim)']
                 },
                 {
                     ref: 'Valores',
-                    value: 'Ordem e controle.'
+                    values: ['Ordem e controle']
                 },
             ],
             img: {
                 content: 'wolf.jpg',
                 id: 'quiz-123_profile-3',
                 name: 'wolf',
-                type: 'jpg'
+                type: 'jpg',
+                positionToFit: 'vertical',
             },
             color: '#CBAACB'
         },
@@ -455,12 +459,12 @@ const quiz = {
         { name: 'Image' },
         { name: 'ChartPie', legend: true },
         { name: 'ChartRadar', radarOrder: radarOrder },
-        { name: 'Title', title: 'Característica Principal' },
-        { name: 'Title', title: 'Traços Comportamentais' },
-        { name: 'Title', title: 'Pontos Fortes' },
-        { name: 'Title', title: 'Pontos de Melhorias' },
-        { name: 'Title', title: 'Motivações' },
-        { name: 'Title', title: 'Valores' },
+        { name: 'List', title: 'Característica Principal', ordered: false },
+        { name: 'List', title: 'Traços Comportamentais', ordered: false },
+        { name: 'List', title: 'Pontos Fortes', ordered: false },
+        { name: 'List', title: 'Pontos de Melhorias', ordered: false },
+        { name: 'List', title: 'Motivações', ordered: false },
+        { name: 'List', title: 'Valores', ordered: false },
     ]
 }
 

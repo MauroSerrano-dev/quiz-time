@@ -27,8 +27,8 @@ function insertLayout(item, results, allResults, radarData, quizResults) {
         case 'Image': return {
             name: 'Image',
             value:
-                <Box id={styles.itemImg} className={styles.layoutItem}>
-                    <div id={styles.allImgs}>
+                <Box className={`${styles.itemImg} ${styles.layoutItem}`}>
+                    <div className={styles.allImgs}>
                         {results.map((result, i) =>
                             <div
                                 className={styles.imgTitleContainer}
@@ -40,7 +40,13 @@ function insertLayout(item, results, allResults, radarData, quizResults) {
                                 key={`Result: ${i}`}
                             >
                                 <div className={styles.resultImgContainer}>
-                                    <img src={quizResults.filter(quizResult => quizResult.id === result.id)[0].img.content} alt={result.img.name} title={result.img.name} />
+                                    <img
+                                        style={quizResults.filter(quizResult => quizResult.id === result.id)[0].img.positionToFit === 'vertical'
+                                            ? { height: 'auto', width: '100%' }
+                                            : { height: '100%', width: 'auto' }}
+                                        src={quizResults.filter(quizResult => quizResult.id === result.id)[0].img.content}
+                                        alt={result.img.name} title={result.img.name}
+                                    />
                                 </div>
                                 <h2>{result.name}</h2>
                             </div>
@@ -51,7 +57,7 @@ function insertLayout(item, results, allResults, radarData, quizResults) {
         case 'ChartPie': return {
             name: 'ChartPie',
             value:
-                <Box className={styles.layoutItem} id={styles.itemPie}>
+                <Box className={`${styles.itemPie} ${styles.layoutItem}`}>
                     <div className='flex center fillWidth'>
                         <ChartPie
                             data={allResults}
@@ -63,19 +69,37 @@ function insertLayout(item, results, allResults, radarData, quizResults) {
         case 'ChartRadar': return {
             name: 'ChartRadar',
             value:
-                <Box id={styles.itemRadar} className={`${styles.layoutItem} flex center`}>
+                <Box className={`${styles.itemRadar} ${styles.layoutItem} flex center`}>
                     <ChartRadar data={radarData} max={25} />
                 </Box>
         }
         case 'Title': return {
             name: 'Title',
             value:
-                <Box id={styles.itemTitle} className={`${styles.layoutItem} flex start`}>
+                <Box className={`${styles.layoutItem} flex start`}>
                     <h2>{item.title}</h2>
                     {results.map((result, i) =>
                         <p key={i}>
                             {result.texts.filter(text => text.ref === item.title)[0].value}
                         </p>
+                    )}
+                </Box>
+        }
+        case 'List': return {
+            name: 'List',
+            value:
+                <Box className={`${styles.layoutItem} flex start`}>
+                    <h2 className={styles.listTitle} >{item.title}</h2>
+                    {results.map((result, i) =>
+                        item.ordered
+                            ? <ol className={styles.list} key={i}>
+                                {result.lists.filter(text => text.ref === item.title)[0].values.map((li, j) =>
+                                    <li className={styles.listItem} key={j}>{li}</li>)}
+                            </ol>
+                            : <ul className={styles.list} key={i}>
+                                {result.lists.filter(text => text.ref === item.title)[0].values.map((li, j) =>
+                                    <li className={styles.listItem} key={j}>{li}</li>)}
+                            </ul>
                     )}
                 </Box>
         }
