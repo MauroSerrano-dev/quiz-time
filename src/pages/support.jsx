@@ -31,8 +31,9 @@ export default function Support(props) {
             {session === null
                 ? <NoSessionPage signIn={signIn} />
                 : <div>
-                    <main>
-                        {/* <Select
+                    {process.env.NODE_ENV === 'development' &&
+                        <main>
+                            {/* <Select
                     labelId="select-label"
                     id="select"
                     name={newRoom.quizInfo.name}
@@ -51,17 +52,18 @@ export default function Support(props) {
                         </MenuItem>
                     ))}
                 </Select> */}
-                        <TextField
-                            id="standard-multiline-static"
-                            label="Ticket"
-                            multiline
-                            rows={8}
-                            variant="filled"
-                        />
-                        <Button variant="outlined" endIcon={<SendIcon />}>
-                            Enviar
-                        </Button>
-                    </main>
+                            <TextField
+                                id="standard-multiline-static"
+                                label="Ticket"
+                                multiline
+                                rows={8}
+                                variant="filled"
+                            />
+                            <Button variant="outlined" endIcon={<SendIcon />}>
+                                Enviar
+                            </Button>
+                        </main>
+                    }
                 </div>
             }
         </div>

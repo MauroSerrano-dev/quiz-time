@@ -44,44 +44,46 @@ export default function Pricing(props) {
         <div>
             <Head>
             </Head>
-            <main>
-                <motion.div
-                    id={styles.pricesContainer}
-                    variants={container}
-                    initial="hidden"
-                    animate="visible"
-                >
-                    <motion.div variants={item}>
-                        <PriceTable
-                            title={'Quiz Time Silver'}
-                            price={'€ 5,90'}
-                            onClick={() => callCheckout('price_1NA6YMG4uTYyyhYycTjRNYk7', 'Silver')}
-                            recurrent={'mês'}
-                            backgroundColor={'transparent'}
-                        />
+            {process.env.NODE_ENV === 'development' &&
+                <main>
+                    <motion.div
+                        id={styles.pricesContainer}
+                        variants={container}
+                        initial="hidden"
+                        animate="visible"
+                    >
+                        <motion.div variants={item}>
+                            <PriceTable
+                                title={'Quiz Time Silver'}
+                                price={'€ 5,90'}
+                                onClick={() => callCheckout('price_1NA6YMG4uTYyyhYycTjRNYk7', 'Silver')}
+                                recurrent={'mês'}
+                                backgroundColor={'transparent'}
+                            />
+                        </motion.div>
+                        <motion.div variants={item}>
+                            <PriceTable
+                                title={'Quiz Time Gold'}
+                                price={'€ 14,90'}
+                                onClick={() => callCheckout('price_1NANnGG4uTYyyhYyRIGefjQr', 'Gold')}
+                                recurrent={'mês'}
+                                backgroundColor={'#e6e6e6'}
+                                outline={'solid 1px #dadada'}
+                                tag={'Mais Popular'}
+                            />
+                        </motion.div>
+                        <motion.div variants={item}>
+                            <PriceTable
+                                title={'Quiz Time Premium'}
+                                price={'€ 39,90'}
+                                onClick={() => callCheckout('price_1NANwwG4uTYyyhYysapo5kKv', 'Premium')}
+                                recurrent={'mês'}
+                                backgroundColor={'transparent'}
+                            />
+                        </motion.div>
                     </motion.div>
-                    <motion.div variants={item}>
-                        <PriceTable
-                            title={'Quiz Time Gold'}
-                            price={'€ 14,90'}
-                            onClick={() => callCheckout('price_1NANnGG4uTYyyhYyRIGefjQr', 'Gold')}
-                            recurrent={'mês'}
-                            backgroundColor={'#e6e6e6'}
-                            outline={'solid 1px #dadada'}
-                            tag={'Mais Popular'}
-                        />
-                    </motion.div>
-                    <motion.div variants={item}>
-                        <PriceTable
-                            title={'Quiz Time Premium'}
-                            price={'€ 39,90'}
-                            onClick={() => callCheckout('price_1NANwwG4uTYyyhYysapo5kKv', 'Premium')}
-                            recurrent={'mês'}
-                            backgroundColor={'transparent'}
-                        />
-                    </motion.div>
-                </motion.div>
-            </main>
+                </main>
+            }
         </div>
     );
 }

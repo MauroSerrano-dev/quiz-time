@@ -1013,17 +1013,17 @@ export default function Settings(props) {
             {session === null
                 ? <NoSessionPage signIn={signIn} />
                 : <div>
-                    <main>
-                        {process.env.NODE_ENV === 'development' &&
+                    {process.env.NODE_ENV === 'development' &&
+                        <main>
                             <div>
                                 <Button variant="outlined" onClick={handlePopulateQuiz}>Populate Quiz</Button>
                                 <Button variant="outlined" onClick={handlePopulateRoom}>Populate Room</Button>
                             </div>
-                        }
-                        <a href='https://billing.stripe.com/p/login/test_dR68y53sd60y5gI144' target='_blank'>
-                            <Button variant="outlined" >Gerenciar Assinatura</Button>
-                        </a>
-                    </main>
+                            <a href='https://billing.stripe.com/p/login/test_dR68y53sd60y5gI144' target='_blank'>
+                                <Button variant="outlined" >Gerenciar Assinatura</Button>
+                            </a>
+                        </main>
+                    }
                 </div>
             }
         </div>
