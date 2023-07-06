@@ -11,7 +11,7 @@ import Logo from './Logo';
 
 const MENU_LIST = [
     { name: 'Lobby', href: '/lobby' },
-    { name: 'Quiz Builder', href: '/quiz-builder' },
+    /* { name: 'Quiz Builder', href: '/quiz-builder' }, */
 ]
 
 export default function Navbar(props) {
