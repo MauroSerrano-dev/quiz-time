@@ -221,7 +221,7 @@ export default function QuizBuilder(props) {
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.5, delay: 0.2, ease: [.62, -0.18, .32, 1.17] }}
                 >
-                    {!quiz.mode
+                    {!quiz.mode && process.env.NODE_ENV === 'development'
                         ? <div className='flex center'>
                             <h1>Escolha um Quiz!</h1>
                             <div id={styles.optionsContainer}>
