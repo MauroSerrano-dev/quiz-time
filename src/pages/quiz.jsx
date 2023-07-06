@@ -436,9 +436,9 @@ export default withRouter((props) => {
                         {room &&
                             <div id={styles.bodyContainer}>
                                 {room.state === 'disable' &&
-                                    <div>
+                                    <div className='size100'>
                                         {!joined &&
-                                            <div>
+                                            <div className={styles.notJoinedContainer}>
                                                 {locked &&
                                                     <div>
                                                         <h3>Insira a Senha</h3>
@@ -454,117 +454,132 @@ export default withRouter((props) => {
                                                         />
                                                     </div>
                                                 }
-                                                <Button variant="outlined" onClick={locked ? handleSubmitUnlock : joinQuiz}>Entrar na Sala</Button>
+                                                <Button
+                                                    variant="outlined"
+                                                    onClick={locked ? handleSubmitUnlock : joinQuiz}
+                                                >
+                                                    Entrar na Sala
+                                                </Button>
                                             </div>
                                         }
                                         {joined &&
-                                            <div>
+                                            <div className={styles.joinedContainer}>
                                                 <div id={styles.watingContainer}>
-                                                    <h3 id={styles.watingMsg}>Aguarde enquanto o Quiz começa{dots}</h3>
+                                                    <h3 id={styles.watingMsg}>Aguarde o Quiz Começar{dots}</h3>
                                                 </div>
-                                                <Button variant="outlined" onClick={leaveQuiz}>Sair</Button>
+                                                <Button
+                                                    variant="outlined"
+                                                    onClick={leaveQuiz}
+                                                    sx={{
+                                                        position: 'absolute',
+                                                        bottom: '2rem',
+                                                    }}
+                                                >
+                                                Sair
+                                            </Button>
                                             </div>
-                                        }
-                                    </div>
-                                }
-                                {room.state === 'active' && quiz && joined && getPlayer().state === 'answering' &&
-                                    <div id={styles.activeContainer}>
-                                        <motion.div
-                                            id={styles.questionContainer}
-                                            initial={{ opacity: 0 }}
-                                            animate={questionTransition ? { opacity: 0 } : { opacity: 1 }}
-                                            transition={{ duration: TRANSITION_DURATION / 1000, ease: [.62, -0.18, .32, 1.17] }}
-                                        >
-                                            <h2>
-                                                {`${room.control
-                                                    ? room.currentQuestion + 1
-                                                    : getPlayer().currentQuestion + 1
-                                                    }
-                                                . 
-                                                ${quiz.questions[
-                                                        room.control
-                                                            ? room.currentQuestion
-                                                            : getPlayer().currentQuestion].content
-                                                    }`
-                                                }
-                                            </h2>
-                                        </motion.div>
-                                        <motion.div
-                                            id={styles.optionsContainer}
-                                            variants={container}
-                                            initial="hidden"
-                                            animate="visible"
-                                        >
-                                            {quiz.questions[room.control
-                                                ? room.currentQuestion
-                                                : getPlayer().currentQuestion
-                                            ].options.map((option, i) =>
-                                                i < 4 || quiz.questions[room.currentQuestion].haveExtraOptions
-                                                    ? <motion.div
-                                                        style={{
-                                                            width: '100%',
-                                                            height: `${i < 4 || quiz.questions[room.currentQuestion].haveExtraOptions
-                                                                ? 25
-                                                                : (100 / 6)
-                                                                }%`
-                                                        }}
-                                                        key={`Option: ${i}`}
-                                                        variants={item}
-                                                    >
-                                                        <OptionInput
-                                                            onClick={() => room.control ? answerControl(i) : answer(i)}
-                                                            state={optionSelected === undefined
-                                                                ? undefined
-                                                                : optionSelected === i
-                                                                    ? 'chosen'
-                                                                    : 'notChosen'
-                                                            }
-                                                            borderRadius={quiz.style.button.borderRadius}
-                                                            textColor={quiz.style.button.textColor}
-                                                            symbolColor={quiz.style.button.symbolColor}
-                                                            option={i}
-                                                            colorValue={quiz.style.button.template === 'monochrome'
-                                                                ? quiz.style.button.color
-                                                                : undefined
-                                                            }
-                                                            symbol={quiz.style.button.symbol}
-                                                            variant={quiz.style.button.variant}
-                                                            text={option.content}
-                                                            width='100%'
-                                                            height='100%'
-                                                            hideText={questionTransition}
-                                                        />
-                                                    </motion.div>
-                                                    : undefined
-                                            )}
-                                        </motion.div>
-                                    </div>
-                                }
-                                {quiz && room.state === 'finish' && joined &&
-                                    <div>
-                                        <h2>Finalizado</h2>
-                                    </div>
-                                }
-                                {quiz && getPlayer() && (room.state === 'results' || getPlayer().state === 'result') && getPlayer().results && joined &&
-                                    <motion.div
-                                        id={styles.resultContainer}
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        transition={{ delay: TRANSITION_DURATION / 2000, duration: TRANSITION_DURATION / 1000, ease: [.62, -0.18, .32, 1.17] }}
-                                    >
-                                        {layout.map((item, i) =>
-                                            <div
-                                                className={`${styles.resultBlock} flex center`}
-                                                key={i}
-                                            >
-                                                {item.value}
-                                            </div>
-                                        )}
-                                    </motion.div>
                                 }
                             </div>
                         }
+                        {room.state === 'active' && quiz && joined && getPlayer().state === 'answering' &&
+                            <div id={styles.activeContainer}>
+                                <motion.div
+                                    id={styles.questionContainer}
+                                    initial={{ opacity: 0 }}
+                                    animate={questionTransition ? { opacity: 0 } : { opacity: 1 }}
+                                    transition={{ duration: TRANSITION_DURATION / 1000, ease: [.62, -0.18, .32, 1.17] }}
+                                >
+                                    <h2>
+                                        {`${room.control
+                                            ? room.currentQuestion + 1
+                                            : getPlayer().currentQuestion + 1
+                                            }
+                                                . 
+                                                ${quiz.questions[
+                                                room.control
+                                                    ? room.currentQuestion
+                                                    : getPlayer().currentQuestion].content
+                                            }`
+                                        }
+                                    </h2>
+                                </motion.div>
+                                <motion.div
+                                    id={styles.optionsContainer}
+                                    variants={container}
+                                    initial="hidden"
+                                    animate="visible"
+                                >
+                                    {quiz.questions[room.control
+                                        ? room.currentQuestion
+                                        : getPlayer().currentQuestion
+                                    ].options.map((option, i) =>
+                                        i < 4 || quiz.questions[room.currentQuestion].haveExtraOptions
+                                            ? <motion.div
+                                                style={{
+                                                    width: '100%',
+                                                    height: `${i < 4 || quiz.questions[room.currentQuestion].haveExtraOptions
+                                                        ? 25
+                                                        : (100 / 6)
+                                                        }%`
+                                                }}
+                                                key={`Option: ${i}`}
+                                                variants={item}
+                                            >
+                                                <OptionInput
+                                                    onClick={() => room.control ? answerControl(i) : answer(i)}
+                                                    state={optionSelected === undefined
+                                                        ? undefined
+                                                        : optionSelected === i
+                                                            ? 'chosen'
+                                                            : 'notChosen'
+                                                    }
+                                                    borderRadius={quiz.style.button.borderRadius}
+                                                    textColor={quiz.style.button.textColor}
+                                                    symbolColor={quiz.style.button.symbolColor}
+                                                    option={i}
+                                                    colorValue={quiz.style.button.template === 'monochrome'
+                                                        ? quiz.style.button.color
+                                                        : undefined
+                                                    }
+                                                    symbol={quiz.style.button.symbol}
+                                                    variant={quiz.style.button.variant}
+                                                    text={option.content}
+                                                    width='100%'
+                                                    height='100%'
+                                                    hideText={questionTransition}
+                                                />
+                                            </motion.div>
+                                            : undefined
+                                    )}
+                                </motion.div>
+                            </div>
+                        }
+                        {quiz && room.state === 'finish' && joined &&
+                            <div className='size100 flex start' style={{paddingTop: '25%'}}>
+                                <h2>Quiz Finalizado!</h2>
+                                <h2>Aguarde o Resultado!</h2>
+                            </div>
+                        }
+                        {quiz && getPlayer() && (room.state === 'results' || getPlayer().state === 'result') && getPlayer().results && joined &&
+                            <motion.div
+                                id={styles.resultContainer}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: TRANSITION_DURATION / 2000, duration: TRANSITION_DURATION / 1000, ease: [.62, -0.18, .32, 1.17] }}
+                            >
+                                {layout.map((item, i) =>
+                                    <div
+                                        className={`${styles.resultBlock} flex center`}
+                                        key={i}
+                                    >
+                                        {item.value}
+                                    </div>
+                                )}
+                            </motion.div>
+                        }
                     </div>
+                        }
+                </div>
                 </motion.div>
             }
         </div >

@@ -30,6 +30,8 @@ export default function PlayersList(props) {
         players,
         totalQuestions,
         noProgressBar,
+        result,
+        position
     } = props
     const [open, setOpen] = useState(false)
     const [items, setItems] = useState(players)
@@ -65,14 +67,27 @@ export default function PlayersList(props) {
     return (
         <div
             id={styles.container}
-            style={{ right: open ? `${ITEM_SIZE.width * 0.54}px` : `-${ITEM_SIZE.width * 0.55}px` }}
+            style={{
+                zIndex: open
+                    ? 10
+                    : 5,
+                top: !position
+                    ? '12%'
+                    : `${12 + (position * 8)}%`,
+                right: open
+                    ? `${ITEM_SIZE.width * 0.54}px`
+                    : `-${ITEM_SIZE.width * 0.55}px`
+            }}
         >
             <div
                 id={styles.tabContainer}
                 onClick={handleTabClick}
                 style={open ? styleOpen : styleClose}
             >
-                <p>{players.length} {players.length === 1 ? 'Jogador' : 'Jogadores'}</p>
+                {result
+                    ? <p style={{ fontSize: '80%', color: result.color }}>{result.name}</p>
+                    : <p>{players.length} {players.length === 1 ? 'Jogador' : 'Jogadores'}</p>
+                }
             </div>
             <div id={styles.playersContainer} style={{ paddingTop: `${LIST_SIZE.paddingTop}px` }}>
                 <motion.div

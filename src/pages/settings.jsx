@@ -331,7 +331,7 @@ const quiz = {
                 name: 'leopard',
                 type: 'jpg',
                 positionToFit: 'vertical'
-            }, color: '#ABDEE6'
+            }, color: '#f0deb8'
         },
         {
             name: result2,
@@ -369,7 +369,7 @@ const quiz = {
                 type: 'jpg',
                 positionToFit: 'vertical',
             },
-            color: '#FFD8BE'
+            color: '#c2dcb9'
         },
         {
             name: result3,
@@ -407,7 +407,7 @@ const quiz = {
                 type: 'jpg',
                 positionToFit: 'horizontal',
             },
-            color: '#FFF7D2'
+            color: '#f2adb0'
         },
         {
             name: result4,
@@ -445,7 +445,7 @@ const quiz = {
                 type: 'jpg',
                 positionToFit: 'vertical',
             },
-            color: '#CBAACB'
+            color: '#a6dedb'
         },
     ],
     resultLayout: [],

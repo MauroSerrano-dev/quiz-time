@@ -13,7 +13,6 @@ import CloseFullscreenRoundedIcon from '@mui/icons-material/CloseFullscreenRound
 import OpenInFullRoundedIcon from '@mui/icons-material/OpenInFullRounded';
 import OptionInput from '@/components/OptionInput';
 import ChartPie from '@/components/ChartPie';
-import { lightBlue } from '@mui/material/colors';
 
 let socket;
 
@@ -169,7 +168,6 @@ export default withRouter((props) => {
     }, [room])
 
     function getCharPieData() {
-        console.log(room)
         return Object.keys(room.players).map(key => room.players[key].results).reduce((acc, result) => acc.concat(result), [])
     }
 
@@ -206,14 +204,14 @@ export default withRouter((props) => {
                                                 {isFullscreen ? 'Sair da Tela Cheia' : 'Tela Cheia'}
                                             </Button>
                                         }
-                                        {room.state === 'disable' &&
+                                        {room.state === 'disable' && process.env.NODE_ENV === 'development' &&
                                             <motion.div
                                                 initial={{ opacity: 0, y: 30 }}
                                                 animate={disableShow ? { opacity: 1, y: 0 } : { opacity: 0, y: 0 }}
                                                 transition={{ delay: disableShow ? 0.5 : 0, duration: disableShow ? 1.2 : 0.6, easings: ["easeInOut"] }}
                                                 id={styles.disableContainer}
                                             >
-                                                {/* <div id={styles.qrContainer}>
+                                                <div id={styles.qrContainer}>
                                                     <div id={styles.qrCode}>
                                                         <QRCode
                                                             value={`${process.env.NEXT_PUBLIC_SITE_DOMAIN}/quiz?code=${code}`}
@@ -227,7 +225,8 @@ export default withRouter((props) => {
                                                                 outer: '#00a0dc',
                                                                 inner: '#005270'
                                                             }}
-                                                            eyeRadius={5} />
+                                                            eyeRadius={5}
+                                                        />
                                                     </div>
                                                     <h2>Scan Me!</h2>
                                                     <div className={styles.frame}></div>
@@ -240,7 +239,7 @@ export default withRouter((props) => {
                                                     <a href={`${process.env.NEXT_PUBLIC_SITE_URL}/quiz?code=${code}`} target='_blank'>
                                                         <h2>{process.env.NEXT_PUBLIC_SITE_DOMAIN}/quiz?code={code}</h2>
                                                     </a>
-                                                </div> */}
+                                                </div>
                                             </motion.div>
                                         }
                                         {room.state === 'active' && quiz &&
@@ -386,11 +385,16 @@ export default withRouter((props) => {
                                             </div>
                                         }
                                         {room.state === 'results' &&
-                                            <div>
-                                                <h2>Estatísticas</h2>
-                                                <div className='flex row'>
-                                                    <h3>Total de Jogadores: {room.players ? Object.keys(room.players).length : 0}</h3>
-                                                    <div className='flex center fillWidth'>
+                                            <div className={styles.statistics}>
+                                                <h1>Estatísticas</h1>
+                                                <div className={styles.statisticsBody}>
+                                                    <div style={{ width: '50%' }}>
+                                                        <h2 style={{ marginBottom: '0.5rem', textAlign: 'start' }}>Total de Jogadores: {room.players ? Object.keys(room.players).length : 0}</h2>
+                                                        {getCharPieData().map((profile, i) =>
+                                                            <h2 style={{ marginBottom: '0.5rem', textAlign: 'start', color: profile.color }} key={i}>{profile.name}: {profile.points}</h2>
+                                                        )}
+                                                    </div>
+                                                    <div className='flex center' style={{ width: '50%', marginTop: '-11%' }}>
                                                         <ChartPie
                                                             data={getCharPieData()}
                                                             totalPoints={Object.keys(room.players).length}
@@ -399,7 +403,7 @@ export default withRouter((props) => {
                                                 </div>
                                             </div>
                                         }
-                                        {room.players &&
+                                        {room.players && room.state === 'active' &&
                                             <div
                                                 className={styles.answersView}
                                                 style={{
@@ -417,6 +421,23 @@ export default withRouter((props) => {
                                             totalQuestions={room.quizInfo.totalQuestions}
                                             noProgressBar={room.control}
                                         />
+                                        {room.state === 'results' &&
+                                            quiz.results.map((quizResult, i) =>
+                                                <div key={i}>
+                                                    <PlayersList
+                                                        position={i + 1}
+                                                        result={quizResult}
+                                                        players={
+                                                            room.players === undefined
+                                                                ? []
+                                                                : Object.keys(room.players).map(index => room.players[index]).filter(player => player.results.some(result => result.id === quizResult.id))
+                                                        }
+                                                        totalQuestions={room.quizInfo.totalQuestions}
+                                                        noProgressBar={room.control}
+                                                    />
+                                                </div>
+                                            )
+                                        }
                                     </div>
                                 }
                                 {session.user.id !== room.owner.id &&
