@@ -131,13 +131,6 @@ export default withRouter((props) => {
 
             socketInitializer()
         }
-
-        return () => {
-            // Cleanup code, disconnect socket and remove event listeners
-            if (socket) {
-                socket.disconnect();
-            }
-        }
     }, [session, code])
 
     useEffect(() => {

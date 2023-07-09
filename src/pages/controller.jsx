@@ -58,16 +58,6 @@ export default withRouter((props) => {
 
             socketInitializer()
         }
-
-        return () => {
-            // Cleanup code, disconnect socket and remove event listeners
-            if (socket) {
-                socket.disconnect();
-                socket.off('getRoom');
-                socket.off(`sendRoom${code}`);
-                socket.off(`updateFieldsRoom${code}`);
-            }
-        }
     }, [session, code])
 
     function nextQuestion() {
@@ -134,6 +124,7 @@ export default withRouter((props) => {
     }
 
     function changeState(newState) {
+        console.log('newState', newState, room)
         socket.emit("updateRoom", {
             ...room,
             controllerState: newState
