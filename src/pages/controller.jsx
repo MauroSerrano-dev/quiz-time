@@ -32,34 +32,43 @@ export default withRouter((props) => {
 
     useEffect(() => {
         if (!room && code && session) {
+            async function socketInitializer() {
+                const options = {
+                    method: 'GET'
+                }
+                await fetch("/api/socket", options)
+
+                socket = io({ query: { code: code } })
+
+                socket.emit('getRoom', code)
+
+                socket.on(`sendRoom${code}`, (room) => {
+                    setRoom(room)
+                    setDisableShow(room.state === 'disable')
+                    setActiveShow(room.state === 'active')
+                })
+
+                socket.on(`updateFieldsRoom${code}`, (att) => {
+                    const { roomAtt } = att
+                    setDisableShow(roomAtt.state === 'disable')
+                    setActiveShow(roomAtt.state === 'active')
+                    setRoom(roomAtt)
+                })
+            }
+
             socketInitializer()
         }
-    }, [session, code])
 
-    const socketInitializer = async () => {
-        const options = {
-            method: 'GET'
+        return () => {
+            // Cleanup code, disconnect socket and remove event listeners
+            if (socket) {
+                socket.disconnect();
+                socket.off('getRoom');
+                socket.off(`sendRoom${code}`);
+                socket.off(`updateFieldsRoom${code}`);
+            }
         }
-        await fetch("/api/socket", options)
-
-        socket = io({ query: { code: code } })
-
-        socket.emit('getRoom', code)
-
-        socket.on(`sendRoom${code}`, (room) => {
-            setRoom(room)
-            setDisableShow(room.state === 'disable')
-            setActiveShow(room.state === 'active')
-        })
-
-        socket.on(`updateFieldsRoom${code}`, (att) => {
-            const { roomAtt } = att
-            setDisableShow(roomAtt.state === 'disable')
-            setActiveShow(roomAtt.state === 'active')
-            setRoom(roomAtt)
-        })
-
-    }
+    }, [session, code])
 
     function nextQuestion() {
         if (room.state === 'active') {
