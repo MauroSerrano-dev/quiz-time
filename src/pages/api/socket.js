@@ -4,12 +4,12 @@ import { initializeApp } from 'firebase/app'
 import { getFirebaseConfig } from '@/backend-data/utils/firebase'
 import { getDatabase, ref, set, onChildChanged, orderByChild, get, push, remove, onValue } from 'firebase/database'
 
+// Inicialize o aplicativo Firebase
+const firebaseConfig = getFirebaseConfig()
+
+const app = initializeApp(firebaseConfig)
+
 export default function SocketHandler(req, res) {
-
-  // Inicialize o aplicativo Firebase
-  const firebaseConfig = getFirebaseConfig()
-
-  const app = initializeApp(firebaseConfig)
 
   // Connect to Realtime Database
   const db = getDatabase()

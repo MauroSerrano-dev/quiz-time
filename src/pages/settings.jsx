@@ -79,7 +79,7 @@ const quiz = {
             options: [
                 { content: 'Ter incertezas', actions: [{ profile: result3, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult3, points: 1 }] },
                 { content: 'Controlar o essencial', actions: [{ profile: result4, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult4, points: 1 }] },
-                { content: 'Diversão e cerebração', actions: [{ profile: result2, points: 1 }, { profile: subResult3, points: 1 }, { profile: subResult2, points: 1 }] },
+                { content: 'Diversão e celebração', actions: [{ profile: result2, points: 1 }, { profile: subResult3, points: 1 }, { profile: subResult2, points: 1 }] },
                 { content: 'Planejar e obter recursos', actions: [{ profile: result1, points: 1 }, { profile: subResult4, points: 1 }, { profile: subResult2, points: 1 }] },
             ],
             optionsRandom: false
@@ -97,9 +97,9 @@ const quiz = {
         {
             content: 'Eu penso que...',
             options: [
-                { content: 'Unidos venceremos, dividos perderemos', actions: [{ profile: result2, points: 1 }, { profile: subResult3, points: 1 }, { profile: subResult2, points: 1 }] },
-                { content: 'O ataque é melhor que a defesa', actions: [{ profile: result1, points: 1 }, { profile: subResult4, points: 1 }, { profile: subResult2, points: 1 }] },
-                { content: 'É bom ser manso, mas andar com um porrete', actions: [{ profile: result3, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult3, points: 1 }] },
+                { content: 'Unidos venceremos, divididos perderemos', actions: [{ profile: result2, points: 1 }, { profile: subResult3, points: 1 }, { profile: subResult2, points: 1 }] },
+                { content: 'A melhor defesa é o ataque', actions: [{ profile: result1, points: 1 }, { profile: subResult4, points: 1 }, { profile: subResult2, points: 1 }] },
+                { content: 'É bom ser manso, entretanto andar com um porrete', actions: [{ profile: result3, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult3, points: 1 }] },
                 { content: 'Um homem prevenido vale por dois', actions: [{ profile: result4, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult4, points: 1 }] },
             ],
             optionsRandom: false
@@ -120,7 +120,7 @@ const quiz = {
                 { content: 'Perguntas a respostas', actions: [{ profile: result3, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult3, points: 1 }] },
                 { content: 'Ter todos os detalhes', actions: [{ profile: result4, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult4, points: 1 }] },
                 { content: 'Vantagens a meu favor', actions: [{ profile: result1, points: 1 }, { profile: subResult4, points: 1 }, { profile: subResult2, points: 1 }] },
-                { content: 'Que todos tenham a chance de ser ouvido', actions: [{ profile: result2, points: 1 }, { profile: subResult3, points: 1 }, { profile: subResult2, points: 1 }] },
+                { content: 'Que todos tenham a chance de serem ouvidos', actions: [{ profile: result2, points: 1 }, { profile: subResult3, points: 1 }, { profile: subResult2, points: 1 }] },
             ],
             optionsRandom: false
         },
@@ -168,7 +168,7 @@ const quiz = {
             content: 'Minha filosofia de vida é...',
             options: [
                 { content: 'Há ganhadores e perdedores, e eu acredito ser um ganhador', actions: [{ profile: result1, points: 1 }, { profile: subResult4, points: 1 }, { profile: subResult2, points: 1 }] },
-                { content: 'Para eu ganhar, niguém precisa perder', actions: [{ profile: result2, points: 1 }, { profile: subResult3, points: 1 }, { profile: subResult2, points: 1 }] },
+                { content: 'Para eu ganhar, ninguém precisa perder', actions: [{ profile: result2, points: 1 }, { profile: subResult3, points: 1 }, { profile: subResult2, points: 1 }] },
                 { content: 'Para ganhar é preciso seguir as regras', actions: [{ profile: result4, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult4, points: 1 }] },
                 { content: 'Para ganhar, é necessário inventar novas regras', actions: [{ profile: result3, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult3, points: 1 }] },
             ],
@@ -179,7 +179,7 @@ const quiz = {
             options: [
                 { content: 'Explorar', actions: [{ profile: result3, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult3, points: 1 }] },
                 { content: 'Evitar surpresas', actions: [{ profile: result4, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult4, points: 1 }] },
-                { content: 'Focalizar a meta', actions: [{ profile: result1, points: 1 }, { profile: subResult4, points: 1 }, { profile: subResult2, points: 1 }] },
+                { content: 'Focar na meta', actions: [{ profile: result1, points: 1 }, { profile: subResult4, points: 1 }, { profile: subResult2, points: 1 }] },
                 { content: 'Realizar uma abordagem natural', actions: [{ profile: result2, points: 1 }, { profile: subResult3, points: 1 }, { profile: subResult2, points: 1 }] },
             ],
             optionsRandom: false
@@ -270,7 +270,7 @@ const quiz = {
                 { content: 'Aquele que hesita está perdido', actions: [{ profile: result1, points: 1 }, { profile: subResult4, points: 1 }, { profile: subResult2, points: 1 }] },
                 { content: 'De grão em grão a galinha enche o papo', actions: [{ profile: result4, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult4, points: 1 }] },
                 { content: 'O que vai, volta', actions: [{ profile: result2, points: 1 }, { profile: subResult3, points: 1 }, { profile: subResult2, points: 1 }] },
-                { content: 'Um sorriso ou uma careta é o mesmo para quem e cego', actions: [{ profile: result3, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult3, points: 1 }] },
+                { content: 'Um sorriso ou uma careta é o mesmo para quem é cego', actions: [{ profile: result3, points: 1 }, { profile: subResult1, points: 1 }, { profile: subResult3, points: 1 }] },
             ],
             optionsRandom: false
         },
@@ -306,19 +306,19 @@ const quiz = {
                 },
                 {
                     ref: 'Traços Comportamentais',
-                    values: ['Senso de urgência', 'Iniciativa', 'Prático', 'Impulsivo', 'Vencer desafios', 'Aqui e agora', 'Auto suficiente', 'Não delegar']
+                    values: ['Senso de urgência', 'Iniciativa', 'Prático', 'Impulsivo', 'Vencer desafios', 'Aqui e agora', 'Autossuficiente', 'Não delegar']
                 },
                 {
                     ref: 'Pontos Fortes',
-                    values: ['Ação', 'Fazer que ocorra', 'Para com a burocracia', 'Motivação']
+                    values: ['Ação', 'Fazer com que ocorra', 'Para com a burocracia', 'Motivação']
                 },
                 {
                     ref: 'Pontos de Melhorias',
-                    values: ['Socialmente um desastre', 'Faz da forma mais fácil', 'Relacionamento complicado', 'Precisa melhorar paciência', 'Atenção às pessoas', 'Humildade', 'Consideração', 'Trabalhar coletivamente', 'Ouvir mais']
+                    values: ['Socialmente um desastre', 'Faz da forma mais fácil', 'Relacionamento complicado', 'Precisa melhorar a paciência', 'Atenção às pessoas', 'Humildade', 'Consideração', 'Trabalhar coletivamente', 'Ouvir mais']
                 },
                 {
                     ref: 'Motivações',
-                    values: ['Liberdade para agir individualmente', 'Controle das proprias atividades', 'Resolver os problemas do seu jeito', 'Competição', 'Variedade de atividades', 'Não ter que repetir tarefas']
+                    values: ['Liberdade para agir individualmente', 'Controle das próprias atividades', 'Resolver os problemas do seu jeito', 'Competição', 'Variedade de atividades', 'Não ter que repetir tarefas']
                 },
                 {
                     ref: 'Valores',
