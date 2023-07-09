@@ -204,7 +204,7 @@ export default withRouter((props) => {
                                                 {isFullscreen ? 'Sair da Tela Cheia' : 'Tela Cheia'}
                                             </Button>
                                         }
-                                        {room.state === 'disable' && process.env.NODE_ENV === 'development' &&
+                                        {room.state === 'disable' &&
                                             <motion.div
                                                 initial={{ opacity: 0, y: 30 }}
                                                 animate={disableShow ? { opacity: 1, y: 0 } : { opacity: 0, y: 0 }}
