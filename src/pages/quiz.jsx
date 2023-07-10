@@ -323,7 +323,6 @@ export default withRouter((props) => {
     }
 
     function getPlayerResults(player) {
-        console.log(player, 'player')
         let newPlayer
         if (room && quiz && player && player.answers) {
             newPlayer = {

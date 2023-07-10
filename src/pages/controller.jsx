@@ -124,7 +124,6 @@ export default withRouter((props) => {
     }
 
     function changeState(newState) {
-        console.log('newState', newState, room)
         socket.emit("updateRoom", {
             ...room,
             controllerState: newState

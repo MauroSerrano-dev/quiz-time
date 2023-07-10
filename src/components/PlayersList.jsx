@@ -55,7 +55,6 @@ export default function PlayersList(props) {
 
     useEffect(() => {
         const tempPlayers = [...players]
-        console.log(tempPlayers)
         const sortedPlayers = tempPlayers.sort((a, b) =>
             Object.keys(b.answers ? b.answers : {}).length !== Object.keys(a.answers ? a.answers : {}).length
                 ? Object.keys(b.answers ? b.answers : {}).length - Object.keys(a.answers ? a.answers : {}).length
