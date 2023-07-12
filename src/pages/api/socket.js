@@ -24,7 +24,7 @@ export default function SocketHandler(req, res) {
   }
 
   // Monitorar todas as mudanças na coleção 'rooms'
-  onChildChanged(roomsRef, async (snapshot) => {
+/*   onChildChanged(roomsRef, async (snapshot) => {
 
     const roomCode = snapshot.key
     const roomData = snapshot.val()
@@ -34,7 +34,7 @@ export default function SocketHandler(req, res) {
         roomAtt: roomData,
       }
     )
-  })
+  }) */
 
   // Initialize socket server
   const io = new Server(res.socket.server)
