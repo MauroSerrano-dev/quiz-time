@@ -1,4 +1,4 @@
-/* import NextAuth from "next-auth";
+import NextAuth from "next-auth";
 import GoogleProvider from 'next-auth/providers/google';
 import { createCustomer, getCustomerByEmail } from "../../../backend-data/utils/stripe";
 
@@ -69,4 +69,4 @@ export default NextAuth({
       privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
     })
   }),
-}); */
+});
