@@ -1,3 +1,4 @@
+import NoSessionPage from "@/components/NoSessionPage"
 import { Button } from "@mui/material"
 
 const result1 = 'Ativador(a)'
